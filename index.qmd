@@ -1,0 +1,53 @@
+# 前言 {.unnumbered}
+
+这是一本中文散射理论的教学书，定位"理论与代码双重并进"。读者顺序读下去，每翻一章既能补一段理论，也能跑一段代码、看一张图。
+
+## 这本书想达成什么
+
+1. 把散射理论里**可计算的核心结果**（S 矩阵、Born 级数、分波相移、解析结构、共振、含自旋振幅）压成 8 章；
+2. 每个结果都**亲手用 numpy/scipy 算一遍**；
+3. 在几个解析可解的具体势能上验证理论。
+
+## 阅读建议
+
+- 假设读者已学过基础量子力学（Hilbert 空间、算符、定态散射常识）。
+- 每个 `.qmd` 都自包含——代码不依赖前一章定义的工具函数，可以直接复制粘贴运行。
+- 代价是同一段数值方法（如 Lippmann-Schwinger 求解）会在几章里重复出现；这是有意的，请不要 import 跨页代码。
+
+## 本地构建
+
+```bash
+python -m venv .venv && . .venv/bin/activate
+pip install -r requirements.txt
+quarto preview
+```
+
+## 与主线教材的关系
+
+理论详证以同名 LaTeX 教材为主，本书做精简化的"可计算"对照：
+
+- LaTeX 详版：`~/workspace/nutstore/physics/ScatteringTheory/new_zhiguang_slides/note/`
+- 个别专题深入笔记：`tianbaiting.github.io` 博客 `sci/minimal_theory/`
+
+## 现状（v0.1-alpha）
+
+第 1 章（自由粒子）+ 5 个具体势能 example 已完工，作为模板。其余 7 章逐章推进。
+
+## 一段最小可运行示例
+
+```{python}
+import numpy as np
+import matplotlib.pyplot as plt
+
+k = np.linspace(0.1, 5, 200)
+lam = -2.0
+t = 2j * k / (2j * k - lam)
+plt.figure(figsize=(6, 3))
+plt.plot(k, np.abs(t)**2, label=r"$|t|^2$")
+plt.xlabel("k"); plt.ylabel("transmission"); plt.legend(); plt.grid(alpha=0.3)
+plt.title("1D δ 势的透射率")
+plt.tight_layout()
+plt.show()
+```
+
+如果上面这张图能在你的浏览器里渲染出来，说明环境就绪。
