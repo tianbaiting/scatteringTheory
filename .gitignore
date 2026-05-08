@@ -1,0 +1,17 @@
+# Quarto build output
+/_site/
+/.quarto/
+*_files/
+_freeze/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Editor
+.vscode/
+.idea/
+*.swp
+.DS_Store
