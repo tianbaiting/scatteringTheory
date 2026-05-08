@@ -1,0 +1,22 @@
+::: {.hidden}
+$$
+\newcommand{\inn}[2]{\left\langle #1 \,\middle|\, #2 \right\rangle}
+\newcommand{\matel}[3]{\left\langle #1 \,\middle|\, #2 \,\middle|\, #3 \right\rangle}
+\newcommand{\rmd}{\mathrm{d}}
+\newcommand{\rmi}{\mathrm{i}}
+\newcommand{\rme}{\mathrm{e}}
+\newcommand{\Hilb}{\mathcal{H}}
+\newcommand{\Smat}{\hat{S}}
+\newcommand{\Tmat}{\hat{T}}
+\newcommand{\Hmat}{\hat{H}}
+\newcommand{\Vmat}{\hat{V}}
+\newcommand{\Op}[1]{\hat{#1}}
+\newcommand{\Tr}{\operatorname{Tr}}
+\newcommand{\sgn}{\operatorname{sgn}}
+\newcommand{\Res}{\operatorname{Res}}
+\newcommand{\Ran}{\operatorname{Ran}}
+\newcommand{\Dom}{\operatorname{Dom}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\C}{\mathbb{C}}
+$$
+:::
