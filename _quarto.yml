@@ -1,0 +1,42 @@
+project:
+  type: book
+  output-dir: _site
+
+book:
+  title: "散射理论 · 中文教学仓库"
+  author: "Baiting Tian"
+  date: today
+  search: true
+  chapters:
+    - index.qmd
+    - part: "Part I — 核心理论"
+      chapters:
+        - chapters/01_free_particle.qmd
+    - part: "Part II — 具体势能"
+      chapters:
+        - examples/1d_delta.qmd
+        - examples/square_well_3d.qmd
+        - examples/delta_shell.qmd
+        - examples/yukawa.qmd
+        - examples/separable_rank1.qmd
+
+format:
+  html:
+    theme: cosmo
+    toc: true
+    toc-depth: 3
+    code-fold: false
+    code-tools: true
+    fig-cap-location: bottom
+    include-before-body: _macros.qmd
+    html-math-method: katex
+    mainfont: "Noto Sans CJK SC"
+    monofont: "JetBrains Mono"
+
+execute:
+  echo: true
+  warning: false
+  freeze: auto
+  cache: false
+
+lang: zh
