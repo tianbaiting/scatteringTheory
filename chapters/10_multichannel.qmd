@@ -1,1 +1,465 @@
-# placeholder: 10_multichannel
+# 多通道与反应
+
+{{< include /_macros.qmd >}}
+
+> **本章目标**：把散射 S 矩阵推广到存在多个内部通道的情形——激发、重排、反应均可能发生。我们引入通道哈密顿量、多通道 Møller 算符与分块 S 矩阵，推导各类截面公式、广义光学定理，最后用数值求解两通道耦合径向方程展示阈值 cusp 和幺正性验证。
+
+> **配套理论详证**：见 LaTeX 教材 `ch_Multichannel.tex`，以及 Taylor《Scattering Theory》第 16–19 章。
+
+全文取 $\hbar = 1$，质量 $m = 1/2$，故动能算符 $\Op{p}^2/(2m) = \Op{p}^2$，能量与波数关系 $E = k^2$（单粒子参考单位）。多粒子截面公式用约化质量 $\mu$ 表达。
+
+## 通道的概念
+
+在多体散射中，一个**通道**（channel）$\alpha$ 是把所有粒子划分为若干稳定碎片（stable fragments）的一种方式，并指定每个碎片所处的内部量子态。例如电子打氢原子
+
+$$
+e + \mathrm{H} \;\longrightarrow\;
+\begin{cases}
+  e + \mathrm{H}        & \alpha = 1 \text{（弹性）}\\
+  e + \mathrm{H}^*       & \alpha = 2 \text{（激发）}\\
+  e + e + p           & \alpha = 3 \text{（电离）}
+\end{cases}
+$$
+
+每种渐近粒子组合对应一个不同的通道。仅分组相同、内部态不同的通道称为同一**安排通道**（arrangement channel）。
+
+**通道阈值**（channel threshold）$W_\alpha$ 是各碎片束缚态能量之和（以所有粒子自由静止为零点）。$E < W_\alpha$ 时通道 $\alpha$ 为**闭通道**（closed channel），$E > W_\alpha$ 时为**开通道**（open channel）。
+
+**通道哈密顿量**（channel Hamiltonian）定义为
+
+$$
+\Hmat_\alpha = \Hmat - \Vmat^\alpha, \qquad \Vmat^\alpha = \Hmat - \Hmat_\alpha,
+$$
+
+其中 $\Vmat^\alpha$ 是通道间（inter-fragment）相互作用——当通道 $\alpha$ 的各碎片相互远离时，$\Vmat^\alpha \to 0$。因此 $\Hmat_\alpha$ 描述碎片自由相对运动，而碎片内部仍处于束缚态。
+
+**通道子空间** $\Hilb_\alpha \subset \Hilb$ 由所有形如"内部冻结于通道 $\alpha$ 指定束缚态、质心运动任意"的波函数张成。对于完全裂解通道 $\alpha = 0$，$\Hilb_0 = \Hilb$。渐近完备性（asymptotic completeness）断言
+
+$$
+\Hilb = \Hilb_{\rm bound} \oplus \bigoplus_\alpha \Hilb_\pm^\alpha,
+$$
+
+即除束缚态外的所有散射态，既可由某个通道的入渐近态演化而来，也将走向某个通道的出渐近态。
+
+## 多通道 Møller 算符
+
+对每个通道 $\alpha$，定义**通道波算符**（channel Møller operator）
+
+$$
+\Omega_+^\alpha \equiv \operatorname{s-lim}_{t \to -\infty}\, \rme^{\rmi \Hmat t}\, \rme^{-\rmi \Hmat_\alpha t}\, P_\alpha, \qquad
+\Omega_-^\alpha \equiv \operatorname{s-lim}_{t \to +\infty}\, \rme^{\rmi \Hmat t}\, \rme^{-\rmi \Hmat_\alpha t}\, P_\alpha,
+$$
+
+其中 $P_\alpha$ 是向 $\Hilb_\alpha$ 的投影，"s-lim"表示强极限（逐矢量收敛）。等距性 $(\Omega_\pm^\alpha)^\dagger \Omega_\pm^\alpha = \mathbb{1}_{\Hilb_\alpha}$ 来自短程势的快速衰减，证明思路与单通道一致：写
+
+$$
+\Omega_+^\alpha |\psi\rangle = |\psi\rangle + \rmi \int_{-\infty}^{0} \rmd t\; \rme^{\rmi \Hmat t}\, \Vmat^\alpha\, \rme^{-\rmi \Hmat_\alpha t}\, |\psi\rangle,
+$$
+
+因 $\Vmat^\alpha$ 仅在碎片相互靠近时不为零，而 $\rme^{-\rmi \Hmat_\alpha t}$ 使各碎片线性分离，被积项按 $|t|^{-3/2}$ 衰减，积分收敛。
+
+**正交性定理**：不同通道的值域两两正交，$\Hilb_\pm^\alpha \perp \Hilb_\pm^{\alpha'}$（$\alpha \neq \alpha'$）；束缚态子空间 $\Hilb_{\rm bound}$ 与所有 $\Hilb_\pm^\alpha$ 正交。
+
+## 多通道 S 矩阵
+
+引入**渐近态空间** $\Hilb_{\rm as} = \bigoplus_\alpha \Hilb_\alpha$，向量为序列 $\{|\psi^\alpha\rangle\}_\alpha$。定义总 Møller 算符 $\Omega_\pm = \sum_\alpha \Omega_\pm^\alpha$，再定义**多通道散射算符**
+
+$$
+\boxed{\Smat \equiv \Omega_-^\dagger\, \Omega_+ : \Hilb_{\rm as} \to \Hilb_{\rm as}.}
+$$
+
+由渐近完备性，$\Smat$ 是 $\Hilb_{\rm as}$ 上的**酉算符**（unitary operator），$\Smat^\dagger \Smat = \Smat \Smat^\dagger = \mathbb{1}_{\Hilb_{\rm as}}$。
+
+**通道分块矩阵元**（channel block matrix elements）
+
+$$
+\Smat_{\beta\alpha} \equiv (\Omega_-^\beta)^\dagger \Omega_+^\alpha : \Hilb_\alpha \to \Hilb_\beta
+$$
+
+把通道 $\alpha$ 的入渐近态映射到通道 $\beta$ 的出渐近态分量。酉性写成分块形式
+
+$$
+\boxed{\sum_\beta \Smat_{\beta\alpha}^\dagger\, \Smat_{\beta\alpha'} = \delta_{\alpha\alpha'}\, \mathbb{1}_{\Hilb_\alpha},}
+$$
+
+对固定入射通道 $\alpha$ 的动量本征态，此式给出**概率守恒**
+
+$$
+\sum_\beta |\Smat_{\beta\alpha}|^2 = 1.
+$$
+
+**缠绕关系** $\Hmat\, \Omega_\pm^\alpha = \Omega_\pm^\alpha\, \Hmat_\alpha$ 保证 S 矩阵元中的**能量守恒**：$\langle \beta, k_\beta | \Smat | \alpha, k_\alpha \rangle \propto \delta(E_\beta - E_\alpha)$。因此 S 矩阵的非平凡内容集中在能壳（on-shell）处。
+
+## 截面：弹性、激发与重排
+
+对两体末态出射通道 $\beta$，能量守恒固定出射相对动量 $p_\beta$：
+
+$$
+\frac{p_\beta^2}{2\mu_\beta} + W_\beta = \frac{p_\alpha^2}{2\mu_\alpha} + W_\alpha = E.
+$$
+
+微分截面
+
+$$
+\boxed{\frac{\rmd\sigma}{\rmd\Omega}(\beta \leftarrow \alpha) = \frac{p_\beta}{p_\alpha}\, |f_{\beta\alpha}(\hat{k}_\beta, \hat{k}_\alpha)|^2,}
+$$
+
+其中 $f_{\beta\alpha}$ 是多通道散射振幅，因子 $p_\beta / p_\alpha$（相空间运动学）是多通道区别于单通道弹性的标志。三类散射过程：
+
+- **弹性散射**（elastic）$\alpha \to \alpha$：粒子分组与内部态不变，$p_\beta = p_\alpha$，因子为 1。
+- **非弹激发**（inelastic excitation）：粒子分组相同，内部态跃迁，$W_\beta > W_\alpha \Rightarrow p_\beta < p_\alpha$。
+- **重排反应**（rearrangement）：粒子分组改变（如 $a+(bc) \to b+(ac)$），约化质量 $\mu_\beta \neq \mu_\alpha$。
+
+**总截面**为对所有末态通道求和
+
+$$
+\sigma_{\rm tot}^{(\alpha)} = \sum_\beta \sigma(\beta \leftarrow \alpha) = \sigma_{\rm el}^{(\alpha)} + \sigma_{\rm reac}^{(\alpha)}.
+$$
+
+**多通道光学定理**（multichannel optical theorem）：由分波酉性，
+
+$$
+\boxed{\operatorname{Im} f_{\alpha\alpha}(\hat{k}, \hat{k}) = \frac{p_\alpha}{4\pi}\, \sigma_{\rm tot}^{(\alpha)},}
+$$
+
+即前向弹性振幅的虚部正比于总截面（包括所有非弹性与重排过程）。右侧 $\sigma_{\rm tot}$ 包含所有开放通道——这是幺正性（概率守恒）在振幅层面的体现。
+
+**细致平衡**（detailed balance）：时间反演不变性 $[\Hmat, \Tmat] = 0$ 导出
+
+$$
+(2s_1+1)(2s_2+1)\, p_\alpha^2\, \sigma(\beta \leftarrow \alpha; E)
+= (2s_3+1)(2s_4+1)\, p_\beta^2\, \sigma(\alpha \leftarrow \beta; E),
+$$
+
+其中 $s_1, s_2$（$s_3, s_4$）是通道 $\alpha$（$\beta$）中两碎片自旋，$p_\alpha, p_\beta$ 是两通道相对动量。
+
+## 耦合通道方程
+
+把总波函数按靶内部态展开，对 Schrödinger 方程投影，对轨道角动量 $\ell = 0$ 得**耦合径向方程**
+
+$$
+-u_i''(r) + \sum_j V_{ij}(r)\, u_j(r) = (E - \epsilon_i)\, u_i(r), \qquad k_i^2 = E - \epsilon_i,
+$$
+
+其中 $u_i(r) = r \eta_i(r)$ 是第 $i$ 通道的约化径向波函数，$\epsilon_i$ 是通道 $i$ 的阈值，$V_{ij}(r)$ 是通道势矩阵元。
+
+- **开通道**（open channel，$E > \epsilon_i$）：$k_i^2 > 0$，渐近行为 $u_i(r) \to A_i \sin(k_i r) + B_i \cos(k_i r)$，包含入射与出射波。
+- **闭通道**（closed channel，$E < \epsilon_i$）：$k_i^2 < 0$，$\kappa_i = \sqrt{\epsilon_i - E} > 0$，渐近行为 $u_i(r) \to C_i\, \rme^{-\kappa_i r}$（指数衰减，物理解）。
+
+在 $r \to \infty$ 处匹配渐近形式，可从 $n_{\rm open} \times n_{\rm open}$ 的反应矩阵（K-matrix）或 S 矩阵中提取截面。
+
+## K 矩阵与参数化
+
+对 $n$ 个开放通道，分波 S 矩阵 $s^\ell(E)$ 是 $n \times n$ 酉矩阵。可用**K 矩阵**（K-matrix）参数化
+
+$$
+\boxed{s^\ell(E) = \frac{\mathbb{1} + \rmi K^\ell(E)}{\mathbb{1} - \rmi K^\ell(E)},}
+$$
+
+其中 $K^\ell(E)$ 是实对称矩阵（时间反演不变性保证）。由此形式，$s^{\ell\dagger} s^\ell = \mathbb{1}$ 自动满足——K 矩阵是保证幺正性的自然参数化，特别适用于多通道共振峰的数据拟合。
+
+对非弹性因子（inelasticity）$\eta_\ell \in [0, 1]$，弹性对角元 $s_{\alpha\alpha}^\ell = \eta_\ell\, \rme^{2\rmi\delta_\ell}$，弹性分波振幅落入 Argand 圆内部：$|f_{\alpha\alpha}^\ell| \leq 1/(2p_\alpha)$。
+
+## 阈值 cusp 与支点
+
+当能量 $E$ 升至通道 $\beta$ 的阈值 $W_\beta$ 时，$p_\beta = \sqrt{2\mu_\beta(E - W_\beta)}$ 从纯虚变为实数。由 **Wigner 阈值定律**
+
+$$
+\sigma(\beta \leftarrow \alpha; E) \sim C_\ell\, \frac{p_\beta^{2\ell_\beta+1}}{p_\alpha}, \qquad E \to W_\beta^+,
+$$
+
+$s$ 波出射（$\ell_\beta = 0$）时截面以 $\sim \sqrt{E - W_\beta}$ 上升，导数在 $E = W_\beta$ 处发散——这就是**Wigner cusp**。
+
+同时，酉性约束迫使弹性截面 $\sigma_{\rm el}^{(\alpha)}(E)$ 在 $E = W_\beta$ 处斜率突变：低于阈值时通道 $\beta$ 闭合，$|s_{\alpha\alpha}^\ell| = 1$（纯弹性）；高于阈值后 $|s_{\alpha\alpha}^\ell| < 1$，弹性截面下降。两侧斜率之差正比于通道 $\beta$ 的耦合强度——此即弹性截面上的"cusp"（折角）。
+
+从解析结构看，$E = W_\beta$ 是 $p_\beta(E) = \sqrt{E - W_\beta}$ 的**支点**（branch point），分波振幅在该点有 $\sqrt{E - W_\beta}$ 型支割线。Wigner cusp 正是此支割线在物理实轴上的投影。
+
+## 两通道数值模型
+
+```{python}
+#| label: fig-multichannel-prob
+#| fig-cap: "两通道散射模型：(a) 弹性概率 $|S_{11}|^2$ 与反应概率 $|S_{21}|^2$ 随能量变化，通道 2 在 $E = \\Delta = 1$ 处打开，弹性截面出现 Wigner cusp；(b) 总截面 $\\sigma_{\\rm tot}^{(1)}$ 由光学定理计算，在阈值处斜率突变。"
+
+import numpy as np
+from scipy.integrate import solve_ivp
+import matplotlib.pyplot as plt
+
+# ── 两通道势参数 ──
+DELTA = 1.0        # 通道 2 阈值
+V1  = 3.0          # 通道 1 对角势深
+V2  = 2.0          # 通道 2 对角势深
+W   = 1.5          # 通道间耦合强度
+
+R_START = 1e-3     # 从 r = eps 出发避开原点奇异性
+R_MAX   = 12.0     # 渐近匹配点
+
+def Vmat(r):
+    """2×2 Gaussian coupling potential matrix."""
+    g = np.exp(-r**2)
+    return np.array([[-V1 * g, -W * g],
+                     [-W * g,  -V2 * g]])
+
+def ode_rhs(r, y, E):
+    """
+    Coupled radial ODE: y = [u1, u1', u2, u2'].
+      u1'' = (V11 - E)  * u1 + V12 * u2
+      u2'' = V21 * u1  + (V22 - E + DELTA) * u2
+    """
+    u1, du1, u2, du2 = y
+    V = Vmat(r)
+    return [du1,
+            (V[0, 0] - E) * u1 + V[0, 1] * u2,
+            du2,
+            V[1, 0] * u1 + (V[1, 1] - E + DELTA) * u2]
+
+def propagate(E, ic):
+    """Integrate ODE from R_START to R_MAX; return y(R_MAX)."""
+    sol = solve_ivp(ode_rhs, [R_START, R_MAX], ic,
+                    args=(E,), method='DOP853',
+                    rtol=1e-10, atol=1e-12)
+    return sol.y[:, -1]
+
+def _amp(u, du, k, R):
+    """
+    Decompose u(R) = A e^{+ikR} + B e^{-ikR}.
+    Returns (A, B) from u and du evaluated at R.
+    """
+    eipR = np.exp( 1j * k * R)
+    eimR = np.exp(-1j * k * R)
+    A = (u + du / (1j * k)) / (2.0 * eipR)
+    B = (u - du / (1j * k)) / (2.0 * eimR)
+    return A, B
+
+def compute_S_above(E):
+    """
+    Compute 2×2 S-matrix for E > DELTA (both channels open).
+
+    Strategy: propagate two regular ICs, then impose the physical
+    asymptotic condition (no incoming wave in channel j) by
+    requiring the log-derivative at R_MAX equals +ik_j (pure outgoing).
+    """
+    k = [np.sqrt(max(E, 1e-14)), np.sqrt(max(E - DELTA, 1e-14))]
+
+    # Two regular s-wave ICs (u_i(0) = 0 => u_i(eps) ~ eps)
+    y1 = propagate(E, [R_START, 1.0, 0.0,     0.0    ])
+    y2 = propagate(E, [0.0,     0.0, R_START,  1.0    ])
+
+    def _lam(y1, y2, chan, k_ch):
+        """
+        Compute c2/c1 such that c1*y1 + c2*y2 has only outgoing wave
+        in channel `chan` (indices 2*chan, 2*chan+1 in y).
+        Condition: (d u_chan + ik_ch * u_chan)(R) = 0  [outgoing only => no e^{-ikr}]
+        i.e. B=0 => du = +ik * u  at R_MAX.
+        """
+        idx_u  = 2 * chan
+        idx_du = 2 * chan + 1
+        f1 = y1[idx_du] - 1j * k_ch * y1[idx_u]   # ≈ 0 for outgoing-only combination
+        f2 = y2[idx_du] - 1j * k_ch * y2[idx_u]
+        return -f1 / f2   # ratio c2/c1
+
+    S = np.zeros((2, 2), dtype=complex)
+    for incoming in range(2):
+        lam = _lam(y1, y2, 1 - incoming, k[1 - incoming])
+        for outgoing in range(2):
+            u_R  = y1[2 * outgoing    ] + lam * y2[2 * outgoing    ]
+            du_R = y1[2 * outgoing + 1] + lam * y2[2 * outgoing + 1]
+            A_out, B_in = _amp(u_R, du_R, k[outgoing], R_MAX)
+            if outgoing == incoming:
+                # S_{ii} = A_out / B_in  (same channel)
+                S[outgoing, incoming] = A_out / B_in
+            else:
+                # S_{ji} = A_out / B_in * sqrt(k_j/k_i)  (flux normalization)
+                _, B_in_ref = _amp(
+                    y1[2 * incoming    ] + lam * y2[2 * incoming    ],
+                    y1[2 * incoming + 1] + lam * y2[2 * incoming + 1],
+                    k[incoming], R_MAX)
+                S[outgoing, incoming] = (A_out / B_in_ref) * np.sqrt(k[outgoing] / k[incoming])
+    return S
+
+def compute_S11_below(E):
+    """
+    Below threshold (E < DELTA): channel 2 closed, u2 ~ exp(-kappa2 r).
+    Returns S11 (phase factor).
+    """
+    k1     = np.sqrt(max(E,       1e-14))
+    kappa2 = np.sqrt(max(DELTA - E, 1e-14))
+
+    y1 = propagate(E, [R_START, 1.0, 0.0,    0.0])
+    y2 = propagate(E, [0.0,     0.0, R_START, 1.0])
+
+    # Condition: u2 decays => du2/dr = -kappa2 * u2  at R_MAX
+    f1 = y1[3] + kappa2 * y1[2]
+    f2 = y2[3] + kappa2 * y2[2]
+    lam = -f1 / f2
+
+    u1_R  = y1[0] + lam * y2[0]
+    du1_R = y1[1] + lam * y2[1]
+    A1, B1 = _amp(u1_R, du1_R, k1, R_MAX)
+    return A1 / B1
+
+# ── 能量扫描 ──
+E_below = np.linspace(0.05, DELTA - 0.02,  60)
+E_above = np.linspace(DELTA + 0.02, 4.0,  120)
+
+S11_below = np.array([compute_S11_below(E) for E in E_below])
+S_above   = [compute_S_above(E) for E in E_above]
+S11_above = np.array([S[0, 0] for S in S_above])
+S21_above = np.array([S[1, 0] for S in S_above])
+
+P11_below = np.abs(S11_below)**2
+P11_above = np.abs(S11_above)**2
+P21_above = np.abs(S21_above)**2
+
+# 总截面（s 波光学定理: sigma_tot = (2pi/k1^2)*(1 - Re S11)）
+def sigma_tot_sw(E_arr, S11_arr):
+    """s-wave total cross section from optical theorem."""
+    k1 = np.sqrt(E_arr)
+    return (2.0 * np.pi / k1**2) * (1.0 - np.real(S11_arr))
+
+sigma_below    = sigma_tot_sw(E_below, S11_below)
+sigma_above_v  = sigma_tot_sw(E_above, S11_above)
+
+# ── 绘图 ──
+fig, axes = plt.subplots(1, 2, figsize=(11, 4.5))
+
+ax = axes[0]
+ax.plot(E_below, P11_below, color='steelblue', lw=2,
+        label=r'$|S_{11}|^2$ (ch. 2 closed)')
+ax.plot(E_above, P11_above, color='steelblue', lw=2, ls='--',
+        label=r'$|S_{11}|^2$ (ch. 2 open)')
+ax.plot(E_above, P21_above, color='tomato', lw=2,
+        label=r'$|S_{21}|^2$ (reaction)')
+ax.axvline(DELTA, color='gray', ls=':', lw=1.5,
+           label=r'Threshold $\Delta = 1$')
+ax.set_xlabel('Energy $E$')
+ax.set_ylabel('Probability')
+ax.set_title('Two-channel S-matrix probabilities')
+ax.legend(fontsize=8)
+ax.grid(alpha=0.3)
+
+ax = axes[1]
+ax.plot(E_below, sigma_below,   color='steelblue', lw=2,
+        label=r'$\sigma_{\rm tot}^{(1)}$ (ch. 2 closed)')
+ax.plot(E_above, sigma_above_v, color='steelblue', lw=2, ls='--',
+        label=r'$\sigma_{\rm tot}^{(1)}$ (ch. 2 open)')
+ax.axvline(DELTA, color='gray', ls=':', lw=1.5,
+           label=r'Threshold $\Delta = 1$')
+ax.set_xlabel('Energy $E$')
+ax.set_ylabel(r'$\sigma_{\rm tot}^{(1)}$  (arb.)')
+ax.set_title('Total cross section (optical theorem, s-wave)')
+ax.legend(fontsize=8)
+ax.grid(alpha=0.3)
+
+fig.tight_layout()
+plt.show()
+```
+
+## 数值验证：幺正性
+
+```{python}
+#| label: unitarity-check
+
+import numpy as np
+from scipy.integrate import solve_ivp
+
+DELTA = 1.0
+V1, V2, W = 3.0, 2.0, 1.5
+R_START, R_MAX = 1e-3, 12.0
+
+def Vmat(r):
+    g = np.exp(-r**2)
+    return np.array([[-V1 * g, -W * g],
+                     [-W * g,  -V2 * g]])
+
+def ode_rhs(r, y, E):
+    u1, du1, u2, du2 = y
+    V = Vmat(r)
+    return [du1,
+            (V[0, 0] - E) * u1 + V[0, 1] * u2,
+            du2,
+            V[1, 0] * u1 + (V[1, 1] - E + DELTA) * u2]
+
+def propagate(E, ic):
+    sol = solve_ivp(ode_rhs, [R_START, R_MAX], ic,
+                    args=(E,), method='DOP853',
+                    rtol=1e-10, atol=1e-12)
+    return sol.y[:, -1]
+
+def _amp(u, du, k, R):
+    eipR = np.exp( 1j * k * R)
+    eimR = np.exp(-1j * k * R)
+    A = (u + du / (1j * k)) / (2.0 * eipR)
+    B = (u - du / (1j * k)) / (2.0 * eimR)
+    return A, B
+
+def compute_S_above(E):
+    k = [np.sqrt(max(E, 1e-14)), np.sqrt(max(E - DELTA, 1e-14))]
+    y1 = propagate(E, [R_START, 1.0, 0.0, 0.0])
+    y2 = propagate(E, [0.0, 0.0, R_START, 1.0])
+
+    def _lam(y1, y2, chan, k_ch):
+        f1 = y1[2*chan+1] - 1j*k_ch*y1[2*chan]
+        f2 = y2[2*chan+1] - 1j*k_ch*y2[2*chan]
+        return -f1 / f2
+
+    S = np.zeros((2, 2), dtype=complex)
+    for inc in range(2):
+        lam = _lam(y1, y2, 1 - inc, k[1 - inc])
+        _, B_inc = _amp(y1[2*inc] + lam*y2[2*inc],
+                        y1[2*inc+1] + lam*y2[2*inc+1],
+                        k[inc], R_MAX)
+        for out in range(2):
+            u_R  = y1[2*out]   + lam*y2[2*out]
+            du_R = y1[2*out+1] + lam*y2[2*out+1]
+            A_out, _ = _amp(u_R, du_R, k[out], R_MAX)
+            S[out, inc] = A_out / B_inc * np.sqrt(k[out] / k[inc])
+    return S
+
+def compute_S11_below(E):
+    k1     = np.sqrt(max(E, 1e-14))
+    kappa2 = np.sqrt(max(DELTA - E, 1e-14))
+    y1 = propagate(E, [R_START, 1.0, 0.0, 0.0])
+    y2 = propagate(E, [0.0, 0.0, R_START, 1.0])
+    f1 = y1[3] + kappa2 * y1[2]
+    f2 = y2[3] + kappa2 * y2[2]
+    lam = -f1 / f2
+    u1_R  = y1[0] + lam * y2[0]
+    du1_R = y1[1] + lam * y2[1]
+    A1, B1 = _amp(u1_R, du1_R, k1, R_MAX)
+    return A1 / B1
+
+# Unitarity above threshold: |S11|^2 + |S21|^2 = 1
+E_test_above = np.linspace(DELTA + 0.05, 4.0, 40)
+for E in E_test_above:
+    S = compute_S_above(E)
+    total = np.abs(S[0, 0])**2 + np.abs(S[1, 0])**2
+    assert abs(total - 1.0) < 1e-6, \
+        f"Unitarity failed above threshold at E={E:.3f}: sum={total:.8f}"
+
+# Elastic unitarity below threshold: |S11|^2 = 1
+E_test_below = np.linspace(0.05, DELTA - 0.05, 20)
+for E in E_test_below:
+    S11 = compute_S11_below(E)
+    val = np.abs(S11)**2
+    assert abs(val - 1.0) < 1e-6, \
+        f"Elastic unitarity failed below threshold at E={E:.3f}: |S11|^2={val:.8f}"
+
+print("multichannel unitarity OK above threshold; closed-channel elastic |S11|=1 below")
+```
+
+## 小结
+
+- 通道 $\alpha$ 由粒子分组 + 内部量子态定义；通道哈密顿量 $\Hmat_\alpha = \Hmat - \Vmat^\alpha$，$\Vmat^\alpha$ 在碎片分离时衰减。
+- 通道 Møller 算符 $\Omega_\pm^\alpha$ 是强极限，等距，值域两两正交。
+- 多通道 S 矩阵 $\Smat = \Omega_-^\dagger \Omega_+$ 在渐近空间 $\Hilb_{\rm as} = \bigoplus_\alpha \Hilb_\alpha$ 上酉；幺正性等价于 $\sum_\beta |\Smat_{\beta\alpha}|^2 = 1$。
+- 微分截面含运动学因子 $p_\beta / p_\alpha$；总截面通过广义光学定理 $\operatorname{Im} f_{\alpha\alpha}(0) = (k_\alpha/4\pi)\,\sigma_{\rm tot}^{(\alpha)}$ 与前向弹性振幅相联系。
+- 耦合径向方程 $-u_i'' + \sum_j V_{ij} u_j = k_i^2 u_i$；开通道振荡，闭通道指数衰减。
+- K 矩阵参数化 $\Smat = (1 + \rmi K)(1 - \rmi K)^{-1}$ 自动保证幺正性，适合共振参数化。
+- 新通道打开时出现 Wigner cusp：$s$ 波反应截面 $\propto \sqrt{E - W_\beta}$，弹性截面斜率突变；根源在于阈值处的支点。
+
+## 进一步阅读
+
+- Taylor《Scattering Theory》第 16–19 章（多通道理论的标准参考）
+- Newton《Scattering Theory of Waves and Particles》第 17 章（Faddeev 方程与三体散射）
+- Burke《R-Matrix Theory of Atomic Collisions》（耦合通道数值方法）
+- 本仓库 LaTeX 教材 `ch_Multichannel.tex`
