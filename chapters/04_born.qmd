@@ -1,1 +1,341 @@
-# placeholder: 04_born
+# Born 级数与 Born 近似
+
+{{< include /_macros.qmd >}}
+
+> **本章目标**：从 Lippmann-Schwinger 方程出发，迭代构造 T 矩阵的 Born 级数；推导第一阶 Born 散射振幅公式（即势的 Fourier 变换）；以 Yukawa 势为例计算 Born 散射截面；定量讨论收敛性——谱半径 $\|\Vmat \Op{G}_0\| < 1$ 是收敛的充分条件；最后在 1D 方势阱模型上数值演示级数在弱/强耦合下的收敛与发散。
+
+> **配套理论详证**：见 LaTeX 教材 `ch08_BornSeries.tex`。
+
+全文取 $\hbar = 1$，$2m = 1$（即 $m = 1/2$），故 $\Hmat_0 = \Op{p}^2$，能量-波数关系 $E = k^2$。
+
+## 从 Lippmann-Schwinger 方程到 Born 级数
+
+Lippmann-Schwinger（LS）方程给出 T 矩阵的算符方程：
+
+$$
+\Tmat(z) = \Vmat + \Vmat\,\Op{G}_0(z)\,\Tmat(z), \qquad \Op{G}_0(z) = (z - \Hmat_0)^{-1}.
+$$
+
+把 $\Vmat \to \lambda\Vmat$，形式上把上式改写为 $[1 - \lambda\Vmat\Op{G}_0]\Tmat = \lambda\Vmat$，逆解得
+
+$$
+\Tmat(z) = [1 - \lambda\Vmat\Op{G}_0(z)]^{-1}\,\lambda\Vmat
+= \sum_{n=0}^{\infty} (\lambda\Vmat\Op{G}_0(z))^{n}\,\lambda\Vmat.
+$$
+
+令 $\lambda \to 1$，得到 **Born 级数**：
+
+$$
+\boxed{
+\Tmat(z) = \Vmat + \Vmat\Op{G}_0(z)\Vmat + \Vmat\Op{G}_0(z)\Vmat\Op{G}_0(z)\Vmat + \cdots
+= \sum_{n=0}^{\infty} \Vmat\,(\Op{G}_0(z)\Vmat)^n.
+}
+$$
+
+用 $\Tmat^{(n)}$ 记第 $n$ 阶近似（截断到 $n$ 项之和）：$\Tmat^{(1)} = \Vmat$，$\Tmat^{(2)} = \Vmat + \Vmat\Op{G}_0\Vmat$，……
+
+对应于散射态波函数，Born 级数写作
+
+$$
+|\psi^+\rangle = |\phi\rangle + \Op{G}_0^+\Vmat|\phi\rangle + \Op{G}_0^+\Vmat\Op{G}_0^+\Vmat|\phi\rangle + \cdots,
+$$
+
+其中 $\Op{G}_0^+ = \Op{G}_0(E + \rmi 0)$。
+
+## 第一阶 Born 近似
+
+仅保留第一项 $\Tmat^{(1)} = \Vmat$，on-shell T 矩阵元为
+
+$$
+t^{(1)}(\vec{k}_f \leftarrow \vec{k}_i)
+= \langle \vec{k}_f | \Vmat | \vec{k}_i \rangle
+= \frac{1}{(2\pi)^3} \int V(\vec{r})\, \rme^{-\rmi(\vec{k}_f - \vec{k}_i)\cdot\vec{r}}\, \rmd^3 r.
+$$
+
+由散射振幅与 T 矩阵的关系 $f = -(2\pi)^2 m \cdot t^{(1)}$（$m = 1/2$，$(2\pi)^2 m = \pi$），得到
+
+$$
+f^B(\theta,\phi) = -\frac{m}{2\pi\hbar^2}
+\int V(\vec{r})\, \rme^{-\rmi \vec{q} \cdot \vec{r}}\, \rmd^3 r,
+\qquad \vec{q} = \vec{k}_f - \vec{k}_i.
+$$
+
+这就是**第一阶 Born 振幅：散射振幅等于势场的 Fourier 变换**，仅依赖动量转移 $\vec{q}$。
+
+对球对称势 $V(r)$，角度积分可以完成，得到
+
+$$
+f^B(\theta) = -2m \int_0^\infty r^2\, \frac{\sin qr}{qr}\, V(r)\, \rmd r,
+\qquad q = 2k\sin\frac{\theta}{2}.
+$$
+
+## Yukawa 势的 Born 结果
+
+Yukawa 势
+
+$$
+V(r) = g\, \frac{\rme^{-\mu r}}{r}
+$$
+
+代入球对称 Born 公式，积分得（取 $\hbar = 1$，$m = 1/2$）：
+
+$$
+f^B(\theta) = \frac{g}{q^2 + \mu^2}, \qquad q = 2k\sin\frac{\theta}{2}.
+$$
+
+取 $\mu \to 0$ 即退化为 Coulomb 散射的 Rutherford 公式。微分截面
+
+$$
+\frac{\rmd\sigma}{\rmd\Omega} = |f^B|^2 = \frac{g^2}{(q^2 + \mu^2)^2}.
+$$
+
+```{python}
+#| label: fig-yukawa-born
+#| fig-cap: "Born cross section for Yukawa potential at several coupling strengths. Increasing coupling enhances forward scattering."
+
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Units: hbar=1, 2m=1, k fixed
+k = 2.0
+mu = 1.0
+theta = np.linspace(0, np.pi, 500)
+q = 2 * k * np.sin(theta / 2)
+
+fig, ax = plt.subplots(figsize=(7, 4))
+for g in [0.5, 1.0, 2.0, 4.0]:
+    fB = g / (q**2 + mu**2)
+    ax.semilogy(np.degrees(theta), fB**2, label=f"g = {g}")
+
+ax.set_xlabel("Scattering angle (degrees)")
+ax.set_ylabel(r"$d\sigma/d\Omega$ (arb. units)")
+ax.set_title("Yukawa Born differential cross section  (k=2, μ=1)")
+ax.legend()
+ax.grid(alpha=0.3)
+fig.tight_layout()
+plt.show()
+```
+
+图中随 $g$ 增大，向前峰显著增强；角宽度 $\sim \mu/k$，能量越高峰越窄。
+
+## 收敛性条件
+
+Born 级数本质上是几何算符级数。类比数标量几何级数 $\sum r^n$ 收敛要求 $|r| < 1$，算符级数要求**谱半径**（spectral radius）满足
+
+$$
+\rho(\Vmat\Op{G}_0) < 1.
+$$
+
+算符范数 $\|\Vmat\Op{G}_0\| < 1$ 是充分条件。这导出两条实用判据：
+
+1. **弱耦合**：存在 $\bar\lambda > 0$ 使 $|\lambda| < \bar\lambda$ 时级数收敛。
+2. **高能**：$E \to \infty$ 时 $\|\Op{G}_0\|_{\mathrm{op}} = \|{(E - \Hmat_0)^{-1}}\| \sim 1/E \to 0$，级数对任何 $V$ 都收敛。
+
+对 Yukawa 势，可靠性判据：
+
+$$
+\text{低能 } (k \ll \mu):\; \left|\frac{gm}{\mu}\right| \ll 1; \qquad
+\text{高能 } (k \gg \mu):\; \left|\frac{gm}{k}\right| \ll 1.
+$$
+
+## 数值演示：1D 方势阱的 Born 级数收敛
+
+用有限矩阵离散化讨论 1D 方势阱中的 Born 级数收敛。方势阱取
+
+$$
+V(x) = \begin{cases} -V_0 & |x| \le a/2 \\ 0 & \text{otherwise} \end{cases}
+$$
+
+在动量格点上离散化：$V_{jl} = \langle k_j | \Vmat | k_l \rangle$，$G_0$ 为对角矩阵 $[G_0]_{jl} = \delta_{jl}/(E + \rmi 0 - k_j^2)$。
+
+"精确" T 矩阵元由线性方程 $(1 - VG_0)T = V$ 直接求解；Born 级数第 $n$ 阶截断为 $T^{(n)} = \sum_{j=0}^{n-1} V(G_0 V)^j$。
+
+```{python}
+#| label: fig-born-convergence
+#| fig-cap: "Convergence of the Born series for the 1D square-well T-matrix element (on-shell). Weak coupling converges geometrically; strong coupling (V0=5) diverges."
+
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Discretise momentum space on [-K, K] with N points
+N = 80
+K = 6.0
+k_grid = np.linspace(-K, K, N, endpoint=False)
+dk = k_grid[1] - k_grid[0]
+
+# Energy (on-shell momentum)
+k0 = 2.0
+E = k0**2
+
+# 1D square-well potential matrix elements in momentum space:
+#   <k'|V|k> = -V0 * a / (2*pi) * sinc((k'-k)*a / (2*pi))
+a = 1.0
+
+def potential_matrix(V0):
+    """N x N matrix of <k_j|V|k_l> for attractive square well of depth V0."""
+    dkk = k_grid[:, None] - k_grid[None, :]
+    return -V0 * a / (2 * np.pi) * np.sinc(dkk * a / (2 * np.pi))
+
+def G0_matrix(eta=1e-4):
+    """Diagonal free Green's function G0(E + i*eta)."""
+    return np.diag(1.0 / (E + 1j * eta - k_grid**2))
+
+def solve_exact_T(V_mat, G0_mat):
+    """Solve (1 - V G0) T = V exactly via linear solve."""
+    A = np.eye(N, dtype=complex) - (V_mat.astype(complex) @ G0_mat) * dk
+    return np.linalg.solve(A, V_mat.astype(complex))
+
+def born_series_errors(V_mat, G0_mat, T_exact, n_orders=12):
+    """
+    Compute |T_partial^(n) - T_exact| (on-shell element) for n = 1..n_orders.
+    T_partial^(n) = sum_{j=0}^{n-1} V (G0 V)^j.
+    Accumulate by repeated application: term_{j+1} = term_j * (G0 V) * dk.
+    """
+    idx = np.argmin(np.abs(k_grid - k0))   # on-shell index
+    T_exact_elem = T_exact[idx, idx]
+    G0V = (G0_mat @ V_mat.astype(complex)) * dk   # G0 V matrix
+
+    T_partial = np.zeros((N, N), dtype=complex)
+    term = V_mat.astype(complex).copy()            # V (G0 V)^0 = V
+    errors = []
+    for _ in range(n_orders):
+        T_partial += term
+        err = abs(T_partial[idx, idx] - T_exact_elem)
+        errors.append(err)
+        term = term @ G0V                          # next order: V (G0 V)^n
+    return errors
+
+G0_mat = G0_matrix()
+n_orders = 12
+orders = np.arange(1, n_orders + 1)
+
+fig, axes = plt.subplots(1, 2, figsize=(11, 4))
+
+# Left: error vs order for several couplings
+ax = axes[0]
+for V0, ls in [(0.5, '-'), (1.0, '--'), (2.0, '-.'), (5.0, ':')]:
+    V_mat = potential_matrix(V0)
+    T_exact = solve_exact_T(V_mat, G0_mat)
+    errs = born_series_errors(V_mat, G0_mat, T_exact, n_orders)
+    ax.semilogy(orders, errs, ls, marker='o', markersize=4, label=f"V0={V0}")
+
+ax.set_xlabel("Born order n")
+ax.set_ylabel(r"$|T^{(n)} - T^{(\infty)}|$")
+ax.set_title("Born series error vs. order (on-shell, 1D square well)")
+ax.legend()
+ax.grid(alpha=0.3)
+
+# Right: ratio test — geometric rate ≈ spectral radius of V G0
+ax2 = axes[1]
+for V0, ls in [(0.5, '-'), (1.0, '--'), (2.0, '-.')]:
+    V_mat = potential_matrix(V0)
+    T_exact = solve_exact_T(V_mat, G0_mat)
+    errs = born_series_errors(V_mat, G0_mat, T_exact, n_orders)
+    ratios = [errs[n] / errs[n-1] for n in range(1, len(errs)) if errs[n-1] > 1e-14]
+    ax2.plot(orders[1:len(ratios)+1], ratios, ls, marker='s', markersize=4, label=f"V0={V0}")
+
+ax2.axhline(1.0, color='k', linestyle=':', linewidth=1, label="ratio = 1")
+ax2.set_xlabel("Born order n")
+ax2.set_ylabel(r"$|T^{(n+1)}-T^\infty| \,/\, |T^{(n)}-T^\infty|$")
+ax2.set_title("Geometric convergence ratio test")
+ax2.legend()
+ax2.grid(alpha=0.3)
+
+fig.tight_layout()
+plt.show()
+```
+
+左图显示：弱耦合（$V_0 = 0.5$）下误差呈几何衰减；强耦合（$V_0 = 10$）下级数发散。右图的比值测试验证收敛区域内比值 $< 1$。
+
+## 数值验证：弱耦合几何收敛
+
+```{python}
+#| label: verification-born
+
+import numpy as np
+
+# --- same setup as above (self-contained) ---
+N = 80
+K = 6.0
+k_grid = np.linspace(-K, K, N, endpoint=False)
+dk = k_grid[1] - k_grid[0]
+k0 = 2.0
+E = k0**2
+a = 1.0
+eta = 1e-4
+
+def potential_matrix(V0):
+    dkk = k_grid[:, None] - k_grid[None, :]
+    return -V0 * a / (2 * np.pi) * np.sinc(dkk * a / (2 * np.pi))
+
+def G0_matrix():
+    return np.diag(1.0 / (E + 1j * eta - k_grid**2))
+
+def solve_exact_T(V_mat, G0_mat):
+    A = np.eye(N, dtype=complex) - (V_mat.astype(complex) @ G0_mat) * dk
+    return np.linalg.solve(A, V_mat.astype(complex))
+
+def born_errors(V0, n_orders=12):
+    """Return list of |T^(n) - T_exact| for n=1..n_orders, using correct Neumann iteration."""
+    V_mat = potential_matrix(V0)
+    G0_mat = G0_matrix()
+    T_exact = solve_exact_T(V_mat, G0_mat)
+    idx = np.argmin(np.abs(k_grid - k0))
+    T_exact_elem = T_exact[idx, idx]
+    G0V = (G0_mat @ V_mat.astype(complex)) * dk
+    T_partial = np.zeros((N, N), dtype=complex)
+    term = V_mat.astype(complex).copy()
+    errors = []
+    for _ in range(n_orders):
+        T_partial += term
+        errors.append(abs(T_partial[idx, idx] - T_exact_elem))
+        term = term @ G0V
+    return errors
+
+# Test weak couplings: ratio test should give r < 1 in convergent regime
+weak_couplings = [0.2, 0.5, 1.0, 1.5]
+all_converge = True
+tol = 1e-12   # ignore ratios when denominator is at machine-noise level
+
+for V0 in weak_couplings:
+    errs = born_errors(V0, n_orders=12)
+    ratios = [errs[n] / errs[n-1]
+              for n in range(1, len(errs))
+              if errs[n-1] > tol]
+    if not ratios:
+        print(f"V0 = {V0:4.1f}  |  converged to machine precision immediately")
+        continue
+    max_ratio = max(ratios)
+    print(f"V0 = {V0:4.1f}  |  max convergence ratio = {max_ratio:.4f}  (< 1 means geometric)")
+    if max_ratio >= 1.0:
+        all_converge = False
+
+assert all_converge, "Born series failed ratio test for weak coupling!"
+print("Born series converges for all sampled weak couplings")
+```
+
+## 物理意义与适用范围小结
+
+Born 近似的适用条件可以归纳为：
+
+| 区制 | 条件 | 物理图像 |
+|------|------|---------|
+| 弱耦合 | $\|VG_0\|_{\mathrm{op}} < 1$ | 多次散射概率远小于单次散射 |
+| 高能 | $k \gg \mu$（Yukawa）| 粒子穿过势场速度快，无暇多次散射 |
+| 强/低能 | 上述条件均不满足 | 需精确解或分波方法 |
+
+特别地，Born 近似在 $O(\lambda)$ 阶给出实的向前散射振幅，**违反幺正性**（光学定理要求 $\mathrm{Im}\,f$ 非零）；这一违反在弱耦合下是 $O(\lambda^2)$ 的小量，计入第二阶 $T^{(2)}$ 后才得到修正。
+
+## 小结
+
+- Born 级数通过迭代 LS 方程得到 Neumann 级数 $\Tmat = \sum_{n \ge 0} \Vmat(\Op{G}_0\Vmat)^n$。
+- 第一阶 Born 振幅 $f^B = -(m/2\pi)\tilde{V}(\vec{q})$，即势的 Fourier 变换，仅依赖动量转移。
+- Yukawa 势 Born 结果：$f^B = g/(q^2 + \mu^2)$（$\hbar = 1$，$2m = 1$）。
+- 收敛条件：$\|\Vmat\Op{G}_0\| < 1$；等价地，弱耦合或高能。
+- 1D 方势阱数值演示验证了弱耦合时的几何收敛与强耦合时的发散。
+
+## 进一步阅读
+
+- Taylor《Scattering Theory》§10（Born 近似）；§10-c Yukawa 结果的因子核查
+- Newton《Scattering Theory of Waves and Particles》第 9–10 章
+- 本仓库 LaTeX 教材 `ch08_BornSeries.tex`（Yukawa 第二阶振幅、电子-原子散射、Dyson 展开与 Feynman 图）
