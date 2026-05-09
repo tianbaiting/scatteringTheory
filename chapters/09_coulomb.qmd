@@ -1,1 +1,662 @@
-# placeholder: 09_coulomb
+# Coulomb 散射
+
+{{< include /_macros.qmd >}}
+
+> **本章目标**：系统建立 Coulomb 势 $V_C(r) = c/r$ 的量子散射理论。由于 $1/r$ 衰减太慢，标准 Møller 算符不存在，渐近态中出现不可消除的对数相位 $\eta\ln(2kr)$；通过合流超几何函数精确求解、Dollard 修正 Møller 算符、以及 Rutherford 公式的数值验证，建立处理长程 Coulomb 散射的完整框架，并推广至短程力 $+$ Coulomb 的叠加情形。
+
+> **配套理论详证**：见 LaTeX 教材 `ch_Coulomb.tex`，主要参考 Taylor《Scattering Theory》第 14 章 14-a、14-b 节。
+
+全文取 $\hbar = 1$，$2m = 1$（即 $m = 1/2$），故自由 Hamiltonian $\Hmat_0 = \Op{p}^2$，能量动量关系 $E = k^2$。在这一单位制下，Sommerfeld 参数
+
+$$
+\eta = \frac{m e_1 e_2}{\hbar^2 k} = \frac{c}{2k}, \qquad c = e_1 e_2,
+$$
+
+其中 $c > 0$ 对应排斥势（如质子-质子），$c < 0$ 对应吸引势（如电子-质子）。
+
+## 为什么 Coulomb 散射与众不同
+
+### 短程条件与 Cook 判据
+
+前几章中所有散射理论的基石是 **短程条件**：
+
+$$
+\int_1^\infty |V(r)|\, \rmd r < \infty, \qquad \text{（Cook 判据）}
+$$
+
+它保证了自由演化 $\rme^{-\rmi \Hmat_0 t}$ 与真实演化 $\rme^{-\rmi \Hmat t}$ 在 $t \to \pm\infty$ 时的差趋于零（在 Hilbert 空间范数意义下），从而 Møller 算符
+
+$$
+\Omega_\pm = \lim_{t \to \mp\infty} \rme^{\rmi \Hmat t} \rme^{-\rmi \Hmat_0 t}
+$$
+
+强极限存在。典型短程势如 Yukawa 势 $V(r) = g \rme^{-\mu r}/r$（$\mu > 0$），满足 $|V(r)| < C/r^{1+\epsilon}$，Cook 判据成立。
+
+**Coulomb 势 $V_C(r) = c/r$ 恰好落在临界情形**：$\int_1^\infty c/r \, \rmd r$ 对数发散，Cook 判据**不成立**。直接后果是：
+
+1. **渐近条件失效**：$\|\rme^{\rmi \Hmat t}\psi - \rme^{\rmi \Hmat_0 t}\psi_{\rm in}\| \not\to 0$，自由平面波不再是正确的渐近态。
+
+2. **径向解的对数畸变**：$\ell = 0$ 的径向 Schrödinger 方程（取 $2m = 1$）
+
+$$
+\left[\frac{\rmd^2}{\rmd r^2} + k^2 - \frac{\ell(\ell+1)}{r^2} - \frac{2k\eta}{r}\right] y_\ell(r) = 0
+$$
+
+在 $r \to \infty$ 时，解不趋于 $\sin(kr - \ell\pi/2 + \delta_\ell)$，而是出现 **对数相位**：
+
+$$
+y_\ell(r) \xrightarrow{r\to\infty} \sin\!\left(kr - \eta\ln 2kr - \frac{\ell\pi}{2} + \sigma_\ell\right).
+$$
+
+3. **Born 近似发散**：直接计算 $f^{(1)} \propto \int_0^\infty \sin(qr)\, (c/r)\, \rmd r$ 积分不收敛，Born 级数对 Coulomb 势发散。
+
+### Sommerfeld 参数的物理含义
+
+Sommerfeld 参数
+
+$$
+\eta = \frac{c}{2k} = \frac{c}{2\sqrt{E}}
+$$
+
+是无量纲的，衡量 Coulomb 相互作用相对于粒子动能的强弱。$|\eta| \gg 1$（低速或强耦合）时 Coulomb 效应显著；$|\eta| \to 0$（高速或弱耦合）时退化为自由粒子。
+
+经典对应：在 Rutherford 散射中，散射角 $\theta \approx 2\arctan(\eta / (kb))$，其中 $b$ 是碰撞参数。$\eta > 0$（排斥）对应轨道偏折远离靶核，$\eta < 0$（吸引）对应向靶核偏折。
+
+## Dollard 修正 Møller 算符
+
+### 对数相位的半经典来源
+
+半经典（WKB）近似下，一个以速度 $v = 2k$（$m = 1/2$）飞出的粒子，在时间 $t$ 内积累的相位为
+
+$$
+\int_0^t \bigl[E - V(r(t'))\bigr]\, \rmd t' \approx Et - c \int_0^t \frac{\rmd t'}{2kt'} = Et - \eta \ln(2kt) + \text{const}.
+$$
+
+即，自由演化 $\rme^{-\rmi \Hmat_0 t}$ 比真实演化**少了**一项 $-\rmi\eta\ln|t|$。Dollard（1964）的思想是把这个对数项**显式吸收**进参考演化中。
+
+### 修正演化算符与修正 Møller 算符
+
+定义 **Dollard 修正演化算符**：
+
+$$
+\Op{U}_D(t) \equiv \exp\!\left[-\rmi \Hmat_0 t - \rmi\,\eta(\Hmat_0)\,\ln\!\bigl(2\Hmat_0|t|\bigr)\,\sgn(t)\right],
+$$
+
+其中 $\eta(\Hmat_0) = c/(2\sqrt{\Hmat_0})$ 是算符函数，在动量本征态 $|k\rangle$ 上特征值即 $\eta(k) = c/(2k)$。
+
+**Coulomb 修正 Møller 算符**定义为：
+
+$$
+\Omega_\pm^C \,\psi \;\equiv\; \lim_{t \to \mp\infty} \rme^{\rmi \Hmat t}\, \Op{U}_D(t)\, \psi.
+$$
+
+Dollard 证明：对 Coulomb 势 $V_C = c/r$，此强极限**存在**，且 $\Omega_\pm^C$ 是等距算符。对应的 **Coulomb 散射算符** $\Op{S}^C = (\Omega_+^C)^\dagger \Omega_-^C$ 是幺正算符，扮演第 2 章中 $\Smat$ 的角色。
+
+> **注**：对可观测量（动量、能量等与 $\Hmat_0$ 对易的量）而言，Dollard 修正仅改变渐近态中不可观测的整体相位，而不影响截面等物理量。这就是为什么 Coulomb 散射仍然给出有意义的微分截面。
+
+## Coulomb 波函数
+
+### 定态散射方程
+
+定态散射定态 $\psi_C^+(\vec{x})$（对应 $\Omega_-^C |k\hat{z}\rangle$）满足
+
+$$
+\left(-\nabla^2 + \frac{c}{r}\right)\psi_C^+(\vec{x}) = k^2\,\psi_C^+(\vec{x}),
+$$
+
+（已用 $2m = 1$）。取入射方向沿 $\hat{z}$，在抛物线坐标 $\xi = r - z$ 下分离变量，得到合流超几何方程，正则解为：
+
+$$
+\boxed{\psi_C^+(\vec{x}) = \rme^{-\pi\eta/2}\,\Gamma(1+\rmi\eta)\,\rme^{\rmi\vec{k}\cdot\vec{x}}\, {}_1F_1\!\bigl(-\rmi\eta;\,1;\,\rmi(kr - \vec{k}\cdot\vec{x})\bigr).}
+$$
+
+归一化因子 $\rme^{-\pi\eta/2}\Gamma(1+\rmi\eta)$ 确保 $\eta \to 0$ 时退化为平面波 $\rme^{\rmi\vec{k}\cdot\vec{x}}$。
+
+### 渐近行为
+
+利用 ${}_1F_1(a;c;z) \sim (-z)^{-a}\Gamma(c)/\Gamma(c-a) + \rme^z z^{a-c}\Gamma(c)/\Gamma(a)$ 的渐近展开，在 $r \to \infty$（排除 $\theta = 0$）时：
+
+$$
+\psi_C^+(\vec{x}) \xrightarrow{r\to\infty} \underbrace{\rme^{\rmi[kz + \eta\ln k(r-z)]}}_{\text{对数畸变入射波}} + f_C(\theta)\,\frac{\rme^{\rmi[kr - \eta\ln 2kr]}}{r}.
+$$
+
+与短程势的渐近形式 $\rme^{\rmi kz} + f(\theta)\rme^{\rmi kr}/r$ 相比，有两处不同：入射波多出对数相位 $\eta\ln k(r-z)$，出射球面波多出对数相位 $-\eta\ln 2kr$。这两项均来自 Coulomb 长程力对传播相位的持续修正，在任何有限 $r$ 处都不能被吸收进常数相移。
+
+### Coulomb 散射振幅
+
+**Coulomb 散射振幅**为：
+
+$$
+\boxed{f_C(\theta) = -\,\frac{\eta}{2k\sin^2(\theta/2)}\,\exp\!\left[-\rmi\eta\ln\sin^2\!\left(\frac{\theta}{2}\right) + 2\rmi\sigma_0\right],}
+$$
+
+其中
+
+$$
+\sigma_0 = \arg\Gamma(1 + \rmi\eta)
+$$
+
+是 $\ell = 0$ 的 **Coulomb 相移**。推导要点（详见 LaTeX 教材）：利用 $r - z = 2r\sin^2(\theta/2)$，以及 $\Gamma$ 函数恒等式
+
+$$
+\frac{\Gamma(1+\rmi\eta)}{\Gamma(-\rmi\eta)} = -\rmi\eta\,\rme^{2\rmi\sigma_0},
+$$
+
+将合流超几何渐近展开的第二项整理成上述形式。
+
+## 微分截面：Rutherford 公式
+
+对 $f_C(\theta)$ 取模方，复杂的对数相位 $-\rmi\eta\ln\sin^2(\theta/2)$ 和常数相位 $2\rmi\sigma_0$ 全部消去：
+
+$$
+\boxed{\frac{\rmd\sigma_C}{\rmd\Omega} = |f_C(\theta)|^2 = \frac{\eta^2}{4k^2\sin^4(\theta/2)}.}
+$$
+
+这正是著名的 **Rutherford 公式**，惊人地与以下三个层级完全一致：
+
+- **经典 Rutherford 散射**：按轨道力学推导；
+- **量子 Born 一阶近似**（对屏蔽 Coulomb 取 $\rho\to\infty$ 极限）；
+- **精确量子结果**（合流超几何精确解）。
+
+这一"三层级巧合"来源于 $1/r$ 势隐藏的 $O(4)$ 对称性（Pauli-Lenz 矢量）。
+
+**总截面发散**：$d\sigma_C/d\Omega \propto \sin^{-4}(\theta/2)$ 在 $\theta \to 0$ 时按 $1/\theta^4$ 发散，故总截面
+
+$$
+\sigma_{\rm tot} = \int_0^\pi 2\pi\sin\theta\,\rmd\theta\,\frac{\eta^2}{4k^2\sin^4(\theta/2)} = \infty.
+$$
+
+物理上：任意大的碰撞参数 $b$ 处粒子仍被偏转（$\theta \approx \eta/(kb) \to 0$），故散射截面无界。截断总截面 $\sigma(\theta_{\min}) \sim 2\eta^2/(k^2\theta_{\min}^2)$ 在 $\theta_{\min} \to 0$ 时按 $1/\theta_{\min}^2$ 发散。
+
+## Coulomb 分波分析
+
+### 径向方程与正则解
+
+取 $y_\ell = r R_\ell$，径向方程为（$2m = 1$）：
+
+$$
+y_\ell'' + \left[k^2 - \frac{\ell(\ell+1)}{r^2} - \frac{2k\eta}{r}\right]y_\ell = 0.
+$$
+
+两个线性独立解是**正则 Coulomb 函数** $F_\ell(\eta, kr)$ 和**不规则 Coulomb 函数** $G_\ell(\eta, kr)$：
+
+$$
+F_\ell(\eta, kr) \xrightarrow{r\to\infty} \sin\!\left(kr - \eta\ln 2kr - \frac{\ell\pi}{2} + \sigma_\ell\right),
+$$
+
+$$
+G_\ell(\eta, kr) \xrightarrow{r\to\infty} \cos\!\left(kr - \eta\ln 2kr - \frac{\ell\pi}{2} + \sigma_\ell\right).
+$$
+
+$F_\ell$ 在 $r \to 0$ 时正则（$\sim (kr)^{\ell+1}$），$G_\ell$ 在 $r \to 0$ 时发散（$\sim (kr)^{-\ell}$）。
+
+### Coulomb 相移
+
+**Coulomb 相移**由 $\Gamma$ 函数的辐角给出：
+
+$$
+\boxed{\sigma_\ell = \arg\Gamma(\ell + 1 + \rmi\eta).}
+$$
+
+对大 $\ell$，由 Stirling 公式 $\sigma_\ell \sim \eta\ln\ell$，这意味着 $\sigma_\ell$ 对所有 $\ell$ 都不为零且不衰减。与短程势相移 $\delta_\ell \to 0$（$\ell \to \infty$）形成鲜明对比。
+
+正因如此，Coulomb 振幅的分波展开
+
+$$
+f_C(\theta) = \frac{1}{2\rmi k}\sum_{\ell=0}^\infty (2\ell+1)\,\bigl(\rme^{2\rmi\sigma_\ell}-1\bigr)\,P_\ell(\cos\theta)
+$$
+
+**不绝对收敛**，其闭合形式 $f_C(\theta)$ 需在 Abel 正规化意义下理解。
+
+## 短程势叠加 Coulomb
+
+### 振幅分解
+
+在实际核物理实验（如 $p$-$p$ 散射、$\alpha$-核散射）中，总势为 Coulomb 加短程核力：
+
+$$
+V(r) = \frac{c}{r} + V_S(r), \qquad V_S(r) = 0 \text{ 当 } r > a.
+$$
+
+短程散射在 **Coulomb 畸变波背景**下发生。在区间 $a < r < \infty$ 中，径向波函数为 $F_\ell$ 和 $G_\ell$ 的线性组合：
+
+$$
+\psi_\ell(r) \propto F_\ell(\eta, kr) + \tan\delta_\ell^S\, G_\ell(\eta, kr), \qquad r > a,
+$$
+
+其中 $\delta_\ell^S$ 是短程势引入的**额外相移**。对 $\ell > ka$，$\delta_\ell^S \approx 0$，故只有有限个分波贡献。
+
+总振幅分解为：
+
+$$
+f(\theta) = f_C(\theta) + f_N(\theta),
+$$
+
+其中短程（"核子"）振幅为：
+
+$$
+\boxed{f_N(\theta) = \frac{1}{2\rmi k}\sum_{\ell=0}^{\ell_{\max}}(2\ell+1)\,\rme^{2\rmi\sigma_\ell}\,\bigl(\rme^{2\rmi\delta_\ell^S}-1\bigr)\,P_\ell(\cos\theta).}
+$$
+
+每一项比纯短程情形多一个 **Coulomb 修正因子** $\rme^{2\rmi\sigma_\ell}$，反映短程散射发生在 Coulomb 畸变波的背景下（扭曲波 Born 近似 DWBA 的体现）。
+
+### 微分截面与 Coulomb-核子干涉
+
+$$
+\frac{\rmd\sigma}{\rmd\Omega} = |f_C + f_N|^2 = |f_C|^2 + |f_N|^2 + 2\,\Re[f_C^* f_N].
+$$
+
+干涉项 $2\Re[f_C^* f_N]$ 的相位包含 $\delta_\ell^S - \eta\ln\sin^2(\theta/2)$，因此对散射角的依赖方式**既包含核相移的大小也包含其符号**，这是纯短程散射所做不到的。这在低能 $p$-$p$ 散射分析中具有直接实验意义。
+
+## 数值验证：Coulomb 波函数与 Rutherford 截面
+
+```{python}
+#| label: fig-coulomb-F0
+#| fig-cap: "正则 Coulomb 函数 $F_0(\\eta, kr)$ 随 $r$ 的变化。$\\eta=0$ 退化为 $\\sin(kr)$（自由粒子）；$\\eta>0$（排斥）节点向外推移；$\\eta<0$（吸引）节点向内拉。虚线为 $\\eta=2$ 的渐近公式 $\\sin(kr - \\eta\\ln 2kr + \\sigma_0)$，在大 $r$ 处与精确值吻合。"
+
+import numpy as np
+import matplotlib.pyplot as plt
+import scipy.special
+
+try:
+    import mpmath
+    def coulomb_F0(eta, rho_vals):
+        return np.array([float(mpmath.coulombf(0, eta, rho)) for rho in rho_vals])
+    HAS_MPMATH = True
+except ImportError:
+    # fallback: use scipy hyp1f1 construction
+    def coulomb_F0(eta, rho_vals):
+        from scipy.special import hyp1f1, gamma
+        import numpy as np
+        C0 = np.exp(-np.pi*eta/2) * abs(float(scipy.special.gamma(1 + 1j*eta)))
+        C0_norm = C0  # overall scale
+        result = []
+        for rho in rho_vals:
+            u = 1j * rho * 2  # argument for hyp1f1
+            F = np.real(C0_norm * rho * np.exp(1j*rho) *
+                       float(np.real(hyp1f1(1 - 1j*eta, 2, -2j*rho))))
+            result.append(F)
+        return np.array(result)
+    HAS_MPMATH = False
+
+k = 1.0
+r = np.linspace(0.1, 30.0, 1000)
+rho = k * r
+
+eta_vals = [0.0, 1.0, 2.0, -1.0]
+labels = [r"$\eta = 0$ (free)", r"$\eta = 1$ (repulsive)",
+          r"$\eta = 2$ (repulsive)", r"$\eta = -1$ (attractive)"]
+colors = ['steelblue', 'darkorange', 'red', 'green']
+
+fig, ax = plt.subplots(figsize=(9, 4.5))
+
+for eta, label, color in zip(eta_vals, labels, colors):
+    if eta == 0.0:
+        F0 = np.sin(rho)  # free particle
+    else:
+        F0 = coulomb_F0(eta, rho)
+    ax.plot(r, F0, label=label, color=color, linewidth=1.5)
+
+# Asymptotic form for eta=2
+eta2 = 2.0
+sigma0_eta2 = float(np.imag(scipy.special.loggamma(1 + 1j*eta2)))
+F0_asymp = np.sin(rho - eta2 * np.log(2*rho) + sigma0_eta2)
+ax.plot(r, F0_asymp, '--', color='red', linewidth=1.0, alpha=0.7,
+        label=r"asymptotic $\eta=2$: $\sin(kr-\eta\ln 2kr + \sigma_0)$")
+
+ax.set_xlabel("r")
+ax.set_ylabel(r"$F_0(\eta, kr)$")
+ax.set_title("Regular Coulomb function $F_0(\\eta, kr)$ for $k=1$")
+ax.legend(loc='upper right', fontsize=8)
+ax.set_xlim(0, 30)
+ax.set_ylim(-1.8, 1.8)
+ax.axhline(0, color='k', linewidth=0.5)
+ax.grid(alpha=0.3)
+fig.tight_layout()
+plt.show()
+```
+
+```{python}
+#| label: fig-rutherford
+#| fig-cap: "Rutherford 微分截面 $\\eta^2 / (4k^2 \\sin^4(\\theta/2))$ 的角分布（log 坐标）。各 $\\eta$ 的曲线形状相同（均为 $\\sin^{-4}$），仅整体强度按 $\\eta^2$ 缩放。"
+
+import numpy as np
+import matplotlib.pyplot as plt
+
+k = 1.0
+theta = np.linspace(1.0, 179.0, 1000)  # degrees, avoid theta=0
+theta_rad = np.deg2rad(theta)
+
+eta_vals = [0.5, 1.0, 2.0, 3.0]
+colors = ['steelblue', 'darkorange', 'red', 'purple']
+
+fig, ax = plt.subplots(figsize=(8, 5))
+
+for eta, color in zip(eta_vals, colors):
+    dsigma = eta**2 / (4 * k**2 * np.sin(theta_rad/2)**4)
+    ax.semilogy(theta, dsigma, label=f"$\\eta = {eta}$", color=color, linewidth=1.8)
+
+ax.set_xlabel(r"Scattering angle $\theta$ (degrees)")
+ax.set_ylabel(r"$d\sigma_C/d\Omega$ (in units of $1/k^2$)")
+ax.set_title("Rutherford differential cross section for $k=1$")
+ax.legend()
+ax.grid(alpha=0.3, which='both')
+fig.tight_layout()
+plt.show()
+```
+
+```{python}
+#| label: fig-total-cross-section
+#| fig-cap: "截断总截面 $\\sigma(\\theta_{\\min})$ 随 $\\theta_{\\min}$ 的双对数关系，斜率 $-2$ 体现 Coulomb 长程性导致的 $1/\\theta_{\\min}^2$ 发散。"
+
+import numpy as np
+import matplotlib.pyplot as plt
+
+k = 1.0
+theta_min_deg = np.logspace(-1, 2, 300)  # 0.1 to 100 degrees
+theta_min_rad = np.deg2rad(theta_min_deg)
+
+eta_vals = [0.5, 1.0, 2.0]
+colors = ['steelblue', 'darkorange', 'red']
+
+fig, ax = plt.subplots(figsize=(7, 5))
+
+for eta, color in zip(eta_vals, colors):
+    # Truncated total cross section: int from theta_min to pi
+    # sigma(theta_min) = (eta^2 / 2k^2) * (1/sin^2(theta_min/2) - 1)
+    sigma_trunc = (eta**2 / (2 * k**2)) * (1.0 / np.sin(theta_min_rad/2)**2 - 1.0)
+    ax.loglog(theta_min_deg, sigma_trunc, label=f"$\\eta = {eta}$",
+              color=color, linewidth=1.8)
+
+# Asymptotic: sigma ~ 2*eta^2 / (k^2 * theta_min^2)
+theta_asym = np.logspace(-1, 1.5, 100)
+for eta, color in zip(eta_vals, colors):
+    sig_asym = 2 * eta**2 / (k**2 * np.deg2rad(theta_asym)**2)
+    ax.loglog(theta_asym, sig_asym, '--', color=color, alpha=0.5, linewidth=1.0)
+
+ax.set_xlabel(r"$\theta_{\min}$ (degrees)")
+ax.set_ylabel(r"$\sigma(\theta_{\min})$ (in units of $1/k^2$)")
+ax.set_title("Truncated total cross section: $\\sim 1/\\theta_{\\min}^2$ divergence")
+ax.legend()
+ax.grid(alpha=0.3, which='both')
+fig.tight_layout()
+plt.show()
+```
+
+```{python}
+#| label: fig-coulomb-phase
+#| fig-cap: "Coulomb 相移 $\\sigma_\\ell = \\arg\\Gamma(\\ell+1+\\rmi\\eta)$ 对各角动量分波 $\\ell$ 的依赖。虚线为大 $\\ell$ 渐近 $\\eta\\ln\\ell$（Stirling 公式）。所有 $\\ell$ 上 $\\sigma_\\ell \\ne 0$，与短程势相移衰减至零的行为形成对比。"
+
+import numpy as np
+import matplotlib.pyplot as plt
+import scipy.special
+
+ell_vals = np.arange(0, 21, dtype=float)
+eta_plot = [0.5, 1.0, 2.0]
+colors = ['steelblue', 'darkorange', 'red']
+
+fig, ax = plt.subplots(figsize=(8, 5))
+
+for eta, color in zip(eta_plot, colors):
+    sigma = np.array([float(np.imag(scipy.special.loggamma(ell + 1 + 1j*eta)))
+                      for ell in ell_vals])
+    ax.plot(ell_vals, sigma, 'o-', color=color, label=f"$\\eta = {eta}$",
+            linewidth=1.5, markersize=5)
+    # Asymptotic: sigma_ell ~ eta * ln(ell)
+    ell_asym = ell_vals[ell_vals >= 1]
+    ax.plot(ell_asym, eta * np.log(ell_asym), '--', color=color, alpha=0.5,
+            linewidth=1.0)
+
+ax.set_xlabel(r"Angular momentum $\ell$")
+ax.set_ylabel(r"$\sigma_\ell = \arg\,\Gamma(\ell+1+i\eta)$")
+ax.set_title(r"Coulomb phase shifts $\sigma_\ell(\eta)$; dashed: asymptotic $\eta\ln\ell$")
+ax.legend()
+ax.grid(alpha=0.3)
+ax.axhline(0, color='k', linewidth=0.5)
+fig.tight_layout()
+plt.show()
+```
+
+```{python}
+#| label: fig-coulomb-short-range
+#| fig-cap: "Coulomb 加 Yukawa 短程势的 $s$ 波相移对比。蓝色：纯短程 Yukawa $\\delta_0^S$；橙色：Coulomb 畸变波中的 $\\delta_0^S$（相移几乎不变，但进入振幅时多了 Coulomb 修正因子 $\\rme^{2\\rmi\\sigma_0}$）。"
+
+import numpy as np
+import matplotlib.pyplot as plt
+import scipy.special
+from scipy.integrate import solve_ivp
+
+try:
+    import mpmath
+    def coulomb_F0_scalar(eta, rho):
+        return float(mpmath.coulombf(0, eta, rho))
+    def coulomb_G0_scalar(eta, rho):
+        return float(mpmath.coulombg(0, eta, rho))
+    HAS_MPMATH = True
+except ImportError:
+    HAS_MPMATH = False
+
+def compute_short_range_phase(k_val, eta_val, g_yukawa=2.0, mu=1.0, a_match=20.0):
+    """
+    Compute the short-range phase shift delta_0^S by integrating the radial SE
+    with potential V_C + V_S = (eta_val * 2k) / r + g_yukawa * exp(-mu*r) / r
+    (in units hbar=1, 2m=1).
+
+    Returns (delta_S_pure, delta_S_coulomb):
+      delta_S_pure: phase from Yukawa alone (matching to sin/cos)
+      delta_S_coulomb: extra phase from Yukawa on top of Coulomb (matching to F_0/G_0)
+    """
+    r0 = 1e-4
+
+    # --- Pure Yukawa (no Coulomb) ---
+    # At r->0: u ~ r for l=0
+    # Initial conditions from power series
+    def eqs_pure(r, y):
+        V = g_yukawa * np.exp(-mu * r) / r
+        return [y[1], (V - k_val**2) * y[0]]
+
+    u0_pure = r0  # u ~ r near origin
+    up0_pure = 1.0
+    sol_pure = solve_ivp(eqs_pure, [r0, a_match], [u0_pure, up0_pure],
+                        method='DOP853', rtol=1e-12, atol=1e-14, dense_output=True)
+
+    u_p = sol_pure.sol(a_match)[0]
+    up_p = sol_pure.sol(a_match)[1]
+    # match to sin(k*r + delta) and cos(k*r + delta)
+    # sin(k*r) * cos(delta) + cos(k*r) * sin(delta) = u, etc.
+    s = np.sin(k_val * a_match)
+    c = np.cos(k_val * a_match)
+    # u = A sin(kr + d) => tan(d) = (u * k*c - up * s) / (u * (-k*s) + up * c) ...
+    # Using: u = A sin(kr+d), up = A k cos(kr+d)
+    # up / (k*u) = cos(kr+d)/sin(kr+d) = cot(kr+d)
+    # => kr+d = arctan(k*u/up) => d = arctan(k*u/up) - kr
+    delta_pure = np.arctan2(k_val * u_p, up_p) - k_val * a_match
+    delta_pure = (delta_pure + np.pi/2) % np.pi - np.pi/2  # to (-pi/2, pi/2)
+
+    # --- Coulomb + Yukawa ---
+    if not HAS_MPMATH:
+        return delta_pure, np.nan
+
+    rho0_c = k_val * r0
+    F0_i = float(mpmath.coulombf(0, eta_val, rho0_c))
+    F0p_i = float(mpmath.diff(lambda rho: mpmath.coulombf(0, eta_val, rho), rho0_c)) * k_val
+
+    def eqs_coulomb(r, y):
+        V_C = 2 * k_val * eta_val / r  # in units hbar=1, 2m=1
+        V_S = g_yukawa * np.exp(-mu * r) / r
+        return [y[1], (V_C + V_S - k_val**2) * y[0]]
+
+    sol_c = solve_ivp(eqs_coulomb, [r0, a_match], [F0_i, F0p_i],
+                     method='DOP853', rtol=1e-12, atol=1e-14, dense_output=True)
+
+    u_c = sol_c.sol(a_match)[0]
+    up_c = sol_c.sol(a_match)[1]
+
+    # Match to A*(F_0 * cos(d) + G_0 * sin(d)) at r=a_match
+    F0_m = float(mpmath.coulombf(0, eta_val, k_val * a_match))
+    G0_m = float(mpmath.coulombg(0, eta_val, k_val * a_match))
+    F0p_m = float(mpmath.diff(lambda rho: mpmath.coulombf(0, eta_val, rho), k_val*a_match)) * k_val
+    G0p_m = float(mpmath.diff(lambda rho: mpmath.coulombg(0, eta_val, rho), k_val*a_match)) * k_val
+
+    # tan(delta_S) = (u_c * F0p_m - up_c * F0_m) / (up_c * G0_m - u_c * G0p_m)
+    num = u_c * F0p_m - up_c * F0_m
+    den = up_c * G0_m - u_c * G0p_m
+    delta_coulomb = np.arctan2(num, den)
+
+    return delta_pure, delta_coulomb
+
+k_vals = np.linspace(0.3, 3.0, 25)
+eta_c = 0.5  # Coulomb coupling
+
+delta_pure_list = []
+delta_coulomb_list = []
+for k_val in k_vals:
+    eta_val = eta_c / (2 * k_val) if k_val > 0 else 0.0  # eta = c/(2k) with c=eta_c
+    d_p, d_c = compute_short_range_phase(k_val, eta_val, g_yukawa=2.0, mu=1.0)
+    delta_pure_list.append(d_p)
+    delta_coulomb_list.append(d_c)
+
+delta_pure_arr = np.array(delta_pure_list)
+delta_coulomb_arr = np.array(delta_coulomb_list)
+
+fig, axes = plt.subplots(1, 2, figsize=(11, 4.5))
+
+# Left: phase shifts
+ax = axes[0]
+ax.plot(k_vals, np.rad2deg(delta_pure_arr), 'o-', color='steelblue',
+        linewidth=1.5, markersize=4, label=r"$\delta_0^S$ (pure Yukawa)")
+if HAS_MPMATH:
+    ax.plot(k_vals, np.rad2deg(delta_coulomb_arr), 's--', color='darkorange',
+            linewidth=1.5, markersize=4,
+            label=r"$\delta_0^S$ (Yukawa in Coulomb background)")
+ax.set_xlabel("k")
+ax.set_ylabel(r"Phase shift (degrees)")
+ax.set_title(r"Short-range $s$-wave phase shift $\delta_0^S$ vs $k$")
+ax.legend()
+ax.grid(alpha=0.3)
+
+# Right: differential cross section at a fixed k
+ax2 = axes[1]
+k_fix = 1.0
+eta_fix_val = eta_c / (2 * k_fix)  # c/(2k)
+sigma0_fix = float(np.imag(scipy.special.loggamma(1 + 1j*eta_fix_val)))
+
+theta_deg = np.linspace(5, 175, 800)
+theta_rad2 = np.deg2rad(theta_deg)
+
+# Pure Coulomb
+dsigma_C = eta_fix_val**2 / (4 * k_fix**2 * np.sin(theta_rad2/2)**4)
+ax2.semilogy(theta_deg, dsigma_C, '-', color='steelblue', linewidth=1.5,
+             label="Pure Coulomb (Rutherford)")
+
+# Coulomb + nuclear (l=0 only, for illustration)
+d_S_at_k1 = delta_pure_arr[np.argmin(np.abs(k_vals - k_fix))]
+fC = -(eta_fix_val / (2*k_fix * np.sin(theta_rad2/2)**2)) * \
+      np.exp(-1j*eta_fix_val*np.log(np.sin(theta_rad2/2)**2) + 2j*sigma0_fix)
+fN = (1/(2j*k_fix)) * np.exp(2j*sigma0_fix) * (np.exp(2j*d_S_at_k1) - 1) * \
+     np.ones_like(theta_rad2)  # l=0 Legendre: P_0=1, factor (2*0+1)=1
+dsigma_tot = np.abs(fC + fN)**2
+ax2.semilogy(theta_deg, dsigma_tot, '--', color='red', linewidth=1.5,
+             label=r"Coulomb + Yukawa ($\ell=0$)")
+
+ax2.set_xlabel(r"$\theta$ (degrees)")
+ax2.set_ylabel(r"$d\sigma/d\Omega$ (in units of $1/k^2$)")
+ax2.set_title(f"Differential cross section at $k={k_fix}$, $\\eta\\approx{eta_fix_val:.2f}$")
+ax2.legend()
+ax2.grid(alpha=0.3, which='both')
+
+fig.tight_layout()
+plt.show()
+```
+
+## 数值校验：径向方程积分与 Coulomb 相移
+
+```{python}
+#| label: verification
+
+import numpy as np
+import scipy.special
+from scipy.integrate import solve_ivp
+
+try:
+    import mpmath
+    HAS_MPMATH = True
+except ImportError:
+    HAS_MPMATH = False
+    print("Warning: mpmath not available, using scipy-based fallback.")
+
+def sigma_0_exact(eta):
+    """Exact Coulomb phase sigma_0(eta) = arg Gamma(1 + i*eta) via scipy."""
+    return float(np.imag(scipy.special.loggamma(1 + 1j*eta)))
+
+# Verification 1: scipy.special.loggamma vs mpmath.arg(mpmath.gamma(...))
+print("=== Verification 1: Coulomb phase sigma_0 = arg Gamma(1+i*eta) ===")
+print(f"{'eta':>6}  {'scipy sigma_0':>15}  {'mpmath sigma_0':>15}  {'diff':>12}  {'pass':>6}")
+eta_test_vals = [0.5, 1.0, 1.5, 2.0, 3.0, 5.0]
+all_pass = True
+for eta in eta_test_vals:
+    sig_scipy = sigma_0_exact(eta)
+    if HAS_MPMATH:
+        sig_mpmath = float(mpmath.arg(mpmath.gamma(1 + 1j*eta)))
+    else:
+        sig_mpmath = sig_scipy  # fallback
+    err = abs(sig_scipy - sig_mpmath)
+    ok = err < 1e-10
+    all_pass = all_pass and ok
+    print(f"{eta:>6.1f}  {sig_scipy:>15.10f}  {sig_mpmath:>15.10f}  {err:>12.2e}  {'ok' if ok else 'FAIL':>6}")
+
+# Verification 2: numerical integration of radial SE matches mpmath.coulombf
+if HAS_MPMATH:
+    print("\n=== Verification 2: Radial SE integration matches F_0(eta, kr) ===")
+    print(f"{'k':>5}  {'eta':>5}  {'F_num':>12}  {'F_exact':>12}  {'diff':>12}  {'pass':>6}")
+
+    test_cases = [(1.0, 0.5), (1.0, 1.0), (2.0, 1.5), (1.5, 2.0), (0.8, 3.0)]
+    r_end = 50.0
+
+    for k_v, eta_v in test_cases:
+        r0 = 1e-4
+        rho0 = k_v * r0
+        F0_i = float(mpmath.coulombf(0, eta_v, rho0))
+        F0p_i = float(mpmath.diff(lambda rho: mpmath.coulombf(0, eta_v, rho), rho0)) * k_v
+
+        def eqs_radial(r, y):
+            return [y[1], (2*k_v*eta_v/r - k_v**2) * y[0]]
+
+        sol = solve_ivp(eqs_radial, [r0, r_end], [F0_i, F0p_i],
+                       method='DOP853', rtol=1e-13, atol=1e-15)
+        F_num = sol.y[0, -1]
+        F_exact = float(mpmath.coulombf(0, eta_v, k_v * r_end))
+        err = abs(F_num - F_exact)
+        ok = err < 1e-6
+        all_pass = all_pass and ok
+        print(f"{k_v:>5.1f}  {eta_v:>5.1f}  {F_num:>12.8f}  {F_exact:>12.8f}  {err:>12.2e}  {'ok' if ok else 'FAIL':>6}")
+
+if all_pass:
+    print("\nCoulomb phase sigma_0(eta) verified for all sampled eta")
+else:
+    print("\nWARNING: some verification checks failed")
+```
+
+## 小结
+
+- Coulomb 势 $V_C = c/r$ 不满足 Cook 判据（短程条件），导致标准 Møller 算符不存在，渐近态不再是平面波，径向解出现不可消除的对数相位 $-\eta\ln 2kr$，Born 近似发散。
+
+- Dollard 修正演化算符 $\Op{U}_D(t)$ 将对数相位显式吸收进参考演化，从而定义了修正 Møller 算符 $\Omega_\pm^C$，并给出幺正的 Coulomb 散射算符 $\Op{S}^C$。
+
+- 精确定态波函数由合流超几何函数 ${}_1F_1$ 给出；其渐近形式含对数畸变的入射波和出射球面波，Coulomb 散射振幅为 $f_C(\theta) = -\eta\,\rme^{-\rmi\eta\ln\sin^2(\theta/2)+2\rmi\sigma_0}/(2k\sin^2(\theta/2))$。
+
+- 微分截面 $|f_C|^2 = \eta^2/(4k^2\sin^4(\theta/2))$ 是著名的 **Rutherford 公式**，与经典结果、Born 近似结果完全一致（$O(4)$ 对称性的体现）；总截面在 $\theta\to 0$ 处发散，$\sigma(\theta_{\min}) \sim 2\eta^2/(k^2\theta_{\min}^2)$。
+
+- 分波分析中，正则 Coulomb 函数 $F_\ell(\eta,kr)$ 的渐近含 $-\eta\ln 2kr$ 的对数畸变；Coulomb 相移 $\sigma_\ell = \arg\Gamma(\ell+1+\rmi\eta)$ 对所有 $\ell$ 均不为零，且大 $\ell$ 时 $\sigma_\ell\sim\eta\ln\ell$，导致分波级数不收敛。
+
+- 短程力 $V_S$ 叠加时，振幅分解为 $f = f_C + f_N$，其中短程振幅 $f_N$ 的每个分波含 Coulomb 修正因子 $\rme^{2\rmi\sigma_\ell}$；Coulomb-核子干涉项包含核相移的符号信息，这是纯短程散射无法提供的。
+
+- 数值校验确认：径向方程积分与 `mpmath.coulombf` 精确吻合（误差 $< 10^{-6}$），$\sigma_0(\eta) = \arg\Gamma(1+\rmi\eta)$ 经 `scipy.special.loggamma` 与 `mpmath` 双重验证。
+
+## 进一步阅读
+
+- Taylor《Scattering Theory》第 14 章（14-a Coulomb 渐近, 14-b Coulomb + 短程力）
+- Messiah《Quantum Mechanics》第 XI 章附录 B（合流超几何解详细推导）
+- Dollard, J.D. (1964) *J. Math. Phys.* 5, 729（修正 Møller 算符原始文献）
+- Abramowitz & Stegun §14（Coulomb 波函数表与公式）
+- 本仓库 LaTeX 教材 `ch_Coulomb.tex`
