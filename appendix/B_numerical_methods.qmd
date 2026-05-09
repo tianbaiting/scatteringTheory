@@ -33,11 +33,11 @@ $$
 $$
 FFT 的精度是**谱精度**（spectral accuracy）——对光滑函数误差按 $\rme^{-cN}$ 指数衰减，远优于有限差分的 $O(h^p)$，代价是要求周期 BC 且势函数可以接受折叠（wrap-around）效应。
 
-以下代码比较三种方法对特征值 $E_n = (n\pi/L)^2$（Dirichlet BC 下自由粒子的精确特征值）的精度。
+以下代码比较三种方法对特征值 $E_n = (n\pi/L)^2$（Dirichlet BC 下自由粒子的精确特征值）的精度。FFT 演示中，将 $-\partial_x^2$ 矩阵作用于固定的非平凡函数（Gaussian bump），通过与精确本征值对比揭示指数收敛。
 
 ```{python}
 #| label: fig-discretization-accuracy
-#| fig-cap: "三种离散化方案的特征值误差：二阶有限差分（FD2）、四阶有限差分（FD4）与 FFT 伪谱法（周期 BC，误差用调整后的参考特征值），纵轴取绝对误差。FFT 对光滑本征函数显示出指数收敛（谱精度），FD2 和 FD4 分别以 $O(h^2)$ 和 $O(h^4)$ 收敛。"
+#| fig-cap: "三种离散化方案的误差收敛：FD2 和 FD4 以 $O(h^2)$/$O(h^4)$ 收敛（对第 $m_0=2$ 个本征值），FFT 伪谱法（周期 BC）通过对非平凡 Gaussian-bump 函数求 $-\\partial_x^2$ 的最低本征值，展示指数收敛（谱精度）。"
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -45,74 +45,100 @@ import matplotlib.pyplot as plt
 def eigenvalues_fd2(N, L):
     """2nd-order finite-difference eigenvalues of -d^2/dx^2 on [0,L], Dirichlet BC."""
     h = L / (N + 1)
-    # Tridiagonal matrix
     diag = 2.0 * np.ones(N)
     off  = -1.0 * np.ones(N - 1)
     M = np.diag(diag) + np.diag(off, 1) + np.diag(off, -1)
     return np.sort(np.linalg.eigvalsh(M)) / h**2
 
 def eigenvalues_fd4(N, L):
-    """4th-order finite-difference eigenvalues of -d^2/dx^2 on [0,L], Dirichlet BC."""
+    """
+    4th-order finite-difference eigenvalues of -d^2/dx^2 on [0,L], Dirichlet BC.
+    Boundary correction: at rows i=0 and i=N-1 the stencil uses antisymmetric ghost
+    points (u_{-1}=0, u_{-2}=-u_0 for Dirichlet), which changes the diagonal entry
+    from 30/12 to 29/12 at both boundary rows, restoring O(h^4) convergence.
+    """
     h = L / (N + 1)
-    # Coefficients: -1/12, 4/3, -5/2, 4/3, -1/12
-    c0 =  5.0 / 2.0
-    c1 = -4.0 / 3.0
+    # Interior stencil coefficients: (-1/12, 4/3, -5/2, 4/3, -1/12) times 1/h^2
+    c0 = 30.0 / 12.0   # = 5/2
+    c1 = -16.0 / 12.0  # = -4/3
     c2 =  1.0 / 12.0
-    diag = c0  * np.ones(N)
-    off1 = c1  * np.ones(N - 1)
-    off2 = c2  * np.ones(N - 2)
+    diag = c0 * np.ones(N)
+    # Boundary rows: ghost-point correction reduces diagonal by 1/12
+    diag[0]  = 29.0 / 12.0
+    diag[-1] = 29.0 / 12.0
+    off1 = c1 * np.ones(N - 1)
+    off2 = c2 * np.ones(N - 2)
     M = (np.diag(diag)
          + np.diag(off1, 1) + np.diag(off1, -1)
          + np.diag(off2, 2) + np.diag(off2, -2))
     return np.sort(np.linalg.eigvalsh(M)) / h**2
 
-def eigenvalues_fft_periodic(N, L):
+# FFT spectral accuracy demo on periodic [-L/2, L/2]:
+# Build the full -d^2/dx^2 matrix in FFT basis as a diagonal operator,
+# applied to a Gaussian-bump function (non-trivial, smooth, periodic).
+# We estimate the ground-state eigenvalue of H0 + V_bump where
+#   V_bump(x) = A * exp(-x^2 / sigma^2), A=5, sigma=0.5
+# via the Rayleigh quotient on the FFT grid; the analytic reference is
+# computed on a very fine grid (N=2048). This isolates spectral convergence.
+def fft_ground_state_energy(N, L, A=5.0, sigma=0.5):
     """
-    FFT pseudo-spectral eigenvalues of -d^2/dx^2 on [-L/2, L/2] with periodic BC.
-    Exact in the Fourier basis: lambda_n = (2*pi*n/L)^2.
+    Estimate ground-state energy of H = -d^2/dx^2 + A*exp(-x^2/sigma^2)
+    on periodic [-L/2, L/2] using the FFT pseudo-spectral method.
+    Returns the smallest eigenvalue of the N×N spectral Hamiltonian.
     """
-    freqs = np.fft.fftfreq(N, d=1.0/N)          # integer frequencies
-    k_n   = 2.0 * np.pi * freqs / L
-    return np.sort(k_n**2)
+    x = np.linspace(-L/2, L/2, N, endpoint=False)
+    h = L / N
+    # Kinetic energy in Fourier space: diagonal with (2*pi*n/L)^2
+    freqs = np.fft.fftfreq(N, d=1.0/N)
+    k2 = (2.0 * np.pi * freqs / L) ** 2
+    # Potential on grid
+    V = A * np.exp(-x**2 / sigma**2)
+    # Build full Hamiltonian matrix: T is circulant (via FFT), V is diagonal
+    # T[i,j] = (1/N) * sum_n k2[n] * exp(2pi*i*n*(i-j)/N)
+    T_mat = np.real(np.fft.ifft(np.fft.fft(np.eye(N), axis=1) * k2[None, :], axis=1))
+    H_mat = T_mat + np.diag(V)
+    evals = np.linalg.eigvalsh(H_mat)
+    return np.sort(evals)[0]
 
 L = 10.0
+A_bump = 5.0
+sigma_bump = 0.5
+
+# Reference energy with very fine grid
+E0_ref = fft_ground_state_energy(2048, L, A_bump, sigma_bump)
+
+# FD2 / FD4: error on fixed mode m0=2 (0-indexed: mode index 1, i.e. the 2nd eigenvalue)
+# exact eigenvalue for free particle (no bump): (m0*pi/L)^2
+# For the FD benchmark we compare free-particle eigenvalues (no V_bump)
+# so that the exact reference is analytic.
+m0 = 2   # fixed mode index (1-based: the 2nd eigenvalue)
 N_vals = [10, 20, 40, 80, 160]
 
-fig, ax = plt.subplots(figsize=(8, 5))
 errors_fd2, errors_fd4 = [], []
-
 for N in N_vals:
-    exact = np.array([(n * np.pi / L)**2 for n in range(1, N + 1)])
-
+    exact_m0 = (m0 * np.pi / L) ** 2
     ev_fd2 = eigenvalues_fd2(N, L)
     ev_fd4 = eigenvalues_fd4(N, L)
-
-    # Use only the lowest N//4 eigenvalues (well-resolved modes)
-    m = N // 4
-    errors_fd2.append(np.max(np.abs(ev_fd2[:m] - exact[:m])))
-    errors_fd4.append(np.max(np.abs(ev_fd4[:m] - exact[:m])))
+    errors_fd2.append(abs(ev_fd2[m0 - 1] - exact_m0))
+    errors_fd4.append(abs(ev_fd4[m0 - 1] - exact_m0))
 
 h_vals = [L / (N + 1) for N in N_vals]
 
-ax.loglog(h_vals, errors_fd2, 'o-', label='FD2: $O(h^2)$', color='steelblue')
-ax.loglog(h_vals, errors_fd4, 's-', label='FD4: $O(h^4)$', color='tomato')
-
-# FFT spectral accuracy demo: vary N and compute error for fixed lowest mode
-N_fft = [8, 16, 32, 64, 128]
-errors_fft = []
-for N in N_fft:
-    # Periodic BC reference: exact eigenvalues are (2*pi*n/L)^2
-    k_exact_n1 = (2 * np.pi * 1 / L)**2
-    ev = eigenvalues_fft_periodic(N, L)
-    # smallest nonzero eigenvalue
-    nonzero = ev[ev > 1e-10]
-    errors_fft.append(abs(nonzero[0] - k_exact_n1))
-
+# FFT: error of ground-state energy vs reference, varying N
+N_fft = [8, 16, 32, 64, 128, 256]
+errors_fft = [abs(fft_ground_state_energy(N, L, A_bump, sigma_bump) - E0_ref)
+              for N in N_fft]
+# Replace any exact-zero errors (below machine precision) with a floor
+errors_fft = [max(e, 1e-15) for e in errors_fft]
 h_fft = [L / N for N in N_fft]
-ax.loglog(h_fft, errors_fft, 'D--', label='FFT pseudo-spectral (spectral acc.)', color='green')
+
+fig, ax = plt.subplots(figsize=(8, 5))
+ax.loglog(h_vals, errors_fd2, 'o-', label='FD2: $O(h^2)$, mode $m_0=2$', color='steelblue')
+ax.loglog(h_vals, errors_fd4, 's-', label='FD4: $O(h^4)$, mode $m_0=2$', color='tomato')
+ax.loglog(h_fft, errors_fft, 'D--', label='FFT pseudo-spectral (Gaussian bump, spectral acc.)', color='green')
 
 ax.set_xlabel("Grid spacing $h$")
-ax.set_ylabel("Max eigenvalue error")
+ax.set_ylabel("Eigenvalue error")
 ax.set_title("Discretization accuracy: $-\\partial_x^2$ eigenvalues")
 ax.legend()
 ax.grid(True, which='both', alpha=0.3)
@@ -184,16 +210,14 @@ $$
 = \int_0^\infty \frac{f(k) - f(k_E)}{E - k^2}\,dk + f(k_E)\,\mathrm{P.V.}\int_0^\infty \frac{dk}{E - k^2}.
 $$
 
-第一项的被积函数在 $k = k_E$ 处趋于有限极限（若 $f$ 可微），可以用标准正交多项式求积（如 Gauss-Legendre）直接计算。第二项的主值积分有解析结果：
+第一项的被积函数在 $k = k_E$ 处趋于有限极限（若 $f$ 可微），可以用标准正交多项式求积（如 Gauss-Legendre）直接计算。第二项的主值积分需要更仔细的处理：
 
 $$
 \mathrm{P.V.}\int_0^\infty \frac{dk}{E - k^2}
-= \mathrm{P.V.}\int_0^\infty \frac{dk}{k_E^2 - k^2}
-= -\frac{1}{2k_E}\,\mathrm{P.V.}\int_{-\infty}^\infty \frac{dk'}{k'(k' + 2k_E)}
-\cdot \frac{1}{k_E + k}
+= \mathrm{P.V.}\int_0^\infty \frac{dk}{k_E^2 - k^2}.
 $$
 
-在关于 $k_E$ 对称的积分区间（或整个 $\R$）上，主值积分为零（奇函数 $1/(k^2 - k_E^2)$ 关于 $k_E$ 对称积分相消）。实际离散化时，若选择包含 $k_E$ 的 Gauss-Legendre 节点，这一性质自然体现为对称格点贡献的相消。
+注意 $\mathrm{P.V.}\int_0^\infty dk/(k_E^2 - k^2)$ 在半直线上并**不**等于零——它在 $k \to \infty$ 处有对数发散，严格来说是发散的。KN 方法的实际操作是：在**有限对称窗口** $[0, K]$（$K \gg k_E$）上离散化，此时奇函数 $1/(k_E^2 - k^2)$ 关于 $k_E$ 的对称格点贡献两两相消，主值有效为零。在实践中，选取包含 $k_E$ 的 Gauss-Legendre 节点时，节点的对称布局使第二项自然消去，只剩下第一项（减法后的正则部分）加上来自围道定理的在壳虚部 $-i\pi f(k_E)/(2k_E)$。
 
 ### 方法三：复化坐标旋转（Contour rotation）
 
@@ -213,94 +237,118 @@ $$
 G_0^+(x, x'; E) = -\frac{i}{2k}\,\rme^{ik|x-x'|}, \quad k = \sqrt{E}.
 $$
 
-以下代码用三种方法通过动量空间积分计算此量，并与解析公式对比。
+以下代码用三种方法通过动量空间积分计算此量，并与解析公式对比。正确的半直线积分表示为
+
+$$
+G_0^+(d; E) = \int_0^\infty \frac{dk}{\pi}\,\frac{\cos(kd)}{E + i0^+ - k^2}, \quad d = |x - x'|,
+$$
+
+其中分母在 $k = k_E = \sqrt{E}$ 处有奇异性。三种方法分别为：$i\epsilon$ 处方（直接正则化）、KN 主值减法（解析分离奇异部分）、以及复化旋转（$k \to k\rme^{i\theta}$，将奇点旋离实轴）。对于复化旋转，$\cos(k_{\rm rot}d) = [\rme^{ik_{\rm rot}d}+\rme^{-ik_{\rm rot}d}]/2$ 中的 $\rme^{-ik_{\rm rot}d}$ 项在 $K_{\max}$ 有限时指数增长，因此必须用 KN 减法正则化实部，仅用复化旋转加速实部积分的收敛，虚部仍由解析留数公式给出。
 
 ```{python}
 #| label: fig-g0-methods
-#| fig-cap: "三种方法计算 1D 自由 Green 函数 $G_0^+(x, x'; E)$ 的误差随 $N$（积分网格点数）的收敛行为。主值减法（Kowalski-Noyes）和复化旋转法均比 $i\\epsilon$ 法收敛快一至两个量级。"
+#| fig-cap: "三种方法计算 1D 自由推迟 Green 函数 $G_0^+(d; E)$ 误差随积分网格点数 $N$ 的对比（$d=0.9$，$E=2.5$，$K_{\\max}=6$）。KN 主值减法（红方块）将奇异部分解析分离，即使在 $N=4$ 节点时误差已落在 $K$ 截断底线 $\\sim 10^{-3}$；复化旋转（绿菱形）对 KN 减法后的光滑余项做路径旋转，误差底线略高（$\\sim 2\\times10^{-2}$，源于旋转路径的 $K$ 截断贡献）；$i\\epsilon$ 法（蓝圆）以 $\\epsilon\\propto(K/N)^2$ 自适应缩小，在较小 $N$ 时误差大且非单调，是三种方法中精度最低的。"
 
 import numpy as np
 import matplotlib.pyplot as plt
 
 # -------------------------------------------------------
 # 1D free retarded Green function (analytic):
-#   G0^+(x, x'; E) = -i/(2k) * exp(ik|x-x'|), k = sqrt(E)
-# Via momentum-space integral (hbar=1, 2m=1):
-#   G0^+(x, x'; E) = (1/(2pi)) * integral dk exp(ik(x-x'))/(E+i0^+ - k^2)
+#   G0^+(d; E) = -i/(2k) * exp(ik*d), k = sqrt(E)
+# Correct half-line integral representation (cos form):
+#   G0^+(d; E) = integral_0^K cos(kd)/pi / (E+i0^+ - k^2) dk
+#              = P.V. integral_0^K cos(kd)/pi / (E - k^2) dk
+#                - i * cos(k0*d) / (2*k0)
+# The three methods regularize the singularity at k = k0 differently:
+#   ieps: replace E by E + i*eps (shifts pole off real axis)
+#   KN:   subtract cos(k0*d)/pi and add imaginary part analytically
+#   CR:   apply KN subtraction first, then integrate the smooth remainder
+#         via contour rotation k -> k*exp(i*theta); cos(k_rot*d) remains bounded
+#         for finite K_max since |exp(-i*k_rot*d)| = exp(k*sin(theta)*d) grows only
+#         as exp(K_max*sin(theta)*d) -- acceptable for moderate K_max.
+#         The imaginary part is added analytically (same as KN).
 # -------------------------------------------------------
 x  = 1.2
 xp = 0.3
 E  = 2.5
 k0 = np.sqrt(E)
+d  = abs(x - xp)
 
-def g0_analytic(x, xp, E):
+def g0_analytic(d, E):
     k = np.sqrt(E + 0j)
-    return -1j / (2 * k) * np.exp(1j * k * abs(x - xp))
+    return -1j / (2 * k) * np.exp(1j * k * d)
 
-g0_exact = g0_analytic(x, xp, E)
+g0_exact = g0_analytic(d, E)
+
+K_max = 6.0
 
 # Method 1: i*epsilon prescription
-def g0_ieps(x, xp, E, N, eps_factor=2.0):
-    """Integral via i*epsilon: use Gauss-Legendre on [0, K_max]."""
+def g0_ieps(d, E, N, K=K_max, eps_factor=2.0):
+    """Integral via i*epsilon on [0, K]: cos(kd)/pi/(E+i*eps-k^2)."""
     from numpy.polynomial.legendre import leggauss
-    K_max = 6.0
     xi, wi = leggauss(N)
-    k_nodes = K_max * (xi + 1) / 2.0
-    w_scaled = wi * K_max / 2.0
-    eps = eps_factor * (K_max / N)**2
-    integrand = (np.exp(1j * k_nodes * (x - xp)) + np.exp(-1j * k_nodes * (x - xp))) / \
-                (2 * np.pi) / (E + 1j * eps - k_nodes**2)
-    # Add the symmetric negative-k part
-    return np.sum(integrand * w_scaled)
+    k = K * (xi + 1) / 2.0
+    w = wi * K / 2.0
+    eps = eps_factor * (K / N)**2
+    return np.sum(np.cos(k * d) / (np.pi * (E + 1j * eps - k**2)) * w)
 
 # Method 2: Kowalski-Noyes principal-value subtraction
-def g0_kn(x, xp, E, N):
-    """Principal-value subtraction (Kowalski-Noyes)."""
+def g0_kn(d, E, N, K=K_max):
+    """KN subtraction: f(k)=cos(kd)/pi, subtract f(k0), add imaginary part analytically."""
     from numpy.polynomial.legendre import leggauss
-    K_max = 6.0
     xi, wi = leggauss(N)
-    k_nodes = K_max * (xi + 1) / 2.0
-    w_scaled = wi * K_max / 2.0
-
-    f = lambda k: (np.exp(1j * k * (x - xp)) + np.exp(-1j * k * (x - xp))) / (2 * np.pi)
-    fk0 = f(k0)
-    # Subtracted integrand (finite at k=k0)
+    k = K * (xi + 1) / 2.0
+    w = wi * K / 2.0
+    fk0 = np.cos(k0 * d) / np.pi
     with np.errstate(divide='ignore', invalid='ignore'):
-        num = f(k_nodes) - fk0
-        denom = E - k_nodes**2
-        integrand = np.where(np.abs(denom) > 1e-12, num / denom, 0.0)
-    real_part = np.sum(integrand * w_scaled)
-    # On-shell imaginary part: -i*pi * delta(E-k^2) = -i/(2k) for k=k0
-    imag_part = -1j * np.pi * fk0 / (2 * k0)
-    return real_part + imag_part
+        integrand = np.where(
+            np.abs(E - k**2) > 1e-12,
+            (np.cos(k * d) / np.pi - fk0) / (E - k**2),
+            0.0
+        )
+    pv_part  = np.sum(integrand * w)
+    imag_part = -1j * np.pi * fk0 / (2 * k0)   # = -i*cos(k0*d)/(2*k0)
+    return pv_part + imag_part
 
-# Method 3: Contour rotation k -> k*exp(i*theta)
-def g0_contour(x, xp, E, N, theta=0.2):
-    """Contour rotation: k -> k * exp(i*theta)."""
+# Method 3: Contour rotation applied to the KN-subtracted integrand
+# After subtracting f(k0) = cos(k0*d)/pi, the remaining integrand
+#   h(k) = (cos(kd)/pi - cos(k0*d)/pi) / (E - k^2)
+# is smooth and can be integrated on the rotated path k -> k*exp(i*theta).
+# For finite K_max, cos(k_rot*d) grows at most as exp(K_max*sin(theta)*d),
+# which is bounded. The imaginary part -i*cos(k0*d)/(2*k0) is added analytically.
+def g0_contour(d, E, N, theta=0.3, K=K_max):
+    """
+    Contour rotation on the KN-subtracted smooth remainder.
+    Integrand h(k) = (cos(kd)/pi - cos(k0*d)/pi)/(E - k^2) is analytic and
+    well-behaved; rotating k -> k*exp(i*theta) moves the (removed) pole off
+    the real axis, reducing quadrature error for the smooth h.
+    Imaginary part added analytically as in KN.
+    """
     from numpy.polynomial.legendre import leggauss
-    K_max = 6.0
     xi, wi = leggauss(N)
-    k_real = K_max * (xi + 1) / 2.0
-    w_scaled = wi * K_max / 2.0
+    k_r = K * (xi + 1) / 2.0
+    w   = wi * K / 2.0
+    fk0 = np.cos(k0 * d) / np.pi
+    k_rot = k_r * np.exp(1j * theta)
+    jac   = np.exp(1j * theta)
+    with np.errstate(divide='ignore', invalid='ignore'):
+        integrand = (np.cos(k_rot * d) / np.pi - fk0) / (E - k_rot**2) * jac
+    pv_rotated = np.sum(integrand * w)
+    imag_part  = -1j * np.pi * fk0 / (2 * k0)
+    return pv_rotated + imag_part
 
-    k_rot = k_real * np.exp(1j * theta)
-    jacobian = np.exp(1j * theta)
-    integrand = (np.exp(1j * k_rot * (x - xp)) + np.exp(-1j * k_rot * (x - xp))) / \
-                (2 * np.pi) / (E - k_rot**2) * jacobian
-    return np.sum(integrand * w_scaled)
-
-N_vals = [10, 20, 40, 80, 160, 320]
+N_vals = [4, 8, 16, 32, 64, 128, 256]
 err_ieps, err_kn, err_cr = [], [], []
 
 for N in N_vals:
-    err_ieps.append(abs(g0_ieps(x, xp, E, N) - g0_exact))
-    err_kn.append(abs(g0_kn(x, xp, E, N) - g0_exact))
-    err_cr.append(abs(g0_contour(x, xp, E, N) - g0_exact))
+    err_ieps.append(abs(g0_ieps(d, E, N) - g0_exact))
+    err_kn.append(abs(g0_kn(d, E, N) - g0_exact))
+    err_cr.append(abs(g0_contour(d, E, N) - g0_exact))
 
 fig, ax = plt.subplots(figsize=(8, 5))
 ax.loglog(N_vals, err_ieps, 'o-', label='$i\\epsilon$ method', color='steelblue')
 ax.loglog(N_vals, err_kn,   's-', label='Kowalski-Noyes subtraction', color='tomato')
-ax.loglog(N_vals, err_cr,   'D-', label='Contour rotation ($\\theta=0.2$)', color='green')
+ax.loglog(N_vals, err_cr,   'D-', label='Contour rotation on KN remainder ($\\theta=0.3$)', color='green')
 ax.set_xlabel("Number of quadrature nodes $N$")
 ax.set_ylabel(r"$|G_0^\mathrm{num} - G_0^\mathrm{exact}|$")
 ax.set_title(r"Convergence of three methods for $G_0^+(x, x'; E)$")
@@ -309,10 +357,10 @@ ax.grid(True, which='both', alpha=0.3)
 fig.tight_layout()
 plt.show()
 
-print(f"Analytic G0^+(x={x}, x'={xp}, E={E}) = {g0_exact:.6f}")
-print(f"N=320  i-eps error:  {err_ieps[-1]:.2e}")
-print(f"N=320  KN error:     {err_kn[-1]:.2e}")
-print(f"N=320  contour error:{err_cr[-1]:.2e}")
+print(f"Analytic G0^+(d={d}, E={E}) = {g0_exact:.6f}")
+print(f"N=256  i-eps error:  {err_ieps[-1]:.2e}")
+print(f"N=256  KN error:     {err_kn[-1]:.2e}")
+print(f"N=256  contour error:{err_cr[-1]:.2e}")
 ```
 
 ## LS 方程作为矩阵方程
@@ -419,7 +467,7 @@ LS 矩阵 $\mathbf{I} - \mathbf{V}\mathbf{G}_0$ 的条件数 $\kappa$ 直接影�
 
 ```{python}
 #| label: fig-condition-number
-#| fig-cap: "LS 方程矩阵 $\\mathbf{I} - \\mathbf{V}\\mathbf{G}_0$ 的条件数 $\\kappa$ 随网格大小 $N$ 的变化（1D 方势阱，位置表象，$E = k^2$，$k = 2$）。条件数增长缓慢，说明离散化是数值稳定的。"
+#| fig-cap: "LS 方程矩阵 $\\mathbf{I} - \\mathbf{V}\\mathbf{G}_0$ 的条件数 $\\kappa$ 随网格大小 $N$ 的变化（1D 方势阱，位置表象，$E = k^2$，$k = 2$）。条件数近似恒定（随 $N$ 极缓慢下降），说明离散化是数值稳定的。"
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -510,7 +558,7 @@ $$
 
 ```{python}
 #| label: fig-pole-location
-#| fig-cap: "3D $\\delta$-shell 势（$\\gamma=20$，$R=1$）的共振极点定位：Newton 迭代（红叉）与 Padé 近似（蓝圆）在复 $k$ 平面下半平面的位置。二者吻合良好。背景色图为 $\\log_{10}|S(k)|$，极点处 $|S| \\to \\infty$（亮斑）。"
+#| fig-cap: "3D $\\delta$-shell 势（$\\gamma=20$，$R=1$）的共振极点定位：Newton 迭代（红叉）与 Padé 近似（蓝三角）在复 $k$ 平面下半平面的位置。二者吻合良好。背景色图为 $\\log_{10}|S(k)|$，极点处 $|S| \\to \\infty$（亮斑）。"
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -656,7 +704,7 @@ plt.show()
 
 ```{python}
 #| label: fig-pole-stability
-#| fig-cap: "极点稳定性检验：Newton 迭代定位的两个共振极点（$\\delta$-shell，$\\gamma=20$，$R=1$）随网格大小 $N$（此处不依赖网格，直接用解析 $F(k)$）收敛到固定值；假极点（如果有）会随 $N$ 漂移。图中每个极点的位置误差（相对 $N=100$ 的收参值）用 $|\\Delta k|$ 表示。"
+#| fig-cap: "Newton 迭代收敛性：$|\\Delta k|$（与收敛值之差）随迭代次数的变化，展示对 $\\delta$-shell 极点方程的二次收敛。前两个共振极点（$\\gamma=20$，$R=1$）均在约 8 步内达到机器精度。"
 
 import numpy as np
 import matplotlib.pyplot as plt
