@@ -243,7 +243,7 @@ $$
 |--------|---------------|
 | 转动不变 | $\alpha = a(E,\theta)$；$\vec\beta = b\,\hat n + c(\vec k'+\vec k) + d(\vec k'-\vec k)$ |
 | 宇称守恒 | $c = d = 0$，故 $F = aI + \rmi b\,\hat n\cdot\vec\sigma$ |
-| 时间反演 | $d = 0$（独立于 $\mathsf{P}$），$F = aI + \rmi[b\,\hat n + c(\vec k'+\vec k)]\cdot\vec\sigma$ |
+| 时间反演 | $c = 0$（独立于 $\mathsf{P}$），$F = aI + \rmi[b\,\hat n + d(\vec k'-\vec k)]\cdot\vec\sigma$ |
 | $\mathsf{P}$ + $\mathsf{T}$ + 转动 | $F = a(E,\theta)I + \rmi b(E,\theta)\,\hat n\cdot\vec\sigma$ |
 
 其中 $\hat n = (\vec k'\times\vec k)/|\vec k'\times\vec k|$ 为散射平面法线方向。
@@ -282,8 +282,6 @@ def phase_shift(ell, k_out, k_in, R):
     # Riccati–Bessel: hat_j_l = x * j_l(x),  hat_n_l = x * y_l(x)
     j_out  = spherical_jn(ell, x_out)
     dj_out = spherical_jn(ell, x_out, derivative=True)
-    n_out  = -spherical_jn(ell, x_out, derivative=False)   # y_l via scipy convention
-    dn_out = -spherical_jn(ell, x_out, derivative=True)
     j_in   = spherical_jn(ell, x_in)
     dj_in  = spherical_jn(ell, x_in, derivative=True)
     # scipy spherical_yn
@@ -293,15 +291,14 @@ def phase_shift(ell, k_out, k_in, R):
     # Logarithmic derivative inside: (d/dr)[r*j_l(k_in*r)] / (r*j_l) at r=R
     # = k_in * j_l'(k_in*R) / j_l(k_in*R)  +  1/R
     beta_in = k_in * dj_in / j_in + 1.0/R   # log deriv of u=r*j_l
-    # Matching outside: A*hat_j_l + B*hat_n_l, log deriv = (k_out*(j'+n') + 1/R * (...))
-    # Solve for tan(delta_l)
-    # hat_j_l = x*j_l, d/dr(hat_j) = k_out*(x*j_l)' = k_out*(j_l + x*j_l')
+    # Matching outside: A*(r*j_l) + B*(r*n_l); u_out ~ sin(k*r - l*pi/2 + delta) at large r
+    # => tan(delta) = -B/A.  Solve log-deriv matching for B/A then negate:
+    # hat_j_l = x*j_l, d/dr(hat_j) = k_out*(j_l + x*j_l')
     f_j = k_out * (j_out + x_out * spherical_jn(ell, x_out, derivative=True))
     f_n = k_out * (n_out_ + x_out * spherical_yn(ell, x_out, derivative=True))
-    # Log deriv of (hat_j + tan*hat_n) = beta_in * (x*j_l + tan*x*n_l) at r=R
-    # => f_j + tan*f_n = beta_in*(x_out*j_out + tan*x_out*n_out_)
-    # => tan(delta) = (beta_in*x_out*j_out - f_j) / (f_n - beta_in*x_out*n_out_)
-    numer = beta_in * x_out * j_out  - f_j
+    # B/A = (beta_in*x_out*j_out - f_j) / (f_n - beta_in*x_out*n_out_)
+    # tan(delta) = -B/A = (f_j - beta_in*x_out*j_out) / (f_n - beta_in*x_out*n_out_)
+    numer = f_j - beta_in * x_out * j_out
     denom = f_n - beta_in * x_out * n_out_
     tan_delta = numer / denom
     return np.arctan(tan_delta)
@@ -337,7 +334,7 @@ plt.show()
 ```
 
 ```{python}
-#| label: verification-parity
+#| label: verification-rotational-invariance
 
 import numpy as np
 from scipy.special import spherical_jn, spherical_yn
@@ -360,48 +357,84 @@ def phase_shift(ell, k_out, k_in, R):
     beta_in = k_in * dj_in / j_in + 1.0/R
     f_j = k_out * (j_out + x_out * spherical_jn(ell, x_out, derivative=True))
     f_n = k_out * (n_out_ + x_out * spherical_yn(ell, x_out, derivative=True))
-    numer = beta_in * x_out * j_out - f_j
+    # tan(delta) = -B/A = (f_j - beta_in*x_out*j_out) / (f_n - beta_in*x_out*n_out_)
+    numer = f_j - beta_in * x_out * j_out
     denom = f_n - beta_in * x_out * n_out_
     return np.arctan(numer / denom)
 
 deltas = np.array([phase_shift(ell, k_out, k_in, R) for ell in range(L_max+1)])
-basis  = [(ell, m) for ell in range(L_max+1) for m in range(-ell, ell+1)]
-N_basis = len(basis)
 
-S_matrix = np.zeros((N_basis, N_basis), dtype=complex)
-for i, (ell_i, m_i) in enumerate(basis):
-    for j, (ell_j, m_j) in enumerate(basis):
-        if ell_i == ell_j and m_i == m_j:
-            S_matrix[i, j] = np.exp(2j * deltas[ell_i])
+# ── 检验 A：独立交叉核对 δ_0（Taylor 公式，仅适用 ℓ=0）─────────────────────
+# 对 ℓ=0 方势阱，精确解析结果为
+#   tan(δ_0) = (k_out·tan(k_in·R) − k_in·tan(k_out·R))
+#            / (k_in  + k_out·tan(k_in·R)·tan(k_out·R))
+k_o, k_i = k_out, k_in
+tan_delta0_taylor = (k_o*np.tan(k_i*R) - k_i*np.tan(k_o*R)) / \
+                    (k_i + k_o*np.tan(k_i*R)*np.tan(k_o*R))
+delta0_taylor = np.arctan(tan_delta0_taylor)
+print(f"δ_0  (log-deriv formula) = {np.degrees(deltas[0]):.4f}°")
+print(f"δ_0  (Taylor analytic)   = {np.degrees(delta0_taylor):.4f}°")
+err0 = abs(deltas[0] - delta0_taylor)
+assert err0 < 1e-10, f"δ_0 mismatch: {err0:.2e} rad"
+print(f"Agreement: |Δδ_0| = {err0:.2e} rad  ✓")
 
-# ── 验证 1：非对角元为零（宇称/转动选择定则）───────────────────────────────
-off_diag_max = 0.0
-for i in range(N_basis):
-    for j in range(N_basis):
-        if i != j:
-            off_diag_max = max(off_diag_max, abs(S_matrix[i, j]))
+# ── 检验 B：弱势（Born 极限）相移符号 ─────────────────────────────────────
+# 弱吸引势 V0_weak > 0 在 Born 近似下给出 δ_0 > 0（吸引 → 正相移）
+V0_weak = 0.01
+k_in_weak = np.sqrt(k_out**2 + V0_weak)
+delta0_weak = phase_shift(0, k_out, k_in_weak, R)
+assert delta0_weak > 0, f"Weak attractive well should give δ_0 > 0; got {delta0_weak:.4f}"
+print(f"\nBorn sign check (V0=0.01, ℓ=0): δ_0 = {delta0_weak:.6f} rad > 0  ✓")
 
-print(f"Max |off-diagonal S_{{lm,l'm'}}| = {off_diag_max:.2e}  (should be 0)")
-assert off_diag_max < 1e-14, f"Off-diagonal elements too large: {off_diag_max}"
+# ── 检验 C：转动不变性的非平凡验证 ────────────────────────────────────────
+# 验证 Wigner D 矩阵幺正性，并检验旋转不变性 U_ℓ S_ℓ U_ℓ† = S_ℓ。
+# （此处 S_ℓ ∝ 单位矩阵，故与任意幺正 U_ℓ 对易——这本身是平凡的；
+#  真正的测试在于确认 D 矩阵的构造正确且幺正，
+#  以及与上述独立相移值联合使用时不出现数值问题。）
+import math as _math
 
-# ── 验证 2：对角块幺正性 |s_ell| = 1 ──────────────────────────────────────────
-for ell in range(L_max+1):
-    sl = np.exp(2j * deltas[ell])
-    assert abs(abs(sl) - 1.0) < 1e-14, f"ell={ell}: |s_ell|={abs(sl):.6f} != 1"
+def wigner_d_matrix(ell, alpha, beta, gamma):
+    """返回 (2ℓ+1)×(2ℓ+1) 的 Wigner D 矩阵，用显式公式。"""
+    dim = 2*ell + 1
+    D = np.zeros((dim, dim), dtype=complex)
+    ms = np.arange(-ell, ell+1)
+    for i, m in enumerate(ms):
+        for j, mp in enumerate(ms):
+            d_val = 0.0
+            t_min = max(0, m - mp)
+            t_max = min(ell + m, ell - mp)
+            for t in range(t_min, t_max + 1):
+                sign = (-1)**(mp - m + t)
+                num = (np.cos(beta/2)**(2*ell - 2*t + m - mp)
+                       * np.sin(beta/2)**(2*t - m + mp))
+                den = (_math.factorial(ell + m - t)
+                       * _math.factorial(t)
+                       * _math.factorial(mp - m + t)
+                       * _math.factorial(ell - mp - t))
+                d_val += sign * num / den
+            norm = np.sqrt(_math.factorial(ell + m)
+                           * _math.factorial(ell - m)
+                           * _math.factorial(ell + mp)
+                           * _math.factorial(ell - mp))
+            D[i, j] = norm * d_val * np.exp(-1j*m*alpha) * np.exp(-1j*mp*gamma)
+    return D
 
-print(f"All |s_ell| = 1.0 (unitarity satisfied for ell=0..{L_max})")
+alpha, beta, gamma = 0.4, 1.1, 0.7   # arbitrary Euler angles
 
-# ── 验证 3：S 矩阵整体幺正 ─────────────────────────────────────────────────────
-unitarity_error = np.max(np.abs(S_matrix @ S_matrix.conj().T - np.eye(N_basis)))
-print(f"Max |S S† - I| = {unitarity_error:.2e}")
-assert unitarity_error < 1e-14
+print("\nRotational invariance test: U_ℓ S_ℓ U_ℓ† = S_ℓ (should hold ∀ ℓ)")
+for ell in range(L_max + 1):
+    D = wigner_d_matrix(ell, alpha, beta, gamma)
+    S_ell = np.exp(2j * deltas[ell]) * np.eye(2*ell + 1)   # ℓ-block of S
+    rotated = D @ S_ell @ D.conj().T
+    err = np.max(np.abs(rotated - S_ell))
+    assert err < 1e-10, f"ℓ={ell}: rotation not invariant, max err={err:.2e}"
+    print(f"  ℓ={ell}: max|U S_ℓ U†  − S_ℓ| = {err:.2e}  ✓")
 
-# ── 验证 4：$\Smat$ 在 $(\ell,m)$ 基中对角 ⟹ 宇称守恒（无 Δℓ 奇数的混合）──
 print(f"\nPhase shifts δ_ell (E={E}, V0={V0}):")
 for ell in range(L_max+1):
     print(f"  ell={ell}: δ_{ell} = {np.degrees(deltas[ell]):.4f}°")
 
-print("\nsymmetry constraint verified")
+print("\nAll non-tautological checks passed.")
 ```
 
 ## 同位旋与道对称性（简述）
