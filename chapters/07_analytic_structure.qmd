@@ -94,7 +94,7 @@ $$
 
 ```{python}
 #| label: fig-delta-pole-heatmap
-#| fig-cap: "一维 δ 势透射振幅 $|t(k)|$ 在复 $k$ 平面的 log10 色图（$\\lambda = -1.5$）。极点在 $k = i|\\lambda|/2 = 0.75\\,i$（红叉）。上半平面 Im $k > 0$ 为物理叶。"
+#| fig-cap: "一维 δ 势透射振幅 $|t(k)|$ 在复 $k$ 平面的 log10 色图（$\\lambda = -1.5$）。极点在 $k = i|\\lambda|/2 = 0.75\\,i$（红叉）。上半平面 Im $k > 0$ 为物理叶。在 $k=0$ 处 $t$ 有一个零点（$|t|\\to 0$），表现为 colormap 的暗带。"
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -159,7 +159,7 @@ ax.axhspan(-2.2, 0, alpha=0.08, color='red', label='Second sheet ($\\mathrm{Im}\
 ax.axhline(0, color='k', lw=1.0)
 ax.axvline(0, color='k', lw=0.6, ls='--', alpha=0.4)
 ax.set_xlim(-1.5, 1.5)
-ax.set_ylim(-1.3, 1.3)
+ax.set_ylim(-1.5, 1.5)
 ax.set_xlabel('Re $k$')
 ax.set_ylabel('Im $k$')
 ax.set_title('Pole trajectory as $\\lambda$ varies')
@@ -174,57 +174,75 @@ plt.show()
 #| label: numerical-verification
 
 import numpy as np
+from scipy.integrate import solve_ivp
 
 # ----------------------------------------------------------------
-# Part 1: Verify delta-potential poles analytically and numerically
+# Part 1: Newton's method on a NONLINEAR pole equation
 # ----------------------------------------------------------------
-# For t(k) = 2ik/(2ik - lambda), pole at 2ik - lambda = 0 => k = -i*lambda/2
-# Newton iteration on g(k) = 2ik - lambda starting near analytic answer
+# 3D delta-shell potential V(r) = gamma * delta(r - R), R = 1.
+# The s-wave Jost-function zero condition on the second sheet reads
+#   g(k) = k*R + gamma * sin(k*R) * cos(k*R) + 1j * gamma * sin(k*R)**2 = 0
+# (derived from matching the exterior/interior wavefunction at r = R).
+# For small gamma the pole starts near k = 0; here we track it numerically.
+#
+# Note: g(k) is genuinely nonlinear in k, so Newton is a non-trivial test.
 
-def newton_pole(lam, k_init, tol=1e-14, max_iter=50):
-    """Find zero of g(k) = 2ik - lambda via Newton's method."""
+def g_deltashell(k, gamma, R=1.0):
+    """Pole condition for 3D delta-shell (s-wave, second sheet)."""
+    kR = k * R
+    return kR + gamma * np.sin(kR) * np.cos(kR) + 1j * gamma * np.sin(kR)**2
+
+def dg_dk_deltashell(k, gamma, R=1.0):
+    """Analytic derivative dg/dk of the delta-shell pole condition."""
+    kR = k * R
+    return R * (1 + gamma * (np.cos(kR)**2 - np.sin(kR)**2)
+                + 2j * gamma * np.sin(kR) * np.cos(kR))
+
+def newton_pole_nonlinear(gamma, k_init, R=1.0, tol=1e-12, max_iter=50):
+    """Find zero of g_deltashell via Newton's method."""
     k = complex(k_init)
     for _ in range(max_iter):
-        g = 2j * k - lam
-        gp = 2j  # g'(k)
-        k_new = k - g / gp
-        if abs(k_new - k) < tol:
-            return k_new
-        k = k_new
+        gval = g_deltashell(k, gamma, R)
+        gpval = dg_dk_deltashell(k, gamma, R)
+        step = gval / gpval
+        k = k - step
+        if abs(step) < tol:
+            break
     return k
 
-test_lambdas = [-2.0, -1.0, -0.5, 0.5, 1.0, 2.0]
-print("Delta-potential pole verification:")
-print(f"{'lambda':>8}  {'numeric k_pole':>22}  {'analytic k_pole':>22}  {'error':>12}")
+# For gamma = -2 the delta-shell has one bound state.
+# We start Newton from a rough initial guess and verify convergence.
+test_gammas = [-1.0, -2.0, -3.0, -5.0]
+print("Delta-shell pole verification (Newton on nonlinear g(k)):")
+print(f"{'gamma':>8}  {'k_pole':>28}  {'|g(k)|':>12}  {'iters':>6}")
 all_ok = True
-for lam in test_lambdas:
-    k_analytic = -1j * lam / 2.0
-    k_num = newton_pole(lam, k_analytic + 0.01 + 0.01j)  # slight offset from analytic
-    err = abs(k_num - k_analytic)
-    print(f"{lam:>8.2f}  {k_num.real:+.6f}{k_num.imag:+.6f}i  "
-          f"{k_analytic.real:+.6f}{k_analytic.imag:+.6f}i  {err:.2e}")
-    if err > 1e-12:
+for gamma in test_gammas:
+    # Rough initial guess: bound-state pole near k ~ i*gamma/2 for small gamma
+    k0 = 1j * abs(gamma) / 2.0
+    k_pole = newton_pole_nonlinear(gamma, k0)
+    residual = abs(g_deltashell(k_pole, gamma))
+    flag = "OK" if residual < 1e-10 else "FAIL"
+    print(f"{gamma:>8.1f}  {k_pole.real:+.8f}{k_pole.imag:+.8f}i  "
+          f"{residual:.2e}  {flag}")
+    if residual >= 1e-10:
         all_ok = False
 
-assert all_ok, "Pole location mismatch!"
+assert all_ok, "Delta-shell Newton pole-finding failed!"
 
 # ----------------------------------------------------------------
-# Part 2: Levinson theorem on 3D square well (s-wave)
+# Part 2: Levinson theorem on 3D square well — GENUINE check
 # ----------------------------------------------------------------
-# Potential: V(r) = -V0 * theta(R - r), V0 > 0, R = 1
-# s-wave phase shift: delta_0(k) = -kR + arctan(k/K * tan(K*R))
-# K = sqrt(k^2 + V0), k real > 0
-# Bound states at E = -kappa^2 < 0: kappa*coth(kappa*R) = K0*cot(K0*R)
-# where K0 = sqrt(V0 - kappa^2), valid while V0 > kappa^2
-# Equivalently, bound state when K0*R = (n - 1/2)*pi i.e. tan(K0*R) -> +/-inf
-# More precisely: bound states satisfy kappa = K0*tan(K0*R) / sqrt(...)
+# delta_0(k->0) is extracted by numerically integrating the radial
+# Schrodinger equation at a small but finite k, then reading off the
+# phase shift from the asymptotic wavefunction.  This is completely
+# independent of the bound-state counting loop.
 
-R = 1.0
+R_sw = 1.0  # well radius
 
 def count_bound_states_square_well(V0, R=1.0):
     """
     Count s-wave bound states of 3D square well (V(r) = -V0, r < R).
-    A new bound state appears each time K0*R = (2n-1)*pi/2 (n=1,2,...), K0=sqrt(V0).
+    A new bound state appears each time K0*R crosses (2n-1)*pi/2.
     """
     K0R = np.sqrt(V0) * R
     count = 0
@@ -234,41 +252,77 @@ def count_bound_states_square_well(V0, R=1.0):
         m += 1
     return count
 
-def delta0_at_zero_square_well(V0, R=1.0):
+def _solve_delta_ode_single_k(V0, k, R=1.0):
     """
-    Return delta_0(k->0) for the 3D square well.
-    The s-wave matching gives:
-        delta_0(k) = arctan(k/K * tan(K*R)) - k*R + n_branch * pi
-    where the branch integer n_branch counts how many times K0*R crossed
-    (2m-1)*pi/2 as V0 increased from 0.  As k->0, arctan->0, k*R->0,
-    so delta_0(0) = n_branch * pi = N_b * pi.
+    Solve the radial ODE for one k value and extract the s-wave phase shift
+    via the Wronskian with the free solutions sin(kr) and cos(kr).
+
+    Derivation: asymptotically u(r) = A*sin(k*r + delta).  At match point r_m:
+        A*sin(delta) = u(r_m)*cos(k*r_m) - u'(r_m)*sin(k*r_m)/k
+        A*cos(delta) = u'(r_m)*cos(k*r_m)/k + u(r_m)*sin(k*r_m)
+    => delta = arctan2(A*sin(delta), A*cos(delta))  in (-pi, pi).
+
+    This is branch-ambiguous by n*pi; the branch is resolved by calling this
+    over a sweep of k values and unwrapping (see delta0_at_kzero).
     """
-    K0R = np.sqrt(V0) * R
-    n_branch = 0
-    m = 1
-    while (2 * m - 1) * np.pi / 2 < K0R:
-        n_branch += 1
-        m += 1
-    return float(n_branch) * np.pi
+    def rhs(r, y):
+        u, up = y
+        U = -V0 if r < R else 0.0
+        return [up, -(k**2 - U) * u]
+
+    r0 = 1e-6
+    u0 = r0       # u ~ r near origin (regular BC)
+    up0 = 1.0
+    # Integrate to 5 free-wave wavelengths beyond the well
+    r_end = R + 5.0 * (2.0 * np.pi / max(k, 0.01))
+
+    sol = solve_ivp(rhs, [r0, r_end], [u0, up0],
+                    method='DOP853', rtol=1e-12, atol=1e-14, dense_output=True)
+
+    r_m = 0.9 * r_end
+    u_m, up_m = sol.sol(r_m)
+    s = np.sin(k * r_m)
+    c = np.cos(k * r_m)
+    A_sin_d = u_m * c - up_m * s / k
+    A_cos_d = up_m * c / k + u_m * s
+    return float(np.arctan2(A_sin_d, A_cos_d))   # in (-pi, pi)
+
+
+def delta0_at_kzero(V0, R=1.0, n_k=100):
+    """
+    Compute delta_0(k -> 0) for the 3D square well by:
+      1. Sweeping k from large (k=10, where delta_0 ~ 0) down to k=5e-4
+         on a log-uniform grid, computing delta_0(k) at each point via ODE.
+      2. Unwrapping the sequence of angles (period=pi) to resolve the
+         n*pi branch ambiguity.
+      3. Returning the last (k -> 0) value.
+
+    This is entirely independent of the bound-state counting loop — it is a
+    genuine numerical test of Levinson's theorem.
+    """
+    k_vals = np.exp(np.linspace(np.log(10.0), np.log(5e-4), n_k))
+    deltas = np.array([_solve_delta_ode_single_k(V0, k, R) for k in k_vals])
+    deltas_unwrapped = np.unwrap(deltas, period=np.pi)
+    return float(deltas_unwrapped[-1])
 
 print("\nLevinson theorem verification (3D square well, s-wave):")
-print(f"{'V0':>8}  {'N_bound':>8}  {'delta0(0)/pi':>14}  {'check':>10}")
+print("  delta_0(k->0) extracted by ODE sweep k=10..5e-4 + pi-unwrap — independent of bound-state count.")
+print(f"{'V0':>8}  {'N_bound':>8}  {'delta0(k->0)/pi':>16}  {'|ratio-Nb|':>12}  {'check':>6}")
 
 levinson_ok = True
 for V0 in [1.0, 3.0, 6.0, 12.0, 25.0, 40.0]:
-    Nb = count_bound_states_square_well(V0, R)
-    d0 = delta0_at_zero_square_well(V0, R)
+    Nb = count_bound_states_square_well(V0, R_sw)
+    d0 = delta0_at_kzero(V0, R=R_sw)
     ratio = d0 / np.pi
-    # Levinson: delta_0(0) - delta_0(inf) = N_b * pi; delta_0(inf) = 0
-    check = abs(ratio - Nb)
-    flag = "OK" if check < 1e-10 else "FAIL"
-    print(f"{V0:>8.1f}  {Nb:>8d}  {ratio:>14.1f}  {flag}")
-    if check >= 1e-10:
+    err = abs(ratio - Nb)
+    flag = "OK" if err < 1e-2 else "FAIL"
+    print(f"{V0:>8.1f}  {Nb:>8d}  {ratio:>16.4f}  {err:>12.2e}  {flag}")
+    if err >= 1e-2:
         levinson_ok = False
 
 assert levinson_ok, "Levinson theorem check failed!"
 
-print("\npole locations and Levinson OK")
+print("\nDelta-shell Newton and Levinson ODE checks both passed.")
 ```
 
 ## 小结
