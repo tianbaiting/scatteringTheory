@@ -63,7 +63,7 @@ $$
 - 半宽度 $q \sim \mu$，对应空间尺度 $\sim 1/\mu$。短程势（$\mu$ 大）给出宽 Lorentzian、各向同性散射；长程势（$\mu$ 小）给出尖锐的前向峰。
 - $\mu \to 0$ 极限退化为 Coulomb 振幅 $f^B \propto 1/q^2$，对应微分截面 $d\sigma/d\Omega \propto 1/q^4 \propto 1/\sin^4(\theta/2)$，正是 Rutherford 公式。完整的 Coulomb 长程修正（Sommerfeld 因子、库仑相移）属于另一条故事线，留给后续的 Coulomb 笔记。
 
-下图是 $|f^B(q)|^2$ 对几个 $\mu$ 值的对数图。$\mu$ 越小，前向越尖锐，远端 $q \gg \mu$ 段都收敛到同一个 $V_0^2/(\mu^2 q^4)$ 包络。
+下图是 $|f^B(q)|^2$ 对几个 $\mu$ 值的对数图。$\mu$ 越小，前向越尖锐，远端 $q \gg \mu$ 段都收敛到同一个 $V_0^2/(\mu^2 q^4)$ 包络。在更大 $q$ 处三条曲线最终收敛到同一渐近线，本图 $q$ 范围尚未到达该极限。
 
 ```{python}
 #| label: fig-born-amplitude
@@ -101,7 +101,7 @@ $$
 N_0 \le \int_0^\infty dr\,r\,|V(r)|.
 $$
 
-对 Yukawa 势 $\int_0^\infty dr\,r\,V_0 \rme^{-\mu r}/(\mu r) = V_0/\mu^2$，所以 $V_0/\mu^2 < 1$ 时一定无束缚态。这是必要条件，不一定紧。Yukawa 数值上的真实 s 波束缚态阈值大约在 $V_0/\mu^2 \approx 1.68$（见后面的扫描图），Bargmann 给出的 $0.84$ 上界是保守的。
+对 Yukawa 势 $\int_0^\infty dr\,r\,V_0 \rme^{-\mu r}/(\mu r) = V_0/\mu^2$，所以 $V_0/\mu^2 < 1$ 时一定无束缚态。这是必要条件，不一定紧。Yukawa 数值上的真实 s 波束缚态阈值大约在 $V_0/\mu^2 \approx 1.68$（见后面的扫描图），Bargmann 给出的 $1.0$ 上界是保守的。
 
 把三件事并起来：
 
@@ -191,11 +191,11 @@ $$
 f(\theta) = \frac{1}{k}\sum_l (2l+1)\,\rme^{\rmi\delta_l}\sin\delta_l\,P_l(\cos\theta),
 $$
 
-可以看到 Born 近似在中等耦合就开始失败的全貌。下图是 $V_0 = \mu = 1$、$k = 1.5$ 的一帧：Born 振幅幅度系统性偏高、且仍然单调，而 full partial-wave sum（截到 $l_{\max} = 6$）在 $\theta \approx 40^\circ$ 处出现一个 Born 看不见的浅极小，对应 $\delta_0$ 与 $\delta_1$ 干涉相消。
+可以看到 Born 近似在中等耦合就开始失败的全貌。下图是 $V_0 = \mu = 1$、$k = 1.5$ 的一帧：在前向（$\theta \lesssim 65^\circ$）Born 偏高，在后向（$\theta \gtrsim 65^\circ$）Born 偏低，且 Born 仍然单调，而 full partial-wave sum（截到 $l_{\max} = 6$）在 $\theta \approx 40^\circ$ 处出现一个 Born 看不见的浅极小，对应 $\delta_0$ 与 $\delta_1$ 干涉相消。
 
 ```{python}
 #| label: fig-cross-section
-#| fig-cap: "微分截面 $d\\sigma/d\\Omega$：Born 近似（蓝虚线）与精确分波求和（红实线，$l_{\\max}=6$），$k=1.5$，$V_0=\\mu=1$。Born 系统性偏高，且看不到精确解在约 $40^\\circ$ 处的浅极小。"
+#| fig-cap: "微分截面 $d\\sigma/d\\Omega$：Born 近似（蓝虚线）与精确分波求和（红实线，$l_{\\max}=6$），$k=1.5$，$V_0=\\mu=1$。前向（$\\theta\\lesssim 65^\\circ$）Born 偏高，后向（$\\theta\\gtrsim 65^\\circ$）Born 偏低；精确解在约 $40^\\circ$ 处有 Born 看不见的浅极小。"
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -276,7 +276,7 @@ $$
 
 ```{python}
 #| label: fig-bound-state-threshold
-#| fig-cap: "低能 s 波相移 $\\delta_0(k=0.05)$ 随耦合 $V_0$ 的扫描（$\\mu=1$）。第一个 Levinson 跳变在 $V_0\\approx 1.68$ 处，对应第一个 s 波束缚态的出现。Bargmann 上界 $V_0/\\mu^2\\approx 0.84$ 标为竖虚线，明显保守。"
+#| fig-cap: "低能 s 波相移 $\\delta_0(k=0.05)$ 随耦合 $V_0$ 的扫描（$\\mu=1$）。第一个 Levinson 跳变在 $V_0\\approx 1.68$ 处，对应第一个 s 波束缚态的出现。Bargmann 上界 $V_0/\\mu^2 = 1.0$ 标为竖虚线，明显保守。"
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -319,8 +319,8 @@ d0 = np.array([numerov_phase(k, V, mu) for V in V0_arr])
 d0_unwrap = np.unwrap(2 * d0) / 2
 fig, ax = plt.subplots(figsize=(7, 4.2))
 ax.plot(V0_arr, d0_unwrap, "C0o-", ms=3, label=fr"$\delta_0(k\to 0)$, $k={k}$")
-ax.axvline(0.84, color="k", ls="--",
-           label=r"Bargmann threshold $V_0/\mu^2 \approx 0.84$")
+ax.axvline(1.0, color="k", ls="--",
+           label=r"Bargmann threshold $V_0/\mu^2 = 1.0$")
 ax.axhline(np.pi / 2, color="grey", ls=":", lw=0.8)
 ax.set(xlabel=r"$V_0$ (with $\mu=1$)", ylabel=r"$\delta_0$",
        title="First bound state appears as Levinson jump")
@@ -329,7 +329,7 @@ fig.tight_layout()
 plt.show()
 ```
 
-数值结果：第一次跳变发生在 $V_0 \approx 1.68$，与 Yukawa s 波束缚态的标准阈值符合。Bargmann 不等式给出的 $V_0/\mu^2 \le 0.84$ 上界标在图上，是真实阈值的一半左右，明显保守——它只用到 $\int r\,|V|\,dr$，没看到 Yukawa 指数压制带来的额外有效宽度。
+数值结果：第一次跳变发生在 $V_0 \approx 1.68$，与 Yukawa s 波束缚态的标准阈值符合。Bargmann 不等式给出的 $V_0/\mu^2 \le 1.0$ 上界标在图上，是真实阈值的约 60%，明显保守——它只用到 $\int r\,|V|\,dr$，没看到 Yukawa 指数压制带来的额外有效宽度。
 
 把这一段连到 Born 失效：
 
