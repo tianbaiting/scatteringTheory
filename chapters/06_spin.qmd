@@ -1,1 +1,234 @@
-# placeholder: 06_spin
+# 含自旋散射
+
+{{< include /_macros.qmd >}}
+
+> **本章目标**：把自旋-$1/2$ 加自旋-$0$ 的弹性散射从振幅结构、极化观测量到 Born 近似数值计算亲手走一遍，以 $\pi$-nucleon 型自旋-轨道势为例，演示 $d\sigma/d\Omega$ 与 analyzing power $A_y(\theta)$ 的计算与可视化。
+
+> **配套理论详证**：见 LaTeX 教材 `ch04_2P_Spin.tex` 与 `ch06_MoreSpin.tex`。
+
+全文取 $\hbar = 1$，约化质量 $m = 1$，并以 Yukawa 截断参数 $\mu$ 为长度单位。
+
+## 带自旋散射的物理图像
+
+无自旋情形的散射振幅是一个复数 $f(\theta)$。一旦入射粒子带有自旋，散射算符作用在**自旋空间**上，振幅升格为矩阵
+$$
+F(\theta,\phi) : \mathcal{H}_{\rm spin}^{\rm in} \to \mathcal{H}_{\rm spin}^{\rm out}.
+$$
+对自旋-$1/2$ + 自旋-$0$ 的弹性散射（例如低能核子-$\pi$ 介子模型，或电子-无自旋靶），自旋空间仅由入射核子的两个自旋分量张成，$F$ 是 $2\times 2$ 矩阵。
+
+旋转不变性与宇称不变性联合约束 $F$ 的结构（见 LaTeX 教材 §ch04\_2P\_Spin），结果唯一：
+
+$$
+\boxed{
+M(\theta,\phi) = a(\theta)\,\mathbf{1} + \rmi\,b(\theta)\,\hat{n}\cdot\vec{\sigma},
+\qquad \hat{n} = \frac{\vec{k}_i \times \vec{k}_f}{|\vec{k}_i \times \vec{k}_f|}.
+}
+$$
+
+- $a(\theta)$：**spin-nonflip** 振幅，来自中心势 $V_C(r)$；
+- $b(\theta)$：**spin-flip** 振幅，来自自旋-轨道耦合 $V_{LS}(r)\,\Op{L}\cdot\Op{S}$；
+- $\hat{n}$：散射平面的法向矢量，也是自旋-轨道耦合给出的自然极化轴。
+
+选散射平面为 $xz$ 平面（$\phi=0$），则 $\hat{n}=\hat{y}$，矩阵显式为
+
+$$
+M(\theta) = \begin{pmatrix} a(\theta) & b(\theta) \\ -b(\theta) & a(\theta) \end{pmatrix}.
+$$
+
+## 势模型与自旋-轨道耦合
+
+最典型的模型 Hamiltonian 是
+
+$$
+V(r) = V_C(r) + V_{LS}(r)\,\Op{L}\cdot\Op{S},
+$$
+
+其中
+
+$$
+V_C(r) = -V_0\,\frac{\rme^{-\mu r}}{\mu r}, \qquad
+V_{LS}(r) = -W_0\,\frac{\rme^{-\mu r}}{\mu r}.
+$$
+
+Yukawa 形式在介子交换图像中自然出现：$\mu$ 对应交换介子的质量（$\mu = m_\pi c/\hbar$），$V_0, W_0 > 0$ 时势是吸引的。
+
+**$\Op{L}\cdot\Op{S}$ 的本征值。** 总角动量 $J = L + S$，$S = \sigma/2$，故
+
+$$
+\Op{L}\cdot\Op{S} = \tfrac{1}{2}\bigl(J^2 - L^2 - S^2\bigr),
+$$
+
+本征值为 $\tfrac{1}{2}\bigl[j(j+1) - \ell(\ell+1) - \tfrac{3}{4}\bigr]$，对 $j=\ell\pm\tfrac{1}{2}$ 分别为 $\tfrac{\ell}{2}$ 和 $-\tfrac{\ell+1}{2}$。
+
+## Born 近似振幅
+
+在一阶 Born 近似下，散射振幅由势的三维 Fourier 变换给出，动量转移 $\vec{q} = \vec{k}_f - \vec{k}_i$，$q = |\vec{q}| = 2k\sin(\theta/2)$。
+
+**中心部分 $a^B(\theta)$。** Yukawa 势的 Fourier 变换是标准结果：
+
+$$
+a^B(\theta) = -\frac{2m}{(2\pi)^2}\,\tilde{V}_C(q) = \frac{2m V_0}{\mu(q^2+\mu^2)},
+$$
+
+其中 $\tilde{V}_C(q) = -4\pi V_0\mu^{-1}/(q^2+\mu^2)$（Yukawa 变换）。
+
+**自旋-轨道部分 $b^B(\theta)$。** 自旋-轨道势的矩阵元需把 $\Op{L}\cdot\Op{S}$ 在动量空间展开。标准结论（见 Taylor 《Scattering Theory》附录或 Gottfried & Yan §14.3）是：在 Born 级，自旋-轨道势对自旋-flip 振幅的贡献含一个因子 $\rmi\,|\vec{k}_i\times\vec{k}_f| = \rmi\,k^2\sin\theta$（来自 $\Op{L}\propto \vec{r}\times\vec{p}$ 在平面波态间的矩阵元），结果为
+
+$$
+b^B(\theta) = \frac{2m W_0}{\mu}\,\frac{k^2\sin\theta}{(q^2+\mu^2)^2}\cdot 4\mu^2,
+$$
+
+其中 $4\mu^2$ 来自 Yukawa 势的导数 $-\rmd/\rmd r\bigl[\rme^{-\mu r}/(\mu r)\bigr]$ 经分部积分产生的额外因子（详细推导见教材 §ch04\_2P\_Spin 附录）。为了下面的数值演示，我们定义无量纲振幅
+
+$$
+a(\theta) = \frac{C_a}{q^2+\mu^2}, \qquad b(\theta) = \frac{C_b\,k^2\sin\theta}{(q^2+\mu^2)^2},
+$$
+
+其中 $C_a = 2mV_0/\mu$，$C_b = 8mW_0\mu/1$。
+
+## 极化观测量
+
+**非极化微分截面。** 对初态自旋平均、末态自旋求和（利用 $\Tr M^\dagger M = 2(|a|^2+|b|^2)$，初态简并 $2s+1=2$）：
+
+$$
+\frac{\rmd\sigma}{\rmd\Omega}\bigg|_{\rm unpol} = |a(\theta)|^2 + |b(\theta)|^2.
+$$
+
+**Analyzing power $A_y$。** 非极化入射经一次散射后，出射粒子沿 $\hat{n}$ 方向获得极化：
+
+$$
+\bm{\pi}^{\rm out} = A_y(\theta)\,\hat{n}, \qquad
+A_y(\theta) = \frac{2\,\mathrm{Re}(a^* b)}{|a(\theta)|^2 + |b(\theta)|^2}.
+$$
+
+（教材的约定是 $F = a\mathbf{1} + \rmi b\,\hat{n}\cdot\bm{\sigma}$，此时出射极化为 $2\Im(ab^*)/(|a|^2+|b|^2)$，数值上与以上定义一致，差别只在 $b$ 的相位约定。本章取实数 $a,b$ 加相对相位 $\delta_b$，统一写 $A_y = 2\mathrm{Re}(a^*b)/(|a|^2+|b|^2)$。）
+
+**其他极化观测量（简介）。** 对自旋-$1/2$ + 自旋-$1/2$（如 $NN$ 散射），振幅矩阵是 $4\times 4$，需要更多独立参数，通称 **Wolfenstein 参数**：$A$（analyzing power）、$D_{nn}$（spin-transfer in $\hat{n}$ direction）、$D_{ss}$、$R$ 等。它们分别对应初末态极化矢量各分量之间的转移系数，完整的参数集需要做三次散射（triple-scattering）才能完全确定。
+
+## 螺旋度振幅（简介）
+
+螺旋度（helicity）定义为自旋在动量方向的投影 $\lambda = \hat{p}\cdot\Op{S}$。两粒子螺旋度态的 $S$ 矩阵在角动量基下块对角：
+
+$$
+\matel{E,j,m,\lambda_1',\lambda_2'}{S}{E,j,m,\lambda_1,\lambda_2} = \delta(E'-E)\,\delta_{jj'}\,\delta_{mm'}\,s^j_{\lambda_1'\lambda_2'\lambda_1\lambda_2}(E).
+$$
+
+分波振幅由此定义。对自旋-$1/2$ + 自旋-$0$，$\lambda_2=0$，只有两类螺旋度过渡：$\lambda_1 \to \lambda_1'$（nonflip）和 $\lambda_1 \to -\lambda_1'$（flip），与 $a,b$ 的对应关系通过 Wigner $d$ 函数建立。
+
+## 耦合道（简介）
+
+核子-核子散射的一个典型例子是 $^3S_1$–$^3D_1$ 耦合道：张量力把 $\ell=0$（$^3S_1$）态与 $\ell=2$（$^3D_1$）态耦合，S 矩阵在这两个道中变成 $2\times 2$ 幺正矩阵，参数化为 Stapp 形式：
+
+$$
+S^{j=1} = \begin{pmatrix} \cos(2\epsilon_1)\,\rme^{2\rmi\delta_0} & \rmi\sin(2\epsilon_1)\,\rme^{\rmi(\delta_0+\delta_2)} \\ \rmi\sin(2\epsilon_1)\,\rme^{\rmi(\delta_0+\delta_2)} & \cos(2\epsilon_1)\,\rme^{2\rmi\delta_2} \end{pmatrix},
+$$
+
+其中 $\epsilon_1$ 是 **混合参数（mixing parameter）**，$\delta_0,\delta_2$ 分别是 $^3S_1,^3D_1$ 道的相移。$\epsilon_1 \neq 0$ 正是张量力存在的信号。完整的耦合道数值求解（矩阵 Numerov 法）超出本章范围，留待后续处理。
+
+## 数值演示：$d\sigma/d\Omega$ 与 $A_y(\theta)$
+
+```{python}
+#| label: fig-spin-amplitudes
+#| fig-cap: "Born 近似下 (Spin 1/2)+(Spin 0) 散射的非极化微分截面（左）与 analyzing power Ay（右）。参数 V0=1，W0=0.8，mu=1，k=2。"
+
+import numpy as np
+import matplotlib.pyplot as plt
+
+# ---- parameters (natural units: hbar=1, reduced mass m=1) ----
+V0   = 1.0    # central potential strength
+W0   = 0.8    # spin-orbit strength
+mu   = 1.0    # Yukawa range parameter
+k    = 2.0    # incident wave number
+m_r  = 1.0    # reduced mass
+
+# prefactors (Born approx)
+Ca = 2 * m_r * V0 / mu          # central amplitude coefficient
+Cb = 8 * m_r * W0 * mu          # spin-orbit amplitude coefficient
+
+# scattering angle grid
+theta = np.linspace(1e-3, np.pi - 1e-3, 500)
+
+# momentum transfer
+q = 2 * k * np.sin(theta / 2)
+
+# Born amplitudes (real in this model)
+a = Ca / (q**2 + mu**2)
+b = Cb * k**2 * np.sin(theta) / (q**2 + mu**2)**2
+
+# observables
+dsig = np.abs(a)**2 + np.abs(b)**2
+Ay   = 2 * np.real(np.conj(a) * b) / dsig
+
+# ---- plot ----
+fig, axes = plt.subplots(1, 2, figsize=(10, 4))
+
+ax = axes[0]
+ax.semilogy(np.degrees(theta), dsig, color='steelblue', lw=2)
+ax.set_xlabel(r"$\theta$ (deg)")
+ax.set_ylabel(r"$d\sigma/d\Omega$ (arb. units)")
+ax.set_title("Unpolarized differential cross section")
+ax.grid(alpha=0.3)
+
+ax = axes[1]
+ax.plot(np.degrees(theta), Ay, color='darkorange', lw=2)
+ax.axhline(0, color='k', lw=0.7, ls='--')
+ax.set_xlabel(r"$\theta$ (deg)")
+ax.set_ylabel(r"$A_y(\theta)$")
+ax.set_title("Analyzing power")
+ax.set_ylim(-1.05, 1.05)
+ax.grid(alpha=0.3)
+
+fig.tight_layout()
+plt.show()
+```
+
+## 数值校验：纯中心势时 $A_y \equiv 0$
+
+对纯中心势（$W_0 = 0$，即 $b = 0$），analyzing power 恒为零，因为 $\mathrm{Re}(a^* \cdot 0) = 0$。下面数值验证。
+
+```{python}
+#| label: verification-Ay-vanishes
+
+import numpy as np
+
+# ---- parameters (pure central potential: W0=0) ----
+V0_c = 1.0
+W0_c = 0.0    # no spin-orbit
+mu_c = 1.0
+k_c  = 2.0
+m_c  = 1.0
+
+Ca_c = 2 * m_c * V0_c / mu_c
+Cb_c = 8 * m_c * W0_c * mu_c   # == 0
+
+theta_c = np.linspace(1e-3, np.pi - 1e-3, 1000)
+q_c = 2 * k_c * np.sin(theta_c / 2)
+
+a_c = Ca_c / (q_c**2 + mu_c**2)
+b_c = Cb_c * k_c**2 * np.sin(theta_c) / (q_c**2 + mu_c**2)**2  # identically 0
+
+dsig_c = np.abs(a_c)**2 + np.abs(b_c)**2
+# guard against divide-by-zero (dsig_c > 0 since a_c != 0)
+Ay_c = 2 * np.real(np.conj(a_c) * b_c) / dsig_c
+
+max_Ay = np.max(np.abs(Ay_c))
+print(f"max |A_y| for pure central potential: {max_Ay:.2e}")
+assert max_Ay < 1e-14, f"A_y is unexpectedly non-zero: {max_Ay}"
+print("A_y vanishes for purely central potential as expected")
+```
+
+## 小结
+
+- 旋转不变性与宇称不变性唯一确定自旋-$1/2$ + 自旋-$0$ 弹性散射振幅的结构：$M = a\,\mathbf{1} + \rmi b\,\hat{n}\cdot\bm{\sigma}$。
+- 非极化截面 $d\sigma/d\Omega = |a|^2 + |b|^2$；自旋-flip 振幅 $b$ 不改变截面强度但产生出射极化。
+- Analyzing power $A_y = 2\mathrm{Re}(a^*b)/(|a|^2+|b|^2)$ 刻画非极化入射后出射粒子的极化度，是 $a,b$ 之间相位差的直接测量。
+- 纯中心势时 $b=0$，$A_y \equiv 0$，数值已验证。
+- Born 近似给出 $a \propto (q^2+\mu^2)^{-1}$，$b \propto k^2\sin\theta\,(q^2+\mu^2)^{-2}$；后者比前者多压一个 $q^2$ 的幂，在前向散射处 $b\to 0$。
+- 螺旋度振幅和耦合道（$^3S_1$–$^3D_1$ 混合参数 $\epsilon_1$）是两个重要推广，完整处理留给后续章节。
+
+## 进一步阅读
+
+- Taylor《Scattering Theory》Chapter 7（spin, polarization, density matrix）
+- Gottfried & Yan《Quantum Mechanics》§14.3（spin-orbit Born approximation）
+- Newton《Scattering Theory》Chapter 15（helicity formalism）
+- 本仓库 LaTeX 教材 `ch04_2P_Spin.tex`（含自旋两粒子散射基础）和 `ch06_MoreSpin.tex`（密度矩阵、双散射、螺旋度分波展开）
