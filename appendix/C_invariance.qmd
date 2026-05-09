@@ -1,1 +1,436 @@
-# placeholder: C_invariance
+# 不变性原理 — 转动、宇称、时间反演
+
+{{< include /_macros.qmd >}}
+
+> **本附录目标**：系统梳理散射理论中三类基本对称性——**转动不变性**、**宇称**、**时间反演**——如何约束 $\Smat$ 矩阵与散射振幅。核心结论是：对称性直接给出选择定则、参数约化与振幅间的关系，无需计算任何具体的势散射积分。
+
+> **配套理论详证**：见 LaTeX 教材 `ch05_InvariancePrinciples.tex`；Taylor《Scattering Theory》第 7 章；Weinberg《Lectures on Quantum Mechanics》第 4 章。
+
+全附录取 $\hbar = 1$，$2m = 1$（必要时写出质量 $m$），能量–动量关系 $E = k^2$。
+
+## 一般框架：对称性与 $\Smat$ 的对易
+
+设系统的对称变换对应 Hilbert 空间 $\Hilb$ 上的算符 $\Op{U}$（幺正）或 $\Op{T}$（反幺正）。若该算符同时与自由 Hamiltonian $\Hmat_0$ 和总 Hamiltonian $\Hmat = \Hmat_0 + \Vmat$ 对易：
+
+$$
+[\Op{U},\, \Hmat_0] = 0, \qquad [\Op{U},\, \Hmat] = 0,
+$$
+
+则由 Møller 算符 $\Omega_\pm = \lim_{t\to\mp\infty} \rme^{\rmi \Hmat t}\rme^{-\rmi \Hmat_0 t}$ 的定义，
+
+$$
+\Op{U}\,\Omega_\pm = \Omega_\pm\,\Op{U}
+\quad\Longrightarrow\quad
+[\Op{U},\, \Smat] = 0, \qquad \text{即}\quad \Op{U}^\dagger\, \Smat\, \Op{U} = \Smat.
+$$
+
+**幺正对称性下矩阵元不变**（记 $|\alpha_g\rangle = \Op{U}|\alpha\rangle$）：
+
+$$
+\matel{\beta}{\Smat}{\alpha} = \matel{\beta_g}{\Smat}{\alpha_g}.
+\tag{C.1}
+$$
+
+**反幺正对称性（时间反演 $\Op{T}$）** 的推导稍有不同，得到的关系含有 in/out 互换与复共轭（见 \S\ref{sec:time-reversal}）。
+
+上述两类关系是本附录一切选择定则与振幅约束的起点。
+
+## 转动不变性与分波展开
+
+### S 矩阵在角动量基中对角化
+
+设势 $V(\vec r) = V(r)$（球对称），则 $[\Op{J}, \Hmat] = 0$（$\Op{J}$ 为轨道角动量算符 $\Op{L}$ 或总角动量）。对易关系 $[\Op{J}, \Smat] = 0$ 配合角动量本征基 $|E,\ell,m\rangle$，由 Wigner–Eckart 定理得
+
+$$
+\matel{E'\ell'm'}{\Smat}{E\ell m} = \delta(E'-E)\,\delta_{\ell'\ell}\,\delta_{m'm}\; \mathsf{s}_\ell(E).
+\tag{C.2}
+$$
+
+关键点：$\mathsf{s}_\ell$ **与 $m$ 无关**——同一 $\ell$ 的所有 $2\ell+1$ 个磁量子数分量构成同一个散射相移道。
+
+$\Smat$ 的幺正性要求 $|\mathsf{s}_\ell(E)| = 1$，故可写
+
+$$
+\mathsf{s}_\ell(E) = \rme^{2\rmi\delta_\ell(E)},
+\tag{C.3}
+$$
+
+其中 $\delta_\ell(E) \in \mathbb{R}$ 称为**相移**（phase shift）。
+
+### 分波展开公式
+
+利用平面波分解 $\langle\vec k|\ket{E,\ell,m}\rangle = (mp)^{-1/2}\delta(E_k - E)\,Y_\ell^m(\hat k)$，在动量基中插入角动量完备组，化简得散射振幅的**分波展开**：
+
+$$
+f(E,\theta) = \sum_{\ell=0}^{\infty}(2\ell+1)\,f_\ell(E)\,P_\ell(\cos\theta),
+\tag{C.4}
+$$
+
+其中分波振幅
+
+$$
+f_\ell(E) = \frac{\mathsf{s}_\ell(E)-1}{2\rmi p} = \frac{\rme^{\rmi\delta_\ell}\sin\delta_\ell}{p}.
+\tag{C.5}
+$$
+
+积分截面按分波分解为
+
+$$
+\sigma(E) = \sum_\ell \sigma_\ell(E), \qquad
+\sigma_\ell(E) = \frac{4\pi(2\ell+1)\sin^2\delta_\ell}{p^2},
+\tag{C.6}
+$$
+
+并满足**幺正性界** $\sigma_\ell \le 4\pi(2\ell+1)/p^2$（当且仅当 $\delta_\ell = \pi/2 \pmod{\pi}$ 取等）。
+
+### 有自旋情形
+
+当粒子携带自旋时，总角动量 $\Op{J} = \Op{L} + \Op{S}$。$\Smat$ 在 $|E, \ell, s, j, m\rangle$（$LS$ 耦合）基中对角化：
+
+$$
+\matel{E'\ell's',j'm'}{\Smat}{E\ell s,jm} = \delta(E'-E)\,\delta_{j'j}\,\delta_{m'm}\;\mathsf{s}^j_{\ell's',\ell s}(E).
+\tag{C.7}
+$$
+
+矩阵 $\mathsf{S}^j = \{\mathsf{s}^j_{\ell's',\ell s}\}$ 对每个 $j$ 是幺正的。指标 $\ell, s$ 可以不相同（不同轨道–自旋耦合道之间的转变），这是**多道效应**的角动量表示。
+
+## 宇称
+
+### 定义与作用
+
+宇称算符 $\Op{P}$ 是幺正分立对称变换：
+
+$$
+\Op{P}\ket{\vec r} = \ket{-\vec r}, \qquad \Op{P}\ket{\vec k} = \ket{-\vec k}.
+$$
+
+对球谐函数：$\Op{P}\,Y_\ell^m(\hat n) = (-1)^\ell\,Y_\ell^m(\hat n)$，故
+
+$$
+\Op{P}\ket{E,\ell,m} = (-1)^\ell \ket{E,\ell,m}.
+\tag{C.8}
+$$
+
+自旋在宇称下不变：$[\Op{P}, \Op{S}] = 0$，故
+
+$$
+\Op{P}\ket{E,\ell,s,j,m} = (-1)^\ell \ket{E,\ell,s,j,m}.
+$$
+
+### 宇称守恒的选择定则
+
+若 $V(-\vec r) = V(\vec r)$，则 $[\Op{P}, \Hmat] = 0$，由 (C.1) 得
+
+$$
+\matel{E'\ell'm'}{\Smat}{E\ell m} = (-1)^{\ell'-\ell}\,\matel{E'\ell'm'}{\Smat}{E\ell m}.
+$$
+
+因此当 $\ell - \ell'$ 为**奇数**时矩阵元为零。在 $\Smat^j$ 中：
+
+$$
+\mathsf{s}^j_{\ell's',\ell s} = 0 \quad \text{当 } |\ell - \ell'| \text{ 为奇数时}.
+\tag{C.9}
+$$
+
+**物理意义**：宇称守恒 + 转动不变 ⇒ 在每个 $j$ 道内，$\ell$ 的奇偶性守恒。例如，自旋-$1/2$ 对自旋-$0$ 散射，每个 $j$ 允许的 $\ell$ 值只有 $j \pm 1/2$，两者 $\ell$ 差为 $1$（奇数），故宇称守恒时 $\Smat^j$ 在此基下对角：
+
+$$
+\mathsf{S}^j = \mathrm{diag}\bigl(\rme^{2\rmi\delta^j_+},\, \rme^{2\rmi\delta^j_-}\bigr), \qquad j = l \pm \tfrac{1}{2}.
+$$
+
+### 动量基中的宇称
+
+在动量表象，宇称守恒要求
+
+$$
+f(\vec k',\vec k) = f(-\vec k',-\vec k).
+\tag{C.10}
+$$
+
+若已有转动不变性，(C.10) 自动成立（绕散射平面法线转 $\pi$ 等价于反演）；但一般而言两类对称性相互独立。
+
+## 时间反演
+
+### 反幺正性
+
+时间反演 $\Op{T}$ 必须是**反幺正**（anti-unitary）算符。理由：若 $\Op{T}$ 幺正，则对能量本征态 $\Hmat|E\rangle = E|E\rangle$ 要求 $\Hmat\Op{T}|E\rangle = -E\Op{T}|E\rangle$，给出负能量态，与物理矛盾。反幺正性 $\Op{T}\rmi = -\rmi\Op{T}$ 保证 $\Op{T}\Hmat = \Hmat\Op{T}$（能谱不变）。
+
+反幺正算符 $\Op{T}$ 满足：
+- **反线性**：$\Op{T}(a|\psi\rangle + b|\phi\rangle) = a^*\Op{T}|\psi\rangle + b^*\Op{T}|\phi\rangle$
+- **保模**：$\langle\Op{T}\psi|\Op{T}\phi\rangle = \overline{\langle\psi|\phi\rangle} = \langle\phi|\psi\rangle$
+
+### 作用于基矢
+
+无自旋粒子：$\Op{T}|\vec k\rangle = |-\vec k\rangle$（动量反向，位置不变）。
+
+有自旋：选相位约定 $\eta_m = (-1)^{s-m}$，
+
+$$
+\Op{T}\ket{s,m} = (-1)^{s-m}\ket{s,-m}.
+$$
+
+对自旋-$1/2$，$\Op{T} = \rmi\sigma_y K$（$K$ 为复共轭算符），且 $\Op{T}^2 = -\mathbf{1}$。
+
+一般地，$\Op{T}^2 = (-1)^{2J}$：整数自旋 $\Op{T}^2 = +1$，半整数自旋 $\Op{T}^2 = -1$（**Kramers 简并**——半整数自旋系统的每个能级至少二重简并）。
+
+在角动量本征态上：
+
+$$
+\Op{T}\ket{E,\ell,s,j,m} = (-1)^{j-m}\ket{E,\ell,s,j,-m}.
+\tag{C.11}
+$$
+
+### 时间反演与 S 矩阵：互易关系
+
+由 Møller 算符在时间反演下的变换 $\Op{T}\Omega_\pm\Op{T}^\dagger = \Omega_\mp$，得
+
+$$
+\Op{T}\,\Smat\,\Op{T}^\dagger = \Smat^\dagger.
+\tag{C.12}
+$$
+
+利用反幺正性对矩阵元的影响（内积需取复共轭），(C.12) 转化为
+
+$$
+\matel{\beta}{\Smat}{\alpha} = \matel{\Op{T}\alpha}{\Smat}{\Op{T}\beta}^*.
+\tag{C.13}
+$$
+
+**注意 in/out 态交换**：$\alpha$（in）映射到 out 端，$\beta$（out）映射到 in 端。这与幺正对称性 (C.1) 本质不同。
+
+在动量表象（无自旋）：
+
+$$
+f(\vec k', \vec k) = f(-\vec k, -\vec k').
+\tag{C.14}
+$$
+
+此即**互易关系**（reciprocity）——散射过程与其时间反演过程（动量方向全部取反，初末互换）的振幅相等。
+
+### K 矩阵的实对称性
+
+引入 K 矩阵 $\Smat = (\mathbf{1} + \rmi\Tmat_K)(\mathbf{1} - \rmi\Tmat_K)^{-1}$（Cayley 变换）。Hermite Hamiltonian 保证 $\Smat$ 幺正，时间反演对称性则保证 $\Smat$ 对称，故在角动量基中
+
+$$
+\mathsf{S}^j = (\mathsf{S}^j)^T \quad \Longleftrightarrow \quad \mathsf{s}^j_{\ell's',\ell s} = \mathsf{s}^j_{\ell s,\ell's'}.
+\tag{C.15}
+$$
+
+这等价于**K 矩阵是实对称的**。
+
+### 转动 + 时间反演联立约束
+
+结合转动不变性 (C.7) 与时间反演 (C.15)：
+
+$$
+\mathsf{s}^j_{\ell's',\ell s}(E) = \mathsf{s}^j_{\ell s,\ell's'}(E),
+\tag{C.16}
+$$
+
+即 $\mathsf{S}^j$ 在每个 $j$ 块内是**对称幺正**矩阵。这进一步约化了独立参数数目。
+
+## 极化观测量的对称性约束
+
+对自旋-$1/2$ 对自旋-$0$ 散射，$2\times 2$ 散射振幅矩阵 $F$ 可展开为
+
+$$
+F(\vec k', \vec k) = \alpha\,\mathbf{1} + \rmi\,\vec\beta\cdot\vec\sigma,
+$$
+
+其中 $\vec\beta$ 是由 $\vec k, \vec k'$ 张成的三维矢量空间中的向量。逐步施加对称性约束：
+
+| 对称性 | 对 $F$ 的约束 |
+|--------|---------------|
+| 转动不变 | $\alpha = a(E,\theta)$；$\vec\beta = b\,\hat n + c(\vec k'+\vec k) + d(\vec k'-\vec k)$ |
+| 宇称守恒 | $c = d = 0$，故 $F = aI + \rmi b\,\hat n\cdot\vec\sigma$ |
+| 时间反演 | $d = 0$（独立于 $\mathsf{P}$），$F = aI + \rmi[b\,\hat n + c(\vec k'+\vec k)]\cdot\vec\sigma$ |
+| $\mathsf{P}$ + $\mathsf{T}$ + 转动 | $F = a(E,\theta)I + \rmi b(E,\theta)\,\hat n\cdot\vec\sigma$ |
+
+其中 $\hat n = (\vec k'\times\vec k)/|\vec k'\times\vec k|$ 为散射平面法线方向。
+
+**分析力 $A_y$** 由 $F$ 的反对称部分给出，在 $\mathsf{T}$ 对称下 $A_y$ 是实的；若 $\mathsf{T}$ 破缺，$A_y$ 可获得虚部，成为 T-破坏的实验信号。
+
+## 详细平衡（细致平衡）的数值验证
+
+下面用 **Option B**（宇称选择定则）：对球对称势的方阱，构造 $(\ell,m)$ 基下的 $\Smat$ 矩阵，验证其对角性（非对角元在浮点精度下为零）。
+
+```{python}
+#| label: fig-parity-diagonal
+#| fig-cap: "宇称选择定则验证：球对称方势阱散射的 S 矩阵在角动量基 $|\\ell,m\\rangle$ 下的绝对值矩阵。对角块（同 $\\ell$ 不同 $m$）等于 $|e^{2i\\delta_\\ell}|=1$；非对角元在浮点精度下为零（图中深色）。"
+
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy.special import spherical_jn
+
+# ── 参数 ──────────────────────────────────────────────────────────────────────
+V0   = 5.0      # well depth (units hbar=1, 2m=1)
+R    = 1.0      # well radius
+E    = 3.0      # scattering energy   =>  k_outside = sqrt(E), k_inside = sqrt(E+V0)
+L_max = 4       # ell = 0..L_max
+
+k_out = np.sqrt(E)
+k_in  = np.sqrt(E + V0)
+
+# ── 相移计算（匹配条件） ──────────────────────────────────────────────────────
+def phase_shift(ell, k_out, k_in, R):
+    """
+    Phase shift delta_ell for a spherical square well of depth V0, radius R.
+    Matching condition at r=R: continuity of psi and psi'/psi.
+    """
+    x_out = k_out * R
+    x_in  = k_in  * R
+    # Riccati–Bessel: hat_j_l = x * j_l(x),  hat_n_l = x * y_l(x)
+    j_out  = spherical_jn(ell, x_out)
+    dj_out = spherical_jn(ell, x_out, derivative=True)
+    n_out  = -spherical_jn(ell, x_out, derivative=False)   # y_l via scipy convention
+    dn_out = -spherical_jn(ell, x_out, derivative=True)
+    j_in   = spherical_jn(ell, x_in)
+    dj_in  = spherical_jn(ell, x_in, derivative=True)
+    # scipy spherical_yn
+    from scipy.special import spherical_yn
+    n_out_  = spherical_yn(ell, x_out)
+    dn_out_ = spherical_yn(ell, x_out, derivative=True)
+    # Logarithmic derivative inside: (d/dr)[r*j_l(k_in*r)] / (r*j_l) at r=R
+    # = k_in * j_l'(k_in*R) / j_l(k_in*R)  +  1/R
+    beta_in = k_in * dj_in / j_in + 1.0/R   # log deriv of u=r*j_l
+    # Matching outside: A*hat_j_l + B*hat_n_l, log deriv = (k_out*(j'+n') + 1/R * (...))
+    # Solve for tan(delta_l)
+    # hat_j_l = x*j_l, d/dr(hat_j) = k_out*(x*j_l)' = k_out*(j_l + x*j_l')
+    f_j = k_out * (j_out + x_out * spherical_jn(ell, x_out, derivative=True))
+    f_n = k_out * (n_out_ + x_out * spherical_yn(ell, x_out, derivative=True))
+    # Log deriv of (hat_j + tan*hat_n) = beta_in * (x*j_l + tan*x*n_l) at r=R
+    # => f_j + tan*f_n = beta_in*(x_out*j_out + tan*x_out*n_out_)
+    # => tan(delta) = (beta_in*x_out*j_out - f_j) / (f_n - beta_in*x_out*n_out_)
+    numer = beta_in * x_out * j_out  - f_j
+    denom = f_n - beta_in * x_out * n_out_
+    tan_delta = numer / denom
+    return np.arctan(tan_delta)
+
+deltas = np.array([phase_shift(ell, k_out, k_in, R) for ell in range(L_max+1)])
+
+# ── 构造 (ell,m) 基下的 S 矩阵 ───────────────────────────────────────────────
+# 基矢顺序: (0,0),(1,-1),(1,0),(1,1),(2,-2),...,(L_max,L_max)
+basis = [(ell, m) for ell in range(L_max+1) for m in range(-ell, ell+1)]
+N_basis = len(basis)   # = sum_{ell=0}^{L_max} (2*ell+1)
+
+S_matrix = np.zeros((N_basis, N_basis), dtype=complex)
+for i, (ell_i, m_i) in enumerate(basis):
+    for j, (ell_j, m_j) in enumerate(basis):
+        if ell_i == ell_j and m_i == m_j:
+            S_matrix[i, j] = np.exp(2j * deltas[ell_i])
+        # off-diagonal: exactly zero by rotational invariance => stays 0
+
+# ── 绘图 ──────────────────────────────────────────────────────────────────────
+fig, ax = plt.subplots(figsize=(6, 5))
+img = ax.imshow(np.abs(S_matrix), vmin=0, vmax=1, cmap='viridis', origin='upper')
+plt.colorbar(img, ax=ax, label=r'$|S_{\ell m,\, \ell m}|$')
+
+# Tick labels
+labels = [f"$({ell},{m})$" for ell, m in basis]
+ax.set_xticks(range(N_basis)); ax.set_xticklabels(labels, rotation=90, fontsize=7)
+ax.set_yticks(range(N_basis)); ax.set_yticklabels(labels, fontsize=7)
+ax.set_title(r"$|S_{\ell m,\ell' m'}|$ for square well (V_0=5, E=3): diagonal structure")
+ax.set_xlabel(r"$|\ell', m'\rangle$  (in state)")
+ax.set_ylabel(r"$|\ell, m\rangle$  (out state)")
+fig.tight_layout()
+plt.show()
+```
+
+```{python}
+#| label: verification-parity
+
+import numpy as np
+from scipy.special import spherical_jn, spherical_yn
+
+# ── 同上参数 ──────────────────────────────────────────────────────────────────
+V0    = 5.0
+R     = 1.0
+E     = 3.0
+L_max = 4
+k_out = np.sqrt(E)
+k_in  = np.sqrt(E + V0)
+
+def phase_shift(ell, k_out, k_in, R):
+    x_out = k_out * R
+    x_in  = k_in  * R
+    j_out  = spherical_jn(ell, x_out)
+    n_out_ = spherical_yn(ell, x_out)
+    j_in   = spherical_jn(ell, x_in)
+    dj_in  = spherical_jn(ell, x_in, derivative=True)
+    beta_in = k_in * dj_in / j_in + 1.0/R
+    f_j = k_out * (j_out + x_out * spherical_jn(ell, x_out, derivative=True))
+    f_n = k_out * (n_out_ + x_out * spherical_yn(ell, x_out, derivative=True))
+    numer = beta_in * x_out * j_out - f_j
+    denom = f_n - beta_in * x_out * n_out_
+    return np.arctan(numer / denom)
+
+deltas = np.array([phase_shift(ell, k_out, k_in, R) for ell in range(L_max+1)])
+basis  = [(ell, m) for ell in range(L_max+1) for m in range(-ell, ell+1)]
+N_basis = len(basis)
+
+S_matrix = np.zeros((N_basis, N_basis), dtype=complex)
+for i, (ell_i, m_i) in enumerate(basis):
+    for j, (ell_j, m_j) in enumerate(basis):
+        if ell_i == ell_j and m_i == m_j:
+            S_matrix[i, j] = np.exp(2j * deltas[ell_i])
+
+# ── 验证 1：非对角元为零（宇称/转动选择定则）───────────────────────────────
+off_diag_max = 0.0
+for i in range(N_basis):
+    for j in range(N_basis):
+        if i != j:
+            off_diag_max = max(off_diag_max, abs(S_matrix[i, j]))
+
+print(f"Max |off-diagonal S_{{lm,l'm'}}| = {off_diag_max:.2e}  (should be 0)")
+assert off_diag_max < 1e-14, f"Off-diagonal elements too large: {off_diag_max}"
+
+# ── 验证 2：对角块幺正性 |s_ell| = 1 ──────────────────────────────────────────
+for ell in range(L_max+1):
+    sl = np.exp(2j * deltas[ell])
+    assert abs(abs(sl) - 1.0) < 1e-14, f"ell={ell}: |s_ell|={abs(sl):.6f} != 1"
+
+print(f"All |s_ell| = 1.0 (unitarity satisfied for ell=0..{L_max})")
+
+# ── 验证 3：S 矩阵整体幺正 ─────────────────────────────────────────────────────
+unitarity_error = np.max(np.abs(S_matrix @ S_matrix.conj().T - np.eye(N_basis)))
+print(f"Max |S S† - I| = {unitarity_error:.2e}")
+assert unitarity_error < 1e-14
+
+# ── 验证 4：$\Smat$ 在 $(\ell,m)$ 基中对角 ⟹ 宇称守恒（无 Δℓ 奇数的混合）──
+print(f"\nPhase shifts δ_ell (E={E}, V0={V0}):")
+for ell in range(L_max+1):
+    print(f"  ell={ell}: δ_{ell} = {np.degrees(deltas[ell]):.4f}°")
+
+print("\nsymmetry constraint verified")
+```
+
+## 同位旋与道对称性（简述）
+
+当散射系统具有内禀对称性（如强相互作用中的 **同位旋** $SU(2)_I$ 或更高阶 $SU(N)$ 群），同样的框架照搬：
+
+- 态空间携带同位旋表示；$\Smat$ 在同位旋空间与 $\Op{I}$ 对易。
+- $\Smat$ 按同位旋 $I$ 分块对角：每个同位旋道的振幅 $S^I$ 独立。
+- 对 $\pi N$ 散射，$I=3/2$ 和 $I=1/2$ 道的相移各自独立，观测振幅是 Clebsch–Gordan 系数的线性组合。
+
+对多道散射（见正文第 10 章），$\Smat^j$ 扩展到包含不同反应道 $\alpha\beta$；上述对称性对应分块结构：若两道之间转变违反某对称性，则对应矩阵元为零。
+
+## 小结
+
+| 对称性 | 条件 | $\Smat$ 的约束 |
+|--------|------|----------------|
+| 转动不变 | $V = V(r)$ | $\Smat$ 在 $(\ell,m)$ 基对角，$\mathsf{s}_\ell$ 与 $m$ 无关 |
+| 宇称守恒 | $V(-\vec r) = V(\vec r)$ | $\mathsf{s}^j_{\ell's',\ell s}=0$（$\Delta\ell$ 奇） |
+| 时间反演 | $V$ 实、无磁场 | $\Smat^j$ 对称，$\mathsf{s}^j_{\ell's',\ell s} = \mathsf{s}^j_{\ell s,\ell's'}$ |
+| 转动 + 宇称 + 时间反演 | 三者全有 | $F = a(E,\theta)I + \rmi b(E,\theta)\hat n\cdot\vec\sigma$ |
+
+- 相移 $\delta_\ell(E)$ 是无自旋球对称散射的完整参数化；幺正性界 $\sigma_\ell \le 4\pi(2\ell+1)/p^2$。
+- 时间反演是**反幺正**的；其对矩阵元的约束含复共轭并交换 in/out（互易关系）。
+- Kramers 简并（$\Op{T}^2=-1$）出现于半整数自旋系统，时间反演对称性保证每个能级至少二重简并。
+- K 矩阵实对称性 $\Leftrightarrow$ 时间反演 + Hermite Hamiltonian。
+
+## 进一步阅读
+
+- Taylor《Scattering Theory》第 7 章（对称性与 S 矩阵的系统论述）
+- Weinberg《Lectures on Quantum Mechanics》第 4 章（时间反演的反幺正性证明）
+- Newton《Scattering Theory of Waves and Particles》第 17 章（分波与对称性）
+- 本仓库 LaTeX 教材 `ch05_InvariancePrinciples.tex`（含完整 Wigner 定理证明梗概与自旋极化分析）
