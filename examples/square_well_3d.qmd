@@ -247,7 +247,7 @@ fig.tight_layout()
 plt.show()
 ```
 
-固定 $V_0 = 2.0$（弱阱，无束缚态），画 $k\cot\delta_0$ 对 $k^2$ 的散点。直线拟合给出截距 $-1/a \approx -0.280$、斜率 $r_e/2 \approx 0.610$。截距与解析散射长度 $a = 1 - \tan\sqrt 2 / \sqrt 2 \approx 3.479$ 给出 $-1/a \approx -0.287$，吻合。这就是有效力程展开"两个参数足以描述低能 s 波"的实验性证据。
+固定 $V_0 = 2.0$（弱阱，无束缚态），画 $k\cot\delta_0$ 对 $k^2$ 的散点。直线拟合给出截距 $-1/a \approx +0.280$、斜率 $r_e/2 \approx 0.610$。截距与解析散射长度 $a = 1 - \tan\sqrt 2 / \sqrt 2 \approx -3.479$ 给出 $-1/a \approx +0.287$，吻合。注意拟合范围延伸至 $k = 1.2$（$k^2$ 达 $1.44$），略超出 ERE 严格低能收敛域，因此截距（$0.280$）与精确值（$0.287$）相差约 $2.5\%$；图中对比仅作示意。这就是有效力程展开"两个参数足以描述低能 s 波"的实验性证据。
 
 ```{python}
 #| label: fig-effective-range-fit
@@ -281,7 +281,7 @@ a_exact = scattering_length(V0)
 fig, ax = plt.subplots(figsize=(7, 4.5))
 ax.plot(k * k, kcot, "C0o", ms=3, label="data")
 ax.plot(k * k, slope * k * k + intercept, "C1-",
-        label=rf"fit: $-1/a={-intercept:.3f},\ r_e={2*slope:.3f}$")
+        label=rf"fit: $-1/a={intercept:.3f},\ r_e={2*slope:.3f}$")
 ax.axhline(-1.0 / a_exact, color="k", lw=0.5, ls=":",
            label=rf"exact $-1/a={-1/a_exact:.3f}$")
 ax.set(xlabel=r"$k^2$", ylabel=r"$k\cot\delta_0$",
