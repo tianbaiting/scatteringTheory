@@ -166,13 +166,13 @@ fig.tight_layout()
 plt.show()
 ```
 
-$\gamma=5$ 时相移平缓上升；$\gamma=20$ 时在 $kR \approx \pi$ 附近出现明显的 $\pi$ 跳跃；$\gamma=50$ 时几乎是阶梯。每过一个 $n\pi$ 相移再增加一个 $\pi$，这是 Levinson 定理在共振版本下的体现：每一个准束缚态贡献 $\pi$ 相位。
+$\gamma=5$ 时相移先陡降至约 $-1.6\,\mathrm{rad}$，再随能量上升出现轻微抬升；$\gamma=20$ 时在 $kR \approx \pi$ 附近出现明显的 $\pi$ 跳跃；$\gamma=50$ 时几乎是阶梯。每过一个 $n\pi$ 相移再增加一个 $\pi$，这是 Levinson 定理在共振版本下的体现：每一个准束缚态贡献 $\pi$ 相位。
 
 第二张图：截面 $\sigma_0(k) = 4\pi\sin^2\delta_0/k^2$。
 
 ```{python}
 #| label: fig-cross-section
-#| fig-cap: "S 波截面 $\\sigma_0(k)=4\\pi\\sin^2\\delta_0/k^2$（对数纵轴），$\\gamma=5,20,50$。Breit-Wigner 峰落在 $kR\\approx n\\pi$；$\\gamma$ 越大峰越窄越尖。"
+#| fig-cap: "S 波截面 $\\sigma_0(k)=4\\pi\\sin^2\\delta_0/k^2$（对数纵轴），$\\gamma=5,20,50$。峰位紧贴 $kR=n\\pi$ 稍低处（$kR=n\\pi$ 处 $\\sin=0$，截面降为零，形成峰间的尖谷）；$\\gamma$ 越大峰越窄越尖。"
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -194,7 +194,7 @@ fig.tight_layout()
 plt.show()
 ```
 
-Breit-Wigner 峰直接坐在 $kR = n\pi$ 附近，峰高 $\sim 4\pi/(n\pi/R)^2$；$\gamma$ 越大峰越窄越尖。$\gamma=5$ 时基本看不见峰，$\gamma=50$ 时峰已经收成针。这就是把 Friedrichs 笔记里"耦合极限下极点靠近实轴"的图像具体化到一个解析势上。
+Breit-Wigner 峰紧贴 $kR = n\pi$ 稍低处，峰高 $\sim 4\pi/(n\pi/R)^2$；$kR = n\pi$ 正好是 $\sin(kR)=0$ 的零点，截面在此处塌陷为零，形成峰间的尖谷。$\gamma$ 越大峰越窄越尖：$\gamma=5$ 时基本看不见峰，$\gamma=50$ 时峰已经收成针。这就是把 Friedrichs 笔记里"耦合极限下极点靠近实轴"的图像具体化到一个解析势上。
 
 第三张图：复 $k$ 平面上 $|S_0(k)|$ 的对数幅度，$\gamma=20$。
 
@@ -226,7 +226,7 @@ def newton_pole(k0, gamma, R=1.0, tol=1e-12, itmax=80):
     return k
 
 gamma = 20.0
-kr = np.linspace(0.2, 7.5, 600); ki = np.linspace(-1.5, 0.3, 360)
+kr = np.linspace(0.2, 10.0, 800); ki = np.linspace(-1.5, 0.3, 360)
 KR, KI = np.meshgrid(kr, ki)
 Z = np.log10(np.abs(s_matrix(KR + 1j * KI, gamma)) + 1e-6)
 fig, ax = plt.subplots(figsize=(7.5, 4.5))
@@ -250,7 +250,7 @@ plt.show()
 
 ```{python}
 #| label: fig-width-vs-gamma
-#| fig-cap: "第一共振宽度 $\\Gamma_1$ 随耦合 $\\gamma$ 的变化（log-log）。数据点几乎压在 $2\\pi/\\gamma$ 直线上，宽度反比于耦合强度。"
+#| fig-cap: "第一共振宽度 $\\Gamma_1$ 随耦合 $\\gamma$ 的变化（log-log）。数据点压在 $4\\pi^3/\\gamma^2$ 直线上，宽度以 $O(\\gamma^{-2})$（log-log 斜率 $-2$）衰减。"
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -272,7 +272,7 @@ widths = np.array([abs(4 * (kp := newton_pole(
     np.pi - 0.05 - 0.3j / np.sqrt(g), g)).real * kp.imag) for g in gammas])
 fig, ax = plt.subplots(figsize=(6.5, 4.2))
 ax.loglog(gammas, widths, "o-", label=r"first resonance $\Gamma$")
-ax.loglog(gammas, 2 * np.pi / gammas, "k--", lw=0.8, label=r"$2\pi/\gamma$")
+ax.loglog(gammas, 4 * np.pi**3 / gammas**2, "k--", lw=0.8, label=r"$4\pi^3/\gamma^2$")
 ax.set(xlabel=r"$\gamma$", ylabel=r"$\Gamma$",
        title="First resonance width vs coupling")
 ax.legend(); ax.grid(True, which="both", alpha=0.3)
@@ -280,7 +280,7 @@ fig.tight_layout()
 plt.show()
 ```
 
-数据点几乎压在 $2\pi/\gamma$ 直线上：宽度反比于耦合，$\Gamma_1 \sim 2\pi/\gamma$。这条 scaling 和 Friedrichs 笔记里 $\Gamma(E) = 2\pi |g(E)|^2$ 的依赖结构是一致的——这里有效"耦合"$|g|^2$ 反比于势的"硬度"$\gamma$，因为壳越硬，准束缚态在内部停留越久（宽度越小）。极限 $\gamma \to \infty$ 极点掉到实轴，恢复硬球内部的真束缚态。
+数据点压在 $4\pi^3/\gamma^2$ 直线上：宽度以 $O(\gamma^{-2})$（log-log 斜率 $-2$）衰减，$\Gamma_1 \sim 4\pi^3/\gamma^2$。推导：在 $kR = \pi$ 附近令 $\delta k = k - \pi/R$，将极点方程展开到二阶，可得 $k_I \approx -\pi^2/(R^2\gamma^2)$，从而 $\Gamma = -4 k_R k_I \approx 4\pi^3/(\gamma^2 R^2)$（$R=1$）。这条 scaling 和 Friedrichs 笔记里 $\Gamma(E) = 2\pi |g(E)|^2$ 的依赖结构一致——有效耦合 $|g_{\rm eff}|^2 \sim 1/\gamma^2$，壳越硬穿透越难，寿命越长。极限 $\gamma \to \infty$ 极点掉到实轴，恢复硬球内部的真束缚态。
 
 ## sanity checks
 
@@ -330,11 +330,11 @@ print(f"sanity checks passed; first pole (γ=20): k={kp:.4f}, "
 | 强排斥壳 $\gamma \to \infty$ 内部硬球能级 $E_n = (n\pi/R)^2$ | 离散态 $E_d$（解耦极限） |
 | 有限 $\gamma$ 下壳让内部态泄漏 | 耦合 $V$ 打开后 $|d\rangle$ 与连续谱混合 |
 | 复 $k$ 极点 $k_n = k_n^{\rm R} + i k_n^{\rm I}$，$k_n^{\rm I} < 0$ | 第二张面极点 $z_* = E_R - i\Gamma/2$ |
-| 宽度 $\Gamma_1 \sim 2\pi/\gamma$ | $\Gamma(E) = 2\pi \|g(E)\|^2$：耦合越强，逃逸通道越快 |
+| 宽度 $\Gamma_1 \sim 4\pi^3/\gamma^2$ | $\Gamma(E) = 2\pi \|g(E)\|^2$：耦合越强，逃逸通道越快 |
 | Breit-Wigner 截面峰 | $\rho(E) \propto \Gamma/[(E-E_R)^2 + \Gamma^2/4]$ 谱函数 |
 | s 波 $S_0 = e^{2i\delta_0}$ | 分波幺正 $S_l = e^{2i\delta_l}$ |
 
-这里要稍微小心 $\gamma$ 与 $g(E)$ 的方向相反这个细节："强壳"$\gamma$ 大对应共振宽度 $\Gamma$ 小，而 Friedrichs 笔记里"强耦合"$|g|^2$ 大却让 $\Gamma$ 大。这一表观矛盾的根源是：delta 壳的 $\gamma$ 大不是"内外耦合大"，恰恰相反，是"内外耦合小"——壳越硬越难穿透，所以 Friedrichs 中起对应作用的有效耦合 $|g_{\rm eff}|^2 \sim 1/\gamma$。把这一对应记牢，下一篇 separable rank-1 笔记里 form factor 的角色才能直接接上。
+这里要稍微小心 $\gamma$ 与 $g(E)$ 的方向相反这个细节："强壳"$\gamma$ 大对应共振宽度 $\Gamma$ 小，而 Friedrichs 笔记里"强耦合"$|g|^2$ 大却让 $\Gamma$ 大。这一表观矛盾的根源是：delta 壳的 $\gamma$ 大不是"内外耦合大"，恰恰相反，是"内外耦合小"——壳越硬越难穿透，所以 Friedrichs 中起对应作用的有效耦合 $|g_{\rm eff}|^2 \sim 1/\gamma^2$（$\Gamma_1 \sim 4\pi^3/\gamma^2$，log-log 斜率 $-2$）。把这一对应记牢，下一篇 separable rank-1 笔记里 form factor 的角色才能直接接上。
 
 ## 与吸引情形 $\gamma < 0$ 的对照
 
