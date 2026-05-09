@@ -1,1 +1,595 @@
-# placeholder: 02_smatrix_cross_section
+# S 矩阵与散射截面
+
+{{< include /_macros.qmd >}}
+
+> **本章目标**：从 Møller 波算符出发严格定义 S 矩阵 $\Smat = \Omega_-^\dagger \Omega_+$，推导散射振幅 $f(\theta,\phi)$、微分截面 $\rmd\sigma/\rmd\Omega = |f|^2$ 与光学定理，并用 Yukawa 势的 Born 近似数值验证光学定理。
+
+> **配套理论详证**：见 LaTeX 教材 `ch01_ScatteringOperator_1P.tex` 与 `ch02_CrossSection.tex`。
+
+全文取 $\hbar = 1$，$2m = 1$（即 $m = 1/2$），故自由 Hamiltonian $\Hmat_0 = \Op{p}^2$，能量-波数关系 $E = k^2$。
+
+## Møller 波算符与散射算符
+
+### 渐近条件的物理直觉
+
+在散射实验中，粒子在 $t \to -\infty$ 时远离靶、自由传播（入射渐近态），与靶相互作用后在 $t \to +\infty$ 时再次自由传播（出射渐近态）。准确表述为：若势 $V$ 在无穷远足够快衰减（例如 $V(r) = O(r^{-3-\varepsilon})$），则对每个自由波包 $|\psi_\mathrm{in}\rangle$，存在真实态 $|\psi\rangle$ 使得
+
+$$
+\lim_{t \to -\infty} \bigl\| \rme^{-\rmi \Hmat t}|\psi\rangle - \rme^{-\rmi \Hmat_0 t}|\psi_\mathrm{in}\rangle \bigr\| = 0,
+$$
+
+对出射方向类似。这就是**渐近条件**。
+
+### Møller 算符的定义
+
+在渐近条件下，定义 **Møller 波算符**（**Møller wave operators**）为强极限
+
+$$
+\Omega_\pm \;=\; \lim_{t \to \mp\infty} \rme^{\rmi \Hmat t}\, \rme^{-\rmi \Hmat_0 t}.
+$$
+
+$\Omega_+$ 把入射渐近态 $|\psi_\mathrm{in}\rangle$ 映射到 $t=0$ 时刻的真实散射态；$\Omega_-$ 把出射渐近态映射回 $t=0$ 的真实态。
+
+**等距性**：由 $\rme^{\pm\rmi \Hmat t}$ 酉，强极限保范数，故
+
+$$
+\Omega_\pm^\dagger \Omega_\pm = \mathbb{1}.
+$$
+
+注意 $\Omega_\pm$ 一般**不是**幺正的——其值域（散射态子空间）不覆盖束缚态。
+
+### 交织关系与能量守恒
+
+直接计算可以证明 **intertwining relation**（交织关系）：
+
+$$
+\Hmat\,\Omega_\pm \;=\; \Omega_\pm\,\Hmat_0,
+$$
+
+等价地 $\rme^{\rmi \Hmat \tau}\Omega_\pm = \Omega_\pm \rme^{\rmi \Hmat_0 \tau}$ 对任意 $\tau \in \R$ 成立。将 $\Smat = \Omega_-^\dagger \Omega_+$ 与交织关系结合，立即得到
+
+$$
+[\Smat,\, \Hmat_0] = 0,
+$$
+
+即**散射过程中渐近能量守恒**。
+
+### S 矩阵的定义
+
+$$
+\boxed{\Smat \;=\; \Omega_-^\dagger\,\Omega_+}, \qquad |\psi_\mathrm{out}\rangle = \Smat\,|\psi_\mathrm{in}\rangle.
+$$
+
+$\Smat$ 是**幺正算符**（在渐近完备性成立时）：$\Smat^\dagger \Smat = \Smat \Smat^\dagger = \mathbb{1}$。
+
+## 在壳 T 矩阵与散射振幅
+
+### 动量表象中的能量守恒
+
+取动量本征态 $|\vec{p}\rangle$ 为基，$[\Smat,\Hmat_0] = 0$ 意味着
+
+$$
+\matel{\vec{p}\,'}{\Smat}{\vec{p}} \;\propto\; \delta(E_{p'} - E_p),
+$$
+
+即散射矩阵元必须含能量 $\delta$ 函数。写为
+
+$$
+\matel{\vec{p}\,'}{\Smat}{\vec{p}} \;=\; \delta^{(3)}(\vec{p}\,' - \vec{p}) \;-\; 2\pi\rmi\,\delta(E_{p'} - E_p)\;t(\vec{p}\,' \leftarrow \vec{p}),
+$$
+
+其中 $t(\vec{p}\,' \leftarrow \vec{p})$ 称为**在壳 T 矩阵元**（on-shell T-matrix element），仅在 $E_{p'} = E_p$（能量壳）上有意义。
+
+### 散射振幅
+
+定义**散射振幅**（scattering amplitude）
+
+$$
+f(\vec{p}\,' \leftarrow \vec{p}) \;=\; -(2\pi)^2\,m\;t(\vec{p}\,' \leftarrow \vec{p}).
+$$
+
+取 $\hbar = 1,\,2m = 1$（即 $m = 1/2$），故
+
+$$
+f(\vec{p}\,' \leftarrow \vec{p}) \;=\; -\frac{\pi}{1}\,t(\vec{p}\,' \leftarrow \vec{p}) \;=\; -\pi\,t(\vec{p}\,' \leftarrow \vec{p}),
+$$
+
+即
+
+$$
+\boxed{f(\vec{p}\,' \leftarrow \vec{p}) \;=\; -\frac{1}{4\pi}\,\matel{\vec{p}\,'}{\Tmat}{\vec{p}}},
+$$
+
+其中 $\matel{\vec{p}\,'}{\Tmat}{\vec{p}}$ 为 off-shell T 算符在壳上的矩阵元，$\Tmat$ 满足 Lippmann–Schwinger 方程（见第 3 章）。因子 $1/(4\pi)$ 来自约定 $m = 1/2$，即 $(2\pi)^2 m = \pi$，而 $t = \matel{\Tmat}/(whatever normalization)$ — 此处采用 $t(\vec{p}' \leftarrow \vec{p}) = \matel{\vec{p}'}{\Tmat}{\vec{p}}/(4\pi^2 m) = \matel{\vec{p}'}{\Tmat}{\vec{p}}/(2\pi^2)$，即
+
+$$
+f = -(2\pi)^2 m\,t = -\frac{1}{4\pi}\matel{\vec{k}_f}{\Tmat}{\vec{k}_i}.
+$$
+
+### 散射波函数的渐近行为
+
+在坐标表象中，散射态的渐近行为（$r \to \infty$）为
+
+$$
+\psi(\vec{r}) \;\sim\; \rme^{\rmi k z} \;+\; \frac{\rme^{\rmi k r}}{r}\,f(\theta,\phi),
+$$
+
+第一项是入射平面波，第二项是向外传播的球面散射波。$f(\theta,\phi)$ 就是上述算符定义的散射振幅，其中 $\theta, \phi$ 是散射角。
+
+## 微分截面与总截面
+
+### $\rmd\sigma/\rmd\Omega = |f|^2$ 的推导思路
+
+对横向位移波包族 $\phi_{\vec{\rho}}(\vec{p}) = \rme^{-\rmi\vec{\rho}\cdot\vec{p}}\phi(\vec{p})$，对碰撞参数 $\vec{\rho}$ 取平均，利用
+
+$$
+\int \rmd^2\rho\;\rme^{\rmi\vec{\rho}\cdot(\vec{p}' - \vec{p}'')} \;=\; (2\pi)^2\,\delta_2(\vec{p}'_\perp - \vec{p}''_\perp),
+$$
+
+合并两个能量 $\delta$ 函数，再在 $\phi(\vec{p})$ 在 $\vec{p}_0$ 附近尖峰集中（尖锐峰假设）的条件下，最终得到
+
+$$
+\boxed{\frac{\rmd\sigma}{\rmd\Omega}(\vec{p} \leftarrow \vec{p}_0) \;=\; \big|f(\vec{p} \leftarrow \vec{p}_0)\big|^2, \qquad |\vec{p}| = |\vec{p}_0|.}
+$$
+
+**总截面**为
+
+$$
+\sigma \;=\; \int \rmd\Omega\;\frac{\rmd\sigma}{\rmd\Omega} \;=\; \int \rmd\Omega\;|f(\theta,\phi)|^2.
+$$
+
+## 幺正性与光学定理
+
+### 从幺正性到光学定理
+
+$\Smat^\dagger \Smat = \mathbb{1}$ 写为 $R + R^\dagger = -R^\dagger R$（其中 $\Smat = \mathbb{1} + R$）。取矩阵元并代入 $R$ 的表达式，约去公共能量 $\delta$ 函数，一般情形得到
+
+$$
+f(\vec{p}\,' \leftarrow \vec{p}) - f^*(\vec{p} \leftarrow \vec{p}\,') \;=\; \frac{\rmi}{2\pi m}\int \rmd^3p''\;\delta(E_{p''} - E_p)\;f^*(\vec{p}'' \leftarrow \vec{p}\,')\;f(\vec{p}'' \leftarrow \vec{p}).
+$$
+
+取 $\vec{p}\,' = \vec{p}$（**向前散射**），左边化为 $2\rmi\,\mathrm{Im}\,f(\vec{p} \leftarrow \vec{p})$，右边利用
+
+$$
+\int \rmd^3p''\;\delta(E_{p''} - E_p)\;|f(\vec{p}'' \leftarrow \vec{p})|^2 \;=\; mp\int \rmd\Omega\;|f|^2 \;=\; mp\,\sigma,
+$$
+
+得到**光学定理**（optical theorem）：
+
+$$
+\boxed{\mathrm{Im}\,f(\vec{p} \leftarrow \vec{p}) \;=\; \frac{p}{4\pi}\,\sigma_\mathrm{tot}.}
+$$
+
+这一关系完全来自 $\Smat$ 的幺正性，与势的具体形式无关，且可推广到非弹性散射与相对论情形。
+
+### 物理解读
+
+- **微分截面**只给出 $|f|$，即散射振幅的模；光学定理额外给出向前散射振幅的虚部。
+- $\mathrm{Im}\,f(0) \geq 0$ 恒成立（因为 $\sigma \geq 0$）。
+- 光学定理与色散关系结合，可以从 $\sigma_\mathrm{tot}(E)$ 数据重建 $\mathrm{Re}\,f(\theta=0, E)$。
+
+## 数值实现：Born 近似与光学定理验证
+
+本节以 **Yukawa 势**的 Born 近似为例，数值验证光学定理。
+
+**势的设置**（$\hbar = 1$，$2m = 1$，$\Hmat_0 = \Op{k}^2$）：
+
+$$
+V(r) = -V_0\,\frac{\rme^{-\mu r}}{\mu r}, \qquad V_0, \mu > 0.
+$$
+
+**一阶 Born 散射振幅**（Born 近似 $f^{(1)}$）：
+
+$$
+f^{(1)}(\theta) \;=\; -\frac{1}{4\pi}\matel{\vec{k}_f}{\Vmat}{\vec{k}_i} \;=\; -\frac{\tilde{V}(\vec{q})}{4\pi}, \qquad \vec{q} = \vec{k}_f - \vec{k}_i,\quad q = 2k\sin(\theta/2).
+$$
+
+对 Yukawa 势，$\tilde{V}(\vec{q}) = -4\pi V_0/(\mu(q^2 + \mu^2))$，故
+
+$$
+f^{(1)}(\theta) \;=\; \frac{V_0}{\mu(q^2 + \mu^2)}, \qquad q^2 = 4k^2\sin^2(\theta/2).
+$$
+
+注意 $f^{(1)}$ 为**实数**，故 $\mathrm{Im}\,f^{(1)}(0) = 0$，而 $\sigma^{(1)} > 0$，**一阶 Born 近似违反光学定理**。这是预期的：光学定理要求 $\mathrm{Im}\,f = (k/4\pi)\sigma$，而 $\sigma \sim V_0^2$（二阶），$\mathrm{Im}\,f$ 也必须是二阶量（来自二阶 Born 修正）。
+
+二阶 Born 振幅 $f^{(2)}$ 包含虚部，且 $\mathrm{Im}\,f^{(2)}(0) = (k/4\pi)\sigma^{(1)}$，从而在二阶精度上恢复光学定理。
+
+下面通过**分波展开与精确 T 矩阵**方法，在一个 rank-1 可分势上给出精确（而非近似的）数值验证。
+
+```{python}
+#| label: fig-optical-theorem
+#| fig-cap: "光学定理验证：用 rank-1 可分势的精确 T 矩阵，在多个能量点和耦合强度下验证 $\\mathrm{Im}\\,f(0) = (k/4\\pi)\\sigma_\\mathrm{tot}$。图中散点与对角线 $y=x$ 重合即表明光学定理成立。"
+
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy import integrate
+
+# -----------------------------------------------------------------------
+# Rank-1 separable potential:  V = -lambda * |g><g|
+# Form factor: g(k) = 1 / (k^2 + beta^2)   (Yukawa-like)
+# Units: hbar=1, 2m=1  =>  H0 = k^2,  E = k^2
+#
+# T-matrix for this potential satisfies the LS equation exactly:
+#   T(E+) = V + V G0(E+) T
+# For rank-1:  T = -lambda |g><g| / D(E+)
+# where D(z) = 1 - lambda * <g| G0(z) |g>
+#          = 1 - lambda * int d^3k' g(k')^2 / (z - k'^2)
+# On-shell matrix element (E = k^2, outgoing boundary: z = k^2 + i0^+):
+#   t(k_f <- k_i) = -lambda * g(k_f) g(k_i) / D(E+)
+# where g(k) = 1/(k^2 + beta^2)
+#
+# Scattering amplitude: f(theta) = -1/(4pi) <k_f|T|k_i>
+#   = lambda/(4pi) * g(k)^2 / D(E+)    [elastic, |k_f|=|k_i|=k, on-shell]
+#
+# Forward amplitude f(0): theta=0 => q=0 => same
+#   f(0) = lambda g(k)^2 / (4pi D(E+))
+#
+# Sigma_tot from integrating |f|^2 over solid angle:
+#   sigma = int |f(theta)|^2 dOmega
+#   = 2pi int_0^pi |f(theta)|^2 sin(theta) dtheta
+# -----------------------------------------------------------------------
+
+def compute_D(lam, beta, k, eta=1e-8):
+    """
+    D(E+) = 1 - lam * I(E+)
+    I(E+) = int_0^inf dp' p'^2 * g(p')^2 / (E+i*eta - p'^2)  * 4pi / (2pi)^3
+          = (1/2pi^2) int_0^inf dp' p'^2 / [(p'^2+beta^2)^2 * (E+ieta - p'^2)]
+    Evaluate analytically:
+    With E = k^2, E+ieta -> k^2 + ieta:
+    I = (1/(2*pi^2)) * PV int + i*pi*residue contribution
+    The integral can be done by partial fractions. The result is:
+    I = (1/(2*pi^2)) * [ pi/(2*beta*(beta^2+k^2)) + pi*k/(2*(k^2+beta^2)^2)*... ]
+
+    Use numerical integration for generality.
+    """
+    E = k**2
+    z = E + 1j * eta
+
+    def integrand_real(p):
+        g2 = 1.0 / (p**2 + beta**2)**2
+        denom = z - p**2
+        return p**2 * g2 / denom
+
+    # Split into real and imaginary; numerical integration over finite range
+    p_max = 50.0 * max(k, beta, 1.0)
+    N = 8000
+    p_arr = np.linspace(1e-6, p_max, N)
+    dp = p_arr[1] - p_arr[0]
+
+    g2_arr = 1.0 / (p_arr**2 + beta**2)**2
+    denom_arr = z - p_arr**2
+    integrand = p_arr**2 * g2_arr / denom_arr
+    I = (1.0 / (2.0 * np.pi**2)) * np.trapezoid(integrand, p_arr)
+
+    return 1.0 - lam * I
+
+
+def forward_amplitude(lam, beta, k, eta=1e-8):
+    """f(theta=0) = lam * g(k)^2 / (4*pi * D(E+))"""
+    g_k = 1.0 / (k**2 + beta**2)
+    D = compute_D(lam, beta, k, eta)
+    return lam * g_k**2 / (4.0 * np.pi * D)
+
+
+def total_cross_section(lam, beta, k, eta=1e-8):
+    """sigma = 2*pi * int_0^pi |f(theta)|^2 sin(theta) dtheta"""
+    E = k**2
+    D = compute_D(lam, beta, k, eta)
+    g_k = 1.0 / (k**2 + beta**2)
+    prefactor = (lam * g_k / (4.0 * np.pi * D))**2
+
+    theta_arr = np.linspace(0, np.pi, 2000)
+    q_arr = 2.0 * k * np.sin(theta_arr / 2.0)
+    g_kf_arr = 1.0 / (q_arr**2 + (k**2 + beta**2))  # wrong: need |k_f|=k
+    # Actually for rank-1: f(theta) = lam*g(k_f)*g(k_i)/(4*pi*D)
+    # with |k_f|=|k_i|=k, g only depends on magnitude => g(k_f)=g(k_i)=g(k)
+    # f(theta) = lam * g(k)^2 / (4*pi*D)  -- same for all theta!
+    # This is an S-wave (isotropic) separable potential for s-wave g.
+    # sigma = 4*pi * |f(0)|^2 * ... no.
+    # For isotropic f: sigma = int |f|^2 dOmega = 4*pi * |f|^2
+
+    f_sq = abs(prefactor)**2 if False else abs(lam * g_k**2 / (4.0 * np.pi * D))**2
+    sigma = 4.0 * np.pi * f_sq
+    return sigma
+
+
+# Plot: Im f(0) vs (k/4pi)*sigma for a grid of (k, lam, beta)
+params = []
+for k in [0.5, 1.0, 2.0, 3.5]:
+    for lam in [2.0, 5.0, 10.0]:
+        for beta in [0.5, 1.0, 2.0]:
+            params.append((k, lam, beta))
+
+imf0_list = []
+rhs_list = []
+
+for (k, lam, beta) in params:
+    f0 = forward_amplitude(lam, beta, k)
+    sigma = total_cross_section(lam, beta, k)
+    imf0_list.append(np.imag(f0))
+    rhs_list.append(k / (4.0 * np.pi) * sigma)
+
+imf0 = np.array(imf0_list)
+rhs = np.array(rhs_list)
+
+fig, ax = plt.subplots(figsize=(6, 5))
+ax.scatter(rhs, imf0, s=18, alpha=0.7, label="samples")
+vmax = max(rhs.max(), imf0.max()) * 1.05
+vmin = min(rhs.min(), imf0.min()) * 0.95
+ax.plot([vmin, vmax], [vmin, vmax], 'r--', lw=1.5, label="y = x (exact)")
+ax.set_xlabel(r"$(k/4\pi)\,\sigma_{\rm tot}$")
+ax.set_ylabel(r"${\rm Im}\,f(\theta=0)$")
+ax.set_title("Optical theorem: Im f(0) vs (k/4pi) sigma_tot\n(rank-1 separable potential, exact T-matrix)")
+ax.legend()
+ax.grid(alpha=0.3)
+fig.tight_layout()
+plt.show()
+```
+
+```{python}
+#| label: fig-born-violation
+#| fig-cap: "一阶 Born 近似中光学定理的「违反」演示：$\\mathrm{Im}\\,f^{(1)}(0) = 0$ 而 $\\sigma^{(1)} > 0$。这是预期的——光学定理只在精确解（或所有阶之和）上成立。"
+
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Yukawa potential Born amplitude
+# f^(1)(theta) = V0 / (mu * (q^2 + mu^2))
+# q = 2k sin(theta/2)
+# All real => Im f^(1)(0) = 0
+
+def born_amplitude(theta, k, V0, mu):
+    q2 = (2*k*np.sin(theta/2))**2
+    return V0 / (mu * (q2 + mu**2))
+
+k_vals = np.array([0.5, 1.0, 2.0, 3.0])
+V0, mu = 3.0, 1.0
+
+theta_arr = np.linspace(0, np.pi, 3000)
+
+fig, axes = plt.subplots(1, 2, figsize=(10, 4))
+
+for k in k_vals:
+    f_arr = born_amplitude(theta_arr, k, V0, mu)
+    sigma_1 = 2 * np.pi * np.trapezoid(np.abs(f_arr)**2 * np.sin(theta_arr), theta_arr)
+    im_f0 = np.imag(born_amplitude(0, k, V0, mu))
+    rhs = k / (4*np.pi) * sigma_1
+    axes[0].plot(theta_arr * 180/np.pi, np.abs(f_arr)**2, label=f"k={k}")
+    axes[1].scatter([k], [rhs], marker='o', s=60)
+    axes[1].scatter([k], [im_f0], marker='x', s=80, color='red')
+
+axes[0].set_xlabel("Scattering angle (degrees)")
+axes[0].set_ylabel(r"$|f^{(1)}(\theta)|^2$")
+axes[0].set_title("Born diff. cross section (Yukawa)")
+axes[0].legend()
+axes[0].grid(alpha=0.3)
+
+axes[1].scatter([], [], marker='o', color='C0', label=r"$(k/4\pi)\sigma^{(1)}$")
+axes[1].scatter([], [], marker='x', color='red', label=r"${\rm Im}\,f^{(1)}(0) = 0$")
+axes[1].set_xlabel("k")
+axes[1].set_ylabel("Value")
+axes[1].set_title("Born optical theorem check: LHS=0, RHS>0")
+axes[1].legend()
+axes[1].grid(alpha=0.3)
+
+fig.tight_layout()
+plt.show()
+print("Im f^(1)(0) = 0 for all k: Born approximation is REAL -> violates optical theorem at 1st order.")
+print("This is expected: optical theorem holds only for the EXACT amplitude.")
+```
+
+## 数值校验：光学定理精确验证
+
+```{python}
+#| label: verification-optical-theorem
+
+import numpy as np
+
+# -----------------------------------------------------------------------
+# Exact T-matrix for rank-1 separable potential
+# V = -lambda * |g><g|,  g(k) = 1/(k^2 + beta^2)
+# Units: hbar=1, 2m=1,  H0 = k^2
+#
+# The on-shell T-matrix:
+#   <k'|T|k> = -lambda * g(k') * g(k) / D(E+)
+# D(E+) = 1 - lambda * I(E+)
+# I(E+) = (1/(2pi^2)) int_0^inf p^2 g(p)^2 / (E+ieta - p^2) dp
+#
+# For g(p) = 1/(p^2+beta^2), we can compute I analytically:
+# I(z) = (1/(2pi^2)) int_0^inf p^2 / [(p^2+beta^2)^2 (z-p^2)] dp
+# Let z = k^2+ieta. Using residues (close contour upper half-plane):
+# Poles: p = i*beta (double), p = i*sqrt(-z) ~ i*k + 0^+ (for E>0, z~k^2+ieta)
+# -> outgoing: p = sqrt(z) = k + i*epsilon
+#
+# Result (derived via partial fractions + residue theorem):
+# I(k^2+i0) = pi*k / (4*(k^2+beta^2)^2) + pi*i / (4*beta*(k^2+beta^2))
+# Wait, let me redo this carefully with partial fractions:
+# 1/[(p^2+beta^2)^2*(z-p^2)] = A/(p^2+beta^2)^2 + B/(p^2+beta^2) + C/(z-p^2)
+# Multiply through by (p^2+beta^2)^2*(z-p^2):
+# 1 = A*(z-p^2) + B*(p^2+beta^2)*(z-p^2) + C*(p^2+beta^2)^2
+# p^2 = z: 1 = C*(z+beta^2)^2 => C = 1/(z+beta^2)^2
+# p^2 = -beta^2: 1 = A*(z+beta^2) => A = 1/(z+beta^2)
+# Compare p^4 coeff: 0 = -B + C => B = C = 1/(z+beta^2)^2  [Wait: match coefficients]
+# Coeff of p^4: 0 = -B + C
+# Coeff of p^2: 0 = A*(-1) + B*(z-beta^2) + 2C*beta^2  ... getting complex.
+# Use numerical integration + residue check instead.
+# -----------------------------------------------------------------------
+
+def compute_I_analytic(k, beta):
+    """
+    I(k^2 + i0^+) = (1/(2pi^2)) int_0^inf p^2 / [(p^2+beta^2)^2 * (k^2+i0-p^2)] dp
+
+    Close the contour in the UPPER half of the complex p-plane.
+    The integrand (as a function of p in the whole complex plane) has poles at:
+      p = +i*beta  (double pole, Im>0)
+      p = +k + i*0^+  (simple pole from 1/(k^2+i0-p^2) => p=+k, simple)
+      p = -k - i*0^+  (not in upper half-plane for the [0,inf) contour)
+
+    By residue theorem (closing in UHP, the original contour is [0,infty)):
+    int_{-inf}^{inf} f(p) dp = 2*pi*i * (Res at p=i*beta + Res at p=k+i0)
+    We need 1/2 of this since our original integral is [0,infty) and the integrand
+    is an even function of p... wait, check:
+    integrand = p^2 / [(p^2+beta^2)^2*(k^2-p^2)]
+    This is an EVEN function of p (all even powers), so:
+    int_0^inf = (1/2) int_{-inf}^{inf}
+
+    Res at simple pole p=k:
+    lim_{p->k} (p-k) * p^2/[(p^2+beta^2)^2*(k^2-p^2)]
+    = lim_{p->k} (p-k) * p^2/[(p^2+beta^2)^2*(k-p)*(k+p)*(-1)]
+    = k^2 / [(k^2+beta^2)^2 * (-2k) * (-1)]
+    = k^2 / [(k^2+beta^2)^2 * 2k]
+    = k / [2*(k^2+beta^2)^2]
+    (The +i0 prescription means the pole is just ABOVE real axis, so it IS in UHP)
+
+    Res at double pole p=i*beta:
+    = d/dp [(p-i*beta)^2 * p^2/((p^2+beta^2)^2*(k^2-p^2))] |_{p=i*beta}
+    = d/dp [p^2 / ((p+i*beta)^2*(k^2-p^2))] |_{p=i*beta}
+    Let h(p) = p^2 / ((p+i*beta)^2*(k^2-p^2))
+    h'(p) = [2p*(p+i*beta)^2*(k^2-p^2) - p^2*(2*(p+i*beta)*(k^2-p^2) + (p+i*beta)^2*(-2p))]
+             / [(p+i*beta)^4*(k^2-p^2)^2]
+    At p=i*beta:
+    p+i*beta = 2i*beta
+    k^2-p^2 = k^2+beta^2
+    Numerator = 2*(i*beta)*(2i*beta)^2*(k^2+beta^2) - (i*beta)^2*(2*(2i*beta)*(k^2+beta^2) + (2i*beta)^2*(-2i*beta))
+    = 2*(i*beta)*(-4*beta^2)*(k^2+beta^2) - (-beta^2)*(4i*beta*(k^2+beta^2) + (-4*beta^2)*(-2i*beta))
+    = -8i*beta^3*(k^2+beta^2) + beta^2*(4i*beta*(k^2+beta^2) + 8i*beta^3)
+    = -8i*beta^3*(k^2+beta^2) + 4i*beta^3*(k^2+beta^2) + 8i*beta^5
+    = -4i*beta^3*(k^2+beta^2) + 8i*beta^5
+    = -4i*beta^3*(k^2+beta^2 - 2*beta^2)
+    = -4i*beta^3*(k^2 - beta^2)
+    Denominator = (2i*beta)^4*(k^2+beta^2)^2 = 16*beta^4*(k^2+beta^2)^2
+    Res = -4i*beta^3*(k^2-beta^2) / [16*beta^4*(k^2+beta^2)^2]
+        = -i*(k^2-beta^2) / [4*beta*(k^2+beta^2)^2]
+    """
+    # I = (1/(2pi^2)) * (1/2) * 2*pi*i * (Res_k + Res_ibeta)
+    # = (i/(2pi)) * (Res_k + Res_ibeta)
+
+    Res_k = k / (2.0 * (k**2 + beta**2)**2)
+    Res_ibeta = -1j * (k**2 - beta**2) / (4.0 * beta * (k**2 + beta**2)**2)
+
+    I = (1j / (2.0 * np.pi)) * (Res_k + Res_ibeta)
+    return I
+
+
+def compute_I_numerical(k, beta, eta=1e-6):
+    """Numerical check of I(k^2+ieta)."""
+    z = k**2 + 1j * eta
+    p_arr = np.linspace(1e-5, 80.0 * max(k, beta, 1.0), 100000)
+    g2 = 1.0 / (p_arr**2 + beta**2)**2
+    integrand = p_arr**2 * g2 / (z - p_arr**2)
+    return (1.0 / (2.0 * np.pi**2)) * np.trapezoid(integrand, p_arr)
+
+
+def optical_theorem_check(k, lam, beta):
+    """
+    Compute Im f(0) and (k/4pi)*sigma for rank-1 separable potential.
+    Returns (im_f0, rhs, relative_error).
+    """
+    I = compute_I_analytic(k, beta)
+    D = 1.0 - lam * I
+
+    g_k = 1.0 / (k**2 + beta**2)
+
+    # Forward amplitude: f(0) = -1/(4pi) * <k|T|k>
+    #                         = -1/(4pi) * (-lam * g(k)^2 / D)
+    #                         = lam * g(k)^2 / (4*pi*D)
+    f0 = lam * g_k**2 / (4.0 * np.pi * D)
+
+    # For this rank-1 separable potential with s-wave form factor:
+    # f(theta) = lam * g(k)^2 / (4*pi*D)  (independent of theta)
+    # sigma = 4*pi * |f|^2
+    f_sq = abs(f0)**2
+    sigma = 4.0 * np.pi * f_sq
+
+    im_f0 = np.imag(f0)
+    rhs = k / (4.0 * np.pi) * sigma
+
+    rel_err = abs(im_f0 - rhs) / (abs(im_f0) + abs(rhs) + 1e-30)
+    return im_f0, rhs, rel_err
+
+
+# Test samples
+test_params = [
+    (0.5,  2.0,  1.0),
+    (1.0,  5.0,  0.5),
+    (2.0,  8.0,  2.0),
+    (3.5,  3.0,  1.5),
+    (0.8,  6.0,  0.8),
+    (1.5, 10.0,  1.0),
+]
+
+print(f"{'k':>6}  {'lam':>6}  {'beta':>6}  {'Im f(0)':>14}  {'(k/4pi)*sigma':>14}  {'rel_err':>12}")
+print("-" * 70)
+all_pass = True
+for (k, lam, beta) in test_params:
+    im_f0, rhs, rel_err = optical_theorem_check(k, lam, beta)
+    status = "OK" if rel_err < 1e-6 else "FAIL"
+    if status == "FAIL":
+        all_pass = False
+    print(f"{k:6.2f}  {lam:6.2f}  {beta:6.2f}  {im_f0:14.8e}  {rhs:14.8e}  {rel_err:12.2e}  {status}")
+
+print()
+if all_pass:
+    print("optical theorem OK for all sampled (k, lam, beta)")
+else:
+    print("WARNING: some samples failed!")
+```
+
+## 数值校验（更严格的断言）
+
+```{python}
+#| label: assertion-optical-theorem
+
+import numpy as np
+
+# Re-use the analytic I and optical_theorem_check from above
+def compute_I_analytic_v2(k, beta):
+    Res_k = k / (2.0 * (k**2 + beta**2)**2)
+    Res_ibeta = -1j * (k**2 - beta**2) / (4.0 * beta * (k**2 + beta**2)**2)
+    return (1j / (2.0 * np.pi)) * (Res_k + Res_ibeta)
+
+def check_optical(k, lam, beta):
+    I = compute_I_analytic_v2(k, beta)
+    D = 1.0 - lam * I
+    g_k = 1.0 / (k**2 + beta**2)
+    f0 = lam * g_k**2 / (4.0 * np.pi * D)
+    sigma = 4.0 * np.pi * abs(f0)**2
+    im_f0 = np.imag(f0)
+    rhs = k / (4.0 * np.pi) * sigma
+    return im_f0, rhs
+
+# 4+ test samples with atol=1e-10
+samples = [
+    (0.5,  2.0, 1.0),
+    (1.0,  5.0, 0.5),
+    (2.0,  8.0, 2.0),
+    (3.5,  3.0, 1.5),
+]
+
+for (k, lam, beta) in samples:
+    lhs, rhs = check_optical(k, lam, beta)
+    err = abs(lhs - rhs)
+    assert err < 1e-10, (
+        f"Optical theorem violated at k={k}, lam={lam}, beta={beta}: "
+        f"|Im f(0) - (k/4pi)*sigma| = {err:.3e}"
+    )
+
+print("optical theorem OK for all sampled (k, lam, beta)")
+```
+
+## 小结
+
+- **Møller 波算符** $\Omega_\pm = \lim_{t\to\mp\infty} \rme^{\rmi \Hmat t}\rme^{-\rmi \Hmat_0 t}$ 是等距算符，将渐近自由态映射为 $t=0$ 的真实散射态。
+- **散射算符** $\Smat = \Omega_-^\dagger \Omega_+$ 是幺正算符（在渐近完备性下），并满足 $[\Smat, \Hmat_0] = 0$（能量守恒）。
+- **散射振幅** $f(\theta) = -\frac{1}{4\pi}\matel{\vec{k}_f}{\Tmat}{\vec{k}_i}$（取 $2m=1$），与稳态波函数渐近行为 $\psi \sim \rme^{\rmi kz} + f(\theta)\rme^{\rmi kr}/r$ 的定义一致。
+- **微分截面** $\rmd\sigma/\rmd\Omega = |f(\theta,\phi)|^2$ 由波包推导和尖锐峰假设严格给出。
+- **光学定理** $\mathrm{Im}\,f(\theta=0) = \dfrac{k}{4\pi}\sigma_\mathrm{tot}$ 完全来自 $\Smat^\dagger \Smat = \mathbb{1}$。
+- 一阶 Born 近似给出实的 $f^{(1)}$，因而在一阶精度上违反光学定理，二阶修正才能弥补。
+- Rank-1 可分势提供精确 T 矩阵，可在数值上精确验证光学定理至 $10^{-10}$ 精度。
+
+## 进一步阅读
+
+- Taylor《Scattering Theory》§2.1–2.5（Møller 算符、S 矩阵、散射截面）；§3.1–3.2（光学定理）
+- Reed–Simon vol III §XI.3–4（Møller 算符的算符论定义与渐近完备性）
+- 本仓库 LaTeX 教材 `ch01_ScatteringOperator_1P.tex`（Møller 算符、intertwining 关系、等距性）
+- 本仓库 LaTeX 教材 `ch02_CrossSection.tex`（散射截面推导、光学定理的完整证明）
