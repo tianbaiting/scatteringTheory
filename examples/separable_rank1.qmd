@@ -55,6 +55,8 @@ $I(E)$ 的被积函数对 $q$ 偶，把积分扩到整条实轴并取一半。$E
 - $q = k$ 的留数：$\dfrac{-k}{2(\beta^2 + k^2)^2}$。
 - $q = i\beta$ 的留数：$\dfrac{i(\beta^2 - k^2)}{4\beta(\beta^2 + k^2)^2}$。
 
+（边界情形注：当 $k = \beta$ 时，两个极点 $q = k$ 和 $q = i\beta$ 的留数之和恰好令 $I(E)$ 的虚部与实部均与一般表达式连续，不存在奇异；整个闭式 $I(E) = -1/[8\pi\beta(\beta - ik)^2]$ 在 $k = \beta$ 处是解析的。）
+
 整理（详细代数留给读者，或者直接交给计算机代数系统）
 
 $$
@@ -192,7 +194,7 @@ ax.plot(E, np.abs(tt), label=r"$|\tau(E)|$")
 kap = kappa_bound(lam, beta)
 if not np.isnan(kap):
     ax.axvline(-kap ** 2, color="r", ls="--", lw=1,
-               label=fr"bound state $E_b={-kap**2:.3f}$")
+               label=fr"bound state $E_b={-kap**2:.4f}$")
 ax.axvline(0, color="k", lw=0.5)
 ax.set_yscale("log")
 ax.set_xlabel("E")
@@ -243,7 +245,7 @@ def numerical_LS(E, lam, beta, N=128, qmax=30.0):
     I_num = re + 1j * im
     return lam / (1 - lam * I_num), I_num
 
-k = np.linspace(0.05, 3.0, 300)
+k = np.concatenate([np.linspace(0.001, 0.05, 50), np.linspace(0.05, 3.0, 300)])
 fig, ax = plt.subplots(figsize=(7, 4))
 for lam, beta, c in [(-30.0, 1.0, "C0"), (-10.0, 1.0, "C1"), (-50.0, 1.5, "C2")]:
     ax.plot(k, np.arctan2(k, kcot(k, lam, beta)), c,
@@ -254,7 +256,8 @@ for lam, beta, c in [(-30.0, 1.0, "C0"), (-10.0, 1.0, "C1"), (-50.0, 1.5, "C2")]
         tn, _ = numerical_LS(kk ** 2, lam, beta)
         T0 = tn / (kk ** 2 + beta ** 2) ** 2
         d_num.append(np.arctan2(kk, -4 * np.pi * (1 / T0).real))
-    ax.plot(ks, d_num, c + "o", ms=5, mfc="none", label="numerical LS")
+    ax.plot(ks, d_num, c + "o", ms=5, mfc="none",
+            label=fr"numerical LS, $\lambda={lam},\beta={beta}$")
 ax.set_xlabel("k")
 ax.set_ylabel(r"$\delta_0(k)$ [rad]")
 ax.set_title("s-wave phase shift: closed form vs numerical LS")
@@ -268,7 +271,7 @@ plt.show()
 
 ```{python}
 #| label: fig-effective-range
-#| fig-cap: "$k\\cot\\delta_0$ 对 $k^2$ 作图。ERE 截断到 $O(k^2)$ 的虚线（用解析 $a, r_e$ 画出）与精确曲线在低 $k^2$ 完美吻合，高 $k^2$ 处出现来自 $-4\\pi k^4/\\lambda$ 项的偏离——这一项也在解析公式里写明，所以偏离也是解析可控的。"
+#| fig-cap: "$k\\cot\\delta_0$ 对 $k^2$ 作图。实线为精确解析公式，它是 $k^2$ 的二次多项式（精确截断在 $k^4$，无更高阶系数）。虚线为标准有效力程展开（ERE）截断至 $O(k^2)$，即 $-1/a + r_e k^2/2$；两者在低 $k^2$ 完美吻合，高 $k^2$ 处出现偏离——偏离来自 ERE 截掉的 $-4\\pi k^4/\\lambda$ 项，反映的是 ERE 截断误差，而非精确公式的失效。"
 
 import numpy as np
 import matplotlib.pyplot as plt
