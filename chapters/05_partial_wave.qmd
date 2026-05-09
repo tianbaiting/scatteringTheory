@@ -94,126 +94,47 @@ $$
 
 import numpy as np
 from scipy.integrate import solve_ivp
+from scipy.special import spherical_jn, spherical_yn
 import matplotlib.pyplot as plt
 
 # ── Parameters ──────────────────────────────────────────────────────────────
 V0 = 10.0   # well depth  (hbar=1, 2m=1 units)
 R  = 1.0    # well radius
 
-def V_well(r):
-    """3D attractive square well."""
-    return -V0 * (r < R)
+def compute_phase_shift(ell, k, r_start=1e-7):
+    """
+    Variable Phase Method (VPM) for the attractive square well.
 
-def radial_ode(r, y, ell, k):
-    """
-    ODE system for u_ell(r) with  hbar=1, 2m=1:
-      u'' = [ell*(ell+1)/r^2 + V(r) - k^2] u
-    State: y = [u, u'].
-    """
-    u, du = y
-    d2u = (ell*(ell+1)/r**2 + V_well(r) - k**2) * u
-    return [du, d2u]
+    The running phase shift δ_ell(r) satisfies (Calogero 1967):
+        dδ/dr = -(V(r)/k) * [hat_j_ell(kr)*cos(δ) - hat_y_ell(kr)*sin(δ)]^2
 
-def compute_phase_shift(ell, k, r_match=8.0, r_start=1e-6):
+    where hat_j_ell(x) = x*j_ell(x) and hat_y_ell(x) = x*y_ell(x) are the
+    Riccati–Bessel functions (hbar=1, 2m=1 units).
+
+    Initial condition: δ(0) = 0.
+    For a square well, V(r)=0 for r>R, so δ is constant beyond R.
+    We integrate from r_start to R only.
+
+    The VPM is continuous in k, automatically satisfies Levinson's theorem
+    (δ(k→0) = N_b*π), and has no arctan2 branch ambiguity.
     """
-    Numerically integrate the radial SE from r_start to r_match,
-    then match to the asymptotic form to extract delta_ell.
-    Returns the raw arctan2 value in (-pi, pi).
-    """
-    # Initial conditions: u ~ r^(ell+1),  u' ~ (ell+1)*r^ell
-    u0  = r_start**(ell + 1)
-    du0 = (ell + 1) * r_start**ell
+    def vpm_ode(r, y):
+        delta = y[0]
+        x = k * r
+        if x < 1e-14:
+            return [0.0]
+        # Riccati-Bessel functions
+        jl = x * spherical_jn(ell, x)
+        yl = x * spherical_yn(ell, x)
+        V  = -V0   # inside the well
+        f  = jl * np.cos(delta) - yl * np.sin(delta)
+        return [-(V / k) * f * f]
 
     sol = solve_ivp(
-        radial_ode,
-        [r_start, r_match],
-        [u0, du0],
-        args=(ell, k),
-        method='DOP853',
-        rtol=1e-10, atol=1e-12,
-        dense_output=False,
+        vpm_ode, [r_start, R + 1e-10], [0.0],
+        method='DOP853', rtol=1e-10, atol=1e-12,
     )
-
-    u_end  = sol.y[0, -1]
-    du_end = sol.y[1, -1]
-    r_end  = sol.t[-1]
-
-    # Asymptotic: u ~ A*sin(k*r - ell*pi/2 + delta)
-    # Match value and derivative at r_end:
-    #   u  = A*(sin(phi)*cos(d) + cos(phi)*sin(d))  with phi = k*r - ell*pi/2
-    #   u' = A*k*(cos(phi)*cos(d) - sin(phi)*sin(d))
-    # => tan(delta) = (k*u*cos(phi) - u'*sin(phi))
-    #                / (u'*cos(phi) + k*u*sin(phi))   ... (*)
-    phi  = k * r_end - ell * np.pi / 2.0
-    sp, cp = np.sin(phi), np.cos(phi)
-
-    numer = k * u_end * cp - du_end * sp
-    denom = du_end * cp + k * u_end * sp
-    delta = np.arctan2(numer, denom)
-    return delta
-
-def count_bound_states(ell, V0, R, n_grid=2000):
-    """
-    Count the number of bound states for angular momentum `ell` in an
-    attractive square well of depth V0 and radius R, using the shooting
-    method on the imaginary-k (bound-state) radial equation.
-
-    Bound states satisfy  -u'' + [ell*(ell+1)/r^2 - V0*theta(R-r) + kappa^2] u = 0
-    with u(0)=0, u->0 as r->inf, for kappa in (0, sqrt(V0)).
-
-    We count sign changes of the log-derivative matching condition as
-    kappa is scanned, which equals the number of bound states.
-    """
-    def bound_ode(r, y, ell, kappa):
-        u, du = y
-        V = -V0 if r < R else 0.0
-        d2u = (ell*(ell+1)/r**2 + V + kappa**2) * u
-        return [du, d2u]
-
-    def matching_residual(kappa):
-        """
-        Integrate from r_start outward to r_match=R+2 with bound-state IC,
-        and return the log-derivative u'/u at r_match.
-        We look for kappa where the wavefunction matches the decaying
-        exponential outside: u'(R+) / u(R+) = -kappa.
-        Returns u'/u + kappa (should be zero at a bound state).
-        """
-        r_start = 1e-7
-        r_match_b = R + 4.0
-        u0  = r_start**(ell + 1)
-        du0 = (ell + 1) * r_start**ell
-        sol = solve_ivp(
-            bound_ode, [r_start, r_match_b], [u0, du0],
-            args=(ell, kappa), method='DOP853', rtol=1e-10, atol=1e-12,
-        )
-        u_m, du_m = sol.y[0, -1], sol.y[1, -1]
-        if abs(u_m) < 1e-30:
-            return 0.0
-        return du_m / u_m + kappa   # zero at a bound state
-
-    kappa_max = np.sqrt(V0) - 1e-6
-    if kappa_max <= 0:
-        return 0
-    kappa_grid = np.linspace(1e-4, kappa_max, n_grid)
-    residuals   = np.array([matching_residual(k) for k in kappa_grid])
-    # Count sign changes (zero crossings) = number of bound states
-    signs = np.sign(residuals)
-    signs[signs == 0] = 1
-    n_bound = int(np.sum(np.diff(signs) != 0))
-    return n_bound
-
-def unwrap_levinson(deltas_raw, ell, V0, R):
-    """
-    1. np.unwrap removes 2*pi jumps.
-    2. Then shift by an integer multiple of pi so that delta[0]
-       (lowest k) equals N_b * pi, enforcing Levinson's theorem.
-    """
-    deltas = np.unwrap(deltas_raw)
-    N_b = count_bound_states(ell, V0, R)
-    # How many pi's must we add?
-    n_shift = round((N_b * np.pi - deltas[0]) / np.pi)
-    deltas += n_shift * np.pi
-    return deltas
+    return sol.y[0, -1]
 
 # ── Scan k values ───────────────────────────────────────────────────────────
 k_vals = np.linspace(0.05, 5.0, 300)
@@ -223,9 +144,7 @@ labels = [r'$\ell=0$', r'$\ell=1$', r'$\ell=2$']
 
 fig, ax = plt.subplots(figsize=(8, 4))
 for ell, col, lab in zip(ells, colors, labels):
-    deltas_raw = np.array([compute_phase_shift(ell, k) for k in k_vals])
-    # Unwrap 2*pi jumps, then pin to Levinson boundary condition at low k
-    deltas = unwrap_levinson(deltas_raw, ell, V0, R)
+    deltas = np.array([compute_phase_shift(ell, k) for k in k_vals])
     ax.plot(k_vals, np.degrees(deltas), color=col, label=lab)
 
 ax.axhline(0, color='k', linewidth=0.5, linestyle='--')
@@ -246,70 +165,31 @@ plt.show()
 
 import numpy as np
 from scipy.integrate import solve_ivp
+from scipy.special import spherical_jn, spherical_yn
 import matplotlib.pyplot as plt
 
-# ── Reuse parameters and helpers ────────────────────────────────────────────
+# ── Parameters and VPM helper (identical to fig-phase-shifts) ───────────────
 V0 = 10.0
 R  = 1.0
 
-def V_well(r):
-    return -V0 * (r < R)
+def compute_phase_shift(ell, k, r_start=1e-7):
+    """Variable Phase Method: phase shift for the attractive square well."""
+    def vpm_ode(r, y):
+        delta = y[0]
+        x = k * r
+        if x < 1e-14:
+            return [0.0]
+        jl = x * spherical_jn(ell, x)
+        yl = x * spherical_yn(ell, x)
+        V  = -V0
+        f  = jl * np.cos(delta) - yl * np.sin(delta)
+        return [-(V / k) * f * f]
 
-def radial_ode(r, y, ell, k):
-    u, du = y
-    d2u = (ell*(ell+1)/r**2 + V_well(r) - k**2) * u
-    return [du, d2u]
-
-def compute_phase_shift(ell, k, r_match=8.0, r_start=1e-6):
-    u0  = r_start**(ell + 1)
-    du0 = (ell + 1) * r_start**ell
     sol = solve_ivp(
-        radial_ode, [r_start, r_match], [u0, du0],
-        args=(ell, k), method='DOP853', rtol=1e-10, atol=1e-12,
+        vpm_ode, [r_start, R + 1e-10], [0.0],
+        method='DOP853', rtol=1e-10, atol=1e-12,
     )
-    u_end, du_end, r_end = sol.y[0,-1], sol.y[1,-1], sol.t[-1]
-    phi = k * r_end - ell * np.pi / 2.0
-    sp, cp = np.sin(phi), np.cos(phi)
-    return np.arctan2(k*u_end*cp - du_end*sp, du_end*cp + k*u_end*sp)
-
-def count_bound_states(ell, V0, R, n_grid=2000):
-    """Count bound states via log-derivative shooting (see fig-phase-shifts)."""
-    def bound_ode(r, y, ell, kappa):
-        u, du = y
-        V = -V0 if r < R else 0.0
-        d2u = (ell*(ell+1)/r**2 + V + kappa**2) * u
-        return [du, d2u]
-
-    def matching_residual(kappa):
-        r_start = 1e-7
-        r_match_b = R + 4.0
-        u0  = r_start**(ell + 1)
-        du0 = (ell + 1) * r_start**ell
-        sol = solve_ivp(
-            bound_ode, [r_start, r_match_b], [u0, du0],
-            args=(ell, kappa), method='DOP853', rtol=1e-10, atol=1e-12,
-        )
-        u_m, du_m = sol.y[0, -1], sol.y[1, -1]
-        if abs(u_m) < 1e-30:
-            return 0.0
-        return du_m / u_m + kappa
-
-    kappa_max = np.sqrt(V0) - 1e-6
-    if kappa_max <= 0:
-        return 0
-    kappa_grid = np.linspace(1e-4, kappa_max, n_grid)
-    residuals   = np.array([matching_residual(k) for k in kappa_grid])
-    signs = np.sign(residuals)
-    signs[signs == 0] = 1
-    return int(np.sum(np.diff(signs) != 0))
-
-def unwrap_levinson(deltas_raw, ell, V0, R):
-    """Unwrap and pin low-k end to N_b * pi (Levinson's theorem)."""
-    deltas = np.unwrap(deltas_raw)
-    N_b = count_bound_states(ell, V0, R)
-    n_shift = round((N_b * np.pi - deltas[0]) / np.pi)
-    deltas += n_shift * np.pi
-    return deltas
+    return sol.y[0, -1]
 
 k_vals = np.linspace(0.05, 5.0, 300)
 ells   = [0, 1, 2]
@@ -318,8 +198,7 @@ labels = [r'$\sigma_0$', r'$\sigma_1$', r'$\sigma_2$']
 
 sigma_all = []
 for ell in ells:
-    deltas_raw = np.array([compute_phase_shift(ell, k) for k in k_vals])
-    deltas = unwrap_levinson(deltas_raw, ell, V0, R)
+    deltas = np.array([compute_phase_shift(ell, k) for k in k_vals])
     sigma  = (4*np.pi / k_vals**2) * (2*ell + 1) * np.sin(deltas)**2
     sigma_all.append(sigma)
 
@@ -347,106 +226,90 @@ plt.show()
 
 import numpy as np
 from scipy.integrate import solve_ivp
+from scipy.special import spherical_jn, spherical_yn
 
 # ── Analytic s-wave phase shift for spherical square well ──────────────────
-# kappa = sqrt(V0 + k^2),  delta_0 analytically:
-# tan(delta_0) = (k*tan(kappa*R) - kappa*tan(k*R))
-#               / (kappa + k*tan(kappa*R)*tan(k*R))
+# Inside: K = sqrt(V0 + k^2);  matching at r=R gives:
+# tan(delta_0) = (k*tan(K*R) - K*tan(k*R)) / (K + k*tan(K*R)*tan(k*R))
 def analytic_delta0(V0, k, R=1.0):
-    kappa = np.sqrt(V0 + k**2)
-    num   = k * np.tan(kappa*R) - kappa * np.tan(k*R)
-    den   = kappa + k * np.tan(kappa*R) * np.tan(k*R)
+    K   = np.sqrt(V0 + k**2)
+    num = k * np.tan(K*R) - K * np.tan(k*R)
+    den = K + k * np.tan(K*R) * np.tan(k*R)
     return np.arctan2(num, den)
 
-def V_well_gen(r, V0, R):
-    return -V0 * (r < R)
-
-def radial_ode_gen(r, y, k, V0, R):
-    u, du = y
-    d2u = (V_well_gen(r, V0, R) - k**2) * u   # ell=0
-    return [du, d2u]
-
-def numerical_delta0(V0, k, R=1.0, r_match=10.0, r_start=1e-7):
+# ── VPM s-wave (ell=0) for comparison ──────────────────────────────────────
+def vpm_delta0(V0, k, R=1.0, r_start=1e-7):
+    """Variable Phase Method for ell=0, square well depth V0, radius R."""
+    def vpm_ode(r, y):
+        delta = y[0]
+        x = k * r
+        if x < 1e-14:
+            return [0.0]
+        jl = x * spherical_jn(0, x)
+        yl = x * spherical_yn(0, x)
+        f  = jl * np.cos(delta) - yl * np.sin(delta)
+        return [(V0 / k) * f * f]   # V(r)=-V0 inside, sign flipped
     sol = solve_ivp(
-        radial_ode_gen, [r_start, r_match], [r_start, 1.0],
-        args=(k, V0, R), method='DOP853', rtol=1e-11, atol=1e-13,
+        vpm_ode, [r_start, R + 1e-10], [0.0],
+        method='DOP853', rtol=1e-11, atol=1e-13,
     )
-    u_end, du_end, r_end = sol.y[0,-1], sol.y[1,-1], sol.t[-1]
-    # ell=0: asymptotic ~ A*sin(k*r + delta)
-    phi = k * r_end
-    sp, cp = np.sin(phi), np.cos(phi)
-    return np.arctan2(k*u_end*cp - du_end*sp, du_end*cp + k*u_end*sp)
+    return sol.y[0, -1]
 
-# ── Test over a grid of (V0, k) pairs ──────────────────────────────────────
+# ── Test VPM vs analytic over a grid of (V0, k) pairs ──────────────────────
 rng = np.random.default_rng(42)
 V0_samples = rng.uniform(1.0, 20.0, 30)
 k_samples  = rng.uniform(0.2, 4.0,  30)
 
 max_err = 0.0
 for V0_t, k_t in zip(V0_samples, k_samples):
-    d_num = numerical_delta0(V0_t, k_t)
+    d_vpm = vpm_delta0(V0_t, k_t)
     d_ana = analytic_delta0(V0_t, k_t)
-    # Both arctan results are in (-pi/2, pi/2); compare mod pi
-    err = abs(np.sin(d_num - d_ana))   # |sin(Δδ)| ~ |Δδ| for small errors
+    # Compare mod pi (analytic arctan2 gives result in (-pi/2, pi/2))
+    err = abs(np.sin(d_vpm - d_ana))   # |sin(Δδ)| ~ |Δδ| for small errors
     max_err = max(max_err, err)
 
-print(f"Maximum |sin(delta_num - delta_ana)| over 30 sampled (V0, k): {max_err:.2e}")
-assert max_err < 1e-6, f"Phase shift mismatch: {max_err:.2e}"
-print("partial-wave delta_0 OK for all sampled (V0, k)")
+print(f"Maximum |sin(delta_VPM - delta_analytic)| over 30 sampled (V0,k): {max_err:.2e}")
+assert max_err < 1e-6, f"VPM vs analytic mismatch: {max_err:.2e}"
+print("VPM delta_0 agrees with analytic formula for all 30 sampled (V0, k)")
 
-# ── Levinson theorem check: delta_0(k->0) = N_b * pi ──────────────────────
-# For V0=10, R=1: the s-wave bound-state condition is kappa*cot(kappa*R) = -kappa
-# i.e. cos(kappa*R) = 0 => kappa*R = pi/2, giving V0_c = (pi/2)^2 ~ 2.47.
-# Since V0=10 > V0_c, there is at least 1 s-wave bound state.
-# Count by scanning kappa:
-
-def count_swave_bound_states(V0_check, R_check=1.0):
-    """
-    Count s-wave (ell=0) bound states by counting sign changes of
-    the matching condition f(kappa) = kappa*cot(sqrt(V0-kappa^2)*R) + kappa = 0.
-    Equivalently use the shooting residual approach.
-    """
-    def residual(kappa):
-        K = np.sqrt(max(V0_check - kappa**2, 0.0))
-        if K < 1e-10:
-            return np.inf
-        # Inside: u ~ sin(K*r); outside: u ~ exp(-kappa*r)
-        # Matching at r=R: K*cos(K*R)/sin(K*R) = -kappa
-        return K / np.tan(K * R_check) + kappa
-
-    kappa_max = np.sqrt(V0_check) - 1e-6
-    if kappa_max <= 0:
-        return 0
-    kappa_grid = np.linspace(1e-4, kappa_max, 5000)
-    vals  = np.array([residual(k) for k in kappa_grid])
-    signs = np.sign(vals)
-    signs[signs == 0] = 1
-    return int(np.sum(np.diff(signs) != 0))
-
+# ── Levinson theorem check using VPM ───────────────────────────────────────
+# Levinson: delta_ell(k->0) = N_b^(ell) * pi.
+# VPM gives the correct absolute branch automatically (no unwrapping needed).
+# For V0=10, R=1:
+#   ell=0: 1 s-wave bound state  -> delta_0(k->0) = pi  (180 deg)
+#   ell=1: 1 p-wave bound state  -> delta_1(k->0) = pi  (180 deg)
+#   ell=2: 0 d-wave bound states -> delta_2(k->0) = 0   (0 deg)
 V0_lev, R_lev = 10.0, 1.0
-N_b = count_swave_bound_states(V0_lev, R_lev)
+expected_Nb = {0: 1, 1: 1, 2: 0}
+lev_tol_deg = 1.0   # 1 degree tolerance at k=0.01
 
-# Compute delta_0 at very low k using the numerical shooter with Levinson pin
-k_low_arr = np.linspace(0.02, 0.15, 40)
-d0_low_raw = np.array([numerical_delta0(V0_lev, k, R_lev) for k in k_low_arr])
-d0_low = np.unwrap(d0_low_raw)
-# Pin to Levinson
-n_shift = round((N_b * np.pi - d0_low[0]) / np.pi)
-d0_low += n_shift * np.pi
+print(f"\nLevinson theorem check (VPM at k=0.01, V0={V0_lev}, R={R_lev}):")
+for ell in [0, 1, 2]:
+    def vpm_ode_ell(r, y, ell=ell):
+        delta = y[0]
+        x = V0_lev**0.5 * r if r < R_lev else 0.0  # not used, see below
+        x = 0.01 * r
+        if x < 1e-14:
+            return [0.0]
+        jl = x * spherical_jn(ell, x)
+        yl = x * spherical_yn(ell, x)
+        V  = -V0_lev if r < R_lev else 0.0
+        f  = jl * np.cos(y[0]) - yl * np.sin(y[0])
+        return [-(V / 0.01) * f * f]
 
-lev_val  = d0_low[0]           # delta_0 at lowest k
-lev_tol  = 0.05 * np.pi       # tolerance: 5% of pi (9 degrees)
-lev_err  = abs(lev_val - N_b * np.pi)
-
-print(f"s-wave bound states for V0={V0_lev}, R={R_lev}: N_b = {N_b}")
-print(f"delta_0(k={k_low_arr[0]:.2f}) = {np.degrees(lev_val):.2f} deg  "
-      f"(Levinson predicts {N_b}*180 = {N_b*180} deg)")
-print(f"Levinson error |delta_0(k_min) - N_b*pi| = {np.degrees(lev_err):.3f} deg")
-assert lev_err < lev_tol, (
-    f"Levinson theorem violated: delta_0(k_min)={np.degrees(lev_val):.2f} deg, "
-    f"expected {N_b*180} deg, error={np.degrees(lev_err):.2f} deg > {np.degrees(lev_tol):.1f} deg"
-)
-print("Levinson theorem check PASSED")
+    sol = solve_ivp(vpm_ode_ell, [1e-7, R_lev + 1e-10], [0.0],
+                    method='DOP853', rtol=1e-11, atol=1e-13)
+    d_lev = sol.y[0, -1]
+    expected = expected_Nb[ell] * np.pi
+    err_deg  = abs(np.degrees(d_lev) - expected_Nb[ell] * 180)
+    status   = "PASS" if err_deg < lev_tol_deg else "FAIL"
+    print(f"  ell={ell}: delta(k=0.01)={np.degrees(d_lev):.4f} deg  "
+          f"(Levinson: {expected_Nb[ell]*180} deg)  err={err_deg:.4f} deg  [{status}]")
+    assert err_deg < lev_tol_deg, (
+        f"Levinson check FAILED for ell={ell}: "
+        f"delta={np.degrees(d_lev):.2f} deg, expected {expected_Nb[ell]*180} deg"
+    )
+print("All Levinson checks PASSED")
 ```
 
 ## 小结
