@@ -112,7 +112,7 @@ $$
 
 ```{python}
 #| label: fig-phase-and-cross-section
-#| fig-cap: "三维 delta 壳层势（$\\gamma=20$，$R=1$）的 s 波性质。上图：相移 $\\delta_0(k)$，竖线标出 $kR=n\\pi$，每过一个 $n\\pi$ 相移跳升 $\\pi$。下图：截面 $\\sigma_0(k)=4\\pi\\sin^2\\delta_0/k^2$（对数纵轴），Breit-Wigner 峰落在 $kR\\approx n\\pi$ 处。"
+#| fig-cap: "三维 delta 壳层势（$\\gamma=20$，$R=1$）的 s 波性质。上图：相移 $\\delta_0(k)$，竖虚线标出共振峰位置（极点实部 $k_R$），每过一个共振相移跳升 $\\pi$。下图：截面 $\\sigma_0(k)=4\\pi\\sin^2\\delta_0/k^2$（对数纵轴），Breit-Wigner 峰落在共振位置处（$k\\approx 3.0,\\,6.0,\\,9.1$，均略小于 $n\\pi$）。$kR=n\\pi$ 处（未标出）是截面的尖锐极小值（$\\sigma_0\\to 0$），非 BW 峰。"
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -132,9 +132,28 @@ def cross_section(k, gamma, R=1.0):
     sin2 = t**2 / (1.0 + t**2)
     return 4.0 * np.pi * sin2 / (k * k)
 
+def newton_pole(k0_guess, gamma, R=1.0, tol=1e-14, itmax=200):
+    """Newton iteration for resonance pole in lower-half k-plane."""
+    k = complex(k0_guess)
+    for _ in range(itmax):
+        s, c = np.sin(k * R), np.cos(k * R)
+        F  = k * R + gamma * s * c + 1j * gamma * s * s
+        dF = R + gamma * R * (c * c - s * s) + 2j * gamma * s * c * R
+        dk = F / dF
+        k -= dk
+        if abs(dk) < tol:
+            break
+    return k
+
 gamma = 20.0
 R = 1.0
 k = np.linspace(0.05, 10.0, 4000)
+
+# Compute resonance positions (real part of pole = k_R)
+resonance_k = []
+for n in range(1, 4):
+    kp = newton_pole(n * np.pi / R - 0.05j, gamma, R)
+    resonance_k.append(kp.real)
 
 # Phase shift via unwrap
 delta0 = np.unwrap(np.arctan(tan_delta0(k, gamma, R)))
@@ -143,8 +162,8 @@ fig, axes = plt.subplots(2, 1, figsize=(8, 6), sharex=True)
 
 ax = axes[0]
 ax.plot(k, delta0, lw=1.4, color="steelblue")
-for n in range(1, 4):
-    ax.axvline(n * np.pi / R, color="gray", lw=0.5, ls="--")
+for kr in resonance_k:
+    ax.axvline(kr, color="gray", lw=0.5, ls="--")
 ax.set_ylabel(r"$\delta_0(k)$  (rad)")
 ax.set_title(r"Delta-shell potential: $\gamma=20$, $R=1$")
 ax.grid(alpha=0.3)
@@ -152,24 +171,24 @@ ax.grid(alpha=0.3)
 ax = axes[1]
 sigma = cross_section(k, gamma, R)
 ax.semilogy(k, sigma, lw=1.4, color="tomato")
-for n in range(1, 4):
-    ax.axvline(n * np.pi / R, color="gray", lw=0.5, ls="--")
+for kr in resonance_k:
+    ax.axvline(kr, color="gray", lw=0.5, ls="--", label=f"$k_R={kr:.2f}$")
 ax.set_xlabel("k  (units: 1/R)")
 ax.set_ylabel(r"$\sigma_0$  (units: $R^2$)")
-ax.set_title("S-wave cross section, Breit-Wigner peaks")
+ax.set_title("S-wave cross section, Breit-Wigner peaks (vertical lines: resonance positions $k_R$)")
 ax.grid(alpha=0.3, which="both")
 
 fig.tight_layout()
 plt.show()
 ```
 
-每过一个 $kR = n\pi$，相移跳升 $\pi$，截面出现尖峰——Levinson 定理在共振版本下的体现：每个准束缚态贡献一个 $\pi$ 相位。$\gamma=20$ 时共振宽度 $\Gamma \sim 0.1–2$，可以清楚看到 Breit-Wigner 峰形。
+每过一个共振（Breit-Wigner 峰），相移跳升 $\pi$，截面出现尖峰——Levinson 定理在共振版本下的体现：每个准束缚态贡献一个 $\pi$ 相位。注意共振峰位置（极点实部 $k_R \approx 3.0,\,6.0,\,9.1$）略小于 $n\pi \approx 3.14,\,6.28,\,9.42$；而 $kR = n\pi$ 处分子 $\sin(kR)=0$，截面 $\sigma_0 \to 0$（深极小），并非 BW 峰。$\gamma=20$ 时共振宽度 $\Gamma \sim 0.2–5$，可以清楚看到 Breit-Wigner 峰形。
 
 ### Breit-Wigner 拟合（$\gamma=100$）
 
 ```{python}
 #| label: fig-bw-fit
-#| fig-cap: "对 $\\gamma=100$ 壳层势的前两个共振峰分别做 Breit-Wigner 拟合（橙虚线）。$\\gamma=100$ 时宽度 $\\Gamma\\ll E_R$，BW 近似精度高，拟合与精确截面几乎重合。"
+#| fig-cap: "对 $\\gamma=100$ 壳层势的前两个共振峰分别做 Breit-Wigner 拟合（橙虚线）。$\\gamma=100$ 时宽度 $\\Gamma\\ll E_R$，BW 近似精度高，拟合与精确截面几乎重合。n=2 的 BW 曲线在峰两翼与精确截面略有偏差，原因是 n=2 处背景相移 $\\delta_{\\mathrm{bg}}$ 已不可忽略，纯 BW 公式未包含非共振本底的贡献。"
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -393,7 +412,7 @@ for n, ER_bw, Gamma_bw, ER_pole, Gamma_pole, kp in results:
 print("resonance parameters consistent across BW fit and pole location")
 ```
 
-两种完全独立的方法——实轴 Breit-Wigner 拟合和复 $k$ 平面牛顿迭代——对头两个共振给出一致的 $E_R$ 和 $\Gamma$（$\gamma=20$ 是窄共振区，两者偏差在 1% 量级，满足断言阈值）。随着 $n$ 增大，宽度 $\Gamma_n \propto n$ 增大，共振变宽，两种方法的一致性会逐渐变差——这正是 BW 公式适用范围（窄共振极限）的边界。
+两种完全独立的方法——实轴 Breit-Wigner 拟合和复 $k$ 平面牛顿迭代——对头两个共振给出一致的 $E_R$ 和 $\Gamma$（$\gamma=100$ 是窄共振区，两者偏差在 $\sim 5\times 10^{-4}$ 量级，满足断言阈值）。随着 $n$ 增大，宽度 $\Gamma_n \propto n$ 增大，共振变宽，两种方法的一致性会逐渐变差——这正是 BW 公式适用范围（窄共振极限）的边界。
 
 ## 小结
 
