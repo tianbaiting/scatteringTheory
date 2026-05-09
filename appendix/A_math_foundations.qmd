@@ -243,7 +243,7 @@ K(E) = |V|^{1/2}(-\Delta - E)^{-1}|V|^{1/2}
 $$
 的本征值（且 $K(E)$ 是紧算符，特征值随 $E \to 0^-$ 单调变化）。
 
-**推论（算符不等式形式的束缚态上界）**：若 $\|K(0)\| < 1$（即势太弱），则无负本征值（无束缚态）。Cwikel–Lieb–Rosenbljum 定理给出更精细的计数上界：
+**推论（算符不等式形式的束缚态上界）**：若 $\|K(0)\| < 1$（即势太弱），则无负本征值（无束缚态）。此结论适用于 $d \geq 3$ 维情形；在 1D 中，任意吸引势都至少存在一个束缚态（与 3D 情况不同），故 $d=1$ 时该阈值判据不适用。Cwikel–Lieb–Rosenbljum 定理给出更精细的计数上界：
 $$
 N(\lambda V) \leq C_d \lambda^{d/2} \int_{\R^d} |V(\mathbf{x})_-|^{d/2}\,\rmd^d x, \quad d \geq 3,
 $$
@@ -255,7 +255,7 @@ $$
 
 ```{python}
 #| label: fig-spectrum-freevsgaussian
-#| fig-cap: "自由粒子（$V=0$）与高斯势阱（$V(x)=-V_0 e^{-x^2/a^2}$，$V_0=5$，$a=1$）的离散本征值谱。负能量本征值（束缚态）在零能以下清晰可见；正能量本征值在两种情形下几乎相同（自由连续谱被盒子截断为离散）。"
+#| fig-cap: "自由粒子（$V=0$）与高斯势阱（$V(x)=-V_0 e^{-x^2/a^2}$，$V_0=5$，$a=1$）的离散本征值谱。负能量本征值（束缚态）在零能以下清晰可见；正能量本征值在两种情形下定性相似（自由连续谱被盒子截断为离散）。"
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -317,7 +317,7 @@ print(f"Number of bound states (E < 0) for Gaussian well V0={V0}: {n_bound}")
 
 ```{python}
 #| label: fig-bound-state-emergence
-#| fig-cap: "随耦合强度 $V_0$ 增大，束缚态本征值从零能以下逐渐'长出'。这是 Birman–Schwinger 原理的数值可视化：每当 Birman–Schwinger 算符 $K(0)$ 的最大本征值越过 $1$，一个新的束缚态出现。"
+#| fig-cap: "随耦合强度 $V_0$ 增大，束缚态本征值从零能以下逐渐'长出'。这是 Birman–Schwinger 原理的数值可视化：每当 Birman–Schwinger 算符 $K(0)$ 的最大本征值越过 $1$，一个新的束缚态出现。注意：第一个束缚态（束缚态 1）在 $V_0$ 的最小取值处即已存在，这是 1D 的特殊性——在一维中任意吸引势都至少有一个束缚态，与 3D 情况不同；Birman–Schwinger 阈值判据对第二个及以后的束缚态出现才有直接对应。"
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -367,7 +367,7 @@ plt.show()
 
 ```{python}
 #| label: fig-spectral-density
-#| fig-cap: "自由情形（$V=0$）盒内正能量本征值的间距 $\\Delta E_n = E_{n+1} - E_n$，以及对比理论连续谱密度 $\\rho(E) \\propto E^{-1/2}$（红线）。两者在低能端定性吻合，展示了有限盒子离散谱趋向 $L \\to \\infty$ 极限连续谱的过程。"
+#| fig-cap: "自由情形（$V=0$）盒内正能量本征值的间距 $\\Delta E_n = E_{n+1} - E_n$（点）与理论值 $\\Delta E = \\pi\\sqrt{E} / L \\propto E^{1/2}$（红线）对照。两者在低能端定性吻合，展示了有限盒子离散谱趋向 $L \\to \\infty$ 极限连续谱的过程。"
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -395,7 +395,7 @@ ax.scatter(E_mid, dE, s=18, color="steelblue", alpha=0.8, label=r"$\Delta E_n$ (
 # density of states rho(E) = dn/dE = L/pi * 1/(2*sqrt(E)), so dE ~ 2*pi*sqrt(E)/L
 L_val = 25.0
 E_plot = np.linspace(E_mid[0], E_mid[-1], 200)
-dE_theory = 2 * np.pi * np.sqrt(E_plot) / L_val  # level spacing from DOS
+dE_theory = np.pi * np.sqrt(E_plot) / L_val  # level spacing from DOS
 ax.plot(E_plot, dE_theory, color="firebrick", lw=2,
         label=r"Theory: $\Delta E \propto E^{1/2}$ (free particle DOS)")
 
