@@ -19,6 +19,8 @@ book:
         - chapters/06_spin.qmd
         - chapters/07_analytic_structure.qmd
         - chapters/08_resonances.qmd
+        - chapters/09_coulomb.qmd
+        - chapters/10_multichannel.qmd
     - part: "Part II — 具体势能"
       chapters:
         - examples/1d_delta.qmd
@@ -29,6 +31,7 @@ book:
   appendices:
     - appendix/A_math_foundations.qmd
     - appendix/B_numerical_methods.qmd
+    - appendix/C_invariance.qmd
 
 format:
   html:
