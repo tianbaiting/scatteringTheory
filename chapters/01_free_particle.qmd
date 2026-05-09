@@ -1,0 +1,137 @@
+# 自由粒子与渐近态
+
+> **本章目标**：把自由 Hamiltonian $\Hmat_0 = \Op{p}^2/(2m)$ 的本征态、动量表象演化、波包扩散这三件事**亲手算一遍**，作为后续所有散射理论的"零阶"参考。
+
+> **配套理论详证**：见 LaTeX 教材 `ch00_QMReview.tex` 与 `ch01_ScatteringOperator_1P.tex`。
+
+全文取 $\hbar = 1$，$m = 1/2$，故 $\Hmat_0 = \Op{p}^2$，能量与波数关系 $E = k^2$。
+
+## 1. 平面波本征态
+
+自由 Hamiltonian 的本征方程
+
+$$
+\Hmat_0 \, \phi_k(x) = k^2 \, \phi_k(x), \qquad \phi_k(x) = \frac{1}{\sqrt{2\pi}} \rme^{\rmi k x}
+$$
+
+满足动量归一化 $\inn{\phi_{k'}}{\phi_k} = \delta(k' - k)$。这是后面构造 in/out 散射态的"基底向量"。
+
+## 2. Møller 渐近态（直觉版）
+
+定态散射态 $|k+\rangle$、$|k-\rangle$ 在严格定义下由 Møller 算符 $\Omega_\pm = \lim_{t \to \mp\infty} \rme^{\rmi \Hmat t} \rme^{-\rmi \Hmat_0 t}$ 给出。本章不展开严格证明，仅记住关键直觉：**自由演化把任何归一化波包"展开"，散射演化在远处与自由演化"几乎相同"——in/out 态就是这两种演化在 $t \to \mp \infty$ 上的差**。
+
+第 2、3 章会重新回到这里，从 S 矩阵和 Lippmann-Schwinger 两个角度落实。
+
+## 3. 数值实现：构造平面波与高斯波包
+
+```{python}
+import numpy as np
+import matplotlib.pyplot as plt
+
+# 空间格点 (单位 hbar=1, m=1/2)
+N = 4096
+L = 60.0
+x = np.linspace(-L/2, L/2, N, endpoint=False)
+dx = x[1] - x[0]
+k = 2 * np.pi * np.fft.fftfreq(N, d=dx)
+
+# 一支平面波 (k0=2)
+k0 = 2.0
+plane_wave = np.exp(1j * k0 * x) / np.sqrt(2 * np.pi)
+
+# 高斯波包 (中心 x0=-15, 宽 sigma=2, 中心动量 k0=2)
+x0, sigma = -15.0, 2.0
+gauss = (np.pi * sigma**2)**(-0.25) * np.exp(-(x - x0)**2 / (2 * sigma**2)) * np.exp(1j * k0 * x)
+print(f"波包归一化:  ∫|ψ|² dx = {np.sum(np.abs(gauss)**2) * dx:.6f}")
+```
+
+输出应该是 `1.000000`（最末位差几个 ulp 都属正常）。
+
+## 4. 自由演化：动量表象 + FFT
+
+自由 Hamiltonian 在动量表象对角，因此演化算符 $\rme^{-\rmi \Hmat_0 t}$ 在动量表象就是逐分量乘 $\rme^{-\rmi k^2 t}$。配合 FFT，三行就够：
+
+```{python}
+#| label: fig-wavepacket-spread
+#| fig-cap: "自由高斯波包随时间的扩散与漂移。中心动量 $k_0=2$，群速度 $v_g = 2 k_0 = 4$。"
+
+import numpy as np
+import matplotlib.pyplot as plt
+
+# 重新构造（自包含）
+N = 4096
+L = 60.0
+x = np.linspace(-L/2, L/2, N, endpoint=False)
+dx = x[1] - x[0]
+k_grid = 2 * np.pi * np.fft.fftfreq(N, d=dx)
+k0 = 2.0
+x0, sigma = -15.0, 2.0
+gauss = (np.pi * sigma**2)**(-0.25) * np.exp(-(x - x0)**2 / (2 * sigma**2)) * np.exp(1j * k0 * x)
+
+def evolve_free(psi, t, kk):
+    """Evolve psi under H0 = p^2 (hbar=1, m=1/2) for time t."""
+    return np.fft.ifft(np.fft.fft(psi) * np.exp(-1j * kk**2 * t))
+
+times = [0.0, 2.0, 4.0, 6.0]
+fig, ax = plt.subplots(figsize=(8, 4))
+for t in times:
+    psi = evolve_free(gauss, t, k_grid)
+    ax.plot(x, np.abs(psi)**2, label=f"t = {t}")
+ax.set_xlabel("x"); ax.set_ylabel(r"$|\psi(x,t)|^2$")
+ax.set_title("自由高斯波包的扩散与漂移")
+ax.legend(); ax.grid(alpha=0.3)
+fig.tight_layout()
+plt.show()
+```
+
+## 5. 数值校验：概率守恒与群速度
+
+```{python}
+#| label: verification
+
+import numpy as np
+
+# 重新构造（自包含）
+N = 4096
+L = 60.0
+x = np.linspace(-L/2, L/2, N, endpoint=False)
+dx = x[1] - x[0]
+k_grid = 2 * np.pi * np.fft.fftfreq(N, d=dx)
+k0 = 2.0
+x0, sigma = -15.0, 2.0
+gauss = (np.pi * sigma**2)**(-0.25) * np.exp(-(x - x0)**2 / (2 * sigma**2)) * np.exp(1j * k0 * x)
+
+def evolve_free(psi, t, kk):
+    return np.fft.ifft(np.fft.fft(psi) * np.exp(-1j * kk**2 * t))
+
+# 5.1 概率守恒：∫|ψ|² dx = const
+norms = []
+for t in [0.0, 1.0, 3.0, 6.0]:
+    psi = evolve_free(gauss, t, k_grid)
+    norms.append(np.sum(np.abs(psi)**2) * dx)
+print("概率守恒检验:", norms)
+assert np.allclose(norms, 1.0, atol=1e-10), "概率不守恒！"
+
+# 5.2 群速度 v_g = dE/dk = 2k (m=1/2)
+def center(psi):
+    return np.sum(x * np.abs(psi)**2) * dx
+
+ts = np.linspace(0, 6, 13)
+centers = [center(evolve_free(gauss, t, k_grid)) for t in ts]
+slope, intercept = np.polyfit(ts, centers, 1)
+print(f"波包中心漂移速度 = {slope:.4f}, 理论群速度 2k0 = {2*k0:.4f}")
+assert abs(slope - 2*k0) < 1e-2, "群速度对不上！"
+```
+
+## 6. 小结
+
+- 自由本征态 $\phi_k(x) = \rme^{\rmi k x}/\sqrt{2\pi}$，动量归一。
+- 自由演化在动量表象对角；用 FFT 可以三行实现。
+- 数值校验了概率守恒与群速度 $v_g = 2k$。
+- 散射态 $|k\pm\rangle$ 的严格定义留给第 2、3 章。
+
+## 进一步阅读
+
+- Taylor《Scattering Theory》§2.1–2.2
+- Reed–Simon vol III §XI.3（Møller 算符的算符论定义）
+- 本仓库 LaTeX 教材 `ch01_ScatteringOperator_1P.tex`
