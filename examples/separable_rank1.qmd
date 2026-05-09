@@ -1,5 +1,7 @@
 # 秩 1 Separable 势与解析 T 矩阵
 
+{{< include /_macros.qmd >}}
+
 前一章一维 delta 势的末节已经把一维 delta 势改写成动量空间的秩 1 separable 形式 $\Vmat = \lambda |0\rangle\langle 0|$，并指出这一结构的特征是 $\langle k'|\Tmat(E)|k\rangle$ 不依赖出射动量 $k'$。本章把同一个机制推广到一般 form factor $g(p)$：势仍然秩 1，但 $g(p)$ 不再是常数，整个 LS 方程仍然能精确解出，并且 $T(p,p';E)$ 的所有动量依赖都被压进同一对 $g(p)g(p')$。
 
 具体取核物理里经典的 Yamaguchi（1954）模型 $g(p) = 1/(p^2 + \beta^2)$。这一选择的好处是：传播子积分有完全闭式，散射长度、有效力程都是 $\lambda, \beta$ 的初等函数，束缚态条件、相移、off-shell 行为都一笔写完。本章的目的是给秩 $N$ EST separable 框架（将在附录中展开）补一个最小完整、可验证的范例。
