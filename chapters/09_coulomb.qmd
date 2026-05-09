@@ -166,7 +166,7 @@ $$
 \sigma_{\rm tot} = \int_0^\pi 2\pi\sin\theta\,\rmd\theta\,\frac{\eta^2}{4k^2\sin^4(\theta/2)} = \infty.
 $$
 
-物理上：任意大的碰撞参数 $b$ 处粒子仍被偏转（$\theta \approx \eta/(kb) \to 0$），故散射截面无界。截断总截面 $\sigma(\theta_{\min}) \sim 2\eta^2/(k^2\theta_{\min}^2)$ 在 $\theta_{\min} \to 0$ 时按 $1/\theta_{\min}^2$ 发散。
+物理上：任意大的碰撞参数 $b$ 处粒子仍被偏转（$\theta \approx \eta/(kb) \to 0$），故散射截面无界。截断总截面 $\sigma(\theta_{\min}) \sim 4\pi\eta^2/(k^2\theta_{\min}^2)$ 在 $\theta_{\min} \to 0$ 时按 $1/\theta_{\min}^2$ 发散。
 
 ## Coulomb 分波分析
 
@@ -272,9 +272,8 @@ except ImportError:
         C0_norm = C0  # overall scale
         result = []
         for rho in rho_vals:
-            u = 1j * rho * 2  # argument for hyp1f1
             F = np.real(C0_norm * rho * np.exp(1j*rho) *
-                       float(np.real(hyp1f1(1 - 1j*eta, 2, -2j*rho))))
+                       hyp1f1(1 - 1j*eta, 2, -2j*rho))
             result.append(F)
         return np.array(result)
     HAS_MPMATH = False
@@ -363,15 +362,15 @@ fig, ax = plt.subplots(figsize=(7, 5))
 
 for eta, color in zip(eta_vals, colors):
     # Truncated total cross section: int from theta_min to pi
-    # sigma(theta_min) = (eta^2 / 2k^2) * (1/sin^2(theta_min/2) - 1)
-    sigma_trunc = (eta**2 / (2 * k**2)) * (1.0 / np.sin(theta_min_rad/2)**2 - 1.0)
+    # sigma(theta_min) = (pi*eta^2 / k^2) * (1/sin^2(theta_min/2) - 1)
+    sigma_trunc = (np.pi * eta**2 / k**2) * (1.0 / np.sin(theta_min_rad/2)**2 - 1.0)
     ax.loglog(theta_min_deg, sigma_trunc, label=f"$\\eta = {eta}$",
               color=color, linewidth=1.8)
 
-# Asymptotic: sigma ~ 2*eta^2 / (k^2 * theta_min^2)
+# Asymptotic: sigma ~ 4*pi*eta^2 / (k^2 * theta_min^2)
 theta_asym = np.logspace(-1, 1.5, 100)
 for eta, color in zip(eta_vals, colors):
-    sig_asym = 2 * eta**2 / (k**2 * np.deg2rad(theta_asym)**2)
+    sig_asym = 4 * np.pi * eta**2 / (k**2 * np.deg2rad(theta_asym)**2)
     ax.loglog(theta_asym, sig_asym, '--', color=color, alpha=0.5, linewidth=1.0)
 
 ax.set_xlabel(r"$\theta_{\min}$ (degrees)")
@@ -550,7 +549,7 @@ ax2.semilogy(theta_deg, dsigma_C, '-', color='steelblue', linewidth=1.5,
              label="Pure Coulomb (Rutherford)")
 
 # Coulomb + nuclear (l=0 only, for illustration)
-d_S_at_k1 = delta_pure_arr[np.argmin(np.abs(k_vals - k_fix))]
+d_S_at_k1 = delta_coulomb_arr[np.argmin(np.abs(k_vals - k_fix))]
 fC = -(eta_fix_val / (2*k_fix * np.sin(theta_rad2/2)**2)) * \
       np.exp(-1j*eta_fix_val*np.log(np.sin(theta_rad2/2)**2) + 2j*sigma0_fix)
 fN = (1/(2j*k_fix)) * np.exp(2j*sigma0_fix) * (np.exp(2j*d_S_at_k1) - 1) * \
@@ -645,7 +644,7 @@ else:
 
 - 精确定态波函数由合流超几何函数 ${}_1F_1$ 给出；其渐近形式含对数畸变的入射波和出射球面波，Coulomb 散射振幅为 $f_C(\theta) = -\eta\,\rme^{-\rmi\eta\ln\sin^2(\theta/2)+2\rmi\sigma_0}/(2k\sin^2(\theta/2))$。
 
-- 微分截面 $|f_C|^2 = \eta^2/(4k^2\sin^4(\theta/2))$ 是著名的 **Rutherford 公式**，与经典结果、Born 近似结果完全一致（$O(4)$ 对称性的体现）；总截面在 $\theta\to 0$ 处发散，$\sigma(\theta_{\min}) \sim 2\eta^2/(k^2\theta_{\min}^2)$。
+- 微分截面 $|f_C|^2 = \eta^2/(4k^2\sin^4(\theta/2))$ 是著名的 **Rutherford 公式**，与经典结果、Born 近似结果完全一致（$O(4)$ 对称性的体现）；总截面在 $\theta\to 0$ 处发散，$\sigma(\theta_{\min}) \sim 4\pi\eta^2/(k^2\theta_{\min}^2)$。
 
 - 分波分析中，正则 Coulomb 函数 $F_\ell(\eta,kr)$ 的渐近含 $-\eta\ln 2kr$ 的对数畸变；Coulomb 相移 $\sigma_\ell = \arg\Gamma(\ell+1+\rmi\eta)$ 对所有 $\ell$ 均不为零，且大 $\ell$ 时 $\sigma_\ell\sim\eta\ln\ell$，导致分波级数不收敛。
 
