@@ -26,6 +26,9 @@ book:
         - examples/delta_shell.qmd
         - examples/yukawa.qmd
         - examples/separable_rank1.qmd
+  appendices:
+    - appendix/A_math_foundations.qmd
+    - appendix/B_numerical_methods.qmd
 
 format:
   html:
