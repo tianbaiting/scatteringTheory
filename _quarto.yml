@@ -12,6 +12,13 @@ book:
     - part: "Part I — 核心理论"
       chapters:
         - chapters/01_free_particle.qmd
+        - chapters/02_smatrix_cross_section.qmd
+        - chapters/03_lippmann_schwinger.qmd
+        - chapters/04_born.qmd
+        - chapters/05_partial_wave.qmd
+        - chapters/06_spin.qmd
+        - chapters/07_analytic_structure.qmd
+        - chapters/08_resonances.qmd
     - part: "Part II — 具体势能"
       chapters:
         - examples/1d_delta.qmd
