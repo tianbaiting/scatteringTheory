@@ -178,7 +178,7 @@ $s$ 波出射（$\ell_\beta = 0$）时截面以 $\sim \sqrt{E - W_\beta}$ 上升
 
 ```{python}
 #| label: fig-multichannel-prob
-#| fig-cap: "两通道散射模型：(a) 弹性概率 $|S_{11}|^2$ 与反应概率 $|S_{21}|^2$ 随能量变化，通道 2 在 $E = \\Delta = 1$ 处打开，弹性截面出现 Wigner cusp；(b) 总截面 $\\sigma_{\\rm tot}^{(1)}$ 由光学定理计算，在阈值处斜率突变。"
+#| fig-cap: "两通道散射模型：(a) 弹性概率 $|S_{11}|^2$ 与反应概率 $|S_{21}|^2$ 随能量变化，通道 2 在 $E = \\Delta = 1$ 处打开，弹性概率出现 Wigner cusp；(b) 总截面 $\\sigma_{\\rm tot}^{(1)}$ 由光学定理计算，在阈值处斜率突变。"
 
 import numpy as np
 from scipy.integrate import solve_ivp
@@ -428,13 +428,12 @@ def compute_S11_below(E):
     A1, B1 = _amp(u1_R, du1_R, k1, R_MAX)
     return A1 / B1
 
-# Unitarity above threshold: |S11|^2 + |S21|^2 = 1
+# Full unitarity check above threshold: S†S = I
 E_test_above = np.linspace(DELTA + 0.05, 4.0, 40)
 for E in E_test_above:
     S = compute_S_above(E)
-    total = np.abs(S[0, 0])**2 + np.abs(S[1, 0])**2
-    assert abs(total - 1.0) < 1e-6, \
-        f"Unitarity failed above threshold at E={E:.3f}: sum={total:.8f}"
+    assert np.allclose(S.conj().T @ S, np.eye(2), atol=1e-6), \
+        f"S^dagger S != I at E={E}: max deviation {np.max(np.abs(S.conj().T @ S - np.eye(2)))}"
 
 # Elastic unitarity below threshold: |S11|^2 = 1
 E_test_below = np.linspace(0.05, DELTA - 0.05, 20)
