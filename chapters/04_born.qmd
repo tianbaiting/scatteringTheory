@@ -52,7 +52,7 @@ t^{(1)}(\vec{k}_f \leftarrow \vec{k}_i)
 = \frac{1}{(2\pi)^3} \int V(\vec{r})\, \rme^{-\rmi(\vec{k}_f - \vec{k}_i)\cdot\vec{r}}\, \rmd^3 r.
 $$
 
-由散射振幅与 T 矩阵的关系 $f = -(2\pi)^2 m \cdot t^{(1)}$（$m = 1/2$，$(2\pi)^2 m = \pi$），得到
+由散射振幅与 T 矩阵的关系 $f = -(2\pi) m \cdot t^{(1)}$（$m = 1/2$，$(2\pi) m = \pi$），得到
 
 $$
 f^B(\theta,\phi) = -\frac{m}{2\pi\hbar^2}
@@ -80,7 +80,7 @@ $$
 代入球对称 Born 公式，积分得（取 $\hbar = 1$，$m = 1/2$）：
 
 $$
-f^B(\theta) = \frac{g}{q^2 + \mu^2}, \qquad q = 2k\sin\frac{\theta}{2}.
+f^B(\theta) = -\frac{g}{q^2 + \mu^2}, \qquad q = 2k\sin\frac{\theta}{2}.
 $$
 
 取 $\mu \to 0$ 即退化为 Coulomb 散射的 Rutherford 公式。微分截面
@@ -245,7 +245,7 @@ fig.tight_layout()
 plt.show()
 ```
 
-左图显示：弱耦合（$V_0 = 0.5$）下误差呈几何衰减；强耦合（$V_0 = 10$）下级数发散。右图的比值测试验证收敛区域内比值 $< 1$。
+左图显示：弱耦合（$V_0 = 0.5$）下误差呈几何衰减；强耦合（$V_0 = 5$）下级数发散。右图的比值测试验证收敛区域内比值 $< 1$。
 
 ## 数值验证：弱耦合几何收敛
 
@@ -330,7 +330,7 @@ Born 近似的适用条件可以归纳为：
 
 - Born 级数通过迭代 LS 方程得到 Neumann 级数 $\Tmat = \sum_{n \ge 0} \Vmat(\Op{G}_0\Vmat)^n$。
 - 第一阶 Born 振幅 $f^B = -(m/2\pi)\tilde{V}(\vec{q})$，即势的 Fourier 变换，仅依赖动量转移。
-- Yukawa 势 Born 结果：$f^B = g/(q^2 + \mu^2)$（$\hbar = 1$，$2m = 1$）。
+- Yukawa 势 Born 结果：$f^B = -g/(q^2 + \mu^2)$（$\hbar = 1$，$2m = 1$）。
 - 收敛条件：$\|\Vmat\Op{G}_0\| < 1$；等价地，弱耦合或高能。
 - 1D 方势阱数值演示验证了弱耦合时的几何收敛与强耦合时的发散。
 
