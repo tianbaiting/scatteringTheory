@@ -1,1 +1,307 @@
-# placeholder: 05_partial_wave
+# 分波展开与相移
+
+{{< include /_macros.qmd >}}
+
+> **本章目标**：对球对称势 $V(r)$ 的散射，将散射振幅 $f(\theta)$ 按勒让德多项式展开，证明每个角动量 $\ell$ 分波独立，所有物理信息编码在实相移 $\delta_\ell(E)$ 中，并用数值方法求解三维方势阱的相移。
+
+> **配套理论详证**：见 LaTeX 教材 `ch10_PartialWaveStationary.tex`。
+
+全文取 $\hbar = 1$，$2m = 1$，故径向方程中动能项为 $-u_\ell''$，能量–波数关系 $E = k^2$。
+
+## 球对称势与角动量守恒
+
+当势 $V(\mathbf{r}) = V(r)$ 只依赖于 $|\mathbf{r}|$ 时，$[\Op{H}, \Op{L}^2] = [\Op{H}, \Op{L}_z] = 0$，角动量
+$\ell$ 是好量子数。S 矩阵在 $|E, \ell, m\rangle$ 基底下对角：
+
+$$
+\langle E', \ell', m' | \Smat | E, \ell, m \rangle
+= \delta(E'-E)\,\delta_{\ell\ell'}\,\delta_{mm'}\, s_\ell(k),
+\qquad
+s_\ell(k) = \rme^{2\rmi\delta_\ell(k)}.
+$$
+
+幺正性 $|s_\ell| = 1$ 要求 $\delta_\ell(k) \in \R$；$\delta_\ell$ 有 $n\pi$ 的不确定性（$n \in \mathbb{Z}$，约定 $k \to \infty$ 时 $\delta_\ell \to 0$）。
+
+## 径向薛定谔方程
+
+令 $u_\ell(r) = r R_\ell(r)$，径向薛定谔方程化为（$\hbar = 1,\;2m = 1$）：
+
+$$
+-u_\ell'' + \left[\frac{\ell(\ell+1)}{r^2} + V(r) - k^2\right] u_\ell = 0,
+$$
+
+边界条件 $u_\ell(0) = 0$（否则三维波函数 $R_\ell$ 在原点发散）。
+这是中心力场散射的核心方程——对每个 $\ell$ 独立求解一维问题。
+
+## 渐近行为与相移的定义
+
+$r \to \infty$ 时，离心势与散射势均消失，方程化为 $u_\ell'' + k^2 u_\ell = 0$，一般解为
+
+$$
+u_\ell(r) \;\xrightarrow{r\to\infty}\; A_\ell\,\sin\!\Bigl(kr - \tfrac{\ell\pi}{2} + \delta_\ell\Bigr).
+$$
+
+与无势时的自由解 $\sin(kr - \ell\pi/2)$ 相比，势引起了相位移动 $\delta_\ell$。吸引势 $V < 0$ 使波函数"向内拉"，$\delta_\ell > 0$；排斥势则相反。
+
+## 分波展开与散射振幅
+
+利用平面波的 Rayleigh 展开和散射态的渐近形式对比，散射振幅的分波展开为
+
+$$
+f(\theta) = \frac{1}{k}\sum_{\ell=0}^{\infty}(2\ell+1)\,\rme^{\rmi\delta_\ell}\sin\delta_\ell\,P_\ell(\cos\theta).
+$$
+
+分波振幅 $f_\ell = k^{-1}\rme^{\rmi\delta_\ell}\sin\delta_\ell$ 位于幺正圆（以 $\rmi/2k$ 为圆心、半径 $1/2k$ 的圆）上。
+
+## 分波截面与幺正界
+
+对 $\rmd\sigma/\rmd\Omega = |f(\theta)|^2$ 做角积分，利用勒让德多项式正交性，得
+
+$$
+\sigma_\ell = \frac{4\pi}{k^2}(2\ell+1)\sin^2\delta_\ell,
+\qquad
+\sigma_{\text{tot}} = \sum_\ell \sigma_\ell.
+$$
+
+由 $\sin^2\delta_\ell \le 1$ 立得**幺正界**（unitarity bound）：
+
+$$
+\sigma_\ell \le \frac{4\pi}{k^2}(2\ell+1),
+$$
+
+等号当且仅当 $\delta_\ell = \pi/2 \pmod{\pi}$ 时取得（共振条件）。
+
+光学定理 $\sigma_{\text{tot}} = (4\pi/k)\,\operatorname{Im} f(0)$ 在分波展开下自动成立，可视为幺正性的直接体现。
+
+## 低能行为与散射长度
+
+$k \to 0$ 时，分波振幅的领头行为为
+
+$$
+f_\ell(k) \xrightarrow{k\to 0} -a_\ell\,k^{2\ell},
+$$
+
+其中 $a_\ell$ 为广义散射长度。$\ell = 0$ 的 $a_0$ 具有长度量纲，称为**散射长度**。
+低能极限下 $\ell \ge 1$ 分波被离心势压制，总截面由 $s$ 波主导：$\sigma_{\text{tot}} \to 4\pi a_0^2$。
+
+**Levinson 定理**（预告）：$\delta_\ell(0) - \delta_\ell(\infty) = n_\ell \pi$，$n_\ell$ 为该分波束缚态数目。
+
+## 数值实现：三维方势阱的相移
+
+```{python}
+#| label: fig-phase-shifts
+#| fig-cap: "3D attractive square well phase shifts $\\delta_\\ell(k)$ for $\\ell=0,1,2$. Parameters: $V_0=10$, $R=1$ (units $\\hbar=1$, $2m=1$)."
+
+import numpy as np
+from scipy.integrate import solve_ivp
+import matplotlib.pyplot as plt
+
+# ── Parameters ──────────────────────────────────────────────────────────────
+V0 = 10.0   # well depth  (hbar=1, 2m=1 units)
+R  = 1.0    # well radius
+
+def V_well(r):
+    """3D attractive square well."""
+    return -V0 * (r < R)
+
+def radial_ode(r, y, ell, k):
+    """
+    ODE system for u_ell(r) with  hbar=1, 2m=1:
+      u'' = [ell*(ell+1)/r^2 + V(r) - k^2] u
+    State: y = [u, u'].
+    """
+    u, du = y
+    d2u = (ell*(ell+1)/r**2 + V_well(r) - k**2) * u
+    return [du, d2u]
+
+def compute_phase_shift(ell, k, r_match=8.0, r_start=1e-6):
+    """
+    Numerically integrate the radial SE from r_start to r_match,
+    then match to the asymptotic form to extract delta_ell.
+    """
+    # Initial conditions: u ~ r^(ell+1),  u' ~ (ell+1)*r^ell
+    u0  = r_start**(ell + 1)
+    du0 = (ell + 1) * r_start**ell
+
+    sol = solve_ivp(
+        radial_ode,
+        [r_start, r_match],
+        [u0, du0],
+        args=(ell, k),
+        method='DOP853',
+        rtol=1e-10, atol=1e-12,
+        dense_output=False,
+    )
+
+    u_end  = sol.y[0, -1]
+    du_end = sol.y[1, -1]
+    r_end  = sol.t[-1]
+
+    # Asymptotic: u ~ A*sin(k*r - ell*pi/2 + delta)
+    # Match value and derivative at r_end:
+    #   u  = A*(sin(phi)*cos(d) + cos(phi)*sin(d))  with phi = k*r - ell*pi/2
+    #   u' = A*k*(cos(phi)*cos(d) - sin(phi)*sin(d))
+    # => tan(delta) = (k*u*cos(phi) - u'*sin(phi))
+    #                / (u'*cos(phi) + k*u*sin(phi))   ... (*)
+    phi  = k * r_end - ell * np.pi / 2.0
+    sp, cp = np.sin(phi), np.cos(phi)
+
+    numer = k * u_end * cp - du_end * sp
+    denom = du_end * cp + k * u_end * sp
+    delta = np.arctan2(numer, denom)
+    return delta
+
+# ── Scan k values ───────────────────────────────────────────────────────────
+k_vals = np.linspace(0.05, 5.0, 300)
+ells   = [0, 1, 2]
+colors = ['C0', 'C1', 'C2']
+labels = [r'$\ell=0$', r'$\ell=1$', r'$\ell=2$']
+
+fig, ax = plt.subplots(figsize=(8, 4))
+for ell, col, lab in zip(ells, colors, labels):
+    deltas = np.array([compute_phase_shift(ell, k) for k in k_vals])
+    # Unwrap to remove 2*pi jumps, then keep in (-pi, pi) range via unwrap
+    deltas = np.unwrap(deltas)
+    ax.plot(k_vals, np.degrees(deltas), color=col, label=lab)
+
+ax.axhline(0, color='k', linewidth=0.5, linestyle='--')
+ax.set_xlabel("Wave number $k$")
+ax.set_ylabel(r"Phase shift $\delta_\ell$ (degrees)")
+ax.set_title("Phase shifts for the 3D attractive square well")
+ax.legend()
+ax.grid(alpha=0.3)
+fig.tight_layout()
+plt.show()
+```
+
+## 数值实现：分波截面
+
+```{python}
+#| label: fig-cross-sections
+#| fig-cap: "Partial-wave cross sections $\\sigma_\\ell(k)$ and total cross section for $\\ell=0,1,2$."
+
+import numpy as np
+from scipy.integrate import solve_ivp
+import matplotlib.pyplot as plt
+
+# ── Reuse parameters and helper ─────────────────────────────────────────────
+V0 = 10.0
+R  = 1.0
+
+def V_well(r):
+    return -V0 * (r < R)
+
+def radial_ode(r, y, ell, k):
+    u, du = y
+    d2u = (ell*(ell+1)/r**2 + V_well(r) - k**2) * u
+    return [du, d2u]
+
+def compute_phase_shift(ell, k, r_match=8.0, r_start=1e-6):
+    u0  = r_start**(ell + 1)
+    du0 = (ell + 1) * r_start**ell
+    sol = solve_ivp(
+        radial_ode, [r_start, r_match], [u0, du0],
+        args=(ell, k), method='DOP853', rtol=1e-10, atol=1e-12,
+    )
+    u_end, du_end, r_end = sol.y[0,-1], sol.y[1,-1], sol.t[-1]
+    phi = k * r_end - ell * np.pi / 2.0
+    sp, cp = np.sin(phi), np.cos(phi)
+    return np.arctan2(k*u_end*cp - du_end*sp, du_end*cp + k*u_end*sp)
+
+k_vals = np.linspace(0.05, 5.0, 300)
+ells   = [0, 1, 2]
+colors = ['C0', 'C1', 'C2']
+labels = [r'$\sigma_0$', r'$\sigma_1$', r'$\sigma_2$']
+
+sigma_all = []
+for ell in ells:
+    deltas = np.unwrap(np.array([compute_phase_shift(ell, k) for k in k_vals]))
+    sigma  = (4*np.pi / k_vals**2) * (2*ell + 1) * np.sin(deltas)**2
+    sigma_all.append(sigma)
+
+sigma_tot = sum(sigma_all)
+
+fig, ax = plt.subplots(figsize=(8, 4))
+for sigma, col, lab in zip(sigma_all, colors, labels):
+    ax.plot(k_vals, sigma, color=col, label=lab)
+ax.plot(k_vals, sigma_tot, 'k--', linewidth=1.5,
+        label=r'$\sigma_{\rm tot}$ (partial sum)')
+
+ax.set_xlabel("Wave number $k$")
+ax.set_ylabel(r"Cross section $\sigma$ (natural units)")
+ax.set_title("Partial-wave cross sections for the 3D attractive square well")
+ax.legend()
+ax.grid(alpha=0.3)
+fig.tight_layout()
+plt.show()
+```
+
+## 数值校验：$s$ 波解析公式对比
+
+```{python}
+#| label: verification
+
+import numpy as np
+from scipy.integrate import solve_ivp
+
+# ── Analytic s-wave phase shift for spherical square well ──────────────────
+# kappa = sqrt(V0 + k^2),  delta_0 analytically:
+# tan(delta_0) = (k*tan(kappa*R) - kappa*tan(k*R))
+#               / (kappa + k*tan(kappa*R)*tan(k*R))
+def analytic_delta0(V0, k, R=1.0):
+    kappa = np.sqrt(V0 + k**2)
+    num   = k * np.tan(kappa*R) - kappa * np.tan(k*R)
+    den   = kappa + k * np.tan(kappa*R) * np.tan(k*R)
+    return np.arctan2(num, den)
+
+def V_well_gen(r, V0, R):
+    return -V0 * (r < R)
+
+def radial_ode_gen(r, y, k, V0, R):
+    u, du = y
+    d2u = (V_well_gen(r, V0, R) - k**2) * u   # ell=0
+    return [du, d2u]
+
+def numerical_delta0(V0, k, R=1.0, r_match=10.0, r_start=1e-7):
+    sol = solve_ivp(
+        radial_ode_gen, [r_start, r_match], [r_start, 1.0],
+        args=(k, V0, R), method='DOP853', rtol=1e-11, atol=1e-13,
+    )
+    u_end, du_end, r_end = sol.y[0,-1], sol.y[1,-1], sol.t[-1]
+    # ell=0: asymptotic ~ A*sin(k*r + delta)
+    phi = k * r_end
+    sp, cp = np.sin(phi), np.cos(phi)
+    return np.arctan2(k*u_end*cp - du_end*sp, du_end*cp + k*u_end*sp)
+
+# ── Test over a grid of (V0, k) pairs ──────────────────────────────────────
+rng = np.random.default_rng(42)
+V0_samples = rng.uniform(1.0, 20.0, 30)
+k_samples  = rng.uniform(0.2, 4.0,  30)
+
+max_err = 0.0
+for V0_t, k_t in zip(V0_samples, k_samples):
+    d_num = numerical_delta0(V0_t, k_t)
+    d_ana = analytic_delta0(V0_t, k_t)
+    # Both arctan results are in (-pi/2, pi/2); compare mod pi
+    err = abs(np.sin(d_num - d_ana))   # |sin(Δδ)| ~ |Δδ| for small errors
+    max_err = max(max_err, err)
+
+print(f"Maximum |sin(delta_num - delta_ana)| over 30 sampled (V0, k): {max_err:.2e}")
+assert max_err < 1e-6, f"Phase shift mismatch: {max_err:.2e}"
+print("partial-wave delta_0 OK for all sampled (V0, k)")
+```
+
+## 小结
+
+- 球对称势使角动量 $\ell$ 守恒，S 矩阵在 $|E,\ell,m\rangle$ 基底下对角，每个分波由实相移 $\delta_\ell(k)$ 完全表征。
+- 径向方程 $-u_\ell'' + [\ell(\ell+1)/r^2 + V(r) - k^2]u_\ell = 0$，$u_\ell(0) = 0$，渐近形式确定 $\delta_\ell$。
+- 散射振幅 $f(\theta) = k^{-1}\sum_\ell(2\ell+1)\rme^{\rmi\delta_\ell}\sin\delta_\ell\,P_\ell(\cos\theta)$，分波截面 $\sigma_\ell = (4\pi/k^2)(2\ell+1)\sin^2\delta_\ell$。
+- 幺正界 $\sigma_\ell \le 4\pi(2\ell+1)/k^2$；共振时等号成立（$\delta_\ell = \pi/2$）。
+- 低能极限 $k \to 0$：仅 $s$ 波贡献，$\sigma_{\text{tot}} \to 4\pi a_0^2$；Levinson 定理联系 $\delta_\ell(0)$ 与束缚态数目。
+- 数值验证：$\ell = 0$ 的方势阱相移与解析公式在 30 个随机 $(V_0, k)$ 点上差异均小于 $10^{-6}$。
+
+## 进一步阅读
+
+- Taylor《Scattering Theory》§§ 8.1–8.4（分波展开、散射长度、低能极限）
+- Newton《Scattering Theory of Waves and Particles》Ch. 10（正则解、Jost 函数）
+- 本仓库 LaTeX 教材 `ch10_PartialWaveStationary.tex`（Levinson 定理、Variable Phase 方法、Jost 函数完整推导）
