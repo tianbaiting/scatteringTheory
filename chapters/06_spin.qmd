@@ -20,7 +20,7 @@ $$
 
 $$
 \boxed{
-M(\theta,\phi) = a(\theta)\,\mathbf{1} + \rmi\,b(\theta)\,\hat{n}\cdot\vec{\sigma},
+M(\theta,\phi) = a(\theta)\,\mathbf{1} + b(\theta)\,\hat{n}\cdot\vec{\sigma},
 \qquad \hat{n} = \frac{\vec{k}_i \times \vec{k}_f}{|\vec{k}_i \times \vec{k}_f|}.
 }
 $$
@@ -101,7 +101,7 @@ $$
 A_y(\theta) = \frac{2\,\mathrm{Re}(a^* b)}{|a(\theta)|^2 + |b(\theta)|^2}.
 $$
 
-（教材的约定是 $F = a\mathbf{1} + \rmi b\,\hat{n}\cdot\bm{\sigma}$，此时出射极化为 $2\Im(ab^*)/(|a|^2+|b|^2)$，数值上与以上定义一致，差别只在 $b$ 的相位约定。本章取实数 $a,b$ 加相对相位 $\delta_b$，统一写 $A_y = 2\mathrm{Re}(a^*b)/(|a|^2+|b|^2)$。）
+（本章约定 $M = a\,\mathbf{1} + b\,\hat{n}\cdot\bm{\sigma}$，$a,b$ 均取实数，$A_y = 2\mathrm{Re}(a^*b)/(|a|^2+|b|^2) = 2ab/(a^2+b^2)$。文献中有时写 $F = a\mathbf{1} + \rmi b'\,\hat{n}\cdot\bm{\sigma}$，其中 $b' = -\rmi b$；若 $a,b'$ 均为实数，则 $b$ 为纯虚，两种写法物理上完全等价但代入公式时须注意取相应的实部或虚部。）
 
 **其他极化观测量（简介）。** 对自旋-$1/2$ + 自旋-$1/2$（如 $NN$ 散射），振幅矩阵是 $4\times 4$，需要更多独立参数，通称 **Wolfenstein 参数**：$A$（analyzing power）、$D_{nn}$（spin-transfer in $\hat{n}$ direction）、$D_{ss}$、$R$ 等。它们分别对应初末态极化矢量各分量之间的转移系数，完整的参数集需要做三次散射（triple-scattering）才能完全确定。
 
@@ -129,7 +129,7 @@ $$
 
 ```{python}
 #| label: fig-spin-amplitudes
-#| fig-cap: "Born 近似下 (Spin 1/2)+(Spin 0) 散射的非极化微分截面（左）与 analyzing power Ay（右）。参数 V0=1，W0=0.8，mu=1，k=2。"
+#| fig-cap: "Born 近似下 (Spin 1/2)+(Spin 0) 散射的非极化微分截面（左）与 analyzing power Ay（右）。参数 V0=1，W0=0.8，mu=1，k=2。注意 Ay 在 θ≈111° 处恰好达到 1，这是因为所选参数偶然满足 a=b（即 Ca/(q²+μ²) = Cb k²sinθ/(q²+μ²)²），并非 Ay 可饱和的普遍现象。此外，V0/Ekin = V0/(k²/2m) ≈ 0.5，Born 近似在此处于临界有效区间，图形仅作定性演示用途。"
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -219,7 +219,7 @@ print("A_y vanishes for purely central potential as expected")
 
 ## 小结
 
-- 旋转不变性与宇称不变性唯一确定自旋-$1/2$ + 自旋-$0$ 弹性散射振幅的结构：$M = a\,\mathbf{1} + \rmi b\,\hat{n}\cdot\bm{\sigma}$。
+- 旋转不变性与宇称不变性唯一确定自旋-$1/2$ + 自旋-$0$ 弹性散射振幅的结构：$M = a\,\mathbf{1} + b\,\hat{n}\cdot\bm{\sigma}$。
 - 非极化截面 $d\sigma/d\Omega = |a|^2 + |b|^2$；自旋-flip 振幅 $b$ 不改变截面强度但产生出射极化。
 - Analyzing power $A_y = 2\mathrm{Re}(a^*b)/(|a|^2+|b|^2)$ 刻画非极化入射后出射粒子的极化度，是 $a,b$ 之间相位差的直接测量。
 - 纯中心势时 $b=0$，$A_y \equiv 0$，数值已验证。
