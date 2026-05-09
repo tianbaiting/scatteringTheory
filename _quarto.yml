@@ -28,8 +28,7 @@ format:
     code-fold: false
     code-tools: true
     fig-cap-location: bottom
-    include-before-body: _macros.qmd
-    html-math-method: katex
+    html-math-method: mathjax
     mainfont: "Noto Sans CJK SC"
     monofont: "JetBrains Mono"
 

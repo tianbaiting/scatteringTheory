@@ -1,5 +1,7 @@
 # 自由粒子与渐近态
 
+{{< include /_macros.qmd >}}
+
 > **本章目标**：把自由 Hamiltonian $\Hmat_0 = \Op{p}^2/(2m)$ 的本征态、动量表象演化、波包扩散这三件事**亲手算一遍**，作为后续所有散射理论的"零阶"参考。
 
 > **配套理论详证**：见 LaTeX 教材 `ch00_QMReview.tex` 与 `ch01_ScatteringOperator_1P.tex`。

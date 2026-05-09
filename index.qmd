@@ -1,5 +1,7 @@
 # 前言 {.unnumbered}
 
+{{< include /_macros.qmd >}}
+
 这是一本中文散射理论的教学书，定位"理论与代码双重并进"。读者顺序读下去，每翻一章既能补一段理论，也能跑一段代码、看一张图。
 
 ## 这本书想达成什么
@@ -45,7 +47,7 @@ t = 2j * k / (2j * k - lam)
 plt.figure(figsize=(6, 3))
 plt.plot(k, np.abs(t)**2, label=r"$|t|^2$")
 plt.xlabel("k"); plt.ylabel("transmission"); plt.legend(); plt.grid(alpha=0.3)
-plt.title("1D δ 势的透射率")
+plt.title("1D delta potential: transmission probability")
 plt.tight_layout()
 plt.show()
 ```
