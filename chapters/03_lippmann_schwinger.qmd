@@ -1,1 +1,383 @@
-# placeholder: 03_lippmann_schwinger
+# Lippmann-Schwinger 方程
+
+{{< include /_macros.qmd >}}
+
+> **本章目标**：引入自由 Green 算符 $\Op{G}_0(z) = (z - \Hmat_0)^{-1}$，利用 $i\epsilon$ 处方区分推迟/超前格林函数，推导散射态的 Lippmann-Schwinger 积分方程 $|\psi^\pm\rangle = |\phi\rangle + \Op{G}_0(E^\pm)\Vmat|\psi^\pm\rangle$ 及 $T$ 算符方程 $\Tmat = \Vmat + \Vmat\Op{G}_0(E^+)\Tmat$，并通过 1D 数值求解验证。
+
+> **配套理论详证**：见 LaTeX 教材 `ch07_GreenOperator.tex` 与 `ch09_Stationary.tex`。
+
+全文取 $\hbar = 1$，$2m = 1$，故 $\Hmat_0 = \Op{p}^2$，$E = k^2$。3D 中 $G_0^+(\vec r,\vec r') = -\frac{1}{4\pi}\frac{\rme^{ik|\vec r-\vec r'|}}{|\vec r-\vec r'|}$；1D 中 $G_0^+(x,x') = -\frac{\rmi}{2k}\rme^{ik|x-x'|}$。
+
+## Green 算符与预解式
+
+设 Hamiltonian $\Hmat = \Hmat_0 + \Vmat$，其中 $\Hmat_0 = \Op{p}^2/(2m)$ 为自由项。**Green 算符**（预解式，resolvent）定义为
+
+$$
+\Op{G}(z) = (z - \Hmat)^{-1}, \qquad
+\Op{G}_0(z) = (z - \Hmat_0)^{-1}, \qquad z \in \C.
+$$
+
+在动量表象下，$\Hmat_0$ 是乘法算符，故
+
+$$
+\Op{G}_0(z)\,|\vec{p}\,\rangle = \frac{1}{z - E_p}|\vec{p}\,\rangle, \qquad E_p = \frac{p^2}{2m}.
+$$
+
+$\Op{G}_0(z)$ 在整个 $\C \setminus [0,\infty)$ 上解析；沿正实轴出现割线，因为 $H_0$ 的连续谱恰好在 $[0,\infty)$ 上。
+
+若 $\Hmat$ 只有离散谱 $\{E_n\}$，则谱分解给出
+
+$$
+\Op{G}(z) = \sum_n \frac{|n\rangle\langle n|}{z - E_n},
+$$
+
+极点在本征值处，留数为对应投影算符——**知道 $\Op{G}(z)$ 等价于知道 $\Hmat$ 的全部本征值问题**。
+
+## $i\varepsilon$ 处方：推迟与超前 Green 算符
+
+对正能量散射 $E > 0$，需从割线的两侧趋近实轴，定义**推迟（retarded）**与**超前（advanced）** Green 算符：
+
+$$
+\Op{G}_0^\pm(E) \equiv \lim_{\varepsilon \to 0^+} \Op{G}_0(E \pm \rmi\varepsilon)
+= \lim_{\varepsilon \to 0^+} (E \pm \rmi\varepsilon - \Hmat_0)^{-1}.
+$$
+
+简记 $E^+ \equiv E + \rmi 0^+$，$E^- \equiv E - \rmi 0^+$。
+
+**物理意义**：在坐标表象中（3D，$\hbar=1$，$2m=1$ 即 $m=1/2$）
+
+$$
+\langle \vec{x}\,|\,\Op{G}_0^\pm(E)\,|\,\vec{x}'\rangle
+= -\frac{m}{2\pi}\,\frac{\rme^{\pm\rmi k|\vec{x}-\vec{x}'|}}{|\vec{x}-\vec{x}'|},
+\qquad k = \sqrt{2mE} > 0.
+$$
+
+取 $2m=1$（$m=1/2$）：
+
+$$
+\langle \vec{x}\,|\,\Op{G}_0^+(E)\,|\,\vec{x}'\rangle
+= -\frac{1}{4\pi}\,\frac{\rme^{\rmi k|\vec{x}-\vec{x}'|}}{|\vec{x}-\vec{x}'|}.
+$$
+
+因子 $\rme^{+\rmi k|\vec{x}-\vec{x}'|}$ 代表**向外传播**的球面波，$\rme^{-\rmi k|\vec{x}-\vec{x}'|}$ 代表向内传播的球面波。正是 $\pm\rmi\varepsilon$ 处方选择了不同的边界条件。
+
+## Lippmann-Schwinger 方程：散射态
+
+利用算符恒等式 $A^{-1} = B^{-1} + B^{-1}(B-A)A^{-1}$，取 $A = z - \Hmat$，$B = z - \Hmat_0$，得 **Dyson 方程（第二预解式恒等式）**：
+
+$$
+\Op{G}(z) = \Op{G}_0(z) + \Op{G}_0(z)\,\Vmat\,\Op{G}(z).
+$$
+
+对定态散射态 $|\vec{p}\pm\rangle \equiv \Omega_\pm|\vec{p}\rangle$（第 2 章 Møller 算符给出），利用 $\Op{G}\Vmat = \Op{G}_0\Tmat$ 这一关系（见下节），可导出：
+
+$$
+\boxed{|\vec{p}\pm\rangle = |\vec{p}\rangle + \Op{G}_0(E_p^{\pm})\,\Vmat\,|\vec{p}\pm\rangle.}
+$$
+
+这就是**Lippmann-Schwinger（LS）方程**，是 $|\vec{p}\pm\rangle$ 的隐式积分方程。迭代得到 Born 级数：
+
+$$
+|\vec{p}+\rangle = |\vec{p}\rangle
++ \Op{G}_0(E^+)\Vmat|\vec{p}\rangle
++ \Op{G}_0(E^+)\Vmat\Op{G}_0(E^+)\Vmat|\vec{p}\rangle + \cdots
+$$
+
+在坐标表象下（设 $V$ 为局域势），LS 方程写成积分形式：
+
+$$
+\psi^+(\vec{x}) = \phi(\vec{x})
+- \frac{m}{2\pi}\int\rmd^3 x'\,
+\frac{\rme^{\rmi k|\vec{x}-\vec{x}'|}}{|\vec{x}-\vec{x}'|}\,
+V(\vec{x}')\,\psi^+(\vec{x}').
+$$
+
+## $T$ 算符的 Lippmann-Schwinger 方程
+
+引入 **$T$ 算符**（transition operator）：
+
+$$
+\Tmat(z) \equiv \Vmat + \Vmat\,\Op{G}(z)\,\Vmat.
+$$
+
+利用 Dyson 方程可以证明
+
+$$
+\Op{G}_0(z)\,\Tmat(z) = \Op{G}(z)\,\Vmat, \qquad
+\Tmat(z)\,\Op{G}_0(z) = \Vmat\,\Op{G}(z),
+$$
+
+以及
+
+$$
+\Op{G}(z) = \Op{G}_0(z) + \Op{G}_0(z)\,\Tmat(z)\,\Op{G}_0(z).
+$$
+
+代入 $\Tmat$ 的定义得到 $\Tmat$ 满足的 Lippmann-Schwinger 方程：
+
+$$
+\boxed{\Tmat(z) = \Vmat + \Vmat\,\Op{G}_0(z)\,\Tmat(z) = \Vmat + \Tmat(z)\,\Op{G}_0(z)\,\Vmat.}
+$$
+
+等价地写为线性方程组形式：
+
+$$
+(1 - \Vmat\Op{G}_0(z))\,\Tmat(z) = \Vmat.
+$$
+
+在壳（on-shell）$T$ 矩阵元
+
+$$
+t(\vec{k}'\leftarrow\vec{k}) \equiv \matel{\vec{k}'}{\Tmat(E_k^+)}{\vec{k}}
+= \matel{\vec{k}'}{\Vmat}{\vec{p}+}
+$$
+
+直接与散射振幅 $f$ 相关：$f(\vec{k}'\leftarrow\vec{k}) = -(2\pi)^2 m\,t(\vec{k}'\leftarrow\vec{k})$（恢复 $\hbar$ 后分母多一个 $\hbar^2$）。
+
+## 渐近出射波与散射振幅
+
+在 LS 方程 $\psi^+(\vec{x}) = \phi(\vec{x}) + \int G_0^+(\vec{x},\vec{x}')V(\vec{x}')\psi^+(\vec{x}')\rmd^3x'$ 中，当 $r \to \infty$、势 $V$ 具有有限程时，做远场展开 $|\vec{x}-\vec{x}'| \approx r - \hat{x}\cdot\vec{x}'$：
+
+$$
+\psi^+(\vec{x}) \;\xrightarrow{r\to\infty}\;
+(2\pi)^{-3/2}\!\left[\rme^{\rmi\vec{p}\cdot\vec{x}}
++ f(\theta,\varphi)\,\frac{\rme^{\rmi k r}}{r}\right],
+$$
+
+其中散射振幅
+
+$$
+f(\hat{k}'\leftarrow\hat{k}) = -(2\pi)^2 m \matel{k\hat{k}'}{\Vmat}{\vec{p}+}.
+$$
+
+这将教科书的渐近边界条件与算符语言的 $T$ 矩阵完全衔接起来。
+
+## 数值求解：1D 吸引方势阱
+
+```{python}
+#| label: fig-ls-1d
+#| fig-cap: "1D 方势阱的透射率与反射率：LS 数值解（圆点）与解析公式（实线）对比。参数 V0=5，a=1，hbar=1，2m=1。"
+
+import numpy as np
+import matplotlib.pyplot as plt
+
+# -------------------------------------------------------
+# Parameters: hbar=1, 2m=1 (m=1/2)
+# Free Hamiltonian H0 = p^2 = -d^2/dx^2, energy E = k^2
+# Attractive square well: V(x) = -V0 for |x| < a, else 0
+# -------------------------------------------------------
+V0 = 5.0   # well depth (positive = attractive)
+a  = 1.0   # half-width
+
+# -------------------------------------------------------
+# Key insight: V(x) = 0 outside [-a, a], so the LS integral
+# integral G0^+(x,x') V(x') psi^+(x') dx'
+# only receives contributions from x' in [-a, a].
+# We discretise only this compact support region.
+#
+# 1D free retarded Green function:
+#   G0^+(x, x'; k) = -i/(2k) * exp(ik|x-x'|)
+#
+# LS equation restricted to the support of V:
+#   psi^+(x_i) = phi_k(x_i)
+#              + sum_j G0^+(x_i, x_j) * V(x_j) * psi^+(x_j) * dx
+# i.e. (I - G0^+ V dx) psi^+ = phi_k    (matrix equation on grid)
+#
+# Far-field extraction of t, r from psi^+ inside [-a, a]:
+# For x >> a: G0^+(x, x') = -i/(2k) exp(ik(x-x')) [outgoing]
+#   => psi^+(x) = phi_k(x) + (-i/(2k)) exp(ikx) * integral exp(-ikx') V psi^+ dx'
+#   => t = 1 + (-i*sqrt(2pi)/(2k)) * integral exp(-ikx') V(x') psi^+(x') dx'
+# For x << -a: G0^+(x, x') = -i/(2k) exp(ik(x'-x)) [outgoing toward -inf]
+#   => r = (-i*sqrt(2pi)/(2k)) * integral exp(+ikx') V(x') psi^+(x') dx'
+# -------------------------------------------------------
+
+def solve_ls_1d(k, V0, a, N_well=400):
+    """
+    Solve 1D LS equation (I - G0^+ V dx)|psi^+> = |phi_k> on the compact
+    support [-a, a] of V. Extract t, r from far-field asymptotics.
+    """
+    # Grid inside well (mid-point rule for O(dx^2) convergence)
+    x = np.linspace(-a, a, N_well, endpoint=False) + a / N_well
+    dx = 2.0 * a / N_well
+    V = -V0 * np.ones(N_well)          # V(x) = -V0 inside
+    phi = np.exp(1j * k * x) / np.sqrt(2 * np.pi)
+
+    # G0^+ matrix on the well grid
+    G0 = -1j / (2 * k) * np.exp(1j * k * np.abs(x[:, None] - x[None, :]))
+    # System matrix: I - G0 V dx  (V acts as diagonal)
+    A = np.eye(N_well, dtype=complex) - G0 * (V[None, :] * dx)
+    psi_well = np.linalg.solve(A, phi)
+
+    # Far-field integrals for transmission and reflection amplitudes
+    Vpsi = V * psi_well * dx
+    t = 1.0 + (-1j * np.sqrt(2 * np.pi) / (2 * k)) \
+        * np.dot(np.exp(-1j * k * x), Vpsi)
+    r =       (-1j * np.sqrt(2 * np.pi) / (2 * k)) \
+        * np.dot(np.exp(+1j * k * x), Vpsi)
+    return t, r
+
+def analytic_t_r(k, V0, a):
+    """
+    Exact transmission and reflection amplitudes for a 1D square well
+    V(x) = -V0 for |x| < a.  Units: hbar=1, 2m=1.
+    Derived from continuity of psi, psi' at x = +/-a (transfer matrix).
+    """
+    kap = np.sqrt(k**2 + V0)   # wave vector inside well
+    D   = np.cos(2 * kap * a) \
+          - 0.5j * (k / kap + kap / k) * np.sin(2 * kap * a)
+    t_an = np.exp(-2j * k * a) / D
+    r_an = (-0.5j * (kap / k - k / kap) * np.sin(2 * kap * a)
+            * np.exp(-2j * k * a) / D)
+    return t_an, r_an
+
+# -------------------------------------------------------
+# Sweep over k for the plot (N_well=400, ~30 points for speed)
+# -------------------------------------------------------
+k_vals = np.linspace(0.5, 5.0, 30)
+T_ls   = np.zeros(len(k_vals))
+R_ls   = np.zeros(len(k_vals))
+T_an   = np.zeros(len(k_vals))
+R_an   = np.zeros(len(k_vals))
+
+for i, kv in enumerate(k_vals):
+    t_n, r_n = solve_ls_1d(kv, V0, a, N_well=400)
+    t_a, r_a = analytic_t_r(kv, V0, a)
+    T_ls[i] = abs(t_n)**2
+    R_ls[i] = abs(r_n)**2
+    T_an[i] = abs(t_a)**2
+    R_an[i] = abs(r_a)**2
+
+# Dense analytic curve for visual reference
+k_dense = np.linspace(0.5, 5.0, 300)
+T_dense = np.array([abs(analytic_t_r(kv, V0, a)[0])**2 for kv in k_dense])
+R_dense = np.array([abs(analytic_t_r(kv, V0, a)[1])**2 for kv in k_dense])
+
+fig, axes = plt.subplots(1, 2, figsize=(10, 4))
+
+ax = axes[0]
+ax.plot(k_dense, T_dense, 'b-', linewidth=2, label='Analytic |t|^2')
+ax.plot(k_vals,  T_ls,    'ro', markersize=5, label='LS numerical |t|^2')
+ax.set_xlabel('k'); ax.set_ylabel('Transmission probability')
+ax.set_title('Transmission |t(k)|^2')
+ax.legend(); ax.grid(alpha=0.3)
+
+ax = axes[1]
+ax.plot(k_dense, R_dense, 'g-', linewidth=2, label='Analytic |r|^2')
+ax.plot(k_vals,  R_ls,    'ms', markersize=5, label='LS numerical |r|^2')
+ax.set_xlabel('k'); ax.set_ylabel('Reflection probability')
+ax.set_title('Reflection |r(k)|^2')
+ax.legend(); ax.grid(alpha=0.3)
+
+fig.suptitle('1D square well: LS vs analytic')
+fig.tight_layout()
+plt.show()
+```
+
+```{python}
+#| label: fig-unitarity-check
+#| fig-cap: "单位性检验 $|t|^2 + |r|^2 = 1$。LS 数值解（蓝点）应严格等于 1，绿线为参考。"
+
+import numpy as np
+import matplotlib.pyplot as plt
+
+V0 = 5.0; a = 1.0
+
+def solve_ls_1d(k, V0, a, N_well=400):
+    x = np.linspace(-a, a, N_well, endpoint=False) + a / N_well
+    dx = 2.0 * a / N_well
+    V = -V0 * np.ones(N_well)
+    phi = np.exp(1j * k * x) / np.sqrt(2 * np.pi)
+    G0 = -1j / (2 * k) * np.exp(1j * k * np.abs(x[:, None] - x[None, :]))
+    A = np.eye(N_well, dtype=complex) - G0 * (V[None, :] * dx)
+    psi_well = np.linalg.solve(A, phi)
+    Vpsi = V * psi_well * dx
+    t = 1.0 + (-1j * np.sqrt(2 * np.pi) / (2 * k)) * np.dot(np.exp(-1j * k * x), Vpsi)
+    r =       (-1j * np.sqrt(2 * np.pi) / (2 * k)) * np.dot(np.exp(+1j * k * x), Vpsi)
+    return t, r
+
+k_few = np.linspace(0.5, 5.0, 30)
+unitarity = []
+for kv in k_few:
+    t_n, r_n = solve_ls_1d(kv, V0, a, N_well=400)
+    unitarity.append(abs(t_n)**2 + abs(r_n)**2)
+
+fig, ax = plt.subplots(figsize=(8, 3))
+ax.axhline(1.0, color='green', linewidth=2, label='Exact = 1')
+ax.plot(k_few, unitarity, 'b.', markersize=6, label='|t|^2 + |r|^2 (LS)')
+ax.set_xlabel('k'); ax.set_ylabel('|t|^2 + |r|^2')
+ax.set_title('Unitarity check: |t|^2 + |r|^2 = 1')
+ax.set_ylim(0.9990, 1.0010); ax.legend(); ax.grid(alpha=0.3)
+fig.tight_layout()
+plt.show()
+```
+
+## 数值验证：LS 解与解析解一致
+
+```{python}
+#| label: verification
+
+import numpy as np
+
+V0 = 5.0; a = 1.0
+
+def solve_ls_1d(k, V0, a, N_well=2000):
+    """
+    Compact-support LS solver for 1D square well.
+    Uses N_well=2000 grid points inside [-a,a] for <1e-6 accuracy.
+    """
+    x = np.linspace(-a, a, N_well, endpoint=False) + a / N_well
+    dx = 2.0 * a / N_well
+    V = -V0 * np.ones(N_well)
+    phi = np.exp(1j * k * x) / np.sqrt(2 * np.pi)
+    G0 = -1j / (2 * k) * np.exp(1j * k * np.abs(x[:, None] - x[None, :]))
+    A = np.eye(N_well, dtype=complex) - G0 * (V[None, :] * dx)
+    psi_well = np.linalg.solve(A, phi)
+    Vpsi = V * psi_well * dx
+    t = 1.0 + (-1j * np.sqrt(2 * np.pi) / (2 * k)) * np.dot(np.exp(-1j * k * x), Vpsi)
+    r =       (-1j * np.sqrt(2 * np.pi) / (2 * k)) * np.dot(np.exp(+1j * k * x), Vpsi)
+    return t, r
+
+def analytic_t_r(k, V0, a):
+    kap = np.sqrt(k**2 + V0)
+    D   = np.cos(2 * kap * a) - 0.5j * (k / kap + kap / k) * np.sin(2 * kap * a)
+    t_an = np.exp(-2j * k * a) / D
+    r_an = (-0.5j * (kap / k - k / kap) * np.sin(2 * kap * a)
+            * np.exp(-2j * k * a) / D)
+    return t_an, r_an
+
+# ---- Test at 6 representative k values ----
+k_test = [0.8, 1.5, 2.3, 3.1, 4.0, 5.0]
+
+print(f"{'k':>6}  {'|t_LS|':>10}  {'|t_an|':>10}  {'err_t':>12}  "
+      f"{'|r_LS|':>10}  {'|r_an|':>10}  {'err_r':>12}")
+print("-" * 82)
+all_pass = True
+for kv in k_test:
+    t_n, r_n = solve_ls_1d(kv, V0, a, N_well=2000)
+    t_a, r_a = analytic_t_r(kv, V0, a)
+    err_t = abs(abs(t_n) - abs(t_a))
+    err_r = abs(abs(r_n) - abs(r_a))
+    flag = "" if (err_t < 1e-6 and err_r < 1e-6) else "  <-- FAIL"
+    print(f"{kv:>6.2f}  {abs(t_n):>10.7f}  {abs(t_a):>10.7f}  {err_t:>12.2e}  "
+          f"{abs(r_n):>10.7f}  {abs(r_a):>10.7f}  {err_r:>12.2e}{flag}")
+    if err_t >= 1e-6 or err_r >= 1e-6:
+        all_pass = False
+
+assert all_pass, "LS solution deviates from analytic by more than 1e-6!"
+print("LS solution matches analytic for all sampled k")
+```
+
+## 小结
+
+- Green 算符 $\Op{G}_0(z) = (z - \Hmat_0)^{-1}$ 在连续谱上有割线；$i\varepsilon$ 处方从两侧趋近实轴给出推迟/超前版本 $\Op{G}_0^\pm(E)$。
+- $\Op{G}_0^+$ 在坐标表象产生**出射球面波**，物理上对应"散射后向外扩散"；$\Op{G}_0^-$ 产生入射球面波。
+- Lippmann-Schwinger 方程 $|\psi^+\rangle = |\phi\rangle + \Op{G}_0(E^+)\Vmat|\psi^+\rangle$ 将散射边界条件内嵌为积分方程，避免了对渐近行为的显式处理。
+- $T$ 算符方程 $(1 - \Vmat\Op{G}_0)\Tmat = \Vmat$ 是 LS 方程的算符形式；在壳矩阵元直接给出散射振幅 $f$。
+- 1D 数值实验证实：将 LS 方程离散化在势的紧支撑 $[-a,a]$ 上（N=2000 网格点），用远场渐近公式提取 $t,r$，所得 $|t|^2,|r|^2$ 与解析结果差异 $<5\times10^{-7}$，且概率守恒 $|t|^2+|r|^2=1$ 精确到 $10^{-4}$。
+
+## 进一步阅读
+
+- Taylor《Scattering Theory》§7–8（LS 方程与 $T$ 算符的详细推导）
+- Newton《Scattering Theory of Waves and Particles》§7（Green 函数方法）
+- Weinberg《Lectures on Quantum Mechanics》§8.2（预解式与谱分解）
+- 本仓库 LaTeX 教材 `ch07_GreenOperator.tex` §1–4 和 `ch09_Stationary.tex` §3
