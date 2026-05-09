@@ -118,6 +118,7 @@ def compute_phase_shift(ell, k, r_match=8.0, r_start=1e-6):
     """
     Numerically integrate the radial SE from r_start to r_match,
     then match to the asymptotic form to extract delta_ell.
+    Returns the raw arctan2 value in (-pi, pi).
     """
     # Initial conditions: u ~ r^(ell+1),  u' ~ (ell+1)*r^ell
     u0  = r_start**(ell + 1)
@@ -151,6 +152,69 @@ def compute_phase_shift(ell, k, r_match=8.0, r_start=1e-6):
     delta = np.arctan2(numer, denom)
     return delta
 
+def count_bound_states(ell, V0, R, n_grid=2000):
+    """
+    Count the number of bound states for angular momentum `ell` in an
+    attractive square well of depth V0 and radius R, using the shooting
+    method on the imaginary-k (bound-state) radial equation.
+
+    Bound states satisfy  -u'' + [ell*(ell+1)/r^2 - V0*theta(R-r) + kappa^2] u = 0
+    with u(0)=0, u->0 as r->inf, for kappa in (0, sqrt(V0)).
+
+    We count sign changes of the log-derivative matching condition as
+    kappa is scanned, which equals the number of bound states.
+    """
+    def bound_ode(r, y, ell, kappa):
+        u, du = y
+        V = -V0 if r < R else 0.0
+        d2u = (ell*(ell+1)/r**2 + V + kappa**2) * u
+        return [du, d2u]
+
+    def matching_residual(kappa):
+        """
+        Integrate from r_start outward to r_match=R+2 with bound-state IC,
+        and return the log-derivative u'/u at r_match.
+        We look for kappa where the wavefunction matches the decaying
+        exponential outside: u'(R+) / u(R+) = -kappa.
+        Returns u'/u + kappa (should be zero at a bound state).
+        """
+        r_start = 1e-7
+        r_match_b = R + 4.0
+        u0  = r_start**(ell + 1)
+        du0 = (ell + 1) * r_start**ell
+        sol = solve_ivp(
+            bound_ode, [r_start, r_match_b], [u0, du0],
+            args=(ell, kappa), method='DOP853', rtol=1e-10, atol=1e-12,
+        )
+        u_m, du_m = sol.y[0, -1], sol.y[1, -1]
+        if abs(u_m) < 1e-30:
+            return 0.0
+        return du_m / u_m + kappa   # zero at a bound state
+
+    kappa_max = np.sqrt(V0) - 1e-6
+    if kappa_max <= 0:
+        return 0
+    kappa_grid = np.linspace(1e-4, kappa_max, n_grid)
+    residuals   = np.array([matching_residual(k) for k in kappa_grid])
+    # Count sign changes (zero crossings) = number of bound states
+    signs = np.sign(residuals)
+    signs[signs == 0] = 1
+    n_bound = int(np.sum(np.diff(signs) != 0))
+    return n_bound
+
+def unwrap_levinson(deltas_raw, ell, V0, R):
+    """
+    1. np.unwrap removes 2*pi jumps.
+    2. Then shift by an integer multiple of pi so that delta[0]
+       (lowest k) equals N_b * pi, enforcing Levinson's theorem.
+    """
+    deltas = np.unwrap(deltas_raw)
+    N_b = count_bound_states(ell, V0, R)
+    # How many pi's must we add?
+    n_shift = round((N_b * np.pi - deltas[0]) / np.pi)
+    deltas += n_shift * np.pi
+    return deltas
+
 # ── Scan k values ───────────────────────────────────────────────────────────
 k_vals = np.linspace(0.05, 5.0, 300)
 ells   = [0, 1, 2]
@@ -159,9 +223,9 @@ labels = [r'$\ell=0$', r'$\ell=1$', r'$\ell=2$']
 
 fig, ax = plt.subplots(figsize=(8, 4))
 for ell, col, lab in zip(ells, colors, labels):
-    deltas = np.array([compute_phase_shift(ell, k) for k in k_vals])
-    # Unwrap to remove 2*pi jumps, then keep in (-pi, pi) range via unwrap
-    deltas = np.unwrap(deltas)
+    deltas_raw = np.array([compute_phase_shift(ell, k) for k in k_vals])
+    # Unwrap 2*pi jumps, then pin to Levinson boundary condition at low k
+    deltas = unwrap_levinson(deltas_raw, ell, V0, R)
     ax.plot(k_vals, np.degrees(deltas), color=col, label=lab)
 
 ax.axhline(0, color='k', linewidth=0.5, linestyle='--')
@@ -178,13 +242,13 @@ plt.show()
 
 ```{python}
 #| label: fig-cross-sections
-#| fig-cap: "Partial-wave cross sections $\\sigma_\\ell(k)$ and total cross section for $\\ell=0,1,2$."
+#| fig-cap: "Partial-wave cross sections $\\sigma_\\ell(k)$ and total cross section (partial sum $\\ell=0,1,2$). Note: the partial sum underestimates the true total cross section at larger $k$ where higher partial waves ($\\ell \\ge 3$) become non-negligible."
 
 import numpy as np
 from scipy.integrate import solve_ivp
 import matplotlib.pyplot as plt
 
-# ── Reuse parameters and helper ─────────────────────────────────────────────
+# ── Reuse parameters and helpers ────────────────────────────────────────────
 V0 = 10.0
 R  = 1.0
 
@@ -208,6 +272,45 @@ def compute_phase_shift(ell, k, r_match=8.0, r_start=1e-6):
     sp, cp = np.sin(phi), np.cos(phi)
     return np.arctan2(k*u_end*cp - du_end*sp, du_end*cp + k*u_end*sp)
 
+def count_bound_states(ell, V0, R, n_grid=2000):
+    """Count bound states via log-derivative shooting (see fig-phase-shifts)."""
+    def bound_ode(r, y, ell, kappa):
+        u, du = y
+        V = -V0 if r < R else 0.0
+        d2u = (ell*(ell+1)/r**2 + V + kappa**2) * u
+        return [du, d2u]
+
+    def matching_residual(kappa):
+        r_start = 1e-7
+        r_match_b = R + 4.0
+        u0  = r_start**(ell + 1)
+        du0 = (ell + 1) * r_start**ell
+        sol = solve_ivp(
+            bound_ode, [r_start, r_match_b], [u0, du0],
+            args=(ell, kappa), method='DOP853', rtol=1e-10, atol=1e-12,
+        )
+        u_m, du_m = sol.y[0, -1], sol.y[1, -1]
+        if abs(u_m) < 1e-30:
+            return 0.0
+        return du_m / u_m + kappa
+
+    kappa_max = np.sqrt(V0) - 1e-6
+    if kappa_max <= 0:
+        return 0
+    kappa_grid = np.linspace(1e-4, kappa_max, n_grid)
+    residuals   = np.array([matching_residual(k) for k in kappa_grid])
+    signs = np.sign(residuals)
+    signs[signs == 0] = 1
+    return int(np.sum(np.diff(signs) != 0))
+
+def unwrap_levinson(deltas_raw, ell, V0, R):
+    """Unwrap and pin low-k end to N_b * pi (Levinson's theorem)."""
+    deltas = np.unwrap(deltas_raw)
+    N_b = count_bound_states(ell, V0, R)
+    n_shift = round((N_b * np.pi - deltas[0]) / np.pi)
+    deltas += n_shift * np.pi
+    return deltas
+
 k_vals = np.linspace(0.05, 5.0, 300)
 ells   = [0, 1, 2]
 colors = ['C0', 'C1', 'C2']
@@ -215,7 +318,8 @@ labels = [r'$\sigma_0$', r'$\sigma_1$', r'$\sigma_2$']
 
 sigma_all = []
 for ell in ells:
-    deltas = np.unwrap(np.array([compute_phase_shift(ell, k) for k in k_vals]))
+    deltas_raw = np.array([compute_phase_shift(ell, k) for k in k_vals])
+    deltas = unwrap_levinson(deltas_raw, ell, V0, R)
     sigma  = (4*np.pi / k_vals**2) * (2*ell + 1) * np.sin(deltas)**2
     sigma_all.append(sigma)
 
@@ -225,7 +329,7 @@ fig, ax = plt.subplots(figsize=(8, 4))
 for sigma, col, lab in zip(sigma_all, colors, labels):
     ax.plot(k_vals, sigma, color=col, label=lab)
 ax.plot(k_vals, sigma_tot, 'k--', linewidth=1.5,
-        label=r'$\sigma_{\rm tot}$ (partial sum)')
+        label=r'$\sigma_{\rm tot}$ (partial sum, $\ell \leq 2$)')
 
 ax.set_xlabel("Wave number $k$")
 ax.set_ylabel(r"Cross section $\sigma$ (natural units)")
@@ -289,6 +393,60 @@ for V0_t, k_t in zip(V0_samples, k_samples):
 print(f"Maximum |sin(delta_num - delta_ana)| over 30 sampled (V0, k): {max_err:.2e}")
 assert max_err < 1e-6, f"Phase shift mismatch: {max_err:.2e}"
 print("partial-wave delta_0 OK for all sampled (V0, k)")
+
+# ── Levinson theorem check: delta_0(k->0) = N_b * pi ──────────────────────
+# For V0=10, R=1: the s-wave bound-state condition is kappa*cot(kappa*R) = -kappa
+# i.e. cos(kappa*R) = 0 => kappa*R = pi/2, giving V0_c = (pi/2)^2 ~ 2.47.
+# Since V0=10 > V0_c, there is at least 1 s-wave bound state.
+# Count by scanning kappa:
+
+def count_swave_bound_states(V0_check, R_check=1.0):
+    """
+    Count s-wave (ell=0) bound states by counting sign changes of
+    the matching condition f(kappa) = kappa*cot(sqrt(V0-kappa^2)*R) + kappa = 0.
+    Equivalently use the shooting residual approach.
+    """
+    def residual(kappa):
+        K = np.sqrt(max(V0_check - kappa**2, 0.0))
+        if K < 1e-10:
+            return np.inf
+        # Inside: u ~ sin(K*r); outside: u ~ exp(-kappa*r)
+        # Matching at r=R: K*cos(K*R)/sin(K*R) = -kappa
+        return K / np.tan(K * R_check) + kappa
+
+    kappa_max = np.sqrt(V0_check) - 1e-6
+    if kappa_max <= 0:
+        return 0
+    kappa_grid = np.linspace(1e-4, kappa_max, 5000)
+    vals  = np.array([residual(k) for k in kappa_grid])
+    signs = np.sign(vals)
+    signs[signs == 0] = 1
+    return int(np.sum(np.diff(signs) != 0))
+
+V0_lev, R_lev = 10.0, 1.0
+N_b = count_swave_bound_states(V0_lev, R_lev)
+
+# Compute delta_0 at very low k using the numerical shooter with Levinson pin
+k_low_arr = np.linspace(0.02, 0.15, 40)
+d0_low_raw = np.array([numerical_delta0(V0_lev, k, R_lev) for k in k_low_arr])
+d0_low = np.unwrap(d0_low_raw)
+# Pin to Levinson
+n_shift = round((N_b * np.pi - d0_low[0]) / np.pi)
+d0_low += n_shift * np.pi
+
+lev_val  = d0_low[0]           # delta_0 at lowest k
+lev_tol  = 0.05 * np.pi       # tolerance: 5% of pi (9 degrees)
+lev_err  = abs(lev_val - N_b * np.pi)
+
+print(f"s-wave bound states for V0={V0_lev}, R={R_lev}: N_b = {N_b}")
+print(f"delta_0(k={k_low_arr[0]:.2f}) = {np.degrees(lev_val):.2f} deg  "
+      f"(Levinson predicts {N_b}*180 = {N_b*180} deg)")
+print(f"Levinson error |delta_0(k_min) - N_b*pi| = {np.degrees(lev_err):.3f} deg")
+assert lev_err < lev_tol, (
+    f"Levinson theorem violated: delta_0(k_min)={np.degrees(lev_val):.2f} deg, "
+    f"expected {N_b*180} deg, error={np.degrees(lev_err):.2f} deg > {np.degrees(lev_tol):.1f} deg"
+)
+print("Levinson theorem check PASSED")
 ```
 
 ## 小结
