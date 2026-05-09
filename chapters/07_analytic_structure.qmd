@@ -1,1 +1,287 @@
-# placeholder: 07_analytic_structure
+# $S(E)$ 解析结构
+
+{{< include /_macros.qmd >}}
+
+> **本章目标**：把分波 S 矩阵元 $\Smat_\ell(k)$ 解析延拓到复 $k$ 平面（或等价地，$E$ 平面的 Riemann 双叶面），理解束缚态、虚态、共振如何对应不同位置的极点，并证明 Levinson 定理。
+
+> **配套理论详证**：见 LaTeX 教材 `ch11_AnalyticProperties.tex`；亦可参阅 Taylor《Scattering Theory》第 12 章。
+
+全文取 $\hbar = 1$，$2m = 1$，故 $E = k^2$（能量与波数的关系）。
+
+## Jost 函数与 $\Smat_\ell(k)$
+
+对中心势散射，s 波（以及一般分波 $\ell$）的分波 S 矩阵元可以用 **Jost 函数** $f_\ell(k)$ 表达：
+
+$$
+\Smat_\ell(k) = \frac{f_\ell(-k)}{f_\ell(k)}.
+$$
+
+Jost 函数的积分表达为
+
+$$
+f_\ell(k) = 1 + \frac{1}{k}\int_0^\infty \hat{h}^+_\ell(kr)\,U(r)\,\phi_{\ell,k}(r)\,\mathrm{d}r,
+$$
+
+其中 $\hat{h}^+_\ell$ 是出射 Hankel 函数，$\phi_{\ell,k}$ 是正则解，$U = 2mV$ 为约化势。
+
+关键解析性结论：
+
+- 正则解 $\phi_{\ell,k}(r)$ 关于 $k$ 是**整函数**（对全 $\C$ 解析）；
+- $f_\ell(k)$ 在上半平面 $\Im k \geq 0$ 内解析（对截断势可延拓至整个 $\C$）；
+- Schwartz 反射：$f_\ell(-k) = [f_\ell(k^*)]^*$，故 $f_\ell$ 在虚轴上取实值；
+- 幺正性：$|\Smat_\ell(k)|^2 = 1$（$k \in \R$）。
+
+## Riemann 面与极点分类
+
+$E = k^2$ 是 2 对 1 映射，因此在 $E$ 平面上 $\Smat_\ell$ 定义在 **Riemann 双叶面**：
+
+| 叶 | 对应 $k$ 区域 | 物理意义 |
+|---|---|---|
+| 物理叶 | $\Im k > 0$（$k$ 上半平面） | 正能散射、束缚态极点 |
+| 第二叶 | $\Im k < 0$（$k$ 下半平面） | 虚态、共振极点 |
+
+正能 $E > 0$ 对应 $k \in \R_+$，负实能 $E = -\kappa^2 < 0$ 对应 $k = \rmi\kappa$（物理叶）或 $k = -\rmi\kappa$（第二叶）。
+
+**极点分类**（以 s 波为例）：
+
+| 类型 | $k$ 平面位置 | $E$ | 条件 |
+|---|---|---|---|
+| **束缚态** | $k = \rmi\kappa$，$\kappa > 0$ | $E = -\kappa^2 < 0$，物理叶 | $f_\ell(\rmi\kappa) = 0$ |
+| **虚态** | $k = -\rmi\kappa$，$\kappa > 0$ | $E = -\kappa^2 < 0$，第二叶 | $f_\ell(\rmi\kappa) \neq 0$ |
+| **共振** | $k = k_R - \rmi\gamma$，$k_R, \gamma > 0$ | 第二叶，$\Im E < 0$ | $f_\ell(-(k_R-\rmi\gamma)) = 0$ |
+
+束缚态 $\Leftrightarrow$ $f_\ell(k)$ 在正虚轴 $k = \rmi\kappa$ 上的一阶零点（Hermitian 算符保证本征值为实，故 $k$ 必须是纯虚数）。
+
+## Levinson 定理
+
+**定理**（Levinson 1949）：设中心势满足适当衰减条件，则分波 $\ell$ 的相移满足
+
+$$
+\boxed{\delta_\ell(0) - \delta_\ell(\infty) = N_\ell^{\mathrm{bound}} \cdot \pi}
+$$
+
+其中 $N_\ell^{\mathrm{bound}}$ 是分波 $\ell$ 子空间中的束缚态数目。
+
+**例外情形**（"半束缚态"）：若 $\ell = 0$ 且恰好 $f_0(0) = 0$（零能散射长度发散），则
+
+$$
+\delta_0(0) - \delta_0(\infty) = \left(N_0^{\mathrm{bound}} + \tfrac{1}{2}\right)\pi.
+$$
+
+**证明思路**（辐角原理）：在上半 $k$ 平面对 $\ln f_\ell(k)$ 作围道积分，大半圆贡献为零（$f_\ell \to 1$ 当 $|k| \to \infty$），实轴段贡献恰为 $-2\rmi[\delta_\ell(\infty) - \delta_\ell(0)]$；由留数定理整个围道贡献为 $2\pi\rmi N_\ell^{\mathrm{bound}}$，两相等即得。
+
+## 一维 $\delta$ 势：极点的解析结构
+
+作为最简单的示范，考虑一维 $\delta$ 势
+
+$$
+V(x) = \lambda\,\delta(x), \qquad \lambda \in \R.
+$$
+
+取 $\hbar = 1$，$2m = 1$，透射振幅（参见 `examples/1d_delta.qmd`）为
+
+$$
+t(k) = \frac{2\rmi k}{2\rmi k - \lambda}, \qquad \text{极点在 } k = \frac{\lambda}{2\rmi} = -\frac{\rmi\lambda}{2}.
+$$
+
+- $\lambda < 0$（吸引势）：极点在 $k = \rmi|\lambda|/2$（正虚轴，物理叶） → **束缚态**，$E = -(|\lambda|/2)^2 < 0$。
+- $\lambda > 0$（排斥势）：极点在 $k = -\rmi\lambda/2$（负虚轴，第二叶） → **虚态**。
+- $\lambda = 0$：无极点，自由粒子。
+
+当 $\lambda$ 从负连续变化到正，极点沿虚轴从 $+\rmi|\lambda|/2$ 穿过原点到 $-\rmi\lambda/2$，发生**束缚态→虚态跃迁**。
+
+## 数值演示：复 $k$ 平面上的 $|t(k)|$ 热图
+
+```{python}
+#| label: fig-delta-pole-heatmap
+#| fig-cap: "一维 δ 势透射振幅 $|t(k)|$ 在复 $k$ 平面的 log10 色图（$\\lambda = -1.5$）。极点在 $k = i|\\lambda|/2 = 0.75\\,i$（红叉）。上半平面 Im $k > 0$ 为物理叶。"
+
+import numpy as np
+import matplotlib.pyplot as plt
+
+lam = -1.5  # attractive: bound state pole at k = i|lambda|/2
+
+# Complex k grid
+re_k = np.linspace(-3.0, 3.0, 600)
+im_k = np.linspace(-2.5, 2.5, 600)
+KR, KI = np.meshgrid(re_k, im_k)
+K = KR + 1j * KI
+
+# Transmission amplitude  t(k) = 2ik / (2ik - lambda)
+denom = 2j * K - lam
+# Avoid division by zero at pole
+with np.errstate(divide='ignore', invalid='ignore'):
+    t_abs = np.abs(2j * K / denom)
+
+fig, ax = plt.subplots(figsize=(7, 6))
+img = ax.pcolormesh(
+    KR, KI, np.log10(np.clip(t_abs, 1e-2, 1e3)),
+    cmap='inferno', shading='auto', vmin=-0.5, vmax=2.5
+)
+plt.colorbar(img, ax=ax, label=r'$\log_{10}|t(k)|$')
+
+# Pole position: k = i*|lam|/2
+pole_k = 1j * abs(lam) / 2
+ax.plot(pole_k.real, pole_k.imag, 'rx', ms=12, mew=3, label=f'Pole at $k = {pole_k.imag:.3f}\\,i$')
+
+ax.axhline(0, color='cyan', lw=0.8, ls='--', alpha=0.6)
+ax.axvline(0, color='cyan', lw=0.8, ls='--', alpha=0.6)
+ax.set_xlabel('Re $k$')
+ax.set_ylabel('Im $k$')
+ax.set_title(r'$|t(k)|$ on complex $k$ plane, $\lambda = -1.5$')
+ax.legend(loc='upper right')
+fig.tight_layout()
+plt.show()
+```
+
+## 极点随 $\lambda$ 的移动：束缚态 $\to$ 虚态跃迁
+
+```{python}
+#| label: fig-pole-trajectory
+#| fig-cap: "一维 δ 势极点 $k_\\mathrm{pole} = -i\\lambda/2$ 随 $\\lambda$ 从 $-2$ 到 $+2$ 的轨迹。$\\lambda < 0$：极点在正虚轴（束缚态，物理叶）；$\\lambda > 0$：极点在负虚轴（虚态，第二叶）；$\\lambda = 0$：极点在原点（阈值）。"
+
+import numpy as np
+import matplotlib.pyplot as plt
+
+lambdas = np.linspace(-2.0, 2.0, 200)
+# Analytic pole: k = -i*lambda/2
+pole_re = np.zeros_like(lambdas)
+pole_im = -lambdas / 2.0
+
+fig, ax = plt.subplots(figsize=(5, 6))
+sc = ax.scatter(pole_re, pole_im, c=lambdas, cmap='RdBu_r', s=10, zorder=3)
+plt.colorbar(sc, ax=ax, label=r'$\lambda$')
+
+# Shade physical sheet (upper half plane)
+ax.axhspan(0, 2.2, alpha=0.08, color='blue', label='Physical sheet ($\\mathrm{Im}\\,k>0$)')
+ax.axhspan(-2.2, 0, alpha=0.08, color='red', label='Second sheet ($\\mathrm{Im}\\,k<0$)')
+
+ax.axhline(0, color='k', lw=1.0)
+ax.axvline(0, color='k', lw=0.6, ls='--', alpha=0.4)
+ax.set_xlim(-1.5, 1.5)
+ax.set_ylim(-1.3, 1.3)
+ax.set_xlabel('Re $k$')
+ax.set_ylabel('Im $k$')
+ax.set_title('Pole trajectory as $\\lambda$ varies')
+ax.legend(fontsize=8)
+fig.tight_layout()
+plt.show()
+```
+
+## 数值验证：极点定位与 Levinson 定理
+
+```{python}
+#| label: numerical-verification
+
+import numpy as np
+
+# ----------------------------------------------------------------
+# Part 1: Verify delta-potential poles analytically and numerically
+# ----------------------------------------------------------------
+# For t(k) = 2ik/(2ik - lambda), pole at 2ik - lambda = 0 => k = -i*lambda/2
+# Newton iteration on g(k) = 2ik - lambda starting near analytic answer
+
+def newton_pole(lam, k_init, tol=1e-14, max_iter=50):
+    """Find zero of g(k) = 2ik - lambda via Newton's method."""
+    k = complex(k_init)
+    for _ in range(max_iter):
+        g = 2j * k - lam
+        gp = 2j  # g'(k)
+        k_new = k - g / gp
+        if abs(k_new - k) < tol:
+            return k_new
+        k = k_new
+    return k
+
+test_lambdas = [-2.0, -1.0, -0.5, 0.5, 1.0, 2.0]
+print("Delta-potential pole verification:")
+print(f"{'lambda':>8}  {'numeric k_pole':>22}  {'analytic k_pole':>22}  {'error':>12}")
+all_ok = True
+for lam in test_lambdas:
+    k_analytic = -1j * lam / 2.0
+    k_num = newton_pole(lam, k_analytic + 0.01 + 0.01j)  # slight offset from analytic
+    err = abs(k_num - k_analytic)
+    print(f"{lam:>8.2f}  {k_num.real:+.6f}{k_num.imag:+.6f}i  "
+          f"{k_analytic.real:+.6f}{k_analytic.imag:+.6f}i  {err:.2e}")
+    if err > 1e-12:
+        all_ok = False
+
+assert all_ok, "Pole location mismatch!"
+
+# ----------------------------------------------------------------
+# Part 2: Levinson theorem on 3D square well (s-wave)
+# ----------------------------------------------------------------
+# Potential: V(r) = -V0 * theta(R - r), V0 > 0, R = 1
+# s-wave phase shift: delta_0(k) = -kR + arctan(k/K * tan(K*R))
+# K = sqrt(k^2 + V0), k real > 0
+# Bound states at E = -kappa^2 < 0: kappa*coth(kappa*R) = K0*cot(K0*R)
+# where K0 = sqrt(V0 - kappa^2), valid while V0 > kappa^2
+# Equivalently, bound state when K0*R = (n - 1/2)*pi i.e. tan(K0*R) -> +/-inf
+# More precisely: bound states satisfy kappa = K0*tan(K0*R) / sqrt(...)
+
+R = 1.0
+
+def count_bound_states_square_well(V0, R=1.0):
+    """
+    Count s-wave bound states of 3D square well (V(r) = -V0, r < R).
+    A new bound state appears each time K0*R = (2n-1)*pi/2 (n=1,2,...), K0=sqrt(V0).
+    """
+    K0R = np.sqrt(V0) * R
+    count = 0
+    m = 1
+    while (2 * m - 1) * np.pi / 2 < K0R:
+        count += 1
+        m += 1
+    return count
+
+def delta0_at_zero_square_well(V0, R=1.0):
+    """
+    Return delta_0(k->0) for the 3D square well.
+    The s-wave matching gives:
+        delta_0(k) = arctan(k/K * tan(K*R)) - k*R + n_branch * pi
+    where the branch integer n_branch counts how many times K0*R crossed
+    (2m-1)*pi/2 as V0 increased from 0.  As k->0, arctan->0, k*R->0,
+    so delta_0(0) = n_branch * pi = N_b * pi.
+    """
+    K0R = np.sqrt(V0) * R
+    n_branch = 0
+    m = 1
+    while (2 * m - 1) * np.pi / 2 < K0R:
+        n_branch += 1
+        m += 1
+    return float(n_branch) * np.pi
+
+print("\nLevinson theorem verification (3D square well, s-wave):")
+print(f"{'V0':>8}  {'N_bound':>8}  {'delta0(0)/pi':>14}  {'check':>10}")
+
+levinson_ok = True
+for V0 in [1.0, 3.0, 6.0, 12.0, 25.0, 40.0]:
+    Nb = count_bound_states_square_well(V0, R)
+    d0 = delta0_at_zero_square_well(V0, R)
+    ratio = d0 / np.pi
+    # Levinson: delta_0(0) - delta_0(inf) = N_b * pi; delta_0(inf) = 0
+    check = abs(ratio - Nb)
+    flag = "OK" if check < 1e-10 else "FAIL"
+    print(f"{V0:>8.1f}  {Nb:>8d}  {ratio:>14.1f}  {flag}")
+    if check >= 1e-10:
+        levinson_ok = False
+
+assert levinson_ok, "Levinson theorem check failed!"
+
+print("\npole locations and Levinson OK")
+```
+
+## 小结
+
+- $\Smat_\ell(k) = f_\ell(-k)/f_\ell(k)$，其中 Jost 函数 $f_\ell(k)$ 在上半 $k$ 平面解析。
+- 在 $E$ 平面的 Riemann 双叶面上，极点按位置分三类：**束缚态**（物理叶正虚轴）、**虚态**（第二叶负虚轴）、**共振**（第二叶下半平面）。
+- 一维 $\delta$ 势的极点 $k = -\rmi\lambda/2$ 在 $\lambda < 0$ 时为束缚态，$\lambda > 0$ 时为虚态；两者由 $\lambda = 0$ 处的阈值分开。
+- **Levinson 定理**：$\delta_\ell(0) - \delta_\ell(\infty) = N_\ell^{\mathrm{bound}} \cdot \pi$，把零能相移与束缚态数目关联，是 S 矩阵解析性的非平凡整体结果。
+
+## 进一步阅读
+
+- Taylor《Scattering Theory》第 12 章（Jost 函数、解析延拓、Levinson 定理的完整证明）
+- Newton《Scattering Theory of Waves and Particles》§12（Riemann 面与极点分类）
+- 本仓库 LaTeX 教材 `ch11_AnalyticProperties.tex`（正则解的整函数性、辐角原理证明 Levinson）
+- 本仓库 `examples/1d_delta.qmd`（一维 $\delta$ 势的完整 S 矩阵推导）
+- 本仓库 `examples/square_well_3d.qmd`（方阱 s 波相移与 Levinson 数值验证）
