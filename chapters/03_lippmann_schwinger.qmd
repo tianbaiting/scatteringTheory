@@ -156,7 +156,7 @@ $$
 
 ```{python}
 #| label: fig-ls-1d
-#| fig-cap: "1D 方势阱的透射率与反射率：LS 数值解（圆点）与解析公式（实线）对比。参数 V0=5，a=1，hbar=1，2m=1。"
+#| fig-cap: "1D 方势阱的透射率与反射率：LS 数值解（圆点）与解析公式（实线）对比。参数 V0=5，a=1，hbar=1，2m=1。解析曲线在 $k\\approx2.207$ 与 $k\\approx4.148$ 附近存在 Ramsauer–Townsend 完全透射共振（$|t|^2\\to1$），但在当前 30 点采样密度下极浅的反射极小值（$\\sim0.2\\%$）几乎不可见。"
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -229,6 +229,10 @@ def analytic_t_r(k, V0, a):
     r_an = (-0.5j * (kap / k - k / kap) * np.sin(2 * kap * a)
             * np.exp(-2j * k * a) / D)
     return t_an, r_an
+# Note: t_an = exp(-2ika)/D carries an extra overall phase e^{ipi}=-1 relative
+# to the boundary-condition convention; since only |t|^2 is plotted this
+# convention difference is invisible, but readers comparing complex amplitudes
+# should be aware of it.
 
 # -------------------------------------------------------
 # Sweep over k for the plot (N_well=400, ~30 points for speed)
@@ -373,7 +377,7 @@ print("LS solution matches analytic for all sampled k")
 - $\Op{G}_0^+$ 在坐标表象产生**出射球面波**，物理上对应"散射后向外扩散"；$\Op{G}_0^-$ 产生入射球面波。
 - Lippmann-Schwinger 方程 $|\psi^+\rangle = |\phi\rangle + \Op{G}_0(E^+)\Vmat|\psi^+\rangle$ 将散射边界条件内嵌为积分方程，避免了对渐近行为的显式处理。
 - $T$ 算符方程 $(1 - \Vmat\Op{G}_0)\Tmat = \Vmat$ 是 LS 方程的算符形式；在壳矩阵元直接给出散射振幅 $f$。
-- 1D 数值实验证实：将 LS 方程离散化在势的紧支撑 $[-a,a]$ 上（N=2000 网格点），用远场渐近公式提取 $t,r$，所得 $|t|^2,|r|^2$ 与解析结果差异 $<5\times10^{-7}$，且概率守恒 $|t|^2+|r|^2=1$ 精确到 $10^{-4}$。
+- 1D 数值实验证实：将 LS 方程离散化在势的紧支撑 $[-a,a]$ 上（N=2000 网格点），用远场渐近公式提取 $t,r$，所得 $|t|^2,|r|^2$ 与解析结果差异 $<5\times10^{-7}$，且概率守恒 $|t|^2+|r|^2=1$ 精确到机器精度（$\sim10^{-15}$）。
 
 ## 进一步阅读
 
