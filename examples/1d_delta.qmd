@@ -82,7 +82,7 @@ $$
 把它对角化到宇称基 $\{\text{偶}, \text{奇}\}$：
 
 - 偶通道 $\psi_e \propto \cos(k|x| + \delta_e)$，$S_e = e^{2i\delta_e} = r + t$；
-- 奇通道 $\psi_o \propto \sin(kx)$，在原点为零，$\delta$ 看不见，$S_o = 1$。
+- 奇通道 $\psi_o \propto \sin(kx)$，在原点为零，$\delta$ 看不见，$S_o = 1$。注意约定：$S$ 矩阵对本征态 $(|L\rangle - |R\rangle)/\sqrt{2}$ 的本征值为 $r - t = -1$；这里取 $S_o = t - r$（即以 $(|R\rangle - |L\rangle)/\sqrt{2}$ 为基底），得 $S_o = 1$，表示奇通道无散射（相移为零）。
 
 代入解析式：
 
@@ -202,7 +202,7 @@ T = 2j * K / (2j * K - lam)
 fig, ax = plt.subplots(figsize=(6, 5))
 pcm = ax.pcolormesh(KR, KI, np.log10(np.abs(T) + 1e-3),
                     shading="auto", cmap="viridis")
-fig.colorbar(pcm, ax=ax, label=r"$\log_{10}|t(k)|$")
+fig.colorbar(pcm, ax=ax, label=r"$\log_{10}(|t(k)|+\varepsilon)$")
 ax.axhline(0, color="w", lw=0.5)
 ax.axvline(0, color="w", lw=0.5)
 kappa = -lam / 2
