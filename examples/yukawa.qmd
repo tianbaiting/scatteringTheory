@@ -1,5 +1,7 @@
 # Yukawa 势与 Born 近似
 
+{{< include /_macros.qmd >}}
+
 可解模型系列第 4 篇。前三篇（一维 delta、三维方阱、delta 壳）都是分段常势，匹配条件可以闭式解到底。Yukawa 势 $V(r) = -V_0\,\rme^{-\mu r}/(\mu r)$ 是第一个真正"光滑且有耦合常数"的例子：Born 振幅有干净的 Lorentzian 闭式，但精确相移只能数值算。这个张力正好让我们把 Born 近似的有效区、Born 级数的发散与束缚态阈值串成一条线。
 
 全文取 $\hbar = 1$，$2m = 1$，能量 $E = k^2$。
