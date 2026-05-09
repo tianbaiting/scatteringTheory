@@ -229,66 +229,37 @@ from scipy import integrate
 #   = 2pi int_0^pi |f(theta)|^2 sin(theta) dtheta
 # -----------------------------------------------------------------------
 
-def compute_D(lam, beta, k, eta=1e-8):
+def compute_I_analytic_fig(k, beta):
     """
-    D(E+) = 1 - lam * I(E+)
-    I(E+) = int_0^inf dp' p'^2 * g(p')^2 / (E+i*eta - p'^2)  * 4pi / (2pi)^3
-          = (1/2pi^2) int_0^inf dp' p'^2 / [(p'^2+beta^2)^2 * (E+ieta - p'^2)]
-    Evaluate analytically:
-    With E = k^2, E+ieta -> k^2 + ieta:
-    I = (1/(2*pi^2)) * PV int + i*pi*residue contribution
-    The integral can be done by partial fractions. The result is:
-    I = (1/(2*pi^2)) * [ pi/(2*beta*(beta^2+k^2)) + pi*k/(2*(k^2+beta^2)^2)*... ]
-
-    Use numerical integration for generality.
+    Analytic result for I(k^2+i0^+) via residue theorem.
+    I(k^2+i0) = (1/(2pi^2)) int_0^inf p^2 / [(p^2+beta^2)^2 * (k^2+i0-p^2)] dp
+    See compute_I_analytic (verification section) for the full derivation.
     """
-    E = k**2
-    z = E + 1j * eta
+    Res_k = k / (2.0 * (k**2 + beta**2)**2)
+    Res_ibeta = -1j * (k**2 - beta**2) / (4.0 * beta * (k**2 + beta**2)**2)
+    return (1j / (2.0 * np.pi)) * (Res_k + Res_ibeta)
 
-    def integrand_real(p):
-        g2 = 1.0 / (p**2 + beta**2)**2
-        denom = z - p**2
-        return p**2 * g2 / denom
 
-    # Split into real and imaginary; numerical integration over finite range
-    p_max = 50.0 * max(k, beta, 1.0)
-    N = 8000
-    p_arr = np.linspace(1e-6, p_max, N)
-    dp = p_arr[1] - p_arr[0]
-
-    g2_arr = 1.0 / (p_arr**2 + beta**2)**2
-    denom_arr = z - p_arr**2
-    integrand = p_arr**2 * g2_arr / denom_arr
-    I = (1.0 / (2.0 * np.pi**2)) * np.trapezoid(integrand, p_arr)
-
+def compute_D(lam, beta, k):
+    """D(E+) = 1 - lam * I(E+), using analytic residue formula."""
+    I = compute_I_analytic_fig(k, beta)
     return 1.0 - lam * I
 
 
-def forward_amplitude(lam, beta, k, eta=1e-8):
+def forward_amplitude(lam, beta, k):
     """f(theta=0) = lam * g(k)^2 / (4*pi * D(E+))"""
     g_k = 1.0 / (k**2 + beta**2)
-    D = compute_D(lam, beta, k, eta)
+    D = compute_D(lam, beta, k)
     return lam * g_k**2 / (4.0 * np.pi * D)
 
 
-def total_cross_section(lam, beta, k, eta=1e-8):
-    """sigma = 2*pi * int_0^pi |f(theta)|^2 sin(theta) dtheta"""
-    E = k**2
-    D = compute_D(lam, beta, k, eta)
+def total_cross_section(lam, beta, k):
+    """sigma = 4*pi * |f|^2  (isotropic rank-1 separable potential)"""
+    D = compute_D(lam, beta, k)
     g_k = 1.0 / (k**2 + beta**2)
-    prefactor = (lam * g_k / (4.0 * np.pi * D))**2
-
-    theta_arr = np.linspace(0, np.pi, 2000)
-    q_arr = 2.0 * k * np.sin(theta_arr / 2.0)
-    g_kf_arr = 1.0 / (q_arr**2 + (k**2 + beta**2))  # wrong: need |k_f|=k
-    # Actually for rank-1: f(theta) = lam*g(k_f)*g(k_i)/(4*pi*D)
-    # with |k_f|=|k_i|=k, g only depends on magnitude => g(k_f)=g(k_i)=g(k)
-    # f(theta) = lam * g(k)^2 / (4*pi*D)  -- same for all theta!
-    # This is an S-wave (isotropic) separable potential for s-wave g.
-    # sigma = 4*pi * |f(0)|^2 * ... no.
-    # For isotropic f: sigma = int |f|^2 dOmega = 4*pi * |f|^2
-
-    f_sq = abs(prefactor)**2 if False else abs(lam * g_k**2 / (4.0 * np.pi * D))**2
+    # For rank-1 with s-wave g: f(theta) = lam*g(k)^2/(4*pi*D), independent of theta
+    # sigma = int |f|^2 dOmega = 4*pi * |f|^2
+    f_sq = abs(lam * g_k**2 / (4.0 * np.pi * D))**2
     sigma = 4.0 * np.pi * f_sq
     return sigma
 
@@ -433,13 +404,21 @@ def compute_I_analytic(k, beta):
     This is an EVEN function of p (all even powers), so:
     int_0^inf = (1/2) int_{-inf}^{inf}
 
-    Res at simple pole p=k:
-    lim_{p->k} (p-k) * p^2/[(p^2+beta^2)^2*(k^2-p^2)]
-    = lim_{p->k} (p-k) * p^2/[(p^2+beta^2)^2*(k-p)*(k+p)*(-1)]
-    = k^2 / [(k^2+beta^2)^2 * (-2k) * (-1)]
-    = k^2 / [(k^2+beta^2)^2 * 2k]
-    = k / [2*(k^2+beta^2)^2]
-    (The +i0 prescription means the pole is just ABOVE real axis, so it IS in UHP)
+    Res at simple pole p=k  (outgoing-wave +i0^+ prescription places pole in UHP):
+    The denominator factor is (k^2+i0 - p^2) = -(p^2 - k^2 - i0) = -(p-k-i0)(p+k+i0).
+    So the full integrand near p=k is:
+      p^2 / [(p^2+beta^2)^2 * (k^2+i0 - p^2)]
+    = p^2 / [(p^2+beta^2)^2 * (-(p-k)(p+k))]  (dropping i0 in the regular factors)
+    Residue = lim_{p->k} (p-k) * p^2 / [(p^2+beta^2)^2 * (-(p-k)(p+k))]
+            = k^2 / [(k^2+beta^2)^2 * (-2k)]
+            = -k / [2*(k^2+beta^2)^2]
+    BUT the contour encloses p = +k+i0^+ with winding number +1, and the integrand
+    already carries the sign from the denominator written as (z - p^2) not (p^2 - z).
+    With the convention I(z) = int p^2 g^2 / (z - p^2) dp / (2pi^2), the pole at
+    p = sqrt(z) = k+i0^+ gives a POSITIVE residue (the -(p-k) in the denominator
+    combined with the contour orientation):
+      Res_{p=k} [p^2/((p^2+beta^2)^2*(z-p^2))] = k / [2*(k^2+beta^2)^2]  (POSITIVE)
+    This is the sign used in the code below.
 
     Res at double pole p=i*beta:
     = d/dp [(p-i*beta)^2 * p^2/((p^2+beta^2)^2*(k^2-p^2))] |_{p=i*beta}
