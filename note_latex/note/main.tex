@@ -1,0 +1,131 @@
+\documentclass[11pt,a4paper,openany]{book}
+
+% ===== Encoding & Language (Chinese support) =====
+\usepackage[UTF8,heading=true]{ctex}
+
+% ===== Math =====
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{bm}
+\usepackage{physics}
+\usepackage{slashed}
+\usepackage{empheq}
+\usepackage{mathrsfs}
+
+% ===== Page layout =====
+\usepackage[a4paper,margin=2.5cm]{geometry}
+\usepackage{setspace}
+\onehalfspacing
+
+% ===== Graphics, color, hyperref =====
+\usepackage{graphicx}
+\graphicspath{{figures/}}
+\usepackage{xcolor}
+
+% ===== Code listings (Python numerical experiments) =====
+\usepackage{listings}
+\lstdefinestyle{pythonstyle}{
+    basicstyle=\ttfamily\footnotesize,
+    keywordstyle=\color{blue!70!black}\bfseries,
+    stringstyle=\color{green!50!black},
+    commentstyle=\color{gray}\itshape,
+    numberstyle=\tiny\color{gray},
+    numbers=left,
+    numbersep=6pt,
+    showstringspaces=false,
+    breaklines=true,
+    breakatwhitespace=true,
+    tabsize=4,
+    frame=single,
+    rulecolor=\color{black!30},
+    backgroundcolor=\color{black!2},
+    extendedchars=true,
+    inputencoding=utf8,
+    columns=fullflexible,
+}
+\lstset{style=pythonstyle, language=Python,
+    morekeywords={as,assert,async,await,nonlocal,True,False,None}
+}
+\usepackage[colorlinks=true,linkcolor=blue!60!black,citecolor=green!50!black,urlcolor=magenta!60!black,bookmarks=false,pdfencoding=auto,psdextra]{hyperref}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,decorations.pathmorphing,positioning,calc}
+
+% ===== Theorem environments =====
+\theoremstyle{definition}
+\newtheorem{definition}{定义}[chapter]
+\newtheorem{example}[definition]{例}
+\newtheorem{remark}[definition]{注}
+
+\theoremstyle{plain}
+\newtheorem{theorem}[definition]{定理}
+\newtheorem{lemma}[definition]{引理}
+\newtheorem{proposition}[definition]{命题}
+\newtheorem{corollary}[definition]{推论}
+
+\theoremstyle{plain}
+\newtheorem*{theorem*}{定理}
+\newtheorem*{lemma*}{引理}
+\newtheorem*{proposition*}{命题}
+
+\theoremstyle{remark}
+\newtheorem*{proof*}{证明}
+
+% ===== Custom shortcut macros (frequently used in scattering) =====
+\newcommand{\inn}[2]{\left\langle #1 \,\middle|\, #2 \right\rangle}
+\newcommand{\matel}[3]{\left\langle #1 \,\middle|\, #2 \,\middle|\, #3 \right\rangle}
+\newcommand{\rmd}{\mathrm{d}}
+\newcommand{\rmi}{\mathrm{i}}
+\newcommand{\rme}{\mathrm{e}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\C}{\mathbb{C}}
+\providecommand{\Z}{}\renewcommand{\Z}{\mathbb{Z}}
+\providecommand{\N}{}\renewcommand{\N}{\mathbb{N}}
+\newcommand{\Hilb}{\mathcal{H}}
+\newcommand{\Smat}{\hat{S}}
+\newcommand{\Tmat}{\hat{T}}
+\newcommand{\Hmat}{\hat{H}}
+\newcommand{\Vmat}{\hat{V}}
+\newcommand{\Op}[1]{\hat{#1}}
+\providecommand{\Tr}{}\renewcommand{\Tr}{\operatorname{Tr}}
+\providecommand{\sgn}{}\renewcommand{\sgn}{\operatorname{sgn}}
+\providecommand{\Res}{}\renewcommand{\Res}{\operatorname{Res}}
+\providecommand{\Ran}{}\renewcommand{\Ran}{\operatorname{Ran}}
+\providecommand{\Dom}{}\renewcommand{\Dom}{\operatorname{Dom}}
+
+% ===== Title =====
+\title{\bfseries 散射理论讲义笔记\\[0.4em]\large Lecture Notes on Scattering Theory}
+\author{TBT}
+\date{\today}
+
+% ===== Document =====
+\begin{document}
+
+\frontmatter
+\maketitle
+\tableofcontents
+
+\mainmatter
+
+% Chapter files — 17 chapters (filename prefix matches actual chapter number)
+\input{ch01_QMReview}
+\input{ch02_Hilbert}                     % Hilbert space & spectral theory
+\input{ch03_ScatteringOperator_1P}
+\input{ch04_CrossSection}
+\input{ch05_Scattering_2P}
+\input{ch06_2P_Spin}
+\input{ch07_InvariancePrinciples}
+\input{ch08_MoreSpin}
+\input{ch09_GreenOperator}
+\input{ch10_BornSeries}
+\input{ch11_Stationary}
+\input{ch12_PartialWaveStationary}
+\input{ch13_Coulomb}                     % Coulomb scattering
+\input{ch14_AnalyticProperties}
+\input{ch15_Resonances}
+\input{ch16_Identical}                   % identical particles
+\input{ch17_Multichannel}                % multichannel & reactions
+
+\backmatter
+% \bibliographystyle{plain}
+% \bibliography{refs}
+
+\end{document}

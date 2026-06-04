@@ -1,0 +1,1186 @@
+\chapter{对称性与不变性原理 (Invariance Principles)}\label{ch:invariance}
+
+对称性 (symmetry) 是物理学中最强有力的分析工具之一. 一个系统如果在某一组变换下不变, 我们就说该系统具有相应的对称性, 也称为不变性 (invariance). 经典力学中, Nöther 定理告诉我们: 系统的 Lagrange 量如果具有一个连续对称性, 则相应地有一个守恒律 (conservation law); 例如, 平移对称性对应动量守恒, 转动对称性对应角动量守恒, 时间平移对称性对应能量守恒.
+
+在量子力学中, 对称性变换对应于 Hilbert 空间 $\Hilb$ 上的一个算符 $U$. 由 Wigner 定理, 该算符或者是幺正 (unitary) 算符, 或者是反幺正 (anti-unitary) 算符. 若 $U$ 与 Hamilton 量对易, $[U,H]=0$, 则
+\begin{itemize}
+  \item 若 $U$ 是连续变换, 其生成元 (generator) 是 Hermite 算符, 对应一个守恒力学量;
+  \item 若 $U$ 是分立变换 (如宇称, 时间反演), 则 $U$ 本身就是 Hermite (或反 Hermite) 的守恒算符.
+\end{itemize}
+
+在散射理论中, 对称性将对 $S$ 散射矩阵元施加很强的限制. 利用对称性分析, 往往不需要具体计算散射矩阵元, 即可得到一些有用的结论 (例如选择定则, 角分布的特征, 矩阵元之间的约束关系等).
+
+本章我们系统地讨论散射理论中的对称性原理: 平移不变性, 转动不变性, 宇称变换 $\mathsf{P}$, 时间反演 $\mathsf{T}$, 以及自旋粒子情形下的角动量表象. 主要参考 Taylor 教科书相应章节.
+
+
+\section{对称性变换与 \texorpdfstring{$S$}{S} 矩阵的一般框架}
+
+设系统的对称群为 $\mathcal{G}$, $\mathcal{G}$ 在 $\Hilb$ 上有幺正 (或反幺正) 表示 $g\mapsto U(g)$. 对自由 Hamilton 量 $H_0$ 和总 Hamilton 量 $H=H_0+V$, 我们说系统具有对称性 $\mathcal{G}$, 即
+\begin{equation}
+[U(g),H_0]=0, \qquad [U(g),H]=0, \qquad \forall g\in\mathcal{G}.
+\end{equation}
+
+\begin{theorem}[对称性与 $S$ 算符]\label{thm:symS}
+若 $[U(g),H_0]=[U(g),H]=0$, 则 Møller 算符 $\Omega_\pm$ 与 $U(g)$ 对易, $S$ 算符也与 $U(g)$ 对易:
+\begin{equation}
+[U(g),\Omega_\pm]=0, \qquad [U(g),\Smat]=0.
+\end{equation}
+\end{theorem}
+
+\begin{proof*}
+由
+\[
+\Omega_\pm =\lim_{t\to \mp\infty} \rme^{\rmi Ht}\rme^{-\rmi H_0 t},
+\]
+对于幺正 $U=U(g)$ 有
+\[
+U\Omega_\pm = \lim_{t\to \mp\infty} U \rme^{\rmi Ht}\rme^{-\rmi H_0 t}
+=\lim_{t\to \mp\infty} \rme^{\rmi Ht}\rme^{-\rmi H_0 t} U =\Omega_\pm U,
+\]
+所以 $[U,\Omega_\pm]=0$. 由 $\Smat=\Omega_-^\dagger \Omega_+$ 立得 $[U,\Smat]=0$, 即
+\begin{equation}
+U^\dagger(g)\,\Smat\,U(g)=\Smat.
+\end{equation}
+对于反幺正变换 (时间反演) 推导稍有不同, 我们将在 \S\ref{sec:T} 单独处理.
+\end{proof*}
+
+由 $[U(g),\Smat]=0$, 散射矩阵元满足
+\begin{equation}\label{eq:S-invariance}
+\matel{\chi}{\Smat}{\phi}=\matel{U(g)\chi}{\Smat}{U(g)\phi}=\matel{\chi_g}{\Smat}{\phi_g},
+\end{equation}
+即 in 态和 out 态同时作变换后, 矩阵元不变, $\phi\to\chi$ 过程的散射几率, 因而散射截面也不变. 这是所有对称性结论的出发点.
+
+\begin{remark}
+后面在二粒子散射中, 我们将利用 $\Smat=\mathbf{1}_{cm}\otimes \Smat_{rel}$ 把质心运动分离掉, 只研究相对运动部分. 因此本章中所谓 ``单粒子'' 散射其实指相对运动 (在 $\Hilb_{rel}$ 上).
+\end{remark}
+
+
+\section{平移对称性与动量守恒}\label{sec:translation}
+
+\subsection{平移算符}
+
+定义平移算符 (translation operator)
+\begin{equation}
+D(\mathbf{a})=\rme^{-\rmi \mathbf{P}\cdot\mathbf{a}},
+\end{equation}
+其中 $\mathbf{P}$ 是总动量算符. $D(\mathbf{a})$ 是幺正的 (因 $\mathbf{P}$ 是 Hermite 算符).
+
+\begin{itemize}
+  \item 系统的平移不变性要求 $D^\dagger(\mathbf{a})HD(\mathbf{a})=H$, 即 $[H,D(\mathbf{a})]=0$, 等价地 $[\mathbf{P},H]=0$, 即总动量守恒.
+  \item 对二粒子系统, $H=H_0+V$, 自由 $H_0$ 自动平移不变, $[H_0,D(\mathbf{a})]=0$. 当 $V=V(\mathbf{x}_1-\mathbf{x}_2)$ 仅依赖相对坐标时 $V$ 也平移不变, 所以 $H$ 平移不变.
+\end{itemize}
+
+由 Theorem \ref{thm:symS},
+\begin{equation}
+[D(\mathbf{a}),\Omega_\pm]=0,\qquad [D(\mathbf{a}),\Smat]=0,
+\end{equation}
+即 $D^\dagger(\mathbf{a})\Smat D(\mathbf{a})=\Smat$.
+
+\subsection{动量守恒}
+
+由 \eqref{eq:S-invariance},
+\begin{equation}
+\matel{\chi}{\Smat}{\phi}=\matel{\chi_{\mathbf{a}}}{\Smat}{\phi_{\mathbf{a}}},
+\end{equation}
+平移之后矩阵元不变. 因 $\mathbf{a}$ 任意, 故 $[\mathbf{P},\Smat]=0$. 取动量本征态 $\ket{\mathbf{p}}$ ($\mathbf{P}\ket{\mathbf{p}}=\mathbf{p}\ket{\mathbf{p}}$), 在 $S-1$ 矩阵元上插入对易子,
+\begin{align}
+0&=\matel{\mathbf{p}'}{[\mathbf{P},\Smat]}{\mathbf{p}}=(\mathbf{p}'-\mathbf{p})\matel{\mathbf{p}'}{\Smat}{\mathbf{p}},
+\end{align}
+所以
+\begin{equation}\label{eq:Sdelta}
+\matel{\mathbf{p}'}{\Smat}{\mathbf{p}}\propto \delta_3(\mathbf{p}'-\mathbf{p}),\qquad \matel{\mathbf{p}'}{\Smat-\mathbf{1}}{\mathbf{p}}\propto \delta_3(\mathbf{p}'-\mathbf{p})|_{\text{forward}}+\cdots.
+\end{equation}
+更准确地, 在质心系中, 二粒子系统的总动量守恒已被分离, $\Smat_{rel}$ 作用在相对动量空间上, 矩阵元含一个 $\delta_3(\mathbf{p}'-\mathbf{p})$ (与 $\delta(E'-E)$ 一起出现的方式见前面散射截面一章).
+
+
+\section{转动对称性与角动量守恒}\label{sec:rotation}
+
+\subsection{转动算符}
+
+定义转动算符
+\begin{equation}
+\mathsf{R}(\bm{\alpha})=\rme^{-\rmi \bm{\alpha}\cdot \bar{\mathbf{J}}},
+\end{equation}
+其中 $\bar{\mathbf{J}}$ 为总角动量算符, $\bm{\alpha}=\alpha\,\mathbf{u}$, $\mathbf{u}$ 为转轴方向单位矢量, $\alpha$ 为顺时针 (按右手定则) 转角.
+
+二粒子系统的转动不变性: $\mathsf{R}^\dagger(\bm{\alpha})H\mathsf{R}(\bm{\alpha})=H$ 及 $\mathsf{R}^\dagger H_0 \mathsf{R}=H_0$. 由 Theorem \ref{thm:symS},
+\begin{equation}
+[\mathsf{R}(\bm{\alpha}),\Omega_\pm]=0,\qquad [\mathsf{R}(\bm{\alpha}),\Smat]=0.
+\end{equation}
+$\bm{\alpha}$ 任意 $\Rightarrow [\bar{\mathbf{J}},\Smat]=0$, 总角动量守恒.
+
+\subsection{分离质心: 内部角动量}
+
+由 $\Smat=\mathbf{1}_{cm}\otimes \Smat_{rel}$, 总角动量
+\begin{equation}
+\bar{\mathbf{J}}=\mathbf{J}_1+\mathbf{J}_2 =\bar{\mathbf{X}}\times \bar{\mathbf{P}} + \mathbf{X}\times\mathbf{P} +\mathbf{S}_1+\mathbf{S}_2 = \bar{\mathbf{X}}\times \bar{\mathbf{P}} + \mathbf{J},
+\end{equation}
+其中 $\bar{\mathbf{X}}\times\bar{\mathbf{P}}$ 为质心轨道角动量, 作用在 $\Hilb_{cm}$ 上; $\mathbf{J}=\mathbf{X}\times \mathbf{P}+\mathbf{S}_1+\mathbf{S}_2$ 为 ``内部'' 角动量, 作用在 $\Hilb_{rel}$ 上. 由
+\[
+[\bar{\mathbf{J}},\Smat]=0\;\Longleftrightarrow\;[\mathbf{J},\Smat_{rel}]=0,
+\]
+研究 $\Smat$ 受转动的限制等价于研究 $\mathbf{J}$ 与 $\Smat_{rel}$ 的对易性. 下文若无特殊说明, $\mathbf{J}, \Smat$ 均指相对运动部分.
+
+\subsection{无自旋情形: 散射振幅依赖 \texorpdfstring{$\theta$}{theta}}
+
+对于无自旋两粒子散射的相对运动部分:
+\begin{itemize}
+  \item $H_0$ 自动转动不变, 所以只要 $V$ 转动不变 (即 $V(\mathbf{x})=V(r)$, $r=|\mathbf{x}|$), $H$ 即转动不变, $\Smat$ 与转动 $\mathsf{R}$ 对易.
+  \item 由转动不变性, $\matel{\mathbf{p}'}{\Smat}{\mathbf{p}}=\matel{\mathbf{p}'_{R}}{\Smat}{\mathbf{p}_{R}}$, 因此散射振幅 $f(\mathbf{p}'\leftarrow \mathbf{p})=f(\mathbf{p}'_{R}\leftarrow \mathbf{p}_{R})$.
+\end{itemize}
+
+无对称性的散射振幅 $f(\mathbf{p}'\leftarrow \mathbf{p})$ 本来有 5 个独立变量 ($\mathbf{p}, \mathbf{p}'$ 方向 4 个 +能量 1 个; 由能量守恒 $|\mathbf{p}'|=|\mathbf{p}|=p$). 转动对称性消掉 3 个转动自由度: 总可以 (i) 把 $\mathbf{p}$ 转到 $z$ 轴, (ii) 把 $\mathbf{p}'$ 转到包含 $z$ 轴的某一特定平面 (如 $xz$ 平面). 因此独立变量只剩 2 个, 可取
+\begin{equation}
+E_p=\frac{p^2}{2\mathrm{m}},\qquad \theta=\angle(\mathbf{p},\mathbf{p}'),
+\end{equation}
+即 $f=f(E,\theta)$. 这就是无自旋粒子的转动不变散射振幅与轴对称性的来源.
+
+\subsection{角动量基与分波 (Partial wave) 展开}
+
+对无自旋情形, 内部角动量 $\mathbf{J}=\mathbf{L}=\mathbf{X}\times\mathbf{P}$ 即轨道角动量. 单粒子 $H_0,\mathbf{L}^2,L_3$ 构成对易力学量完全集 (CSCO), 描述束缚态的渐近行为. 取共同本征基 $\ket{E,l,m}$,
+\begin{equation}
+H_0\ket{E,l,m}=E\ket{E,l,m},\quad \mathbf{L}^2\ket{E,l,m}=l(l+1)\ket{E,l,m},\quad L_3\ket{E,l,m}=m\ket{E,l,m}.
+\end{equation}
+自由 Hamilton 解: 径向方程 $\bigl(\partial_\rho^2 -\frac{l(l+1)}{\rho^2}+1\bigr)R_l(\rho)=0$, $\rho=pr$, $p=\sqrt{2\mathrm{m}E}$, 解为 Riccati-Bessel 函数 $\hat{j}_l(z)=z j_l(z)$. 坐标表象波函数为
+\begin{equation}
+\inn{\mathbf{x}}{E,l,m}=\rmi^l\Bigl(\frac{2\mathrm{m}}{\pi p}\Bigr)^{1/2}\frac{1}{r}\hat{j}_l(pr)\,Y_l^m(\hat{\mathbf{x}}),
+\end{equation}
+归一化为
+\[
+\inn{E',l',m'}{E,l,m}=\delta(E'-E)\delta_{l'l}\delta_{m'm},\qquad p\equiv (2\mathrm{m}E)^{1/2}.
+\]
+$\ket{E,l,m}$ 是 improper (delta 归一化的非平方可积) 矢量.
+
+\begin{theorem}[转动不变下 $\Smat$ 在角动量基中对角]\label{thm:S-diag}
+若 $[\mathbf{L},\Smat]=0$, 则
+\begin{equation}\label{eq:Sdiag-l}
+\matel{E'l'm'}{\Smat}{Elm}=\delta(E'-E)\delta_{l'l}\delta_{m'm}\,\mathsf{s}_l(E),
+\end{equation}
+其中 $\mathsf{s}_l(E)$ 与 $m$ 无关. (这是 Wigner-Eckart 定理的特例.)
+\end{theorem}
+
+\begin{proof*}
+由 $[\mathbf{L},\Smat]=0$, $L_\pm \Smat=\Smat L_\pm$, 故
+\[
+\matel{\ldots,m+1}{\Smat}{\ldots,m+1}=\matel{\ldots,m}{\Smat}{\ldots,m},
+\]
+所以矩阵元与 $m$ 无关. 角动量算符 ($\mathbf{L}^2,L_3$) 与 $H_0$ 对易, $\Smat$ 在能量与 $(l,m)$ 上同时对角: 故得 \eqref{eq:Sdiag-l}.
+\end{proof*}
+
+由 $\Smat$ 幺正性 ($\Smat^\dagger \Smat=1$), $|\mathsf{s}_l(E)|=1$, 故 $\mathsf{s}_l$ 是纯位相,
+\begin{equation}\label{eq:phaseshift}
+\mathsf{s}_l(E)=\rme^{2\rmi \delta_l(E)}.
+\end{equation}
+$\delta_l(E)$ 称为相移 (phase shift), 由 $\rme^{2\rmi(\delta_l+n\pi)}=\rme^{2\rmi\delta_l}$, $\delta_l$ 模 $\pi$ 取值, $n\in \mathbb{Z}$.
+
+\subsection{动量基与角动量基的转换 -- 分波展开公式}
+
+利用平面波分解
+\begin{equation}
+\rme^{\rmi\mathbf{k}\cdot\mathbf{x}}=\frac{4\pi}{kr}\sum_{l,m}\rmi^l\hat{j}_l(kr)Y_l^m(\hat{\mathbf{x}})Y_l^{m*}(\hat{\mathbf{k}}),
+\end{equation}
+有
+\begin{equation}
+\inn{\mathbf{p}}{E,l,m}=(\mathrm{m}p)^{-1/2}\delta(E_p-E)\,Y_l^m(\hat{\mathbf{p}}).
+\end{equation}
+由此
+\begin{align}
+\matel{\mathbf{p}'}{(\Smat-\mathbf{1})}{\mathbf{p}}
+&=\frac{\rmi}{2\pi \mathrm{m}}\delta(E_{p'}-E_p)\,f(\mathbf{p}'\leftarrow \mathbf{p}) \nonumber\\
+&=\sum_{l,m}\int dE\,\matel{\mathbf{p}'}{(\Smat-\mathbf{1})}{E,l,m}\inn{E,l,m}{\mathbf{p}}\nonumber\\
+&=\sum_{l,m}(\mathsf{s}_l(E)-1)\inn{\mathbf{p}'}{E,l,m}\inn{E,l,m}{\mathbf{p}}\nonumber\\
+&=\frac{1}{\mathrm{m}p}\delta(E_{p'}-E_p)\sum_{l,m}Y_l^m(\hat{\mathbf{p}}')[\mathsf{s}_l(E)-1]Y_l^{m*}(\hat{\mathbf{p}}).
+\end{align}
+对比得
+\begin{equation}
+f(\mathbf{p}'\leftarrow \mathbf{p})=\frac{2\pi}{\rmi p}\sum_{l,m}Y_l^m(\hat{\mathbf{p}}')[\mathsf{s}_l(E)-1]Y_l^{m*}(\hat{\mathbf{p}}).
+\end{equation}
+取 $\hat{\mathbf{p}}=\hat{z}$, $Y_l^m(\hat{z})=\sqrt{(2l+1)/(4\pi)}\,\delta_{m,0}$ (仅 $m=0$ 不为零), 利用 $P_l(\cos\theta)=\sqrt{4\pi/(2l+1)}\,Y_l^0(\theta,\varphi)$:
+
+\begin{theorem}[分波展开]\label{thm:partial-wave}
+具有转动不变性的无自旋单粒子势散射, 散射振幅展为分波 (partial wave) 形式
+\begin{equation}\label{eq:partial-wave}
+f(E,\theta)=\sum_{l=0}^{\infty}(2l+1)f_l(E)P_l(\cos\theta),
+\end{equation}
+其中
+\begin{equation}\label{eq:fl}
+f_l(E)=\frac{\mathsf{s}_l(E)-1}{2\rmi p}=\frac{\rme^{2\rmi\delta_l(E)}-1}{2\rmi p}=\frac{\rme^{\rmi\delta_l}\sin\delta_l(E)}{p}
+\end{equation}
+称为分波振幅 (partial wave amplitude). 反过来
+\[
+f_l(E)=\frac{1}{2}\int_{-1}^{1}\rmd(\cos\theta)\,f(E,\theta)P_l(\cos\theta).
+\]
+\end{theorem}
+
+\subsection{分波散射截面与幺正性界 (unitary bound)}
+
+微分散射截面 $\rmd\sigma/\rmd\Omega=|f|^2$ 用分波振幅写成
+\begin{equation}
+\frac{\rmd\sigma}{\rmd\Omega}=\sum_{l,l'=0}^{\infty}(2l+1)(2l'+1)f_l^*(E)f_{l'}(E)P_l(\cos\theta)P_{l'}(\cos\theta).
+\end{equation}
+对 $\theta,\varphi$ 积分, 利用 $\int P_l P_{l'}\sin\theta\,\rmd\theta=\frac{2}{2l+1}\delta_{ll'}$,
+\begin{equation}
+\sigma(p)=\sum_l\sigma_l(p),\qquad \sigma_l(p)=4\pi(2l+1)|f_l(p)|^2=\frac{4\pi(2l+1)\sin^2\delta_l}{p^2}.
+\end{equation}
+
+由 $|\sin\delta_l|\le 1$,
+\begin{equation}\label{eq:unitarity-bound}
+\sigma_l(p)\le \frac{4\pi(2l+1)}{p^2},
+\end{equation}
+此式称为幺正性界 (unitary bound), 仅在 $\delta_l=k\pi/2$ ($k$ 奇数) 时取等号.
+
+\begin{remark}
+低能时仅有少数几个分波相移非零, 无穷分波求和变成有限项求和. 这是低能散射 (例如 $s$ 波 ($l=0$) 主导) 处理的物理基础.
+\end{remark}
+
+\begin{example}[$s$ 波散射]
+低能极限下, 若 $\rmd\sigma/\rmd\Omega$ 与方向 $\theta$ 无关, 则只有 $l=0$ 贡献. 此时
+\begin{equation}
+f(E,\theta)=\frac{1}{2\rmi p}(\rme^{2\rmi\delta_0(E)}-1)=\frac{\rme^{\rmi \delta_0}\sin\delta_0(E)}{p}.
+\end{equation}
+$\rmd\sigma/\rmd\Omega=|f|^2=\sin^2\delta_0/p^2$ 给出 $|\sin\delta_0|$ 的大小.
+\end{example}
+
+
+\section{宇称变换 \texorpdfstring{$\mathsf{P}$}{P}}\label{sec:parity}
+
+\subsection{宇称的定义与基本性质}
+
+宇称变换 $\mathsf{P}$ (又称空间反演, parity, space inversion) 为分立对称变换:
+\begin{equation}
+\mathbf{x}\to -\mathbf{x},\qquad \mathbf{p}\to -\mathbf{p}.
+\end{equation}
+作用在波函数上:
+\begin{equation}
+\mathsf{P}\psi(\mathbf{x})=\psi(-\mathbf{x}),\qquad (\mathsf{P}\psi)(\mathbf{p})=\psi(-\mathbf{p}),
+\end{equation}
+即在动量基矢上 $\mathsf{P}\ket{\mathbf{x}}=\ket{-\mathbf{x}}$, $\mathsf{P}\ket{\mathbf{p}}=\ket{-\mathbf{p}}$. 显然 $\mathsf{P}$ 幺正且 $\mathsf{P}^2=\mathbf{1}$, 故 $\mathsf{P}=\mathsf{P}^\dagger$, 本征值 $\mathsf{p}=\pm 1$.
+
+\subsection{宇称不变与守恒}
+
+非相对论情形, $H=H_0+V(\mathbf{x})$. $\mathsf{P}$ 变换下 $H_0$ 不变 (因 $H_0$ 仅依赖 $\mathbf{p}^2$). 若势满足 $V(\mathbf{x})=V(-\mathbf{x})$, 则 $[\mathsf{P},V]=[\mathsf{P},H]=0$, 由 Theorem \ref{thm:symS}
+\[
+\mathsf{P}^\dagger \Smat \mathsf{P}=\Smat,\qquad [\mathsf{P},\Smat]=0.
+\]
+
+设 $\ket{\phi}$ 有确定宇称 $\mathsf{P}\ket{\phi}=\mathsf{p}\ket{\phi}$ ($\mathsf{p}=\pm 1$), 类似 $\mathsf{P}\ket{\phi'}=\mathsf{p}'\ket{\phi'}$, 则
+\[
+0=\matel{\phi}{[\mathsf{P},\Smat]}{\phi'}=(\mathsf{p}-\mathsf{p}')\matel{\phi}{\Smat}{\phi'},
+\]
+故 $\matel{\phi}{\Smat}{\phi'}$ 仅在 $\mathsf{p}=\mathsf{p}'$ 时不为零, 即宇称守恒 (parity conservation).
+
+\subsection{在动量基上}
+
+由 $\mathsf{P}\ket{\mathbf{p}}=\ket{-\mathbf{p}}$ (取相位为 1),
+\begin{equation}
+\matel{\mathbf{p}'}{\Smat}{\mathbf{p}}=\matel{-\mathbf{p}'}{\Smat}{-\mathbf{p}},\qquad f(\mathbf{p}'\leftarrow \mathbf{p})=f(-\mathbf{p}'\leftarrow -\mathbf{p}).
+\end{equation}
+
+\begin{remark}
+若已经具有转动对称性, 上式自动成立 (因为绕散射平面法线轴转 $\pi$ 等价于反演). 但一般而言, 转动对称性与 $\mathsf{P}$ 对称性是独立的.
+\end{remark}
+
+
+\section{时间反演 \texorpdfstring{$\mathsf{T}$}{T}}\label{sec:T}
+
+\subsection{Wigner 定理与反幺正变换}
+
+\begin{theorem}[Wigner]
+若一对称性变换 $\ket{\psi}\to \ket{\psi'}$ 保持所有跃迁概率不变, 则通过调整位相, 可以存在一个幺正变换 $U$ 或一个反幺正变换 (anti-unitary) $W$ 使得
+\[
+\ket{\psi'}=U\ket{\psi}\quad \text{或}\quad \ket{\psi'}=W\ket{\psi},\quad \forall \ket{\psi}.
+\]
+\end{theorem}
+
+反幺正变换 $W:\Hilb\to \Hilb$ 是一一映射, 保模长 $\inn{W\chi}{W\chi}=\inn{\chi}{\chi}$, 但是是反线性 (anti-linear) 算符:
+\begin{equation}
+W(a\ket{\psi}+b\ket{\phi})=a^*W\ket{\psi}+b^*W\ket{\phi}.
+\end{equation}
+
+平移, 转动, 宇称都是幺正算符. 时间反演 $\mathsf{T}$ 则是反幺正的, 原因如下:
+\begin{itemize}
+  \item 两个反幺正算符乘积是幺正的.
+  \item 一个幺正算符乘以一个反幺正算符是反幺正的.
+  \item 对线性算符 $A$, 有左作用规则 $\matel{\phi}{A}{\psi}=(\bra{\phi}A)\ket{\psi}=\inn{A^\dagger \phi}{\psi}$.
+  \item 对反线性算符 $W$ 的左右作用规则: $\inn{\phi}{W\psi}=\inn{W^\dagger \phi}{\psi}^*$ (复共轭).
+  \item 反幺正性: $\inn{W\chi}{W\phi}=\inn{\chi}{\phi}^*$, $W^\dagger W=WW^\dagger=\mathbf{1}$.
+\end{itemize}
+
+\subsection{时间反演与 Hamilton 量: \texorpdfstring{$\mathsf{T} \rmi=-\rmi \mathsf{T}$}{T i = -i T}}
+
+若 $\psi(t)$ 满足含时 Schrödinger 方程
+\[
+\rmi \partial_t \psi(t)=H\psi(t),\Rightarrow -\rmi \partial_t \psi(-t)=H\psi(-t).
+\]
+我们希望 $\psi(-t)$ 经过适当变换 $\psi_{\mathsf{T}}(t)\equiv \mathsf{T}\psi(-t)$ 后 ($\mathsf{T}$ 待定, 幺正或反幺正) 仍满足含时 Schrödinger 方程
+\[
+\rmi \partial_t \psi_{\mathsf{T}}(t)=H\psi_{\mathsf{T}}(t).
+\]
+代入:
+\begin{align*}
+\rmi\partial_t \mathsf{T}\psi(-t)&=H\mathsf{T}\psi(-t)\;\Rightarrow\; \mathsf{T}\,\rmi\partial_t \psi(-t)=H\mathsf{T}\psi(-t)\\
+&\Rightarrow \mathsf{T}\,\rmi(-\rmi)H\psi(-t)/\!\rmi=H\mathsf{T}\psi(-t)\\
+&\Rightarrow \mathsf{T}\,\rmi H=-\rmi H\mathsf{T}\quad(\text{即 } \mathsf{T}(\rmi)=-\rmi\mathsf{T}).
+\end{align*}
+
+\begin{itemize}
+  \item 若 $\mathsf{T}$ 幺正 ($\mathsf{T}\rmi=\rmi \mathsf{T}$), 则 $\mathsf{T} H=-H\mathsf{T}$, 对能量本征态 $\ket{E}$ ($H\ket{E}=E\ket{E}$), 应有 $H\mathsf{T}\ket{E}=-E\mathsf{T}\ket{E}$, 即对应一个能量为 $-E$ 的态. 物理上能谱无界 $E\in[0,\infty)$ 时这会出现负能态, 不合理.
+  \item 若 $\mathsf{T}$ 反幺正 ($\mathsf{T}\rmi=-\rmi\mathsf{T}$), $\mathsf{T} H= H\mathsf{T}$, 不会有负能量态出现.
+\end{itemize}
+故时间反演必然是反幺正算符.
+
+\subsection{基本变换规则}
+
+时间反演下,
+\[
+\mathbf{x}\to \mathbf{x},\quad \mathbf{p}\to -\mathbf{p},\quad \mathbf{J}\to -\mathbf{J}.
+\]
+经典上 $\mathbf{x},\mathbf{p},\mathbf{J}$ 都是数; 量子上是算符. 通过适当选择基矢相位, 可以取
+\begin{equation}\label{eq:Tbasis}
+\mathsf{T}\ket{\mathbf{x}}=\ket{\mathbf{x}},\qquad \mathsf{T}\ket{\mathbf{p}}=\ket{-\mathbf{p}}.
+\end{equation}
+对任意态 $\ket{\psi}=\int \rmd^3x\,\psi(\mathbf{x})\ket{\mathbf{x}}$, 由 $\mathsf{T}$ 反线性:
+\begin{align}
+\mathsf{T}\ket{\psi}&=\int \rmd^3x\,\psi^*(\mathbf{x})\mathsf{T}\ket{\mathbf{x}}=\int \rmd^3x\,\psi^*(\mathbf{x})\ket{\mathbf{x}}\nonumber\\
+\Rightarrow \psi_{\mathsf{T}}(\mathbf{x})&=\psi^*(\mathbf{x}),\qquad \psi_{\mathsf{T}}(\mathbf{p})=\psi^*(-\mathbf{p}).
+\end{align}
+
+\subsection{无自旋势散射的 \texorpdfstring{$\mathsf{T}$}{T} 不变性}
+
+无自旋粒子定域势 (无磁场) 的情形: $V=V(\mathbf{x})$, $\mathsf{T}^\dagger V \mathsf{T}=V^*(\mathbf{x})$ (因 $\mathsf{T}$ 反幺正且 $\mathbf{x}$ 不变). 故
+\[
+[\mathsf{T},H]=0\quad\Longleftrightarrow\quad V^*(\mathbf{x})=V(\mathbf{x}),
+\]
+即势取实值. 演化算符 $\mathsf{T}\rme^{\rmi Ht}\mathsf{T}^\dagger=\rme^{-\rmi Ht}$ (因 $\mathsf{T}\rmi=-\rmi\mathsf{T}$).
+
+Møller 算符:
+\[
+\mathsf{T}\Omega_\pm \mathsf{T}^\dagger=\mathsf{T}\lim_{t\to \mp\infty}\rme^{\rmi Ht}\rme^{-\rmi H_0 t}\mathsf{T}^\dagger
+=\lim_{t\to \mp\infty}\rme^{-\rmi Ht}\rme^{\rmi H_0 t}=\Omega_\mp,
+\]
+即 $\mathsf{T}\Omega_\pm=\Omega_\mp\mathsf{T}$, 或 $\Omega_\pm =\mathsf{T}^\dagger\Omega_\mp \mathsf{T}$.
+
+对 $\Smat=\Omega_-^\dagger \Omega_+$:
+\[
+\mathsf{T}\Smat \mathsf{T}^\dagger=\mathsf{T}\Omega_-^\dagger \mathsf{T}^\dagger\,\mathsf{T}\Omega_+\mathsf{T}^\dagger=\Omega_+^\dagger \Omega_-=\Smat^\dagger,
+\]
+所以
+\begin{equation}\label{eq:T-S}
+\Smat=\mathsf{T}^\dagger \Smat^\dagger \mathsf{T}.
+\end{equation}
+
+$\mathsf{T}$ 不变下 $S$ 矩阵元的关系: 设 $\inn{\chi_{\mathsf{T}}}{\phi_{\mathsf{T}}}$ 等记号表示 $\chi_{\mathsf{T}}=\mathsf{T}\chi$ 等. 由反幺正性
+\begin{align}
+\inn{\chi}{\Smat\phi}&=\inn{\chi}{\mathsf{T}^\dagger \Smat^\dagger \mathsf{T}\phi}=\inn{\mathsf{T}\chi}{\Smat^\dagger \mathsf{T}\phi}^*=\inn{\chi_{\mathsf{T}}}{\Smat^\dagger \phi_{\mathsf{T}}}^*\nonumber\\
+&=\inn{\phi_{\mathsf{T}}}{\Smat \chi_{\mathsf{T}}},
+\end{align}
+即 $w(\phi\leftarrow \chi)=w(\chi_{\mathsf{T}}\leftarrow \phi_{\mathsf{T}})$ (跃迁概率反向但 in/out 互换).
+
+在动量表象 $\matel{\mathbf{p}'}{\Smat}{\mathbf{p}}=\matel{-\mathbf{p}}{\Smat}{-\mathbf{p}'}$, 即
+\begin{equation}\label{eq:T-amp}
+f(\mathbf{p}'\leftarrow \mathbf{p})=f(-\mathbf{p}\leftarrow -\mathbf{p}').
+\end{equation}
+此即 ``反应平衡 (reciprocity)'' 关系.
+
+
+\section{有自旋粒子的转动}\label{sec:spin-rotation}
+
+对于无自旋粒子, 基矢 $\ket{\mathbf{p}}$ 完全描述; 有自旋粒子需要额外的自旋指标 $\ket{\mathbf{p},\xi}$.
+
+\subsection{自旋部分的转动表示}
+
+考虑自旋态 $\ket{\chi}\in \Hilb_s$ (自旋空间), 转动下变换
+\begin{equation}
+\ket{\chi}\stackrel{\mathsf{R}}{\longrightarrow}\ket{\chi_R}=\mathsf{R}_s\ket{\chi},\qquad \mathsf{R}_s=\rme^{-\rmi \bm{\alpha}\cdot \mathbf{S}},
+\end{equation}
+$\mathbf{S}$ 为对应总自旋算符. 选自旋基 $\ket{\xi}$,
+\[
+\mathsf{R}_s\ket{\xi}=\sum_{\xi'}\ket{\xi'}\matel{\xi'}{\mathsf{R}_s}{\xi}.
+\]
+特殊地, 选 $S_3$ 本征态 $\ket{sm}$,
+\[
+\mathsf{R}_s(\alpha\hat{3})\ket{sm}=\rme^{-\rmi \alpha S_3}\ket{sm}=\rme^{-\rmi \alpha m}\ket{sm}.
+\]
+
+整个 Hilbert 空间为 $\Hilb=\Hilb_p\otimes \Hilb_s$, 一般态 $\ket{\mathbf{p},\xi}=\ket{\mathbf{p}}\otimes \ket{\xi}$. 完整转动 $\mathsf{R}=\mathsf{R}_p\otimes \mathsf{R}_s$ 作用:
+\begin{equation}
+\mathsf{R}\ket{\mathbf{p},\xi}=\ket{\mathbf{p}_R}\otimes \sum_{\xi'}\ket{\xi'}\matel{\xi'}{\mathsf{R}_s}{\xi}=\sum_{\xi'}\ket{\mathbf{p}_R,\xi'}\mathsf{R}_{\xi'\xi}.
+\end{equation}
+
+\subsection{有自旋下的转动不变性}
+
+$\Smat$ 转动不变: $\Smat=\mathsf{R}^\dagger \Smat \mathsf{R}$, 矩阵元
+\[
+\matel{\mathbf{p}',\xi'}{\Smat}{\mathbf{p},\xi}=\matel{\mathbf{p}',\xi'}{\mathsf{R}^\dagger \Smat \mathsf{R}}{\mathbf{p},\xi}=\sum_{\bar\xi,\bar\xi'}\mathsf{R}^*_{\bar\xi'\xi'}\matel{\mathbf{p}'_R,\bar\xi'}{\Smat}{\mathbf{p}_R,\bar\xi}\mathsf{R}_{\bar\xi\xi}.
+\]
+对应的散射振幅 $F(\mathbf{p}'\leftarrow \mathbf{p})=\{f_{\xi'\xi}(\mathbf{p}'\leftarrow \mathbf{p})\}$ 由
+\begin{equation}
+\matel{\mathbf{p}',\xi'}{\Smat-\mathbf{1}}{\mathbf{p},\xi}=\frac{\rmi}{2\pi \mathrm{m}}\delta(E_{p'}-E_p)f_{\xi'\xi}(\mathbf{p}'\leftarrow \mathbf{p})
+\end{equation}
+是一个 $(2s_1+1)(2s_2+1)\times (2s_1+1)(2s_2+1)$ 的矩阵.
+
+\subsubsection*{利用转动减少独立变量}
+
+选 $\mathbf{p}$ 沿 $\hat{3}$ 方向, $\mathbf{p}'$ 方向 $(\theta,\varphi)$, 基矢取 $S_3$ 本征 $\xi=(m_1,m_2)$ 或 $\xi=(s,m)$. 围绕 $z$ 轴转动 $-\varphi$, $\mathbf{p}, \mathbf{p}'$ 进入 $xz$ 平面:
+\begin{align}
+\mathsf{R}(-\varphi\hat{3})\ket{\mathbf{p},s,m}&=\rme^{\rmi m\varphi}\ket{\mathbf{p},s,m},\nonumber\\
+\mathsf{R}(-\varphi\hat{3})\ket{\mathbf{p}',s,m'}&=\rme^{\rmi m'\varphi}\ket{\mathbf{p}'',s,m'},
+\end{align}
+故
+\begin{align}
+\matel{\mathbf{p}',sm'}{\Smat}{\mathbf{p}sm}&=\matel{\mathbf{p}'sm'}{\mathsf{R}^\dagger(-\varphi\hat{3})\Smat \mathsf{R}(-\varphi\hat{3})}{\mathbf{p}sm}\nonumber\\
+&=\rme^{\rmi(m-m')\varphi}\matel{\mathbf{p}''sm'}{\Smat}{\mathbf{p}sm},
+\end{align}
+即
+\begin{equation}\label{eq:phivar}
+f_{sm',sm}(E,\theta,\varphi)=\rme^{\rmi(m-m')\varphi}f_{sm',sm}(E,\theta,0).
+\end{equation}
+
+\begin{example}[自旋 $1/2$ 与自旋 $0$ 散射]
+$S_z\ket{\pm}=\pm 1/2\ket{\pm}$, 散射振幅
+\[
+F(E,\theta,\varphi)=\begin{pmatrix}f_{++}(\mathbf{p}'\leftarrow \mathbf{p})&f_{+-}(\mathbf{p}'\leftarrow \mathbf{p})\\ f_{-+}(\mathbf{p}'\leftarrow \mathbf{p})&f_{--}(\mathbf{p}'\leftarrow \mathbf{p})\end{pmatrix}=\begin{pmatrix}a(E,\theta)& b(E,\theta)\rme^{-\rmi \varphi}\\ c(E,\theta)\rme^{\rmi\varphi}& d(E,\theta)\end{pmatrix}.
+\]
+其中 $f_{++},f_{--}$ 称为非自旋反转振幅 (spin-nonflip amplitude); $f_{+-},f_{-+}$ 称为自旋反转振幅 (spin-flip amplitude). 4 个独立函数 $a,b,c,d$ 完全确定 $E,\theta$ 给定时的 $F$.
+\end{example}
+
+
+\section{有自旋下的 \texorpdfstring{$\mathsf{P}$}{P} 与 \texorpdfstring{$\mathsf{T}$}{T} 对称性}\label{sec:spin-PT}
+
+\subsection{有自旋下的 \texorpdfstring{$\mathsf{P}$}{P} 对称性}
+
+由 $\mathsf{P}^\dagger \mathbf{J}\mathsf{P}=\mathbf{J}$, $\mathsf{P}^\dagger \mathbf{P}_{op}\mathsf{P}=-\mathbf{P}_{op}$, 故
+\[
+\mathsf{P}\ket{\mathbf{p},\xi}=\ket{-\mathbf{p},\xi}.
+\]
+($\mathsf{P}$ 不改变自旋. 实际上还可以有一个相位因子, 此处非相对论弹性散射可设为 $1$.)
+
+对自旋 $1/2$, $\mathsf{P}^\dagger \mathbf{S}\mathsf{P}=\mathbf{S}$, $\mathsf{P}_s^\dagger \bm{\sigma}\mathsf{P}_s=\bm{\sigma}$, 可选 $\mathsf{P}_s=\rme^{\rmi \omega}I$. 非相对论情形可取 $\ket{\mathbf{p},m}, \ket{-\mathbf{p},m}$ 的相位使 $\omega=0$.
+
+$\mathsf{P}$ 是对称性: $\Smat=\mathsf{P}^\dagger \Smat \mathsf{P}$,
+\begin{equation}
+\matel{\mathbf{p}',\xi'}{\Smat}{\mathbf{p},\xi}=\matel{-\mathbf{p}',\xi'}{\Smat}{-\mathbf{p},\xi}.
+\end{equation}
+
+\subsubsection*{对自旋 $1/2$-自旋 $0$ 散射: \texorpdfstring{$\mathsf{P}$}{P} 守恒的限制}
+
+考虑 $\mathbf{p}$ 在 $z$ 方向, $\mathbf{p}'$ 在 $\varphi=0$ 平面上. $\mathsf{P}$ 使 $\mathbf{p}\to -\mathbf{p},\mathbf{p}'\to -\mathbf{p}'$. 然而我们约定 $F(E,\theta,\varphi)$ 中 $\theta,\varphi$ 是 $\mathbf{p}'$ 相对 $\mathbf{p}$ 上时定义的. 我们再做 $\mathsf{R}(\pi\hat{2})$, 联合变换 $M_2=\mathsf{R}(\pi\hat{2})\mathsf{P}$ 把 $\mathbf{p},\mathbf{p}'$ 转回原来的方向. 这相当于在 $xz$ 平面做镜像 (以 $xz$ 平面对反射).
+
+可以证明: 对 $xz$ 平面上的 $\mathbf{p}$,
+\[
+\mathsf{R}(\pi\hat{2})\ket{\mathbf{p},m}=(-1)^{s-m}\ket{-\mathbf{p},-m},
+\]
+所以 $M_2\ket{\mathbf{p},m}=(-1)^{s-m}\ket{\mathbf{p},-m}$. 由 $\Smat=M_2^\dagger \Smat M_2$,
+\[
+\matel{\mathbf{p}',m'}{\Smat}{\mathbf{p},m}=(-1)^{m'-m}\matel{\mathbf{p}',-m'}{\Smat}{\mathbf{p},-m}.
+\]
+对自旋 $1/2$ - 自旋 $0$ 情形即 $f_{++}=f_{--}$, $f_{+-}=-f_{-+}$, 即 $a=d$, $b=-c$. 所以同时具有转动对称性和 $\mathsf{P}$ 对称性时
+\begin{equation}
+F(E,\theta,\varphi)=\begin{pmatrix}a(E,\theta)& b(E,\theta)\rme^{-\rmi \varphi}\\ -b(E,\theta)\rme^{\rmi \varphi}& a(E,\theta)\end{pmatrix}.
+\end{equation}
+
+\subsubsection*{$\varphi$ 依赖与极化}
+
+对极化态 $\bm{\chi}=\frac{1}{\sqrt{2}}(1,1)^T$ (沿 $\hat{x}$ 方向极化),
+\begin{equation}
+\frac{\rmd\sigma}{\rmd\Omega}(\mathbf{p}',\bm{\chi}'\leftarrow \mathbf{p},\bm{\chi})=|\bm{\chi}'^\dagger F\bm{\chi}|^2=|a|^2-2\,\mathrm{Im}(ab^*)\sin\varphi+|b|^2\sin^2\varphi.
+\end{equation}
+与无自旋粒子不同, 无自旋粒子散射截面与 $\varphi$ 无关, 而带自旋极化散射截面可与 $\varphi$ 有关 (自旋方向给一个特殊的 $\varphi$ 方向). 但非极化散射截面 (对 in 自旋平均, out 自旋求和) 仍与 $\varphi$ 无关:
+\begin{equation}
+\frac{\rmd\sigma}{\rmd\Omega}(\mathbf{p}'\leftarrow \mathbf{p})=\frac{1}{2}\{|f_{++}|^2+|f_{--}|^2+|f_{+-}|^2+|f_{-+}|^2\}=|a(E,\theta)|^2+|b(E,\theta)|^2.
+\end{equation}
+
+\subsection{有自旋下的 \texorpdfstring{$\mathsf{T}$}{T} 对称性}
+
+$\mathsf{T}^\dagger \mathbf{P}\mathsf{T}=-\mathbf{P}$, $\mathsf{T}^\dagger \mathbf{X}\mathsf{T}=\mathbf{X}$, $\mathsf{T}^\dagger \mathbf{J}\mathsf{T}=-\mathbf{J}$, 选适当相位
+\begin{equation}
+\mathsf{T}\ket{s,m}=\eta_m \ket{s,-m}.
+\end{equation}
+由 $S_\pm \ket{s,m}=\sqrt{(s\mp m)(s\pm m+1)}\ket{s,m\pm 1}$, 作用 $\mathsf{T}$ 并要求 $\mathsf{T}S_\pm \mathsf{T}^\dagger=-S_\mp$:
+\begin{align*}
+-S_\mp \eta_m\ket{s,-m}&=\sqrt{(s\mp m)(s\pm m+1)}\eta_{m\pm 1}\ket{s,-(m\pm 1)}\\
+\Rightarrow \eta_m&=-\eta_{m\pm 1}.
+\end{align*}
+一般约定 $\eta_m=(-1)^{s-m}$. 对自旋 $1/2$, $\mathsf{T}^\dagger \sigma_{x,y,z}\mathsf{T}=-\sigma_{x,y,z}$, 可表示
+\begin{equation}
+\mathsf{T}=\rmi \sigma_y K,\qquad K=\text{复共轭算符},\qquad \mathsf{T}^2=-1.
+\end{equation}
+
+$\mathsf{T}$ 对称性: $\mathsf{T}^\dagger \Smat \mathsf{T}=\Smat^\dagger$,
+\begin{equation}
+\matel{\mathbf{p}',s',m'}{\Smat}{\mathbf{p},s,m}=(-1)^{s-m+s'-m'}\matel{-\mathbf{p},s,-m}{\Smat}{-\mathbf{p}',s',-m'}.
+\end{equation}
+
+\subsection{自旋 \texorpdfstring{$1/2$}{1/2} - 自旋 $0$ 散射: \texorpdfstring{$\mathsf{T}$}{T} 不变性}
+
+$\mathsf{T}$ 不变, 取 $T_s$ 反线性算符
+\[
+(T_s)_{m'_s,m_s}=\{(-1)^{s-m_s}\delta_{m'_s+m_s,0}\}=\begin{pmatrix}0&-1\\1&0\end{pmatrix},
+\]
+可得到 $F=T_s^\dagger F^\dagger(-\mathbf{p}\leftarrow -\mathbf{p}')T_s$, 从而 $\bm{\beta}(\mathbf{p}',\mathbf{p})=-\bm{\beta}(-\mathbf{p},-\mathbf{p}')$ ($\bm{\beta}$ 为下面的展开系数).
+
+\subsubsection*{$F$ 的 \texorpdfstring{$2\times 2$}{2x2} 矩阵分解}
+
+任意 $2\times 2$ 矩阵都可以用 $I, \bm{\sigma}$ 四个矩阵展开:
+\begin{equation}
+F(\mathbf{p}'\leftarrow \mathbf{p})=\alpha(\mathbf{p}',\mathbf{p})I+\rmi\bm{\beta}(\mathbf{p}',\mathbf{p})\cdot \bm{\sigma}.
+\end{equation}
+转动不变性 $F(\mathbf{p}'\leftarrow \mathbf{p})=\mathsf{R}_s^\dagger F(\mathbf{p}'_R\leftarrow \mathbf{p}_R)\mathsf{R}_s$, 利用 $\mathsf{R}_s^\dagger \sigma_i \mathsf{R}_s=O_{ij}(\mathsf{R})\sigma_j$, $\bm{\sigma}$ 在自旋空间像三维矢量, 分别对比左右两边:
+\begin{itemize}
+  \item $\alpha(\mathbf{p}',\mathbf{p})=\alpha(\mathbf{p}'_R,\mathbf{p}_R)$, 转动不变标量, 即 $\alpha(\mathbf{p}',\mathbf{p})=a(E,\theta)$.
+  \item $\bm{\beta}(\mathbf{p}',\mathbf{p})=O_{ji}(\mathsf{R})\beta_j(\mathbf{p}'_R,\mathbf{p}_R)$, 即 $\bm{\beta}$ 按矢量转动, 可以分解到三个正交矢量:
+\end{itemize}
+\[
+\hat{\mathbf{n}}=\frac{\mathbf{p}'\times \mathbf{p}}{|\mathbf{p}'\times \mathbf{p}|}=(-\sin\varphi,\cos\varphi,0),\quad \mathbf{p}'+\mathbf{p},\quad \mathbf{p}'-\mathbf{p}.
+\]
+故
+\begin{equation}
+\bm{\beta}(\mathbf{p}',\mathbf{p})=b\,\hat{\mathbf{n}}+c\,(\mathbf{p}'+\mathbf{p})+d\,(\mathbf{p}'-\mathbf{p}),
+\end{equation}
+其中 $b,c,d$ 为 $E,\theta$ 的函数 (转动不变).
+
+\subsubsection*{$\mathsf{P}$ 不变与 $\mathsf{T}$ 不变带来的限制}
+
+\textbf{$\mathsf{P}$ 不变}: $F(\mathbf{p}'\leftarrow \mathbf{p})=P_s^\dagger F(-\mathbf{p}'\leftarrow -\mathbf{p})P_s$, $P_s^\dagger \bm{\sigma}P_s=\bm{\sigma}$, $\Rightarrow \bm{\beta}(\mathbf{p}',\mathbf{p})=\bm{\beta}(-\mathbf{p}',-\mathbf{p})$. 由 $\hat{\mathbf{n}}$ 偶, $\mathbf{p}'\pm\mathbf{p}$ 奇, 得 $c=d=0$. 所以
+\begin{equation}
+F=aI+\rmi b\,\hat{\mathbf{n}}\cdot\bm{\sigma}.
+\end{equation}
+$\hat{\mathbf{n}}\cdot \bm{\sigma}=-\rmi \begin{pmatrix}0& \rme^{-\rmi\varphi}\\ -\rme^{\rmi \varphi}& 0\end{pmatrix}$, 故
+\[
+F(E,\theta,\varphi)=\begin{pmatrix}a(E,\theta)& b(E,\theta)\rme^{-\rmi \varphi}\\ -b(E,\theta)\rme^{\rmi \varphi}& a(E,\theta)\end{pmatrix},
+\]
+与前面 \S\ref{sec:spin-PT} 直接推导结果一致.
+
+\textbf{$\mathsf{T}$ 不变}: 由 $\bm{\beta}(\mathbf{p}',\mathbf{p})=-\bm{\beta}(-\mathbf{p},-\mathbf{p}')$, 在分解 $\bm{\beta}=b\hat{\mathbf{n}}+c(\mathbf{p}'+\mathbf{p})+d(\mathbf{p}'-\mathbf{p})$ 中, $\hat{\mathbf{n}}(\mathbf{p}',\mathbf{p})=-\hat{\mathbf{n}}(-\mathbf{p},-\mathbf{p}')$ (反向), $\mathbf{p}'+\mathbf{p}\to -(\mathbf{p}+\mathbf{p}')=-(\mathbf{p}'+\mathbf{p})$, $\mathbf{p}'-\mathbf{p}\to -\mathbf{p}-(-\mathbf{p}')=\mathbf{p}'-\mathbf{p}$. 比较 $\bm{\beta}(\mathbf{p}',\mathbf{p})=-\bm{\beta}(-\mathbf{p},-\mathbf{p}')$, 得 $d=0$. 所以同时满足转动不变和 $\mathsf{T}$ 不变性的理论
+\begin{equation}
+F(\mathbf{p}'\leftarrow \mathbf{p})=aI+\rmi[b\hat{\mathbf{n}}+c(\mathbf{p}'+\mathbf{p})]\cdot \bm{\sigma}.
+\end{equation}
+
+
+\section{角动量表象 (Angular Momentum Representation)}\label{sec:Jrep}
+
+转动对称性要求 $[\mathbf{J},\Smat]=0$, $\mathbf{J}=\mathbf{L}+\mathbf{S}_1+\mathbf{S}_2$, 我们用 $\mathbf{J}^2,J_3$ 共同本征态作为基矢.
+
+由 $\ket{sm}$ 可以合成总自旋, 和轨道角动量本征态 $\ket{Elm}$ 合成总角动量本征态. 令 $\ket{E,l,s,m_l,m_s}=\ket{Elm_l}\otimes \ket{sm_s}$:
+\begin{equation}\label{eq:LS-coupling}
+\ket{Els,jm}=\sum_{m_l,m_s}\ket{E,l,s,m_l,m_s}\inn{lsm_lm_s}{jm}.
+\end{equation}
+$\inn{lsm_lm_s}{jm}$ 即 Clebsch-Gordan 系数.
+
+\subsection{$S^j$ 矩阵}
+
+由 $[\mathbf{J},\Smat]=0$, 同 Theorem \ref{thm:S-diag} 类似:
+\begin{equation}
+\matel{E'l's',j'm'}{\Smat}{Els,jm}=\delta(E'-E)\delta_{j'j}\delta_{m'm}\,\mathsf{s}^{j}_{l's',ls}(E),
+\end{equation}
+$\mathsf{s}^j$ 与 $m$ 无关. 矩阵 $\mathsf{S}^j=\{s^j_{l's',ls}(E)\}$ 是幺正的: $\mathsf{S}^j \mathsf{S}^{j\dagger}=\mathbf{1}$, 即
+\begin{equation}
+\sum_{\bar l,\bar s}\mathsf{s}^j_{l's',\bar l\bar s}(E)\,\mathsf{s}^{j*}_{ls,\bar l\bar s}(E)=\delta_{l'l}\delta_{s's}.
+\end{equation}
+
+\subsection{$\mathsf{P}$ 对称性下的限制}
+
+由 $Y_l^m(-\hat{\mathbf{x}})=(-1)^l Y_l^m(\hat{\mathbf{x}})$, $\mathsf{P}\ket{Elm}=(-1)^l\ket{Elm}$. 由 $[\mathsf{P},\mathbf{S}]=0$, $\mathsf{P}\ket{sm}=\ket{sm}$, 故由合成公式
+\begin{equation}
+\mathsf{P}\ket{Els,jm}=(-1)^l \ket{Els,jm}.
+\end{equation}
+若同时具有转动对称性和 $\mathsf{P}$ 对称性 ($\mathsf{P}^\dagger \Smat \mathsf{P}=\Smat$):
+\[
+\matel{E'l's',jm'}{\Smat}{Els,jm}=(-1)^{l-l'}\matel{E'l's',jm'}{\Smat}{Els,jm},
+\]
+故 $l-l'$ 为奇数的矩阵元 $\mathsf{s}^j_{l's',ls}(E)=0$. 这就是 $\mathsf{P}$ 守恒造成的选择定则.
+
+\subsection{$\mathsf{T}$ 对称性下的限制}
+
+\[
+\inn{\mathbf{x}}{E,l,m}=\rmi^l \Bigl(\frac{2\mathrm{m}}{\pi p}\Bigr)^{1/2}\frac{1}{r}\hat{j}_l(pr)Y_l^m(\hat{\mathbf{x}}).
+\]
+由 $\mathsf{T}\inn{\mathbf{x}}{E,l,m}=[\inn{\mathbf{x}}{E,l,m}]^*$, 利用 $(Y_l^m)^*=(-1)^m Y_l^{-m}$:
+\[
+\mathsf{T}\ket{Elm}=(-1)^{l-m}\ket{El,-m}.
+\]
+再由 $\mathsf{T}\ket{lsm_lm_s}\to (-)^{l-l-s}\ket{ls,-m_l,-m_s}$, 经合成
+\begin{equation}
+\mathsf{T}\ket{Els,jm}=(-)^{j-m}\ket{Els,j,-m}.
+\end{equation}
+
+若 $\mathsf{T}$ 不变, $\inn{\chi}{\Smat \phi}=\inn{\phi_{\mathsf{T}}}{\Smat \chi_{\mathsf{T}}}$:
+\[
+\matel{E'l's',j'm'}{\Smat}{Elsjm}=(-)^{j-j'-m+m'}\matel{Elsj,-m}{\Smat}{E'l's',j',-m'}.
+\]
+若再加转动不变性 ($j'=j,m'=m$):
+\begin{equation}\label{eq:S-symmetric}
+\mathsf{s}^j_{l's',ls}(E)=\mathsf{s}^j_{ls,l's'}(E),
+\end{equation}
+即 $\mathsf{S}^j$ 是对称矩阵.
+
+\begin{example}[自旋 $1/2$ - 自旋 $0$ 散射]
+总自旋 $s=1/2$, $j=1/2,3/2,\ldots$, 每个 $j$ 可由 $l=j\pm 1/2$ 两值得到.
+\begin{itemize}
+  \item 对每一 $j$, $\mathsf{S}^j$ 是 $2\times 2$ 幺正矩阵.
+  \item $\mathsf{P}$ 不变: 斜对角为零 (因 $|\Delta l|=1$ 奇), $\mathsf{S}^j=\mathrm{diag}(\rme^{2\rmi \delta^j_+}, \rme^{2\rmi \delta^j_-})$.
+  \item 此时 $\mathsf{T}$ 不变性自动满足 (因 $2\times 2$ 对角矩阵自然对称).
+\end{itemize}
+\end{example}
+
+\subsection{动量基与角动量基的转换}
+
+利用
+\[
+\inn{\mathbf{p},s,m_s}{Els,m_l,m_s}=(\mathrm{m}p)^{-1/2}\delta(E_p-E)Y_l^{m_l}(\hat{\mathbf{p}})\delta_{m'_s m_s},
+\]
+插入完备组:
+\begin{align}
+\matel{\mathbf{p}'s'm'_s}{\Smat-\mathbf{1}}{\mathbf{p}sm_s}&=\frac{\rmi}{2\pi \mu}\delta(E_{p'}-E_p)f_{s'm'_s,sm_s}(\mathbf{p}'\leftarrow \mathbf{p})\nonumber\\
+&=\sum_{\substack{l,m_l,l',m'_l\\ j',m',j,m}}\inn{\mathbf{p}'s'm'_s}{El'sm'_l m'_s}\inn{l'sm'_lm'_s}{l's',j'm'}\nonumber\\
+&\quad\times \matel{El's'j'm'}{\Smat-\mathbf{1}}{Elsjm}\inn{ls,jm}{lsm_lm_s}\inn{Elsm_lm_s}{\mathbf{p}sm_s}.
+\end{align}
+利用 $\delta_{j'j}\delta_{m'm}$, 得
+\begin{equation}
+f_{s'm'_s\leftarrow sm_s}(\mathbf{p}'\leftarrow \mathbf{p})=\frac{2\pi}{\rmi p}\sum_{l',l,j,m}\inn{l's'm'_lm'_s}{jm}Y_{l'}^{m'_l}(\hat{\mathbf{p}}')[\mathsf{s}^j_{l's',ls}(E)-1]Y_l^{m_l*}(\hat{\mathbf{p}})\inn{jm}{lsm_lm_s},
+\end{equation}
+其中 $m'_l=m-m'_s, m_l=m-m_s$.
+
+取 $\hat{\mathbf{p}}=\hat{z}$, $Y_l^0(1)=\sqrt{(2l+1)/(4\pi)}$, $Y_l^{m_l}(\hat{z})=\sqrt{(2l+1)/(4\pi)}\,\delta_{m_l,0}$, 所以 $m=m_s$. 定义
+\[
+\tilde{f}^j_{l's',ls}(E)=\frac{1}{2\rmi p}[\mathsf{s}^j_{l's',ls}(E)-1].
+\]
+得
+\begin{equation}\label{eq:fpwspin}
+f_{s'm'_s\leftarrow sm_s}(\mathbf{p}'\leftarrow \mathbf{p})=\sqrt{4\pi}\sum_{l',l,j}\sqrt{2l+1}\,\inn{l's'm'_lm'_s}{jm_s}Y_{l'}^{m'_l}(\hat{\mathbf{p}}')\tilde{f}^j_{l's',ls}(E)\inn{jm_s}{ls0m_s},
+\end{equation}
+其中 $\theta,\varphi$ 为 $\mathbf{p}'$ 方向角.
+
+\begin{example}[自旋 $1/2$-自旋 $0$ 散射: 分波展开]
+取 $s=s'=1/2$, 散射振幅
+\begin{align}
+f\bigl(\mathbf{p}',\tfrac{1}{2}\leftarrow \mathbf{p},\tfrac{1}{2}\bigr)&=\sum_l (2l+1)P_l(\cos\theta)\nonumber\\
+&\quad\times \Bigl[\inn{l\tfrac{1}{2}0\tfrac{1}{2}}{l+\tfrac{1}{2},\tfrac{1}{2}}\,\tilde{f}^+_l(E)\inn{l+\tfrac{1}{2},\tfrac{1}{2}}{l\tfrac{1}{2}0\tfrac{1}{2}}\nonumber\\
+&\qquad+\inn{l\tfrac{1}{2}0\tfrac{1}{2}}{l-\tfrac{1}{2},\tfrac{1}{2}}\,\tilde{f}^-_l(E)\inn{l-\tfrac{1}{2},\tfrac{1}{2}}{l\tfrac{1}{2}0\tfrac{1}{2}}\Bigr]\nonumber\\
+&=\sum_l[(l+1)\tilde{f}^+_l(E)+l\,\tilde{f}^-_l(E)]P_l(\cos\theta).
+\end{align}
+其中 $\tilde{f}^\pm_l$ 对应 $j=l\pm 1/2$ 的分波振幅. 自旋反转振幅
+\begin{align}
+f\bigl(\mathbf{p}',-\tfrac{1}{2}\leftarrow \mathbf{p},\tfrac{1}{2}\bigr)&=\sum_l (2l+1)\frac{1}{\sqrt{l(l+1)}}P_l^1(\cos\theta)\rme^{\rmi \varphi}\nonumber\\
+&\quad\times \Bigl[\inn{l\tfrac{1}{2}1,-\tfrac{1}{2}}{l+\tfrac{1}{2},\tfrac{1}{2}}\,\tilde{f}^+_l(E)\inn{l+\tfrac{1}{2},\tfrac{1}{2}}{l\tfrac{1}{2}0\tfrac{1}{2}}\nonumber\\
+&\qquad+\inn{l\tfrac{1}{2}1,-\tfrac{1}{2}}{l-\tfrac{1}{2},\tfrac{1}{2}}\,\tilde{f}^-_l(E)\inn{l-\tfrac{1}{2},\tfrac{1}{2}}{l\tfrac{1}{2}0\tfrac{1}{2}}\Bigr]\nonumber\\
+&=\sum_l[\tilde{f}^+_l(E)-\tilde{f}^-_l(E)]P_l^1(\cos\theta)\rme^{\rmi \varphi}.
+\end{align}
+\end{example}
+
+利用 $Y_l^m(\theta,\varphi)=\sqrt{\frac{2l+1}{4\pi}}\sqrt{\frac{(l-m)!}{(l+m)!}}P_l^m(\cos\theta)\rme^{\rmi m\varphi}$ 与 Clebsch-Gordan 系数表
+\[
+\begin{array}{c|cc}
+& m_s=1/2 & m_s=-1/2 \\\hline
+j=l+1/2 & \sqrt{\tfrac{l+m_l+1}{2l+1}} & \sqrt{\tfrac{l-m_l+1}{2l+1}} \\
+j=l-1/2 & -\sqrt{\tfrac{l-m_l}{2l+1}} & \sqrt{\tfrac{l+m_l}{2l+1}}
+\end{array}
+\]
+可以核验上述展开式系数. 这一组分波公式称为 \emph{Mott} 公式族, 是有自旋极化散射分析的基础.
+
+
+\section{Galilei 不变性与全同粒子}\label{sec:galilei-identical}
+
+\subsection{Galilei 不变性}
+
+Galilei 变换 $\mathbf{x}\to \mathbf{x}+\mathbf{v}t$ 对应到非相对论性散射理论. Galilei 算符 $G(\mathbf{v})=\rme^{\rmi (\mathbf{v}\cdot M\mathbf{X}-\mathbf{v}\cdot \mathbf{P}t)}$, $M$ 总质量. Galilei 不变性 $[G,H]=0$ 要求势仅依赖相对坐标 $V(\mathbf{x}_1-\mathbf{x}_2)$, 此时 $G$ 与 Hamilton 量, Møller 算符及 $\Smat$ 对易. 物理上, 这保证质心运动可以分离 $\Smat=\mathbf{1}_{cm}\otimes \Smat_{rel}$, 且散射截面在 Galilei 参考系变换 (如实验室系到质心系) 下按已知方式变化, 我们前面计算质心系散射截面是合法的.
+
+\subsection{全同粒子: (反) 对称化}
+
+设两粒子全同, 自旋 $s$. 物理态空间为
+\[
+\Hilb_{phys}=\begin{cases}\mathrm{Sym}^2 \Hilb_1, & \text{玻色子, } 2s\in 2\mathbb{Z}\\ \mathrm{Asym}^2 \Hilb_1, & \text{费米子, } 2s\in 2\mathbb{Z}+1.\end{cases}
+\]
+对应交换算符 $\mathsf{P}_{12}$ 满足 $\mathsf{P}_{12}^2=1$, 物理态满足 $\mathsf{P}_{12}\ket{\Psi}=\pm \ket{\Psi}$ ($+$ 玻色, $-$ 费米).
+
+由 $H$ 对全同粒子交换不变 ($[\mathsf{P}_{12},H]=0$), $\Smat$ 与 $\mathsf{P}_{12}$ 对易, 即矩阵元在 in 与 out 端独立交换粒子 1,2 时不变.
+
+对相对运动部分, $\mathbf{x}_1-\mathbf{x}_2\to -(\mathbf{x}_1-\mathbf{x}_2)$, 即 $\mathbf{x}\to -\mathbf{x}$, 这等价于 (相对动量空间的) 宇称作用 + 自旋部分的交换. 具体地, 对自旋 $0$ 玻色子, 散射振幅
+\[
+f_{phys}(\theta)=f(\theta)+f(\pi-\theta).
+\]
+对自旋 $1/2$ 费米子, 区分自旋单态 ($S=0$, 反对称) 与三重态 ($S=1$, 对称):
+\begin{align}
+f_{S=0}(\theta)&=f(\theta)+f(\pi-\theta),\nonumber\\
+f_{S=1}(\theta)&=f(\theta)-f(\pi-\theta).
+\end{align}
+非极化散射截面
+\begin{equation}
+\frac{\rmd\sigma}{\rmd\Omega}=\frac{1}{4}|f_{S=0}|^2+\frac{3}{4}|f_{S=1}|^2.
+\end{equation}
+后续章节将更详细讨论全同粒子散射 (例 Mott 散射).
+
+
+\section{$S$ 矩阵选择定则与 Wigner-Eckart 定理总结}\label{sec:WE-summary}
+
+将本章所得到的对称性对 $S$ 矩阵的限制总结如下:
+
+\begin{theorem}[$S$ 矩阵对称性总结]
+设系统具有的对称性以及它们对动量基或角动量基中 $S$ 矩阵元施加的限制为:
+\begin{enumerate}
+  \item \textbf{平移不变性}: $\matel{\mathbf{p}'}{\Smat}{\mathbf{p}}\propto \delta_3(\mathbf{p}'-\mathbf{p})$, 总动量守恒.
+  \item \textbf{转动不变性}: $\matel{\mathbf{p}'}{\Smat}{\mathbf{p}}=\matel{\mathbf{p}'_R}{\Smat}{\mathbf{p}_R}$. 在角动量基, $\matel{E'l's'j'm'}{\Smat}{Elsjm}=\delta(E'-E)\delta_{j'j}\delta_{m'm}\,\mathsf{s}^j_{l's',ls}(E)$, 与 $m$ 无关 (Wigner-Eckart 定理特例).
+  \item \textbf{宇称不变性}: $\matel{\mathbf{p}'}{\Smat}{\mathbf{p}}=\matel{-\mathbf{p}'}{\Smat}{-\mathbf{p}}$. 角动量基: $\mathsf{s}^j_{l's',ls}=0$ 当 $l-l'$ 奇时.
+  \item \textbf{时间反演不变性}: $\matel{\mathbf{p}'}{\Smat}{\mathbf{p}}=\matel{-\mathbf{p}}{\Smat}{-\mathbf{p}'}$. 角动量基 (含转动): $\mathsf{s}^j$ 对称, $\mathsf{s}^j_{l's',ls}=\mathsf{s}^j_{ls,l's'}$.
+  \item \textbf{Galilei 不变性}: 质心分离, $\Smat=\mathbf{1}_{cm}\otimes \Smat_{rel}$.
+  \item \textbf{粒子全同}: $\Smat$ 与交换算符 $\mathsf{P}_{12}$ 对易, in/out 端做正则 (反) 对称化, 干涉项出现于物理散射振幅.
+\end{enumerate}
+\end{theorem}
+
+\begin{remark}
+通过对称性分析, 我们已经在没有具体计算势散射任何积分的情形下:
+\begin{itemize}
+  \item 把无自旋粒子的散射振幅约化为 $f(E,\theta)=\sum_l (2l+1)f_l(E)P_l(\cos\theta)$, $|f_l|\le 1/p$;
+  \item 给出幺正性界 $\sigma_l\le 4\pi(2l+1)/p^2$;
+  \item 把自旋 $1/2$-自旋 $0$ 散射振幅 $4$ 元素矩阵约化为 $\{a(E,\theta), b(E,\theta)\rme^{-\rmi\varphi}\}$ 两个独立函数;
+  \item 对角动量基中 $\mathsf{S}^j$ 矩阵给出 $\mathsf{P}$ 选择定则 ($\Delta l$ 偶) 与 $\mathsf{T}$ 对称性 ($\mathsf{S}^j$ 对称).
+\end{itemize}
+后续章节将以这些结果为出发点, 进入定态势散射 (Lippmann-Schwinger), Born 级数, 分波相移的计算等具体问题.
+\end{remark}
+
+\bigskip
+
+\noindent\textbf{习题:} 补充上面 \S\ref{sec:spin-PT} 中由 $\mathsf{T}$ 不变性推导 $\bm{\beta}(\mathbf{p}',\mathbf{p})=-\bm{\beta}(-\mathbf{p},-\mathbf{p}')$ 的中间推导过程, 并由此独立推出 $d=0$.
+
+
+\section{本章定理证明补全}\label{sec:inv-proofs}
+
+为了把本章 (从 \S\ref{sec:translation} 到 \S\ref{sec:Jrep}) 反复用到的``幕后''结论显化, 这里集中给出若干关键定理与公式的完整证明 / 推导. 与正文使用的章节交叉引用为: 单粒子散射算符的构造见第~\ref{ch:Smat1P} 章; 截面的关系见第~\ref{ch:cross} 章; 二粒子分离质心见第~\ref{ch:scat2p} 章; 自旋下散射振幅矩阵的写法见第~\ref{ch:spin2p}, \ref{ch:morespin} 章; 分波分析的具体计算见第~\ref{ch:partial} 章; 多道情形见第~\ref{ch:multichannel} 章.
+
+
+\subsection{Wigner 定理的证明梗概}\label{sec:inv-wigner}
+
+\begin{theorem}[Wigner, 1931]\label{thm:inv-wigner}
+设 $\mathcal{T}: \Hilb\to \Hilb$ 是一一映射 (在物理射线 / ray 的意义下), 保持所有跃迁概率,
+\begin{equation}\label{eq:inv-wigner-prob}
+|\inn{\mathcal{T}\phi}{\mathcal{T}\psi}|^2 = |\inn{\phi}{\psi}|^2,\qquad \forall \phi,\psi\in \Hilb,
+\end{equation}
+则可以选取每个射线代表元的相位, 使得 $\mathcal{T}$ 由 $\Hilb$ 上的一个幺正算符 $U$ 或一个反幺正算符 $W$ 实现; 而且这二者中只能有一个成立 (除了平凡的一维情形).
+\end{theorem}
+
+\begin{proof*}[证明 (梗概)]
+设 $\{e_k\}_{k\ge 1}$ 是 $\Hilb$ 中一个标准正交基. 用记号 $\tilde{\psi}=\mathcal{T}\psi$ (理解为射线代表元, 待选相位).
+\begin{enumerate}
+\item \emph{基的标准正交性保持.} 由 \eqref{eq:inv-wigner-prob}, $|\inn{\tilde{e}_j}{\tilde{e}_k}|=\delta_{jk}$. 选 $\tilde{e}_k$ 的相位使其为标准正交; 这给出一组新的标准正交基 (可能不完整, 但由 $\mathcal{T}$ 双射性可补成完备基).
+
+\item \emph{对一般态 $\psi=\sum_k c_k e_k$ 的作用.}
+设 $\tilde{\psi}=\sum_k \tilde{c}_k \tilde{e}_k$. 由 $|\inn{e_k}{\psi}|=|\inn{\tilde{e}_k}{\tilde{\psi}}|$ 得 $|c_k|=|\tilde{c}_k|$. 因此 $\tilde{c}_k=\rme^{\rmi \alpha_k(\psi)}c_k$, 其中 $\alpha_k$ 可能与 $\psi$ 有关.
+
+\item \emph{用相干态 $f_k=(e_1+e_k)/\sqrt{2}$ 校准相位.}
+对 $f_k$ 重复 (1)--(2) 步, 选 $\tilde{f}_k$ 的相位使 $\tilde{f}_k=(\tilde{e}_1+\tilde{e}_k)/\sqrt{2}$. 这给出 $\alpha_1(\psi)=\alpha_k(\psi)$ 对所有出现 $\inn{f_k}{\psi}\ne 0$ 的态成立. 因此对一般 $\psi$ 我们可以选射线相位使得
+\begin{equation}\label{eq:inv-wigner-c}
+\tilde{c}_k = \chi(c_k),\qquad \chi:\C\to \C,
+\end{equation}
+其中 $\chi$ 是仅依赖于复数本身的函数 ($\chi(0)=0$, $|\chi(z)|=|z|$).
+
+\item \emph{$\chi$ 的形式.}
+考虑 $\psi=(c_1 e_1+c_2 e_2)/\sqrt{|c_1|^2+|c_2|^2}$. 利用 $|\inn{f_2}{\psi}|^2$ 的不变性
+\[
+|c_1+c_2|^2 = |\chi(c_1)+\chi(c_2)|^2,
+\]
+可推出对所有 $z_1,z_2$, $\chi(z_1)+\chi(z_2)$ 与 $z_1+z_2$ 同模, 进而 $\chi(z_1+z_2)=\chi(z_1)+\chi(z_2)$ 或 $\overline{\chi(z_1)+\chi(z_2)}$. 结合 $\chi$ 的连续性 (从 $|\chi(z)|=|z|$ 及 $\mathcal{T}$ 双射推出) 得
+\[
+\chi(z)=z\quad \text{或}\quad \chi(z)=\bar{z},\qquad \forall z.
+\]
+
+\item \emph{得到 $U$ 或 $W$.}
+若 $\chi(z)=z$: 定义 $U\psi=\sum_k c_k \tilde{e}_k$, 验证 $U(\alpha\psi+\beta\phi)=\alpha U\psi+\beta U\phi$, 且
+\[
+\inn{U\phi}{U\psi}=\sum_k \overline{d_k}c_k=\inn{\phi}{\psi},
+\]
+即 $U$ 幺正.
+若 $\chi(z)=\bar{z}$: 定义 $W\psi=\sum_k \bar{c}_k \tilde{e}_k$, 则 $W(\alpha \psi+\beta \phi)=\bar{\alpha}W\psi+\bar{\beta}W\phi$, 即反线性, 且 $\inn{W\phi}{W\psi}=\overline{\inn{\phi}{\psi}}=\inn{\psi}{\phi}$, 即反幺正.
+
+\item \emph{两情形互斥.}
+若 $\dim \Hilb \ge 2$, 取 $\psi=(e_1+\rmi e_2)/\sqrt{2}$, $\chi(z)=z$ 与 $\chi(z)=\bar{z}$ 给出不同的 $\tilde{\psi}$, 故只能取一种. 对连续的对称群, 单位元附近的元素必为幺正 (因为反幺正算符的平方为幺正, 其连续路径无法回到单位元).
+\end{enumerate}
+\end{proof*}
+
+\begin{remark}
+完整严格证明 (Bargmann 1964) 涉及到三维 Hilbert 空间情形相位的精细处理, 但上面的核心思路与 Taylor 教科书的处理一致. 物理上要点是: \emph{要使所有跃迁概率不变, 仅有幺正与反幺正这两类算符可供使用; 所有连续对称性必为幺正, 仅有分立对称性 (本质上即时间反演) 才可能为反幺正}.
+\end{remark}
+
+
+\subsection{反幺正 \texorpdfstring{$\mathsf{T}$}{T} 必满足 \texorpdfstring{$\mathsf{T}\rmi=-\rmi\mathsf{T}$}{Ti = -iT}}\label{sec:inv-Ti}
+
+\begin{proposition}\label{prop:inv-anti}
+若 $W:\Hilb\to \Hilb$ 是反线性算符, 即 $W(a\ket{\psi}+b\ket{\phi})=\bar{a}W\ket{\psi}+\bar{b}W\ket{\phi}$, 则把数 $a$ 看作 $a\,\mathbf{1}$ 算符时
+\begin{equation}\label{eq:inv-anti-rule}
+W\,a = \bar{a}\,W,\qquad \forall a\in \C.
+\end{equation}
+特别 $W\rmi = -\rmi W$.
+\end{proposition}
+
+\begin{proof*}
+对任意 $\ket{\psi}$, $W(a\ket{\psi}) = \bar{a}\,W\ket{\psi}=(\bar{a}\,W)\ket{\psi}$. 故 $W\circ (a\,\mathbf{1})=(\bar{a}\,\mathbf{1})\circ W$, 取 $a=\rmi$ 即得 $W\rmi=-\rmi W$.
+\end{proof*}
+
+\begin{remark}
+请注意 \eqref{eq:inv-anti-rule} 是``算符等式'', 等号两边均是 $\Hilb\to \Hilb$ 的反线性算符. 这一性质在所有时间反演相关推导中反复使用 -- 复共轭与算符顺序的``交换''要付出符号代价.
+\end{remark}
+
+由 \eqref{eq:inv-anti-rule}, 对任意 Hermite 算符 $A$, $W A W^{-1}$ 仍为线性算符 (反幺正算符的``共轭'' $A\mapsto W A W^{-1}$ 把反幺正再一次变回线性):
+\begin{equation}\label{eq:inv-WAW}
+(W A W^{-1})(a\ket{\psi}+b\ket{\phi}) = a (W A W^{-1})\ket{\psi}+b(W A W^{-1})\ket{\phi}.
+\end{equation}
+
+
+\subsection{反幺正 \texorpdfstring{$\mathsf{T}$}{T} 与 \texorpdfstring{$\mathsf{T}\bm{S}\mathsf{T}^{-1}=-\bm{S}$}{T S Tinv = -S} 的推导}\label{sec:inv-TST}
+
+\begin{proposition}\label{prop:inv-TST}
+设 $\mathsf{T}$ 是时间反演算符 (反幺正), 在适当相位约定下满足 $\mathsf{T}\mathbf{X}\mathsf{T}^{-1}=\mathbf{X}$, $\mathsf{T}\mathbf{P}\mathsf{T}^{-1}=-\mathbf{P}$. 则对任意角动量算符 $\mathbf{J}$ (轨道 $\mathbf{L}=\mathbf{X}\times \mathbf{P}$ 或自旋 $\mathbf{S}$) 有
+\begin{equation}\label{eq:inv-TJT}
+\mathsf{T}\mathbf{J}\mathsf{T}^{-1}=-\mathbf{J}.
+\end{equation}
+\end{proposition}
+
+\begin{proof*}
+\textbf{(i) 轨道部分.}
+$\mathbf{L}=\mathbf{X}\times\mathbf{P}$. 由
+\[
+\mathsf{T}L_i \mathsf{T}^{-1} = \mathsf{T}\,\epsilon_{ijk}X_j P_k\,\mathsf{T}^{-1}.
+\]
+由 $\epsilon_{ijk}\in\R$ 及 $\mathsf{T}$ 反线性 (\eqref{eq:inv-anti-rule} 中 $a$ 实数时与线性算符同),
+\[
+\mathsf{T}\,\epsilon_{ijk}X_j P_k\,\mathsf{T}^{-1}=\epsilon_{ijk}(\mathsf{T}X_j\mathsf{T}^{-1})(\mathsf{T}P_k\mathsf{T}^{-1})=\epsilon_{ijk}X_j(-P_k)=-L_i.
+\]
+
+\textbf{(ii) 自旋部分.}
+对自旋 $\mathbf{S}$, 时间反演要求与对应的经典轴矢量行为一致: $\mathbf{S}\to -\mathbf{S}$. 这等价于
+\begin{equation}\label{eq:inv-TST-spin}
+\mathsf{T}\mathbf{S}\mathsf{T}^{-1}=-\mathbf{S}.
+\end{equation}
+由 SU(2) 表示理论, 这一性质可由如下方式验证: 在 $S_3$ 本征基 $\ket{s,m}$ 上设 $\mathsf{T}\ket{s,m}=\eta_m\ket{s,-m}$ (变到 $-m$ 子空间); 对升降算符
+\[
+\mathsf{T}S_\pm \mathsf{T}^{-1}\ket{s,-m}=\mathsf{T}S_\pm \eta_m^*\ket{s,m}=\eta_m^*\sqrt{(s\mp m)(s\pm m+1)}\,\mathsf{T}\ket{s,m\pm 1}=\eta_m^*\eta_{m\pm 1}\sqrt{\cdots}\ket{s,-m\mp 1}.
+\]
+对比 $-S_\mp\ket{s,-m}=-\sqrt{(s\pm m)(s\mp m+1)}\ket{s,-m\mp 1}$ ($\sqrt{\cdots}$ 与 $\sqrt{(s\pm m)(s\mp m+1)}$ 相等), 要求
+\[
+\eta_m^*\eta_{m\pm 1}=-1.
+\]
+取 $\eta_m=\rme^{\rmi \alpha_m}$ 模一相位, 得 $\alpha_{m\pm 1}-\alpha_m=\pi \mod 2\pi$, 解为 $\alpha_m=\alpha_0+m\pi$, 即 $\eta_m=(-1)^m \eta_0$. 选 $\eta_0=(-1)^s$ (这是常用的 ``Condon-Shortley'' 约定), 即得
+\begin{equation}\label{eq:inv-eta-m}
+\eta_m=(-1)^{s-m}.
+\end{equation}
+带入即恢复 \eqref{eq:inv-TST-spin}.
+
+\textbf{(iii) 总角动量.} $\mathbf{J}=\mathbf{L}+\mathbf{S}$, 由 (i)(ii) 线性叠加, 得 \eqref{eq:inv-TJT}.
+\end{proof*}
+
+\begin{remark}
+对自旋 $1/2$ 情形 ($s=1/2$, $m=\pm 1/2$), \eqref{eq:inv-eta-m} 给 $\eta_{1/2}=(-1)^0=1$, $\eta_{-1/2}=(-1)^1=-1$. 取 $\mathsf{T}=U_T K$ (其中 $K$ 是复共轭, $U_T$ 是某幺正), 由 $\mathsf{T}\sigma_i\mathsf{T}^{-1}=-\sigma_i$ 与 $K\sigma_i K=\sigma_i^*$ 得 $U_T\sigma_i^* U_T^{-1}=-\sigma_i$. 解出 $U_T=\rmi \sigma_y$ (相差一个相位), 故 $\mathsf{T}=\rmi \sigma_y K$, 而 $\mathsf{T}^2=\rmi\sigma_y K\rmi\sigma_y K=(\rmi\sigma_y)(-\rmi\sigma_y^*)=-\sigma_y\sigma_y^* =-\mathbf{1}$ (因 $\sigma_y^*=-\sigma_y$, $\sigma_y\sigma_y=\mathbf{1}$). 这一负号性质给出 Kramers 简并定理.
+\end{remark}
+
+
+\subsection{从 \texorpdfstring{$\mathsf{T}$}{T} 不变性导出反应平衡 (Detailed Balance)}\label{sec:inv-dbalance}
+
+\begin{theorem}[反应平衡]\label{thm:inv-detailed-balance}
+设 $\mathsf{T}$ 是反幺正时间反演算符, $[\mathsf{T},H]=[\mathsf{T},H_0]=0$ 且选基满足 $\mathsf{T}\ket{\mathbf{p},s,m}=(-1)^{s-m}\ket{-\mathbf{p},s,-m}$. 则 $\Smat$ 矩阵元的反应平衡关系为
+\begin{equation}\label{eq:inv-db-S}
+\matel{\mathbf{p}',s',m'}{\Smat}{\mathbf{p},s,m}=(-1)^{s-m+s'-m'}\matel{-\mathbf{p},s,-m}{\Smat}{-\mathbf{p}',s',-m'}.
+\end{equation}
+对应散射振幅
+\begin{equation}\label{eq:inv-db-f}
+f_{s'm',sm}(\mathbf{p}'\leftarrow \mathbf{p})=(-1)^{s-m+s'-m'}f_{s,-m;s',-m'}(-\mathbf{p}\leftarrow -\mathbf{p}'),
+\end{equation}
+$\Rightarrow$ 截面满足 (对自旋求和后)
+\begin{equation}\label{eq:inv-db-sigma}
+\frac{(2s+1)(2s'+1)}{p^2}\,\bar{\sigma}(\mathbf{p}'\leftarrow \mathbf{p})=\frac{(2s+1)(2s'+1)}{p'^2}\,\bar{\sigma}(-\mathbf{p}\leftarrow -\mathbf{p}'),
+\end{equation}
+其中 $\bar\sigma$ 是非极化截面. 在弹性散射 ($p=p'$) 中此即反过程截面相等.
+\end{theorem}
+
+\begin{proof*}
+由 $[\mathsf{T},H]=[\mathsf{T},H_0]=0$ 及 $\mathsf{T}\rmi=-\rmi \mathsf{T}$, 演化算符
+\[
+\mathsf{T}\rme^{\rmi Ht}\mathsf{T}^{-1}=\rme^{-\rmi Ht}.
+\]
+对 Møller 算符 $\Omega_\pm=\lim_{t\to \mp\infty}\rme^{\rmi Ht}\rme^{-\rmi H_0 t}$:
+\begin{align}
+\mathsf{T}\Omega_\pm \mathsf{T}^{-1}
+&=\lim_{t\to \mp\infty}\mathsf{T}\rme^{\rmi Ht}\mathsf{T}^{-1}\,\mathsf{T}\rme^{-\rmi H_0 t}\mathsf{T}^{-1}\nonumber\\
+&=\lim_{t\to \mp\infty}\rme^{-\rmi Ht}\rme^{\rmi H_0 t}\nonumber\\
+&=\lim_{t'\to \pm\infty}\rme^{\rmi H t'}\rme^{-\rmi H_0 t'} = \Omega_\mp.\label{eq:inv-T-omega}
+\end{align}
+故
+\[
+\mathsf{T}\Smat \mathsf{T}^{-1}=\mathsf{T}\Omega_-^\dagger \Omega_+ \mathsf{T}^{-1}=(\mathsf{T}\Omega_-\mathsf{T}^{-1})^\dagger (\mathsf{T}\Omega_+\mathsf{T}^{-1}) =\Omega_+^\dagger \Omega_- = \Smat^\dagger,
+\]
+即
+\begin{equation}\label{eq:inv-TST-S}
+\mathsf{T}\Smat \mathsf{T}^{-1}=\Smat^\dagger,\qquad \Smat=\mathsf{T}^{-1}\Smat^\dagger \mathsf{T}.
+\end{equation}
+反幺正算符的左右作用规则 $\inn{W\phi}{W\psi}=\inn{\phi}{\psi}^*$, 故对任意 $\ket{\chi},\ket{\phi}$,
+\begin{align}
+\inn{\chi}{\Smat\phi}
+&=\inn{\chi}{\mathsf{T}^{-1}\Smat^\dagger \mathsf{T}\phi}\nonumber\\
+&=\inn{\mathsf{T}\chi}{\Smat^\dagger \mathsf{T}\phi}^*\quad\text{(反幺正性)}\nonumber\\
+&=\inn{\Smat \mathsf{T}\chi}{\mathsf{T}\phi}^*\nonumber\\
+&=\inn{\mathsf{T}\phi}{\Smat \mathsf{T}\chi}.\label{eq:inv-Sphchi}
+\end{align}
+取 $\ket{\chi}=\ket{\mathbf{p}',s',m'}$, $\ket{\phi}=\ket{\mathbf{p},s,m}$:
+\begin{align*}
+\inn{\mathbf{p}'s'm'}{\Smat\,\mathbf{p}sm}
+&=\inn{\mathsf{T}\mathbf{p}sm}{\Smat\,\mathsf{T}\mathbf{p}'s'm'}\\
+&=(-1)^{s-m}(-1)^{s'-m'}\inn{-\mathbf{p},s,-m}{\Smat\,(-\mathbf{p}',s',-m')},
+\end{align*}
+即 \eqref{eq:inv-db-S} (注意外部 $\eta_m^*\eta_{m'}=(-)^{s-m}(-)^{s'-m'}$ 同样为实, 故 $|{}|^2$ 不出符号).
+
+\textbf{由 $S\to f$ 转换.} 由 \eqref{eq:inv-db-S} 与
+\[
+\matel{\mathbf{p}'s'm'}{\Smat-\mathbf{1}}{\mathbf{p}sm}=\frac{\rmi}{2\pi\mathrm{m}}\delta(E_{p'}-E_p)\,f_{s'm',sm}(\mathbf{p}'\leftarrow \mathbf{p})
+\]
+(见第~\ref{ch:spin2p} 章), 立得 \eqref{eq:inv-db-f}.
+
+\textbf{微分截面与非极化平均.} 微分截面
+\[
+\frac{\rmd\sigma}{\rmd\Omega}(s'm';sm)=\frac{p'}{p}|f_{s'm',sm}|^2\quad\text{(弹性 } p'=p\text{)}.
+\]
+非极化截面 (in 自旋平均, out 自旋求和):
+\begin{equation}
+\bar\sigma(\mathbf{p}'\leftarrow \mathbf{p})=\frac{1}{2s+1}\sum_{m,m'}|f_{s'm',sm}(\mathbf{p}'\leftarrow \mathbf{p})|^2.
+\end{equation}
+对 \eqref{eq:inv-db-f} 取模平方再对 $m,m'$ 求和 (相位因子 $(-1)^{2(s-m+s'-m')}=1$ 消去):
+\[
+\sum_{m,m'}|f_{s'm',sm}(\mathbf{p}'\leftarrow \mathbf{p})|^2=\sum_{m,m'}|f_{s,-m;s',-m'}(-\mathbf{p}\leftarrow -\mathbf{p}')|^2,
+\]
+重命名 $-m\to m, -m'\to m'$:
+\begin{equation}\label{eq:inv-db-sumsq}
+\sum_{m,m'}|f_{s'm',sm}(\mathbf{p}'\leftarrow \mathbf{p})|^2=\sum_{m',m}|f_{sm,s'm'}(-\mathbf{p}\leftarrow -\mathbf{p}')|^2.
+\end{equation}
+左边 $= (2s+1)\bar\sigma(\mathbf{p}'\leftarrow \mathbf{p})$, 右边 $= (2s'+1)\bar\sigma(-\mathbf{p}\leftarrow -\mathbf{p}')$ (其中初末态身份在反过程中交换); 故
+\begin{equation}\label{eq:inv-db-final}
+(2s+1)\bar\sigma(\mathbf{p}'\leftarrow \mathbf{p})=(2s'+1)\bar\sigma(-\mathbf{p}\leftarrow -\mathbf{p}').
+\end{equation}
+对反应过程 $a+b\to c+d$ (多道情形, 见第~\ref{ch:multichannel} 章), 相同推导给出
+\begin{equation}\label{eq:inv-db-mc}
+(2s_a+1)(2s_b+1)\,p_{ab}^2\,\bar\sigma(c+d\leftarrow a+b)=(2s_c+1)(2s_d+1)\,p_{cd}^2\,\bar\sigma(\bar a+\bar b\leftarrow \bar c+\bar d),
+\end{equation}
+其中 $\bar a$ 等指动量反向 (再加 $\mathsf{P}$ 不变性时 $-\mathbf{p}\to \mathbf{p}$, 即得 ``真'' 反过程). 这里多出的 $p^2$ 来自相空间 (见第~\ref{ch:cross} 章): $\rmd\sigma\propto p_f/p_i\,|f|^2$, 同时 in 通量正比 $p_i$ 且 $\delta(E)$ 含 $\mathrm{m}/p$.
+\end{proof*}
+
+\begin{remark}
+若同时具有宇称 $\mathsf{P}$ 不变性 $f(\mathbf{p}'\leftarrow\mathbf{p})=f(-\mathbf{p}'\leftarrow -\mathbf{p})$, 则 \eqref{eq:inv-db-final} 给
+\[
+(2s+1)\bar\sigma(\mathbf{p}'\leftarrow \mathbf{p})=(2s'+1)\bar\sigma(\mathbf{p}\leftarrow \mathbf{p}'),
+\]
+即 ``正反过程截面对称''. 这是核反应中常引用的 \emph{detailed balance} 形式. 在弹性散射 ($s=s'$) 此即 $\bar\sigma(\mathbf{p}'\leftarrow \mathbf{p})=\bar\sigma(\mathbf{p}\leftarrow \mathbf{p}')$.
+\end{remark}
+
+
+\subsection{宇称选择定则: \texorpdfstring{$\Delta\ell$}{Delta-l} 偶}\label{sec:inv-parity-rule}
+
+\begin{theorem}[宇称选择定则]\label{thm:inv-parity-rule}
+若 $[\mathsf{P},\Smat]=0$, 在角动量基 $\ket{Elsjm}$ 中 (无内禀宇称),
+\begin{equation}\label{eq:inv-parity-rule}
+\mathsf{s}^j_{l's',ls}(E)=0\quad \text{当 }l-l'\text{ 为奇数 (即 }\Delta\ell=l'-l\text{ 奇)}.
+\end{equation}
+等价地, 仅 $\Delta\ell$ 偶的分波贡献.
+\end{theorem}
+
+\begin{proof*}
+\textbf{第一步: 角动量基的宇称.}
+轨道角动量基 $\ket{Elm}$ 在坐标表象的波函数 $\inn{\mathbf{x}}{Elm}\propto \frac{1}{r}\hat{j}_l(pr)Y_l^m(\hat{\mathbf{x}})$. 宇称作用 $\mathsf{P}\inn{\mathbf{x}}{Elm}=\inn{-\mathbf{x}}{Elm}$. 利用球谐函数性质 $Y_l^m(-\hat{\mathbf{x}})=Y_l^m(\pi-\theta,\varphi+\pi)=(-1)^l Y_l^m(\hat{\mathbf{x}})$ 得
+\begin{equation}\label{eq:inv-Plm}
+\mathsf{P}\ket{E,l,m}=(-1)^l\ket{E,l,m}.
+\end{equation}
+对自旋部分 $[\mathsf{P},\mathbf{S}]=0$, $\mathsf{P}\ket{s,m_s}=\ket{s,m_s}$ (无内禀宇称约定下). 由 LS 耦合 \eqref{eq:LS-coupling},
+\begin{equation}\label{eq:inv-Pjm}
+\mathsf{P}\ket{Elsjm}=(-1)^l\ket{Elsjm}.
+\end{equation}
+
+\textbf{第二步: 用 $[\mathsf{P},\Smat]=0$.}
+取 \eqref{eq:inv-Pjm} 的对偶, 在 $\Smat$ 矩阵元上插入 $\mathsf{P}^\dagger \mathsf{P}=\mathbf{1}$:
+\begin{align*}
+\mathsf{s}^j_{l's',ls}(E)\delta(E'-E)\delta_{j'j}\delta_{m'm}
+&=\matel{E'l's',j'm'}{\Smat}{Elsjm}\\
+&=\matel{E'l's',j'm'}{\mathsf{P}^\dagger \Smat \mathsf{P}}{Elsjm}\\
+&=(-1)^{l'+l}\matel{E'l's',j'm'}{\Smat}{Elsjm}\\
+&=(-1)^{l'+l}\,\mathsf{s}^j_{l's',ls}(E)\delta(E'-E)\delta_{j'j}\delta_{m'm}.
+\end{align*}
+故 $[1-(-1)^{l+l'}]\mathsf{s}^j_{l's',ls}(E)=0$. 当 $l+l'$ 为奇数 (即 $\Delta\ell=l-l'$ 为奇数) 时左因子非零, 推出 \eqref{eq:inv-parity-rule}.
+
+\textbf{推论 (单道弹性).} 当 $s$ 不变 (无总自旋翻转, 相对运动只有一个轨道角动量贡献) 时, $l'=l$ 自动 $\Delta\ell=0$ 偶, $\mathsf{s}^j_l$ 非零. 但若多个 $l$ 值通过 $\mathbf{J}$ 守恒耦合 (例如自旋-轨道作用使两 $l=j\pm 1/2$ 子空间通过同一 $j$ 联系), 则 $\Delta\ell=\pm 1$ (奇), $\mathsf{P}$ 不变性禁止它们之间的混合.
+\end{proof*}
+
+
+\subsection{Galilei 变换下动量与角动量的变换}\label{sec:inv-galilei-trans}
+
+\begin{proposition}\label{prop:inv-galilei}
+非相对论 Galilei boost $G(\mathbf{v})=\rme^{\rmi (\mathbf{v}\cdot M\mathbf{X}_{cm}-\mathbf{v}\cdot \mathbf{P}_{cm}\,t)}$ (其中 $M$ 为总质量, $\mathbf{X}_{cm}, \mathbf{P}_{cm}$ 为质心位置 / 动量算符) 作用如下:
+\begin{equation}\label{eq:inv-G-rules}
+G(\mathbf{v})\,\mathbf{X}_i\,G(\mathbf{v})^{-1}=\mathbf{X}_i+\mathbf{v}t,\qquad G(\mathbf{v})\,\mathbf{P}_i\,G(\mathbf{v})^{-1}=\mathbf{P}_i+m_i\mathbf{v},
+\end{equation}
+即坐标加位移 $\mathbf{v}t$, 动量加 $m_i\mathbf{v}$. 对总角动量 $\bar{\mathbf{J}}=\sum_i \mathbf{X}_i\times \mathbf{P}_i+\sum_i \mathbf{S}_i$,
+\begin{equation}\label{eq:inv-Gjr-J}
+G(\mathbf{v})\bar{\mathbf{J}}G(\mathbf{v})^{-1}=\bar{\mathbf{J}}+\mathbf{v}t \times \mathbf{P}_{tot}+M\mathbf{X}_{cm}\times \mathbf{v}+\mathbf{v}t\times M\mathbf{v},
+\end{equation}
+其中最后一项 $\mathbf{v}t\times M\mathbf{v}=0$. 即角动量本身不是 Galilei 不变的, 但相对角动量 $\mathbf{J}=\mathbf{X}\times\mathbf{P}+\mathbf{S}$ (相对坐标) 是.
+\end{proposition}
+
+\begin{proof*}
+\textbf{(i) 对动量.} $\mathbf{P}_{cm}=\sum_i \mathbf{P}_i$ 为生成元. 由 BCH:
+\[
+G(\mathbf{v})\mathbf{P}_i G(\mathbf{v})^{-1}=\rme^{\rmi (\mathbf{v}\cdot M\mathbf{X}_{cm})}\mathbf{P}_i \rme^{-\rmi (\mathbf{v}\cdot M\mathbf{X}_{cm})}=\mathbf{P}_i +\rmi[\mathbf{v}\cdot M\mathbf{X}_{cm},\mathbf{P}_i].
+\]
+利用 $M\mathbf{X}_{cm}=\sum_j m_j \mathbf{X}_j$, $[X_{j,a}, P_{i,b}]=\rmi \delta_{ji}\delta_{ab}$, 得
+\[
+[\mathbf{v}\cdot M\mathbf{X}_{cm}, P_{i,b}]=\sum_j m_j v_a [X_{j,a},P_{i,b}]=\rmi m_i v_b.
+\]
+所以
+\[
+G\mathbf{P}_iG^{-1}=\mathbf{P}_i+\rmi(\rmi m_i \mathbf{v})=\mathbf{P}_i+m_i\mathbf{v}.
+\]
+(注: 时间项 $\rme^{-\rmi \mathbf{v}\cdot \mathbf{P}_{cm}t}$ 与 $\mathbf{P}_i$ 对易, 不贡献.)
+
+\textbf{(ii) 对位置.} 由 $\rme^{-\rmi \mathbf{v}\cdot \mathbf{P}_{cm}t}\mathbf{X}_i \rme^{\rmi \mathbf{v}\cdot \mathbf{P}_{cm}t}=\mathbf{X}_i+\mathbf{v}t$ (经典平移), 而 $\rme^{\rmi \mathbf{v}\cdot M\mathbf{X}_{cm}}\mathbf{X}_i \rme^{-\rmi \mathbf{v}\cdot M\mathbf{X}_{cm}}=\mathbf{X}_i$ (因 $\mathbf{X}$ 自对易), 合并即得 $G\mathbf{X}_iG^{-1}=\mathbf{X}_i+\mathbf{v}t$.
+
+\textbf{(iii) 对角动量.}
+$\mathbf{X}_i\to \mathbf{X}_i+\mathbf{v}t$, $\mathbf{P}_i\to \mathbf{P}_i+m_i\mathbf{v}$:
+\begin{align*}
+\mathbf{X}_i\times\mathbf{P}_i &\to (\mathbf{X}_i+\mathbf{v}t)\times (\mathbf{P}_i+m_i\mathbf{v})\\
+&=\mathbf{X}_i\times \mathbf{P}_i + m_i \mathbf{X}_i\times \mathbf{v}+\mathbf{v}t\times \mathbf{P}_i+m_i \mathbf{v}t\times \mathbf{v}\\
+&= \mathbf{X}_i\times \mathbf{P}_i+m_i\mathbf{X}_i\times\mathbf{v}+\mathbf{v}t\times \mathbf{P}_i.
+\end{align*}
+对所有 $i$ 求和, 利用 $\sum_i m_i \mathbf{X}_i=M\mathbf{X}_{cm}$ 与 $\sum_i \mathbf{P}_i=\mathbf{P}_{tot}$, 加上 $\mathbf{S}_i$ 部分 (Galilei 不动, $G\mathbf{S}_iG^{-1}=\mathbf{S}_i$, 因 $\mathbf{S}$ 与 $\mathbf{X},\mathbf{P}$ 对易) 得 \eqref{eq:inv-Gjr-J}.
+
+\textbf{(iv) 相对角动量.}
+对二粒子, 引入相对坐标 $\mathbf{x}=\mathbf{x}_1-\mathbf{x}_2$, 相对动量 $\mathbf{p}=(m_2 \mathbf{p}_1-m_1\mathbf{p}_2)/(m_1+m_2)$. 在 Galilei boost 下,
+\[
+\mathbf{x}\to (\mathbf{x}_1+\mathbf{v}t)-(\mathbf{x}_2+\mathbf{v}t)=\mathbf{x},\qquad \mathbf{p}\to \mathbf{p}+\frac{m_2 m_1\mathbf{v}-m_1 m_2 \mathbf{v}}{M}=\mathbf{p},
+\]
+即相对坐标与相对动量均不变. 故相对轨道角动量 $\mathbf{L}=\mathbf{x}\times\mathbf{p}$ 与 $\mathbf{S}_{1,2}$ 一同, 总相对角动量
+\begin{equation}\label{eq:inv-J-rel}
+G(\mathbf{v})\mathbf{J}G(\mathbf{v})^{-1}=\mathbf{J}\qquad (\mathbf{J}=\mathbf{x}\times\mathbf{p}+\mathbf{S}_1+\mathbf{S}_2),
+\end{equation}
+即 \eqref{eq:inv-J-rel} -- 这是相对运动散射理论里使用 $\mathbf{J}$ 而非 $\bar{\mathbf{J}}$ 的根本原因.
+\end{proof*}
+
+\begin{remark}
+公式 \eqref{eq:inv-Gjr-J} 中带 $\mathbf{v}t$ 项与 $M\mathbf{X}_{cm}\times\mathbf{v}$ 项分别与质心运动绕新原点的轨道角动量增加, 以及``boost 生成元''效应有关; 在质心系 ($\mathbf{P}_{tot}=0,\mathbf{X}_{cm}=0$) 二者皆为零. 这与第~\ref{ch:scat2p} 章的质心分离结论自洽.
+\end{remark}
+
+
+\section{综合例题}\label{sec:inv-examples}
+
+\begin{example}[自旋 $1/2$ + 自旋 $0$ 散射: 转动 $+$ 宇称 $+$ 时间反演的联合限制]\label{ex:inv-half-zero}
+考虑入射粒子 $a$ (自旋 $s=1/2$, 如核子), 靶 $b$ (自旋 $s'=0$, 如 $\alpha$ 粒子或自旋零原子核); 仅考虑弹性散射, 内禀宇称中性. 我们已在正文 \S\ref{sec:spin-rotation}--\ref{sec:spin-PT} 中分别用三种对称性约束散射振幅矩阵, 这里把推导链条系统串起来, 强调每一步删去多少自由度.
+
+\textbf{无对称性的散射振幅.}
+散射振幅 $F(\mathbf{p}'\leftarrow\mathbf{p})$ 是 $2\times 2$ 矩阵 (作用在 $\mathrm{spin}\,1/2$ 空间), 矩阵元 $f_{m'm}$, 复函数. 每个 $f_{m'm}$ 依赖 $\mathbf{p},\mathbf{p}'$ 共 $5$ 个独立标量 (能量 + 4 个角度). 共 $4\times 2=8$ 个实自由度 (函数).
+
+\textbf{第一步: 转动不变 ($[\mathbf{J},\Smat]=0$).}
+由 \S\ref{sec:Jrep}, $F$ 可在 $\bm{1},\bm{\sigma}$ 上展开:
+\begin{equation}\label{eq:inv-ex-F1}
+F(\mathbf{p}',\mathbf{p})=\alpha(\mathbf{p}',\mathbf{p})\bm{1}+\rmi\,\bm{\beta}(\mathbf{p}',\mathbf{p})\cdot \bm{\sigma}.
+\end{equation}
+转动协变性要求 $\alpha$ 是标量, $\bm{\beta}$ 是矢量; 二者只能用 $\mathbf{p},\mathbf{p}',\mathbf{p}\times\mathbf{p}'$ 构造. 故
+\begin{align}
+\alpha(\mathbf{p}',\mathbf{p})&=a(E,\theta),\label{eq:inv-ex-a}\\
+\bm{\beta}(\mathbf{p}',\mathbf{p})&=b(E,\theta)\hat{\mathbf{n}}+c(E,\theta)(\mathbf{p}'+\mathbf{p})+d(E,\theta)(\mathbf{p}'-\mathbf{p}),\label{eq:inv-ex-bcd}
+\end{align}
+其中 $\hat{\mathbf{n}}=(\mathbf{p}\times\mathbf{p}')/|\mathbf{p}\times\mathbf{p}'|$. 共 4 个复函数 $a,b,c,d$, 仅 $E,\theta$ 为变量 ($\varphi$ 通过 $\hat{\mathbf{n}},\mathbf{p}'$ 出现).
+
+\textbf{第二步: 加宇称 ($[\mathsf{P},\Smat]=0$).}
+$\mathsf{P}: \mathbf{p}\to -\mathbf{p}$, $\mathbf{S}\to \mathbf{S}$, 故 $\bm\sigma\to \bm\sigma$. 等式 $F(\mathbf{p}',\mathbf{p})=F(-\mathbf{p}',-\mathbf{p})$ 要求
+\[
+\alpha(\mathbf{p}',\mathbf{p})=\alpha(-\mathbf{p}',-\mathbf{p}),\qquad \bm{\beta}(\mathbf{p}',\mathbf{p})=\bm{\beta}(-\mathbf{p}',-\mathbf{p}).
+\]
+由 $\hat{\mathbf{n}}\to (-\mathbf{p})\times (-\mathbf{p}')/|\cdots|=\hat{\mathbf{n}}$ (偶), $\mathbf{p}'\pm\mathbf{p}\to -(\mathbf{p}'\pm\mathbf{p})$ (奇), \eqref{eq:inv-ex-bcd} 中
+\[
+b\,\hat{\mathbf{n}}+c(\mathbf{p}'+\mathbf{p})+d(\mathbf{p}'-\mathbf{p})=b\,\hat{\mathbf{n}}-c(\mathbf{p}'+\mathbf{p})-d(\mathbf{p}'-\mathbf{p}),
+\]
+$\Rightarrow c=d=0$. 振幅化为
+\begin{equation}\label{eq:inv-ex-F2}
+F(\mathbf{p}',\mathbf{p})=a(E,\theta)\bm{1}+\rmi b(E,\theta)\,\hat{\mathbf{n}}\cdot \bm{\sigma}.
+\end{equation}
+仅 $a,b$ 两个复函数.
+
+\textbf{第三步: 加时间反演 ($\mathsf{T}\Smat \mathsf{T}^{-1}=\Smat^\dagger$).}
+由 \eqref{eq:inv-db-f} 及自旋 $1/2$ + $0$ 简化 (设 $s'=0$, 末态自旋指标 $m'=0$, 故 $(-1)^{s'-m'}=1$, 或更简单地直接对自旋 $1/2$ 部分用 $\mathsf{T}=\rmi\sigma_y K$):
+\begin{align*}
+f_{m'm}(\mathbf{p}',\mathbf{p})
+&=(\rmi\sigma_y)_{m',\bar m'}\,(\rmi\sigma_y)^*_{m,\bar m}\,f_{\bar m,\bar m'}^*(-\mathbf{p},-\mathbf{p}')\\
+&=[\sigma_y F^*(-\mathbf{p},-\mathbf{p}')\sigma_y]_{m'm}\quad \text{(注意因子的转置)}.
+\end{align*}
+即
+\begin{equation}\label{eq:inv-ex-T}
+F(\mathbf{p}',\mathbf{p})=\sigma_y F^T(-\mathbf{p},-\mathbf{p}')\sigma_y,
+\end{equation}
+其中 $F^T$ 为转置. 利用 $\sigma_y \bm{1}\sigma_y=\bm{1}$, $\sigma_y \sigma_i^T \sigma_y=-\sigma_i$ (因 $\sigma_y \sigma_x^T \sigma_y=-\sigma_x$, $\sigma_y\sigma_y^T\sigma_y=-\sigma_y$, $\sigma_y\sigma_z^T\sigma_y=-\sigma_z$):
+\begin{align*}
+\sigma_y F^T(-\mathbf{p},-\mathbf{p}')\sigma_y
+&=\sigma_y[a(-\mathbf{p},-\mathbf{p}')\bm{1}+\rmi \bm\beta(-\mathbf{p},-\mathbf{p}')\cdot \bm{\sigma}^T]\sigma_y\\
+&= a(-\mathbf{p},-\mathbf{p}')\bm{1}-\rmi \bm{\beta}(-\mathbf{p},-\mathbf{p}')\cdot \bm{\sigma}.
+\end{align*}
+对比 \eqref{eq:inv-ex-F2} 给出
+\[
+a(\mathbf{p}',\mathbf{p})=a(-\mathbf{p},-\mathbf{p}'),\qquad \bm{\beta}(\mathbf{p}',\mathbf{p})=-\bm{\beta}(-\mathbf{p},-\mathbf{p}').
+\]
+联立 \eqref{eq:inv-ex-bcd} ($\hat{\mathbf{n}}(\mathbf{p}',\mathbf{p})=\mathbf{p}\times\mathbf{p}'/|\cdots|$, $\hat{\mathbf{n}}(-\mathbf{p},-\mathbf{p}')=(-\mathbf{p}')\times(-\mathbf{p})/|\cdots|=\mathbf{p}'\times\mathbf{p}/|\cdots|=-\hat{\mathbf{n}}$) 验证 $\mathsf{T}$ 不变在 $b\hat{\mathbf{n}}$ 项上自动成立, 在 $c,d$ 项上要求 $c=d=0$ (与 $\mathsf{P}$ 一致或独立给出 $c=0$, $d=0$ -- 见正文 \S\ref{sec:spin-PT}).
+
+\textbf{结论 (三对称联合).}
+\begin{empheq}[box=\fbox]{equation}\label{eq:inv-ex-final}
+F(\mathbf{p}',\mathbf{p})=a(E,\theta)\,\bm{1}+\rmi b(E,\theta)\,\hat{\mathbf{n}}\cdot \bm{\sigma},
+\end{empheq}
+仅 $a, b$ 两个复函数 (4 实自由度), 是描述自旋 $1/2$ + 自旋 $0$ 弹性散射的最简形式. 对自旋 $1/2$ 入射粒子的极化方向 $\bm{P}$, 微分截面写成
+\[
+\frac{\rmd\sigma}{\rmd\Omega}=|a|^2+|b|^2+2\,\mathrm{Im}(ab^*)\,\hat{\mathbf{n}}\cdot \bm{P}.
+\]
+非极化时 $\bm{P}=0$, $\rmd\sigma/\rmd\Omega=|a|^2+|b|^2$. 出射粒子极化 $\bm{P}'=(\bm{P}+2\,\mathrm{Im}(ab^*)\hat{\mathbf{n}}/(|a|^2+|b|^2)+\cdots)$ 含 ``左右不对称'' 量 $A_{LR}=2\,\mathrm{Im}(ab^*)/(|a|^2+|b|^2)$, 即著名的 ``Mott 极化''.
+\end{example}
+
+\begin{example}[Born 近似下的反应平衡验证]\label{ex:inv-born}
+取无自旋粒子, 实定域势 $V(\mathbf{x})$ 满足 $V(\mathbf{x})=V^*(\mathbf{x})\in\R$ (从而 $\mathsf{T}$ 不变). 一阶 Born 近似散射振幅
+\begin{equation}\label{eq:inv-born-f}
+f^{(1)}(\mathbf{p}'\leftarrow \mathbf{p})=-\frac{\mathrm{m}}{2\pi}\int \rmd^3x\,\rme^{-\rmi (\mathbf{p}'-\mathbf{p})\cdot \mathbf{x}}V(\mathbf{x})=-\frac{\mathrm{m}}{2\pi}\tilde V(\mathbf{q}),
+\end{equation}
+其中 $\mathbf{q}=\mathbf{p}'-\mathbf{p}$ 为转移动量.
+
+\textbf{验证 $f^{(1)}(\mathbf{p}'\leftarrow \mathbf{p})=f^{(1)}(-\mathbf{p}\leftarrow -\mathbf{p}')$ (反应平衡).}
+反过程的转移动量
+\[
+\mathbf{q}_{rev}=(-\mathbf{p})-(-\mathbf{p}')=\mathbf{p}'-\mathbf{p}=\mathbf{q}.
+\]
+故
+\[
+f^{(1)}(-\mathbf{p}\leftarrow -\mathbf{p}')=-\frac{\mathrm{m}}{2\pi}\tilde V(\mathbf{q})=f^{(1)}(\mathbf{p}'\leftarrow \mathbf{p}),
+\]
+反应平衡 \emph{自动满足}.
+
+\textbf{验证宇称选择定则 (中心势).}
+考虑中心势 $V(\mathbf{x})=V(r)$, $r=|\mathbf{x}|$, 自动 $V(-\mathbf{x})=V(r)=V(\mathbf{x})$, $\mathsf{P}$ 不变. Fourier 变换 $\tilde V(\mathbf{q})=\tilde V(q)$ 仅依赖 $|\mathbf{q}|$. 由
+\[
+q^2=|\mathbf{p}'-\mathbf{p}|^2=2p^2(1-\cos\theta)=4p^2\sin^2(\theta/2),
+\]
+$f^{(1)}=-\frac{\mathrm{m}}{2\pi}\tilde V(2p\sin(\theta/2))$. 分波展开 (利用 \eqref{eq:partial-wave})
+\[
+f^{(1)}_l(E)=\frac{1}{2}\int_{-1}^1 \rmd(\cos\theta)\,f^{(1)}(E,\theta)P_l(\cos\theta)/ (2l+1)
+\]
+对所有 $l\ge 0$ 一般非零 (与 $\Delta\ell$ 偶相符: $l'=l$, 即 $\Delta\ell=0$ 偶).
+
+\textbf{反例 (违反 $\mathsf{T}$).} 设势含虚部 $V=V_R(r)+\rmi V_I(r)$ ($V_I\ne 0$), 即光学模型. 此时 $\mathsf{T}^{-1}V \mathsf{T}=V^*=V_R-\rmi V_I\ne V$, $[\mathsf{T},H]\ne 0$, 反应平衡破坏:
+\[
+\tilde V(\mathbf{q})\ne \tilde V^*(\mathbf{q})\quad \text{($V_I\ne 0$, $\tilde V_I$ 复)},
+\]
+但仍有 (动量空间中, $\tilde V_R$ 实, $\tilde V_I$ 实)
+\[
+\tilde V(-\mathbf{q})=\tilde V(\mathbf{q})^*\quad\text{(若 } V_R, V_I\text{ 偶函数)}.
+\]
+对应 $f^{(1)}(\mathbf{p}'\leftarrow\mathbf{p})\ne f^{(1)}(-\mathbf{p}\leftarrow -\mathbf{p}')^*$, 即 \emph{反过程几率} 与正过程不再相等. 这是吸收 (吸收道, 第~\ref{ch:multichannel} 章) 引入虚部破坏弹性 $\mathsf{T}$ 不变的标准例子.
+
+\textbf{二阶 Born 近似及其反应平衡.}
+二阶 Born 振幅
+\begin{equation}
+f^{(2)}(\mathbf{p}'\leftarrow \mathbf{p})=-\frac{\mathrm{m}}{2\pi}\int \frac{\rmd^3q}{(2\pi)^3}\,\frac{\tilde V(\mathbf{p}'-\mathbf{q})\,\tilde V(\mathbf{q}-\mathbf{p})}{E-q^2/2\mathrm{m}+\rmi 0^+}\cdot (2\mathrm{m}).
+\end{equation}
+反过程
+\[
+f^{(2)}(-\mathbf{p}\leftarrow -\mathbf{p}')=-\frac{\mathrm{m}}{2\pi}\int \frac{\rmd^3q}{(2\pi)^3}\,\frac{\tilde V(-\mathbf{p}-\mathbf{q})\tilde V(\mathbf{q}+\mathbf{p}')}{E-q^2/2\mathrm{m}+\rmi 0^+}\cdot (2\mathrm{m}).
+\]
+作变量替换 $\mathbf{q}\to -\mathbf{q}$, 利用 $\tilde V(-\mathbf{q})=\tilde V^*(\mathbf{q})=\tilde V(\mathbf{q})$ (实势, 偶函数), 得相等 -- 即 $\mathsf{T}$ 不变性在二阶 Born 也保持. 实际上由 $V$ 实 + $H$ 厄米性, 任意阶 Born 严格满足 \eqref{eq:inv-db-f} (无自旋情形).
+\end{example}
+
+\begin{remark}
+两个例题展示了对称性分析的两种典型用法: (a) 通过对称性把振幅形式约化到尽可能少的不变函数 (例 \ref{ex:inv-half-zero}); (b) 在具体近似中验证对称性的体现与破坏 (例 \ref{ex:inv-born}). 这些方法将在之后第~\ref{ch:morespin}, \ref{ch:partial}, \ref{ch:multichannel} 章 (有自旋极化, 共振, 多道反应) 中被反复使用.
+\end{remark}

@@ -1,0 +1,436 @@
+\chapter{全同粒子散射 (Identical Particles in Scattering)}\label{ch:identical}
+
+到目前为止，在第~\ref{ch:scat2p}、\ref{ch:spin2p}、\ref{ch:invariance}~章讨论两粒子散射时，我们一直把"粒子~1"与"粒子~2"当作\emph{可区分}的对象——比如说一个 $\alpha$ 粒子打一个氘核。这一假设让人轻松地谈论"入射方向"与"被打中的靶"，并且 lab/CM 变换、微分截面的公式都按"区分入射粒子和靶粒子"展开。但量子力学的一条基本公设要求：\textbf{全同粒子 (identical particles) 是不可区分的}——电子打电子的实验不可能区分"哪个电子是被打中的"。这一不可分辨性迫使我们对入射态、出射态、散射算符乃至截面公式做(反)对称化处理。
+
+本章把全同粒子的(反)对称化原理引入散射理论的语言。我们将
+\begin{enumerate}
+  \item 回顾置换算符 $P_{12}$ 与 (反)对称投影 $\Pi_\pm$；
+  \item 证明当 $[H,P_{12}]=0$ 时 (反)对称子空间是 $S$ 算符的不变子空间，于是有自洽的"对称扇区散射理论"；
+  \item 把无自旋两粒子的散射振幅 $f(\theta)$ (反)对称化为 $f(\theta)\pm f(\pi-\theta)$，导出 \textbf{Mott} 公式与典型干涉条纹；
+  \item 把含自旋的散射纳入同样的框架，得到自旋 $1/2$--$1/2$ 的单态/三态分解，应用于 $e$--$e$, $p$--$p$ 散射；
+  \item 讨论分波展开下的奇偶限制（玻色子只剩偶分波、费米子只剩奇分波）；
+  \item 在多通道情形 (第~\ref{ch:multichannel}~章) 中提到"全同 fragments" 带来的诱导对称化与统计因子。
+\end{enumerate}
+
+本章主要参考 Taylor《Scattering Theory》第~18~章；干涉公式与 Mott 散射的细节参考 Joachain《Quantum Collision Theory》及 Mott--Massey《Theory of Atomic Collisions》。
+
+%======================================================================
+\section{置换算符与(反)对称投影}\label{sec:id-perm}
+
+\subsection{两粒子置换算符}\label{sec:id-P12}
+
+设两粒子总 Hilbert 空间 $\Hilb=\Hilb_1\otimes\Hilb_2$，单粒子 Hilbert 空间相同 (此即"全同"的形式要求)：$\Hilb_1=\Hilb_2\equiv\Hilb_{1p}$。在直积基 $\ket{a}_1\otimes\ket{b}_2$ 上定义\emph{置换算符}
+\begin{equation}
+  P_{12}\bigl(\ket{a}_1\otimes\ket{b}_2\bigr)=\ket{b}_1\otimes\ket{a}_2,
+  \label{eq:id-P12-def}
+\end{equation}
+延拓为线性算符. 显然 $P_{12}^2=\mathbb 1$ 与 $P_{12}^\dagger=P_{12}$，所以 $P_{12}$ 既幺正又自伴，本征值为 $\pm 1$.
+
+\begin{definition}[对称/反对称投影]\label{def:id-Pi}
+  定义
+  \begin{equation}
+    \Pi_+\equiv\frac{1}{2}(\mathbb 1+P_{12}),\qquad
+    \Pi_-\equiv\frac{1}{2}(\mathbb 1-P_{12}).
+    \label{eq:id-Pi-def}
+  \end{equation}
+  则 $\Pi_\pm$ 正交投影到 $P_{12}$ 的 $\pm 1$ 特征子空间
+  $\Hilb_\pm=\Pi_\pm\Hilb=\{\psi\in\Hilb:P_{12}\psi=\pm\psi\}$，
+  且 $\Hilb=\Hilb_+\oplus\Hilb_-$.
+\end{definition}
+
+对带自旋两粒子，$\Hilb_{1p}=L^2(\R^3)\otimes\C^{2s+1}$，置换交换\emph{位置和自旋}两部分.
+
+\subsection{全同粒子假设}\label{sec:id-postulate}
+
+\begin{definition}[全同粒子假设]\label{def:id-axiom}
+  自然界中每种粒子或者是\emph{玻色子} (boson, 整数自旋)，物理态空间为对称子空间 $\Hilb_+$；或者是\emph{费米子} (fermion, 半整数自旋)，物理态空间为反对称子空间 $\Hilb_-$. 任何可观测算符 $A$ 须满足 $[A,P_{12}]=0$；特别地，Hamiltonian 必满足 $[H,P_{12}]=0$，从而 (反)对称子空间是动力学的不变子空间.
+\end{definition}
+
+\begin{remark}[自旋--统计定理]
+  $\text{玻色子}\leftrightarrow\text{整数自旋}$, $\text{费米子}\leftrightarrow\text{半整数自旋}$ 这一对应在非相对论 QM 中是公设，在相对论量子场论中可由微观因果性 + Poincaré 不变性 + 正定能量谱共同导出 (Pauli 1940). 本章把它作为已知公设直接使用.
+\end{remark}
+
+%======================================================================
+\section{(反)对称化对 \texorpdfstring{$\Smat$}{S} 算符的作用}\label{sec:id-Smat}
+
+设两粒子 Hamiltonian $H=H_0+V$ 满足
+\begin{itemize}
+  \item $[H_0,P_{12}]=0$ (动能项天然对称, 自由 Hamiltonian 不区分粒子标号)；
+  \item $[V,P_{12}]=0$ (势 $V$ 不依赖于人为标号，例如 $V=V(|\bm x_1-\bm x_2|)$).
+\end{itemize}
+所以 $[H,P_{12}]=0$. 此条件下，Møller 算符 $\Omega_\pm$ 与 $\Smat$ 算符都与 $P_{12}$ 对易：
+\begin{equation}
+  [\Omega_\pm,P_{12}]=0,\qquad [\Smat,P_{12}]=0.
+  \label{eq:id-S-commute}
+\end{equation}
+证明在第~\ref{sec:id-proofs}~节给出 (Wigner 定理 + 对称性变换的标准论证). 由 \eqref{eq:id-S-commute}，
+\begin{equation}
+  [\Smat,\Pi_\pm]=0,\qquad
+  \Smat\,\Hilb_\pm\subset\Hilb_\pm.
+  \label{eq:id-S-invariant}
+\end{equation}
+$\Smat$ 在对称子空间和反对称子空间分别独立作用，于是\emph{玻色子之间的散射}与\emph{费米子之间的散射}是两个完全独立的过程，可以分别讨论.
+
+\subsection{对称化 S 矩阵元}\label{sec:id-sym-S}
+
+考虑无自旋全同玻色子 (对称化)，从初态 $\ket{\bm p_1,\bm p_2}$ 散射到 $\ket{\bm p_1',\bm p_2'}$. 单个直积态\emph{并不是}物理态——必须对称化:
+\begin{equation}
+  \ket{\bm p_1,\bm p_2}_\pm\equiv\sqrt{2}\,\Pi_\pm\ket{\bm p_1,\bm p_2}
+  =\frac{1}{\sqrt 2}\bigl(\ket{\bm p_1,\bm p_2}\pm\ket{\bm p_2,\bm p_1}\bigr),
+  \label{eq:id-bose-state}
+\end{equation}
+归一化为 $\inn{\bm p_1',\bm p_2'}{\bm p_1,\bm p_2}_\pm=\delta^{(3)}(\bm p_1'-\bm p_1)\delta^{(3)}(\bm p_2'-\bm p_2)\pm\delta^{(3)}(\bm p_1'-\bm p_2)\delta^{(3)}(\bm p_2'-\bm p_1)$. 物理 $\Smat$ 矩阵元：
+\begin{equation}
+  \matel{\bm p_1',\bm p_2'}{\Smat}{\bm p_1,\bm p_2}_\pm^{\,\pm}
+  =\frac{1}{2}\Bigl[\matel{\bm p_1',\bm p_2'}{\Smat}{\bm p_1,\bm p_2}\pm\matel{\bm p_2',\bm p_1'}{\Smat}{\bm p_1,\bm p_2}\Bigr]\cdot 2,
+  \label{eq:id-S-symmetrized}
+\end{equation}
+其中乘 $2$ 来源于左右 $\Pi_\pm$ 均做用即 $\Pi_\pm^2=\Pi_\pm$ 配合 \eqref{eq:id-S-commute} 的化简（详见 \ref{sec:id-proofs}）. 等价地，可以写成对未对称化矩阵元的简单求和：
+\begin{equation}
+  \boxed{\;_\pm\matel{\bm p_1',\bm p_2'}{\Smat}{\bm p_1,\bm p_2}_\pm
+  =\matel{\bm p_1',\bm p_2'}{\Smat}{\bm p_1,\bm p_2}\pm\matel{\bm p_2',\bm p_1'}{\Smat}{\bm p_1,\bm p_2}.\;}
+  \label{eq:id-S-pm-formula}
+\end{equation}
+这就是\emph{交换图}: 物理振幅是直接散射振幅 (粒子 $1\to 1$, $2\to 2$) 加上交换散射振幅 (粒子 $1\to 2$, $2\to 1$) 的 (反)对称组合.
+
+%======================================================================
+\section{无自旋全同粒子: 散射振幅与微分截面}\label{sec:id-spinless}
+
+\subsection{CM 系中的散射振幅(反)对称化}\label{sec:id-fpm}
+
+在 CM 系做相对运动分析 (见第~\ref{ch:scat2p}~章). 设入射相对动量沿 $+\hat z$ 方向、大小为 $p$，散射方向 $(\theta,\phi)$ 上探测到一个粒子. CM 系中 \emph{交换粒子标号}相当于 \emph{把相对动量翻号} $\bm p\to-\bm p$，即角度 $(\theta,\phi)\to(\pi-\theta,\phi+\pi)$. 故 \eqref{eq:id-S-pm-formula} 在散射振幅层面变成
+\begin{equation}
+  \boxed{\;f_\pm(\theta)=f(\theta)\pm f(\pi-\theta),\;}
+  \label{eq:id-fpm}
+\end{equation}
+（"+"对应玻色，"−"对应费米；这里假设势是中心势，振幅与 $\phi$ 无关.）
+
+\subsection{微分截面: 干涉项}\label{sec:id-dsigma}
+
+CM 系微分截面（探测器对粒子标号不敏感，因为粒子全同）：
+\begin{equation}
+  \frac{\rmd\sigma_\pm}{\rmd\Omega}(\theta)
+  =\bigl|f(\theta)\pm f(\pi-\theta)\bigr|^2.
+  \label{eq:id-dsigma-pm}
+\end{equation}
+展开:
+\begin{equation}
+  \boxed{\;\frac{\rmd\sigma_\pm}{\rmd\Omega}(\theta)
+  =\bigl|f(\theta)\bigr|^2+\bigl|f(\pi-\theta)\bigr|^2\pm 2\Re\bigl[f^*(\theta)f(\pi-\theta)\bigr].\;}
+  \label{eq:id-dsigma-pm-expanded}
+\end{equation}
+
+\paragraph{与可区分粒子的对比.}\quad 同样能量 $E$、同样势 $V$，把两个粒子视作可区分时探测器若不分辨"哪个粒子被打到"，截面是
+\begin{equation}
+  \frac{\rmd\sigma_{\rm dist}}{\rmd\Omega}(\theta)
+  =\bigl|f(\theta)\bigr|^2+\bigl|f(\pi-\theta)\bigr|^2.
+  \label{eq:id-dist}
+\end{equation}
+全同情形比可区分情形多了一个干涉项 $\pm 2\Re[f^*(\theta)f(\pi-\theta)]$. 这是\textbf{量子干涉的纯统计来源}——并非来自势的"新作用力"，而完全来自不可分辨性. 这是 Mott 散射相比经典 Rutherford 散射的根本不同.
+
+\paragraph{$\theta=\pi/2$ 处的特征值.}\quad 在 $\theta=\pi/2$, $\sin\theta=1$ 时，$\theta$ 和 $\pi-\theta$ 同点，得
+\begin{equation}
+  \frac{\rmd\sigma_\pm}{\rmd\Omega}(\pi/2)=
+  \begin{cases}
+    4|f(\pi/2)|^2 & (\text{玻色 +}),\\
+    0 & (\text{费米 -}).
+  \end{cases}
+  \label{eq:id-90deg}
+\end{equation}
+即\emph{两个无自旋全同费米子在 CM $90^\circ$ 处微分截面恒为零}——经典图像下完全不可理解的结果. 反过来，\emph{两个无自旋全同玻色子在 $90^\circ$ 处恰好是可区分情形截面的两倍} (干涉增强).
+
+%======================================================================
+\section{Mott 散射: Coulomb 全同粒子}\label{sec:id-mott}
+
+\subsection{Coulomb 振幅的(反)对称化}\label{sec:id-mottf}
+
+回顾第~\ref{ch:coulomb}~章 Rutherford 振幅 (CM 系，两粒子相对动量 $p=\mu v$、电荷 $Z_1e,Z_2e$、Sommerfeld 参数 $\eta=Z_1Z_2 e^2\mu/p$):
+\begin{equation}
+  f_C(\theta)
+  =-\frac{\eta}{2p\sin^2(\theta/2)}\,
+   \exp\!\Bigl[-\rmi\eta\ln\sin^2(\theta/2)+2\rmi\sigma_0\Bigr],
+  \label{eq:id-fC}
+\end{equation}
+($\sigma_0=\arg\Gamma(1+\rmi\eta)$ 为 Coulomb 相移). 对全同的电荷 $Z_1=Z_2=Z$ (例如 $p$--$p$ 或 $e^-$--$e^-$):
+\begin{equation}
+  f_C(\pi-\theta)
+  =-\frac{\eta}{2p\cos^2(\theta/2)}\,
+   \exp\!\Bigl[-\rmi\eta\ln\cos^2(\theta/2)+2\rmi\sigma_0\Bigr].
+  \label{eq:id-fC-pi}
+\end{equation}
+
+\subsection{Mott 公式 (无自旋玻色)}\label{sec:id-mott-bose}
+
+代入 \eqref{eq:id-dsigma-pm-expanded}，三项有共同因子 $\eta^2/(4p^2)$，化简得 \textbf{Mott 公式} (玻色版):
+\begin{equation}
+  \boxed{\;
+    \frac{\rmd\sigma_+^{\,\rm Mott,B}}{\rmd\Omega}
+    =\frac{\eta^2}{4p^2}\Biggl[\frac{1}{\sin^4(\theta/2)}+\frac{1}{\cos^4(\theta/2)}
+      +\frac{2\cos[\eta\ln\tan^2(\theta/2)]}{\sin^2(\theta/2)\cos^2(\theta/2)}\Biggr].
+  \;}
+  \label{eq:id-mott-bose}
+\end{equation}
+费米版 (无自旋费米——抽象，物理上无对应) 把最后一项符号反向. 第三项是\emph{Mott 干涉项}，振幅 (相位) 由 $\eta\ln\tan^2(\theta/2)$ 给出：能量越低 ($\eta$ 越大)，干涉条纹越细密；能量很高 ($\eta\to 0$) 时干涉项变常数 $+2$，相干增强不依赖于能量.
+
+\paragraph{$\theta=\pi/2$ 处 (Mott 玻色).}\quad $\sin^2(\theta/2)=\cos^2(\theta/2)=1/2$, $\ln\tan^2(\theta/2)=\ln 1=0$, 三项分别给 $4+4+8=16$，乘 $\eta^2/(4p^2)$ 得
+\begin{equation}
+  \frac{\rmd\sigma_+^{\,\rm Mott,B}}{\rmd\Omega}\bigg|_{\theta=\pi/2}
+  =\frac{4\eta^2}{p^2}=4\times\frac{\eta^2}{p^2}=2\times\frac{2\eta^2}{p^2},
+\end{equation}
+即可区分情形 $|f_C(\pi/2)|^2+|f_C(\pi/2)|^2=2|f_C(\pi/2)|^2=2\eta^2/p^2$ 的两倍.
+
+%======================================================================
+\section{自旋全同粒子: 自旋空间的(反)对称化}\label{sec:id-spin}
+
+\subsection{置换在自旋空间上的作用}\label{sec:id-perm-spin}
+
+带自旋时 $P_{12}=P_{12}^{\rm orb}\otimes P_{12}^{\rm spin}$，分别置换轨道与自旋分量. 自旋空间置换算符的本征空间用总自旋 $\bm S=\bm S_1+\bm S_2$ 的本征基描述. 对自旋 $1/2$--$1/2$：
+\begin{itemize}
+  \item 单态 (singlet) $\ket{S=0,M_S=0}=(\ket{\!\uparrow\downarrow}-\ket{\!\downarrow\uparrow})/\sqrt 2$\,: $P_{12}^{\rm spin}=-1$ (反对称).
+  \item 三态 (triplet) $\ket{S=1,M_S\in\{-1,0,+1\}}$\,: $P_{12}^{\rm spin}=+1$ (对称).
+\end{itemize}
+一般地，对两个全同自旋 $s$ 的粒子，置换在合成自旋 $S$ 上作用为 $(-1)^{2s-S}$ (Clebsch--Gordan 性质).
+
+\subsection{费米子总(反)对称化}\label{sec:id-fermi-decomp}
+
+物理态需要满足 $P_{12}\psi=(-1)^{2s}\psi$. 对 $s=1/2$ 费米子：$P_{12}\psi=-\psi$，即\emph{轨道 $\times$ 自旋}总反对称. 把波函数按总自旋分块:
+\begin{align}
+  \psi_{\rm singlet}&=\psi^{\rm orb}_{\rm sym}\otimes\chi_{\rm singlet},\quad &P_{12}^{\rm orb}=+1,\ P_{12}^{\rm spin}=-1\nonumber\\
+  \psi_{\rm triplet}&=\psi^{\rm orb}_{\rm antisym}\otimes\chi_{\rm triplet},\quad &P_{12}^{\rm orb}=-1,\ P_{12}^{\rm spin}=+1.
+  \label{eq:id-singtrip-decomp}
+\end{align}
+即 \emph{单态散射用对称的轨道振幅 (玻色形式)，三态散射用反对称的轨道振幅 (费米形式)}.
+
+\subsection{自旋--平均微分截面}\label{sec:id-unpol-dsigma}
+
+设初态非极化，自旋投影态 $\ket{S,M_S}$ 各为 $1/4$ 等概率 ($s=1/2$ 时 $4$ 个态). 假设 $V$ 不含自旋项，散射振幅在自旋空间分块对角 $f^{S=0}(\theta)\equiv f(\theta)$ 与 $f^{S=1}(\theta)\equiv f(\theta)$ (本来同一个 $f$). 自旋分量被对称/反对称化:
+\begin{align}
+  f_{S=0}(\theta)&=f(\theta)+f(\pi-\theta)\quad &\text{(orb sym)},\\
+  f_{S=1}(\theta)&=f(\theta)-f(\pi-\theta)\quad &\text{(orb antisym)}.
+\end{align}
+不极化时按权重 $w_0=1/4$, $w_1=3/4$ 平均:
+\begin{align}
+  \frac{\rmd\sigma_{\rm unpol}}{\rmd\Omega}
+  &=\frac{1}{4}|f_{S=0}|^2+\frac{3}{4}|f_{S=1}|^2\nonumber\\
+  &=|f(\theta)|^2+|f(\pi-\theta)|^2
+   -\Re[f^*(\theta)f(\pi-\theta)].
+  \label{eq:id-unpol-master}
+\end{align}
+注意干涉项的系数变成 $-1$（不是无自旋玻色情形的 $+2$ 也不是无自旋费米情形的 $-2$），且\emph{与可区分情形 \eqref{eq:id-dist} 比较}多了一项 $-\Re[f^*(\theta)f(\pi-\theta)]$.
+
+\paragraph{Mott 公式 (无极化 $s=1/2$ 全同费米).}\quad 代入 Coulomb 振幅:
+\begin{equation}
+  \boxed{\;
+    \frac{\rmd\sigma_{\rm unpol}^{\,\rm Mott,F}}{\rmd\Omega}
+    =\frac{\eta^2}{4p^2}\Biggl[\frac{1}{\sin^4(\theta/2)}+\frac{1}{\cos^4(\theta/2)}
+      -\frac{\cos[\eta\ln\tan^2(\theta/2)]}{\sin^2(\theta/2)\cos^2(\theta/2)}\Biggr].
+  \;}
+  \label{eq:id-mott-fermi}
+\end{equation}
+这是测量 $e$--$e$ 与 $p$--$p$ 散射时实际使用的公式 (低能, 非相对论). 注意：
+\begin{itemize}
+  \item 比无自旋玻色 \eqref{eq:id-mott-bose} 的干涉项符号反 + 系数减半，物理来源是 \emph{$1/4$ 单态 + $3/4$ 三态} 的加权.
+  \item $\theta=\pi/2$ 处：三项给 $4+4-4=4$，乘 $\eta^2/(4p^2)$ 得 $\eta^2/p^2$，恰好是可区分情形 $2\eta^2/p^2$ 的\emph{一半}.
+\end{itemize}
+
+%======================================================================
+\section{分波展开中的奇偶限制}\label{sec:id-pw}
+
+\subsection{无自旋情形}\label{sec:id-pw-spinless}
+
+把 \eqref{eq:id-fpm} 用分波展开 (第~\ref{ch:partial}~章) 写出，利用 $P_l(-\cos\theta)=(-1)^l P_l(\cos\theta)$:
+\begin{align}
+  f_\pm(\theta)&=\sum_l(2l+1)\,f_l(p)\,P_l(\cos\theta)\bigl[1\pm(-1)^l\bigr]\nonumber\\
+  &=
+  \begin{cases}
+    2\sum_{l\text{ 偶}}(2l+1)f_l(p)P_l(\cos\theta) & (\text{玻色 +}),\\
+    2\sum_{l\text{ 奇}}(2l+1)f_l(p)P_l(\cos\theta) & (\text{费米 -}).
+  \end{cases}
+  \label{eq:id-fpm-pw}
+\end{align}
+即 \emph{无自旋玻色子只贡献偶分波 $l=0,2,4,\ldots$；无自旋费米子只贡献奇分波 $l=1,3,5,\ldots$}. 总截面也相应分块:
+\begin{equation}
+  \sigma_\pm=\frac{8\pi}{p^2}\sum_{l\,(\text{偶/奇})}(2l+1)\sin^2\delta_l(p).
+  \label{eq:id-sigma-pw}
+\end{equation}
+注意前因子是 $8\pi$ 不是 $4\pi$ —— 因为 \eqref{eq:id-fpm} 已经把"两个粒子都被探测器接收"的 $\theta\leftrightarrow\pi-\theta$ 等价折叠了，截面公式只能积 $0\le\theta\le\pi/2$ 半个区域，但通常约定仍积 $\theta\in[0,\pi]$ 同时除以 $2$，二者抵消重新给出 $8\pi$；或等价地: \eqref{eq:id-fpm-pw} 中每个保留的 $l$ 振幅幅度多了因子 $2$，平方贡献 $4$，乘原本 $4\pi$ 因子等于 $16\pi$，再除以"积分重复因子" $2$，得 $8\pi$. 详见 \ref{sec:id-proofs}.
+
+\subsection{含自旋 $1/2$--$1/2$}\label{sec:id-pw-spin}
+
+总自旋 $S=0$ 对应轨道对称 (偶 $l$)，$S=1$ 对应轨道反对称 (奇 $l$). 故
+\begin{equation}
+  \begin{aligned}
+    \sigma_{S=0}&=\frac{8\pi}{p^2}\sum_{l\text{ 偶}}(2l+1)\sin^2\delta_l^{(S=0)}(p),\\
+    \sigma_{S=1}&=\frac{8\pi}{p^2}\sum_{l\text{ 奇}}(2l+1)\sin^2\delta_l^{(S=1)}(p).
+  \end{aligned}
+\end{equation}
+不极化总截面
+\begin{equation}
+  \sigma_{\rm unpol}=\frac{1}{4}\sigma_{S=0}+\frac{3}{4}\sigma_{S=1}.
+\end{equation}
+注意当 $V$ 包含\emph{自旋相关}项（如 spin--orbit、$\bm S_1\cdot\bm S_2$）时，$\delta_l^{(S=0)}\neq\delta_l^{(S=1)}$，单/三态相移可以\emph{独立测量}.
+
+%======================================================================
+\section{典型例: $\alpha$--$\alpha$, $p$--$p$ 与 $e$--$e$ 低能散射}\label{sec:id-examples-summary}
+
+\paragraph{$\alpha$--$\alpha$ (玻色, $s=0$).}\quad $\alpha$ 粒子是 $^4$He 核, 自旋零, 双玻色子. 仅\emph{偶分波}贡献:
+\begin{equation}
+  f^{\alpha\alpha}(\theta)=2\sum_{l=0,2,4,\ldots}(2l+1)\Bigl[f_l^{\rm Coul}(\theta)+f_l^{\rm nuc}(\theta)\Bigr]P_l(\cos\theta).
+\end{equation}
+低能下 ($E_\alpha\lesssim 10\,{\rm MeV}$) 只有 $l=0$ 贡献; $\theta=\pi/2$ 处微分截面恰好达到可区分 Rutherford 截面的 $4$ 倍 —— Mott (1930) 用这个测量确认了 $\alpha$ 粒子服从玻色统计.
+
+\paragraph{$p$--$p$ (费米, $s=1/2$, 低能).}\quad 低能 ($E_p\lesssim 1\,{\rm MeV}$) 由 Coulomb 主导; 单态 $l=0$ 主导核相互作用部分. 测量到的 $\sigma_{\rm unpol}$ 给出\emph{$pp$ 单态散射长度} $a_{pp}^{(S=0)}\approx -7.8\,{\rm fm}$ (含 Coulomb 修正后的"核+ Coulomb"散射长度). 核物理学中这是 $NN$ 相互作用的重要约束.
+
+\paragraph{$e^-$--$e^-$ (M{\o}ller 散射).}\quad 低能 $e^-e^-$ 散射 (Mott 1930) 实验显示了 \eqref{eq:id-mott-fermi} 而非 Rutherford 公式，给出对电子作为费米子和 spin $1/2$ 的早期实验证据. (相对论修正在高能下重要, 这里只取非相对论极限.)
+
+\paragraph{$n$--$p$.}\quad \emph{不全同}（中子≠质子，可由同位旋区分），不做(反)对称化. 但若引入同位旋 $T$ 把 $n,p$ 视为同一同位旋多重态的两个分量，则可以做\emph{同位旋}的"全同粒子"处理，分 $T=0$ (反对称, 同位旋单态) 与 $T=1$ (对称, 同位旋三态) 分波. 这条思路是核物理 $NN$ 相互作用分析的标准框架.
+
+%======================================================================
+\section{多通道全同 fragments}\label{sec:id-multich}
+
+第~\ref{ch:multichannel}~章的多通道形式允许出射通道是不同的 fragment 组合. 若一个通道的两个 (或多个) fragment 是\emph{全同的}——例如 $a+a\to a+a$ 弹性, 或 $p+d\to p+d$ 中两个核子之外 $p$ 单出, 等等——则对该通道的渐近态需要做(反)对称化, 自洽地伴随\emph{统计因子}的出现:
+\begin{equation}
+  \sigma_{\beta\alpha}\,\text{(全同 final fragments)}=\frac{1}{n!}\bigl|T^{\rm sym}_{\beta\alpha}\bigr|^2\times(\text{运动学因子}),
+  \label{eq:id-multich-stat}
+\end{equation}
+其中 $1/n!$ 是 $n$ 个全同 fragment 的相空间重复计数因子. 在三体散射 (例如 $p+d$ 末态 $p+p+n$) 中, 两个末态质子全同, 必须额外做轨道+自旋反对称化.
+
+%======================================================================
+\section{小结}\label{sec:id-summary}
+
+\begin{itemize}
+  \item 全同粒子要求物理态居于 $\Pi_\pm$ 投影子空间, 玻色子+, 费米子-.
+  \item $[H,P_{12}]=0$ 保证 $\Smat$ 与 $\Pi_\pm$ 对易, 物理 $\Smat$ 矩阵元自然 (反)对称化:
+    $f_\pm(\theta)=f(\theta)\pm f(\pi-\theta)$.
+  \item 微分截面比可区分情形多干涉项 $\pm 2\Re[f^*(\theta)f(\pi-\theta)]$, 这是 \emph{纯统计来源}, Mott 公式 \eqref{eq:id-mott-bose}\eqref{eq:id-mott-fermi} 给出 Coulomb 实例.
+  \item 含自旋时按总自旋分块: $s=1/2$ 全同费米子单态 (轨道对称, 偶 $l$) 与三态 (轨道反对称, 奇 $l$) 独立散射, 非极化按 $1/4:3/4$ 加权.
+  \item 分波展开下: 玻色无自旋只剩偶 $l$, 费米无自旋只剩奇 $l$; 含自旋时按总自旋决定轨道奇偶.
+  \item 多通道全同 fragments 需 $1/n!$ 统计因子.
+\end{itemize}
+
+%======================================================================
+\section{本章定理证明补全}\label{sec:id-proofs}
+
+\subsection{$[\Smat,P_{12}]=0$ 的证明}\label{sec:id-proof-S-comm}
+
+\begin{proof*}[证明]
+$\Omega_\pm=\lim_{t\to\mp\infty}\rme^{\rmi Ht}\rme^{-\rmi H_0 t}$ (强极限). 由
+$[H,P_{12}]=[H_0,P_{12}]=0$, $P_{12}$ 与 $\rme^{\rmi Ht}$, $\rme^{-\rmi H_0 t}$ 都对易. 故
+\begin{equation}
+  P_{12}\Omega_\pm\psi=\lim_{t\to\mp\infty}\rme^{\rmi Ht}\rme^{-\rmi H_0 t}P_{12}\psi=\Omega_\pm P_{12}\psi,
+\end{equation}
+即 $[\Omega_\pm,P_{12}]=0$. 由 $\Smat=\Omega_-^\dagger\Omega_+$ 推出 $[\Smat,P_{12}]=0$.\hfill
+\end{proof*}
+
+\subsection{(反)对称化矩阵元 \eqref{eq:id-S-pm-formula}}\label{sec:id-proof-pmS}
+
+\begin{proof*}[证明]
+$\Pi_\pm$ 自伴投影. 由 $[\Smat,\Pi_\pm]=0$ 与 $\Pi_\pm^2=\Pi_\pm$:
+\begin{align}
+  _\pm\!\matel{f}{\Smat}{i}_\pm
+  &=\matel{f}{2\Pi_\pm\Smat\Pi_\pm}{i}/2 \cdot 2 \nonumber\\
+  &= \matel{f}{\Smat(\mathbb 1\pm P_{12})}{i}\nonumber\\
+  &= \matel{f}{\Smat}{i}\pm \matel{f}{\Smat P_{12}}{i}\nonumber\\
+  &= \matel{f}{\Smat}{i}\pm \matel{P_{12} f}{\Smat}{i},
+\end{align}
+其中 $\sqrt 2\Pi_\pm\ket{i}=\ket{i}_\pm$ 已用作\emph{物理初态}（系数已含进归一化）, 而 $\sqrt 2\Pi_\pm\ket{f}=\ket{f}_\pm$ 也已含归一化. 实际计算时, $\ket{P_{12} f}=\ket{\bm p_2',\bm p_1'}$ 即可. 这给出 \eqref{eq:id-S-pm-formula}.\hfill
+\end{proof*}
+
+\subsection{无自旋分波展开 \eqref{eq:id-fpm-pw}}\label{sec:id-proof-pw}
+
+\begin{proof*}[证明]
+$P_l(\cos(\pi-\theta))=P_l(-\cos\theta)=(-1)^l P_l(\cos\theta)$. 代入分波展开
+$f(\theta)=\sum_l(2l+1)f_l P_l(\cos\theta)$:
+\begin{equation}
+  f(\theta)\pm f(\pi-\theta)=\sum_l(2l+1)f_l\bigl[1\pm(-1)^l\bigr]P_l(\cos\theta).
+\end{equation}
+$[1\pm(-1)^l]$ 在 "+"号 $l$ 偶为 $2$, $l$ 奇为 $0$; "−" 号反之. 立得 \eqref{eq:id-fpm-pw}.\hfill
+\end{proof*}
+
+\subsection{总截面前因子 $8\pi$ vs $4\pi$}\label{sec:id-proof-prefactor}
+
+\begin{proof*}[证明思路]
+未对称化情形 $\sigma=\int_{\theta=0}^{\pi}|f(\theta)|^2 \rmd\Omega$, $\int |P_l|^2 \rmd\Omega=\frac{4\pi}{2l+1}$, 得 $\sigma=\frac{4\pi}{p^2}\sum(2l+1)\sin^2\delta_l$.
+
+全同情形 \eqref{eq:id-fpm-pw} 给 $|f_\pm|^2$, 注意 $f_\pm$ 的每个保留 $l$ 振幅有 $2$ 倍因子, 平方后 $4$ 倍, 但物理上探测器对每对粒子的 $\theta$ 与 $\pi-\theta$\emph{不分辨}, 不应重复计数; 积分区域应取 $\theta\in[0,\pi/2]$, $\int_0^{\pi/2}|P_l|^2\rmd\Omega=\frac{1}{2}\frac{4\pi}{2l+1}=\frac{2\pi}{2l+1}$. 合起来 $\sigma_\pm=4\cdot\frac{2\pi}{2l+1}\cdot\frac{1}{p^2}\sum(2l+1)\sin^2\delta_l\cdot(2l+1)\to\frac{8\pi}{p^2}\sum_{(l\,{\rm sel})}(2l+1)\sin^2\delta_l$.
+
+或者等价地保持 $\theta\in[0,\pi]$ 积但除以 $2$ (因为两个相对置换的 $\theta,\pi-\theta$ 在 $\Pi_\pm$ 下完全等价), 得相同 $8\pi$.\hfill
+\end{proof*}
+
+%======================================================================
+\section{例题}\label{sec:id-examples}
+
+\subsection{例 1: $\alpha$--$\alpha$ 低能 Mott 干涉}\label{sec:id-ex-alpha}
+
+设 $\alpha$ 粒子在 lab 系 $E_\alpha=4\,\rm MeV$ 入射另一静止 $\alpha$. CM 系能量 $E_{\rm cm}=2\,\rm MeV$, 约化质量 $\mu=2\,{\rm amu}$, 相对动量 $p=\sqrt{2\mu E_{\rm cm}}$. Sommerfeld 参数 $\eta=Z^2 e^2\mu/p$, $Z=2$. 数值: $\eta\approx 1.65$.
+
+应用 Mott 玻色公式 \eqref{eq:id-mott-bose}, 与可区分 Rutherford $|f_C(\theta)|^2+|f_C(\pi-\theta)|^2$ 比较：
+
+\begin{itemize}
+  \item $\theta=\pi/2$ 处, $\rmd\sigma_+^{\rm Mott}=4|f_C(\pi/2)|^2=2\,\rmd\sigma_{\rm dist}/\rmd\Omega$.
+  \item 干涉项相位 $\eta\ln\tan^2(\theta/2)$ 在 $\theta\approx 60^\circ$ 处穿过 $\pi$, 给出第一个干涉极小值.
+\end{itemize}
+
+历史: Chadwick 1930 测量 $\alpha$--$\alpha$ 弹性散射, $\theta=\pi/2$ 处给出 Rutherford 的 $4$ 倍 (玻色), 之后 Mott 用全同粒子理论解释了此现象 (从而独立确认 $\alpha$ 是玻色子).
+
+\subsection{例 2: $p$--$p$ 非极化干涉项符号}\label{sec:id-ex-pp}
+
+无极化 $pp$ Mott 公式 \eqref{eq:id-mott-fermi}, $Z=1$. $\theta=\pi/2$ 处 $\rmd\sigma/\rmd\Omega=\eta^2/p^2$, 恰为 Rutherford $2\eta^2/p^2$ 的一半 —— 比无统计减少 (反对称化干涉破坏增强).
+
+\subsection{例 3: 三粒子全同末态的相空间因子}\label{sec:id-ex-3body}
+
+考虑 $\beta$ 衰变型出射 $n\to p+e^-+\bar\nu_e$. $e^-$ 和 $\bar\nu_e$ 不全同, 不做对称化. 但若考虑 $n+p\to d+\gamma\to d+e^++e^-$ 中的 $e^+e^-$ 对生成, 因为 $e^+,e^-$ 区分, 也不做对称化. 而 $\alpha\to e^++e^-+e^++e^-$ (假设的反应) 中 $e^+,e^+$ 全同, $e^-,e^-$ 全同, 总相空间应除以 $2!\cdot 2!=4$.
+
+%======================================================================
+\section{数值实验: $\alpha$--$\alpha$ Mott 干涉条纹}\label{sec:numexp-ch-id}
+
+\subsection*{问题}
+画出 $\alpha$--$\alpha$ Mott 玻色公式 \eqref{eq:id-mott-bose} 与可区分 Rutherford $|f_C(\theta)|^2+|f_C(\pi-\theta)|^2$ 的 $\theta$ 依赖, 比较 $\eta=0.5,\,1.65,\,5$ 三种能量下干涉条纹的密度.
+
+\subsection*{算法}
+1. 取 $\theta\in(0.05,\pi-0.05)$ 网格, 避开前向/后向奇异.\\
+2. 计算 $|f_C(\theta)|^2$, $|f_C(\pi-\theta)|^2$ 与干涉项 $2\Re[f_C^*(\theta)f_C(\pi-\theta)]=2|f_C||f_C^{\pi}|\cos[\eta\ln\tan^2(\theta/2)]$.\\
+3. 用 $\sin^4(\theta/2),\cos^4(\theta/2)$ 的奇异性提取主项后画 $\rmd\sigma/\rmd\Omega\cdot\sin^4(\theta/2)$, 让曲线看上去不会被 $\theta\to 0$ 处的 $1/\theta^4$ 发散主导.
+
+\subsection*{Python 实现}
+\begin{lstlisting}
+import numpy as np
+import matplotlib.pyplot as plt
+
+def mott_bose(theta, eta):
+    s2 = np.sin(theta/2)**2
+    c2 = np.cos(theta/2)**2
+    direct  = 1/s2**2 + 1/c2**2
+    interf  = 2*np.cos(eta*np.log(s2/c2))/(s2*c2)
+    return direct + interf  # 单位: η²/(4p²)
+
+def dist_rutherford(theta, eta):
+    s2 = np.sin(theta/2)**2; c2 = np.cos(theta/2)**2
+    return 1/s2**2 + 1/c2**2
+
+theta = np.linspace(0.05, np.pi-0.05, 800)
+for eta in [0.5, 1.65, 5.0]:
+    plt.figure()
+    plt.plot(np.degrees(theta),
+             mott_bose(theta, eta)*np.sin(theta/2)**4,
+             label=f'Mott boson, eta={eta}')
+    plt.plot(np.degrees(theta),
+             dist_rutherford(theta, eta)*np.sin(theta/2)**4,
+             '--', label=f'Distinguishable, eta={eta}')
+    plt.xlabel(r'$\theta$ (deg)'); plt.ylabel(r'$d\sigma/d\Omega \cdot\sin^4(\theta/2)$ (rel.)')
+    plt.legend(); plt.title(f'alpha-alpha-like, eta={eta}')
+\end{lstlisting}
+
+\subsection*{结果}
+\begin{itemize}
+  \item $\eta=0.5$ (高能极限): 干涉项几乎为常数 $+2/\sin^2 c^2$, 整体曲线在 $\theta=\pi/2$ 附近平坦升高至 Rutherford 的 $2$ 倍.
+  \item $\eta=1.65$ ($\alpha$--$\alpha$ 4 MeV): 在 $\theta\sim 50^\circ$ 与 $\theta\sim 130^\circ$ 处出现明显干涉极大/极小.
+  \item $\eta=5$ (低能强 Coulomb): 干涉条纹密集, 出现多个振荡周期, 反映 $\eta$ 大时 $\ln\tan^2(\theta/2)$ 的相位变化快.
+\end{itemize}
+
+\subsection*{物理讨论}
+\begin{itemize}
+  \item Mott 干涉的振幅\emph{不衰减} (与势的微观细节无关), 完全来自不可分辨性 + Coulomb 相位的能量依赖.
+  \item 实验上, 测量到的条纹间距可以\emph{独立}确定 $\eta$ —— 即独立测量"电荷$\times$质量"组合, 这正是 1930 年代 Chadwick / Mott 用以确证 $\alpha$ 玻色统计的关键.
+  \item 把 \texttt{mott\_bose} 改成 \texttt{mott\_fermi} (干涉项前 $+\to -$ 且系数 $/2$ 加权), 即 \eqref{eq:id-mott-fermi}, 得到 $p$--$p$ 非极化情形, 干涉项符号反转, $\theta=\pi/2$ 处压低到 Rutherford 的 $1/2$.
+\end{itemize}

@@ -1,0 +1,1125 @@
+\chapter{单粒子散射算符 (Scattering Operator: One-Particle)}\label{ch:Smat1P}
+
+本章的目标是为最简单的散射过程——\emph{无自旋单粒子在固定势 $V(\mathbf{x})$
+中的弹性散射 (elastic scattering)}——建立完整的算符化形式：从描述渐近自由
+运动的渐近条件 (asymptotic condition) 出发，引入 \emph{Møller 波算符
+$\Omega_\pm$}，进而把散射过程的全部信息浓缩到一个酉算符——\emph{散射算符
+$\Smat$ (scattering operator, 又名 $S$ 矩阵 / S-matrix)}——之中。
+
+我们采用与幻灯片一致的约定：$\Omega_+$ 由 $t\to-\infty$ 取极限得到，
+作用在\emph{入射渐近态 (in asymptote)} $|\psi_{\text{in}}\rangle$ 上给出
+$t=0$ 时刻的真实态；$\Omega_-$ 由 $t\to+\infty$ 取极限得到，作用在
+\emph{出射渐近态 (out asymptote)} $|\psi_{\text{out}}\rangle$ 上给出同
+一时刻的真实态。于是
+\[
+  \Smat \;=\; \Omega_-^{\dagger}\Omega_+ ,\qquad
+  |\psi_{\text{out}}\rangle \;=\; \Smat\,|\psi_{\text{in}}\rangle .
+\]
+这是后面所有讨论的总线索。
+
+%-----------------------------------------------------------------------
+\section{经典散射的对照图像}
+\label{sec:1P-classical}
+
+考虑一个轻质量粒子 (例如电子) 被一个质量很大、近似不动的靶 (例如原子)
+弹性散射。经典轨道 $\mathbf{x}(t)$ 满足牛顿方程
+\begin{equation}
+  \ddot{\mathbf{x}}(t) \;=\; -\nabla V\bigl(\mathbf{x}(t)\bigr).
+  \label{eq:1P-newton}
+\end{equation}
+
+只要 $V$ 在无穷远处下降足够快，散射轨道在远离靶时趋于自由运动：
+\begin{align}
+  \mathbf{x}(t) \;&\xrightarrow{t\to-\infty}\;
+    \mathbf{x}_{\text{in}}(t) \;=\; \mathbf{a}_{\text{in}} + \mathbf{v}_{\text{in}}\,t ,
+  \label{eq:1P-xin}\\
+  \mathbf{x}(t) \;&\xrightarrow{t\to+\infty}\;
+    \mathbf{x}_{\text{out}}(t) \;=\; \mathbf{a}_{\text{out}} + \mathbf{v}_{\text{out}}\,t ,
+  \label{eq:1P-xout}
+\end{align}
+其中 $\mathbf{x}(t)\xrightarrow{t\to\pm\infty}\mathbf{y}(t)$ 的含义是
+$|\mathbf{x}(t)-\mathbf{y}(t)|\to 0$。直线 $\mathbf{x}_{\text{in}}(t)$、
+$\mathbf{x}_{\text{out}}(t)$ 称为\emph{入射渐近线 / 出射渐近线
+(incoming / outgoing asymptotes)}。
+
+经验事实是：在云室、气泡室等实验装置中，我们\emph{看不到}相互作用区域
+($\sim$ 几个原子直径) 的轨迹细节，能记录的仅仅是入射和出射两条直轨。
+因此散射的描述只需建立 \emph{入射渐近线 $\to$ 出射渐近线} 的对应关系：
+\[
+  (\mathbf{a}_{\text{in}},\mathbf{v}_{\text{in}})
+  \;\xrightarrow{\;V\;}\;
+  (\mathbf{a}_{\text{out}},\mathbf{v}_{\text{out}}),
+\]
+而不必关心中间的具体轨道。
+
+\begin{remark}[束缚态破坏对应关系]
+\label{rmk:1P-bound}
+并非每条轨道都同时具有入射与出射渐近线。系统的全部解可分两类：
+(i) \emph{散射轨道}\,——\,既有入射又有出射渐近线；(ii) \emph{束缚态轨道}
+\,——\,被囚禁在势阱内、不存在渐近线。例如对于足够吸引、奇异性更强的
+势 (如 $V=-1/r^3$)，粒子可能在近距被俘获，使原本有入射渐近线的轨道
+不再有出射渐近线。
+\end{remark}
+
+\begin{remark}[需要排除的势]
+\label{rmk:1P-Vexclude}
+若 $V$ 在 $r\to\infty$ 衰减不够快 (如库仑势 $V=1/r$)，则即使两粒子
+相距任意远，粒子也不会沿直线运动\,——\,经典与量子情形都是如此。库仑势
+需要特殊处理 (见后续章节)。在 \emph{微观尺度} 上，$t\to\pm\infty$ 应理解
+为 $|t|\gtrsim 10^{-10}\,\text{s}$，因为典型散射只持续 $\sim 10^{-10}$ 秒。
+\end{remark}
+
+%-----------------------------------------------------------------------
+\section{量子散射：轨道与渐近态}
+\label{sec:1P-quantum}
+
+把经典图像翻译到量子力学。无自旋单粒子的态空间为
+\[
+  \Hilb \;=\; L^2(\R^3),\qquad \langle \mathbf{x}|\psi\rangle \in L^2(\R^3).
+\]
+含时 Schrödinger 方程
+\begin{equation}
+  \rmi\,\frac{\rmd}{\rmd t}|\psi_t\rangle \;=\; \Hmat\,|\psi_t\rangle,
+  \qquad \Hmat = \Hmat_0 + \Vmat,\qquad \Hmat_0=\frac{\Op{\mathbf{p}}^2}{2m},
+  \label{eq:1P-Schrodinger}
+\end{equation}
+解为
+\begin{equation}
+  |\psi_t\rangle \;=\; U(t)|\psi\rangle, \qquad
+  U(t) = \rme^{-\rmi \Hmat t}, \quad
+  U_0(t) = \rme^{-\rmi \Hmat_0 t}.
+  \label{eq:1P-Ut}
+\end{equation}
+我们沿用经典的术语，把映射 $t\mapsto U(t)|\psi\rangle$ 称为
+\emph{轨道 (orbit)}；初始态 $|\psi\rangle\equiv |\psi_{t=0}\rangle$ 唯一
+决定一条轨道。
+
+\subsection{渐近条件}
+\label{ssec:1P-asympCond}
+
+对一个真实的散射轨道，期望它在很久以前 ($t\to-\infty$) 与某个自由粒子
+波包 $U_0(t)|\psi_{\text{in}}\rangle$ \emph{物理上不可分辨}，在很久之后
+($t\to+\infty$) 与另一自由波包 $U_0(t)|\psi_{\text{out}}\rangle$
+不可分辨。所谓“不可分辨”，由 Hilbert 空间中的强极限刻画：
+\begin{align}
+  U(t)|\psi\rangle \;&\xrightarrow{t\to-\infty}\; U_0(t)|\psi_{\text{in}}\rangle,
+  \qquad
+  \lim_{t\to-\infty}\bigl\| U(t)|\psi\rangle - U_0(t)|\psi_{\text{in}}\rangle \bigr\| = 0,
+  \label{eq:1P-asym-in}\\
+  U(t)|\psi\rangle \;&\xrightarrow{t\to+\infty}\; U_0(t)|\psi_{\text{out}}\rangle.
+  \label{eq:1P-asym-out}
+\end{align}
+向量 $|\psi_{\text{in}}\rangle$、$|\psi_{\text{out}}\rangle$ 分别称为
+\emph{渐近入射态、渐近出射态 (in/out asymptotes)}。
+
+\begin{definition}[渐近条件]
+\label{def:1P-asymCond}
+若对每一个 $|\psi_{\text{in}}\rangle\in\Hilb$ 都存在一个真实态
+$|\psi\rangle\in\Hilb$ 使 \eqref{eq:1P-asym-in} 成立，且对每一个
+$|\psi_{\text{out}}\rangle\in\Hilb$ 都存在 $|\psi\rangle\in\Hilb$ 使
+\eqref{eq:1P-asym-out} 成立，则称该势 $V$ 满足\emph{渐近条件
+(asymptotic condition)}。
+\end{definition}
+
+\begin{remark}[渐近态与束缚态]
+与经典情形并行：束缚态 $|\phi_b\rangle$ ($\Hmat|\phi_b\rangle =
+E_b|\phi_b\rangle$, $E_b<0$) 始终被局域在势阱里，根本不接近任何自由波
+包；它们没有渐近态。我们期望散射态与束缚态加在一起张成整个 $\Hilb$
+(即\emph{渐近完备性}，见 \S\ref{sec:1P-completeness})。
+\end{remark}
+
+\subsection{散射理论的适用条件}
+\label{ssec:1P-conditions}
+
+并不存在一组对所有势都成立的“充分必要”条件。我们仅给出对球对称势
+$V(r)$ 一组方便而充分的条件 (\,Taylor 第 2 章\,)：
+\begin{enumerate}
+  \item[\textbf{(I)}] $V(r)=O(r^{-3-\epsilon}),\;\epsilon>0$ \quad
+        ($r\to\infty$，下降快于 $r^{-3}$；库仑势不满足)。
+  \item[\textbf{(II)}] $V(r)=O(r^{-3/2+\epsilon}),\;\epsilon>0$ \quad
+        ($r\to 0$，奇异性弱于 $r^{-3/2}$)；不满足者称为
+        \emph{奇异 (singular)}。
+  \item[\textbf{(III)}] $V(r)$ 在 $0<r<\infty$ 连续，至多有有限个有限
+        的间断点。
+\end{enumerate}
+适用范围更广 (非球对称、多中心、与自旋耦合、非局域等) 的势一般也能
+纳入，但证明更繁。我们之后假设上述三条已成立。其一个直接推论是
+\begin{equation}
+  \int \rmd^3x\,|V(\mathbf{x})|^2 \;<\;\infty,
+  \label{eq:1P-V-L2}
+\end{equation}
+此条件足以保证下面的渐近极限存在。\,Yukawa 势、方形势、电子-原子势
+等均属此类。
+
+%-----------------------------------------------------------------------
+\section{渐近条件的证明}
+\label{sec:1P-proofAsym}
+
+下面证明：在条件 \eqref{eq:1P-V-L2} 下，对 $\forall |\psi_{\text{in}}
+\rangle\in\Hilb$，存在 $|\psi\rangle\in\Hilb$ 使
+\eqref{eq:1P-asym-in} 成立。出射情形完全类似。
+
+\begin{proof*}
+注意 $U(t)$ 酉，$U(t)^{\dagger}=U(-t)$，于是 \eqref{eq:1P-asym-in} 等价于
+\begin{equation}
+  \lim_{t\to-\infty}\bigl\| |\psi\rangle - U(t)^{\dagger}U_0(t)|\psi_{\text{in}}\rangle \bigr\|
+  \;=\; 0,
+  \label{eq:1P-asym-equiv}
+\end{equation}
+即只需证明 $\lim_{t\to-\infty} U(t)^{\dagger}U_0(t)|\psi_{\text{in}}\rangle$
+存在。计算其时间导数：
+\begin{align}
+  \frac{\rmd}{\rmd t}\,U(t)^{\dagger}U_0(t)
+  \;&=\; \rmi\,\rme^{\rmi \Hmat t}(\Hmat-\Hmat_0)\,\rme^{-\rmi \Hmat_0 t}
+  \;=\; \rmi\,U(t)^{\dagger}\,\Vmat\,U_0(t).
+  \label{eq:1P-derivOmega}
+\end{align}
+积分得
+\begin{equation}
+  U(t)^{\dagger}U_0(t)|\psi_{\text{in}}\rangle
+  \;=\; |\psi_{\text{in}}\rangle
+  \;+\; \rmi\int_0^{t} \rmd\tau\; U(\tau)^{\dagger}\,\Vmat\,U_0(\tau)\,|\psi_{\text{in}}\rangle.
+  \label{eq:1P-Omega-integral}
+\end{equation}
+
+要让 $t\to-\infty$ 时极限存在，由 Cauchy 判据 (\,Hilbert 空间完备\,)
+只需证明上式的积分在该极限下绝对收敛，即
+\begin{equation}
+  \int_{-\infty}^{0} \rmd\tau \; \bigl\| U(\tau)^{\dagger}\Vmat\,U_0(\tau)|\psi_{\text{in}}\rangle\bigr\|
+  \;=\; \int_{-\infty}^{0} \rmd\tau \;\bigl\| \Vmat\,U_0(\tau)|\psi_{\text{in}}\rangle\bigr\|
+  \;<\;\infty,
+  \label{eq:1P-int-cond}
+\end{equation}
+其中我们利用了 $U(\tau)^\dagger$ 的酉性 (保范数)。
+
+\textbf{对高斯波包验证 \eqref{eq:1P-int-cond}：}
+取 $\langle \mathbf{x}|\psi_{\text{in}}\rangle =
+\rme^{-(\mathbf{x}-\mathbf{a})^2/(2\xi^2)}$ (略归一化常数)。直接的自由
+演化给出
+\begin{equation}
+  |\langle \mathbf{x}|U_0(\tau)|\psi_{\text{in}}\rangle|^2
+  \;=\; \Bigl(1 + \frac{\tau^2}{m^2\xi^4}\Bigr)^{-3/2}
+        \exp\!\Bigl[-\,\frac{(\mathbf{x}-\mathbf{a})^2}{\xi^2 + \tau^2/(m^2\xi^2)}\Bigr],
+  \label{eq:1P-gauss-spread}
+\end{equation}
+描写的就是“扩散且漂移”的高斯波包：宽度 $\sim\xi\sqrt{1+\tau^2/(m^2\xi^4)}$，
+在 $|\tau|$ 很大时按 $|\tau|^{-3/2}$ 整体衰减。于是
+\begin{align}
+  \bigl\|\Vmat\,U_0(\tau)|\psi_{\text{in}}\rangle\bigr\|^2
+  &= \int \rmd^3x\;|V(\mathbf{x})|^2\,
+     \Bigl(1+\frac{\tau^2}{m^2\xi^4}\Bigr)^{-3/2}
+     \exp\!\Bigl[-\frac{(\mathbf{x}-\mathbf{a})^2}{\xi^2+\tau^2/(m^2\xi^2)}\Bigr]
+  \nonumber\\
+  &\le \Bigl[\int \rmd^3x\;|V(\mathbf{x})|^2\Bigr]
+       \Bigl(1+\frac{\tau^2}{m^2\xi^4}\Bigr)^{-3/2}.
+  \label{eq:1P-VU0-bound}
+\end{align}
+取平方根并代入 \eqref{eq:1P-int-cond}：
+\begin{equation}
+  \int_{-\infty}^{0}\rmd\tau\,\bigl\|\Vmat U_0(\tau)|\psi_{\text{in}}\rangle\bigr\|
+  \;\le\;\Bigl[\int \rmd^3x\,|V(\mathbf{x})|^2\Bigr]^{1/2}
+        \int_{-\infty}^{0}\rmd\tau\,\Bigl(1+\frac{\tau^2}{m^2\xi^4}\Bigr)^{-3/4}
+  \;<\;\infty,
+  \label{eq:1P-int-finite}
+\end{equation}
+积分在原点附近显然有限，而 $|\tau|\to\infty$ 时被积函数 $\sim
+|\tau|^{-3/2}$ 可积。
+
+\textbf{对一般 $L^2$ 波函数：}\,
+高斯函数的有限线性叠加在 $L^2(\R^3)$ 中稠密，再由三角不等式
+$\|\psi+\chi\|\le\|\psi\|+\|\chi\|$ 推广到一般 $L^2$ 波函数；同样
+$U_0(\tau)|\psi_{\text{in}}\rangle$ 为出射态时也得到相同结论。整个证
+明只用到 $\int \rmd^3x\,|V(\mathbf{x})|^2<\infty$。
+\end{proof*}
+
+\begin{remark}
+此处出现的关键判据是 \emph{对积分 $\int\rmd\tau \|\Vmat U_0(\tau)
+|\psi_{\text{in}}\rangle\|$ 的收敛性}。它意味着相互作用 $\Vmat$ 作用在
+弥散开来的自由波包上的“尾巴”随时间足够快地衰减。这正是 Taylor 教材
+\S 1\hbox{-}f 的 Cauchy 判据精神。
+\end{remark}
+
+%-----------------------------------------------------------------------
+\section{Møller 波算符 $\Omega_\pm$}
+\label{sec:1P-Moller}
+
+把上一节得到的极限正式命名为 \emph{Møller 波算符}。
+
+\begin{definition}[Møller wave operator]
+\label{def:1P-Moller}
+对每一个 $|\psi_{\text{in}}\rangle$、$|\psi_{\text{out}}\rangle\in\Hilb$，
+$t=0$ 时刻的真实态由强极限给出：
+\begin{align}
+  \Omega_+\,|\psi_{\text{in}}\rangle
+    &\;\equiv\;\lim_{t\to-\infty} U(t)^{\dagger} U_0(t)\,|\psi_{\text{in}}\rangle,
+    \label{eq:1P-Omega-plus}\\
+  \Omega_-\,|\psi_{\text{out}}\rangle
+    &\;\equiv\;\lim_{t\to+\infty} U(t)^{\dagger} U_0(t)\,|\psi_{\text{out}}\rangle,
+    \label{eq:1P-Omega-minus}
+\end{align}
+统一记
+\begin{equation}
+  \Omega_\pm \;=\;\lim_{t\to\mp\infty} U(t)^{\dagger} U_0(t).
+  \label{eq:1P-Omega-def}
+\end{equation}
+\end{definition}
+
+\begin{remark}[符号约定]
+$\Omega_+$ 用 $t\to -\infty$ 极限定义、对应入射渐近态；$\Omega_-$ 用
+$t\to +\infty$ 极限、对应出射渐近态。Taylor 书也是这一约定。
+\end{remark}
+
+\subsection{$\Omega_\pm$ 的等距性}
+\label{ssec:1P-isometry}
+
+\begin{theorem}[Isometry]
+\label{thm:1P-isometry}
+$\Omega_\pm$ 是等距算符 (isometric)：
+\begin{equation}
+  \Omega_\pm^{\dagger}\,\Omega_\pm \;=\; \mathbb{1}.
+  \label{eq:1P-isom}
+\end{equation}
+\end{theorem}
+
+\begin{proof*}
+对任意 $|\psi_{\text{in}}\rangle$，由 $U(t)$、$U_0(t)$ 酉，$\|U(t)^{\dagger}U_0(t)
+|\psi_{\text{in}}\rangle\|=\|\psi_{\text{in}}\|$。强收敛保持范数，故
+$\|\Omega_+|\psi_{\text{in}}\rangle\|=\|\psi_{\text{in}}\|$。由极化恒等式
+$\inn{\phi}{\psi}$ 在 $\Omega_+$ 下不变，因此 $\Omega_+^{\dagger}\Omega_+
+=\mathbb{1}$；$\Omega_-$ 同理。
+\end{proof*}
+
+\textbf{然而 $\Omega_\pm$ 一般不是酉的}：$\Omega_\pm \Omega_\pm^{\dagger}
+\neq \mathbb{1}$，原因是 $\Omega_\pm$ 的值域 $\mathcal{R}_\pm
+=\Omega_\pm \Hilb$ 通常是 $\Hilb$ 的真子空间 (即\emph{散射态空间})，
+不能覆盖束缚态部分；详见 \S\ref{sec:1P-RangeBound}。
+
+\subsection{交织 (intertwining) 关系}
+\label{ssec:1P-intertwine}
+
+\begin{theorem}[Intertwining relations]
+\label{thm:1P-intertwine}
+$\Omega_\pm$ 把自由演化“缠绕”进相互作用演化：对任何 $\tau\in\R$，
+\begin{equation}
+  U(\tau)\,\Omega_\pm \;=\; \Omega_\pm\,U_0(\tau),
+  \label{eq:1P-intertwine-U}
+\end{equation}
+等价地 (在 $\Omega_\pm$ 的定义域上)
+\begin{equation}
+  \Hmat\,\Omega_\pm \;=\; \Omega_\pm\,\Hmat_0 .
+  \label{eq:1P-intertwine-H}
+\end{equation}
+\end{theorem}
+
+\begin{proof*}
+由定义 \eqref{eq:1P-Omega-def}，
+\begin{align*}
+  U(\tau)\,\Omega_+\,|\psi_{\text{in}}\rangle
+  &=U(\tau)\lim_{t\to-\infty}U(t)^\dagger U_0(t)\,|\psi_{\text{in}}\rangle\\
+  &=\lim_{t\to-\infty}U(t-\tau)^{\dagger}U_0(t-\tau)\;U_0(\tau)\,|\psi_{\text{in}}\rangle\\
+  &=\Omega_+\,U_0(\tau)\,|\psi_{\text{in}}\rangle,
+\end{align*}
+其中第二行用了 $U(\tau)U(t)^{\dagger}=U(t-\tau)^{\dagger}$ 和
+$U_0(t)=U_0(t-\tau)U_0(\tau)$；最后一行换变量
+$t'=t-\tau\to-\infty$。对 $\Omega_-$ 相同。对 \eqref{eq:1P-intertwine-U}
+两边对 $\tau$ 求导取 $\tau=0$ 即得 \eqref{eq:1P-intertwine-H}。
+\end{proof*}
+
+\begin{corollary}[能量守恒/在壳条件的雏形]
+\label{cor:1P-energy}
+若 $\Hmat_0|\psi_{\text{in}}\rangle=E|\psi_{\text{in}}\rangle$ (即
+$|\psi_{\text{in}}\rangle$ 是动量本征/能量本征的“理想态”)，则
+$\Hmat\bigl(\Omega_+|\psi_{\text{in}}\rangle\bigr)
+=E\bigl(\Omega_+|\psi_{\text{in}}\rangle\bigr)$，能量在 Møller 映射
+下保留。这一性质后面将转化为 $\Smat$ 矩阵元的能量守恒
+($S$ 算符与 $\Hmat_0$ 对易)。
+\end{corollary}
+
+%-----------------------------------------------------------------------
+\section{实验图像与 $|\phi+\rangle, |\chi-\rangle$ 记号}
+\label{sec:1P-experiment}
+
+实验上，加速器中制备的入射波包就是某个 $|\phi\rangle\in\Hilb$，把它
+当作渐近入射态 $|\psi_{\text{in}}\rangle = |\phi\rangle$；探测器在远端
+测得的是某个 $|\chi\rangle\in\Hilb$，把它当作渐近出射态
+$|\psi_{\text{out}}\rangle=|\chi\rangle$。引入便于书写的记号：
+\begin{align}
+  |\phi+\rangle &\;\equiv\; \Omega_+\,|\phi\rangle, \qquad
+  \forall |\phi\rangle\in\Hilb,
+  \label{eq:1P-phi-plus}\\
+  |\chi-\rangle &\;\equiv\; \Omega_-\,|\chi\rangle, \qquad
+  \forall |\chi\rangle\in\Hilb.
+  \label{eq:1P-chi-minus}
+\end{align}
+$|\phi+\rangle$ 表示“$t=0$ 时刻、由 $t\to-\infty$ 来的入射渐近态
+$|\phi\rangle$ 演化而来”的真实态；$|\chi-\rangle$ 表示“$t=0$ 时
+刻、将于 $t\to+\infty$ 演化为出射渐近态 $|\chi\rangle$”的真实态。
+两套记号汇成
+\[
+  \boxed{\;
+   \begin{array}{ccccc}
+     \text{in asymptote} & \xrightarrow{\Omega_+} &
+     \text{actual state at }t=0 & \xleftarrow{\Omega_-} &
+     \text{out asymptote}\\[1mm]
+     |\psi_{\text{in}}\rangle & \longrightarrow & |\psi\rangle &
+     \longleftarrow & |\psi_{\text{out}}\rangle\\[1mm]
+     |\phi\rangle & \longrightarrow & |\phi+\rangle &  &  \\[1mm]
+        &  & |\chi-\rangle & \longleftarrow & |\chi\rangle
+   \end{array}\;}
+\]
+
+%-----------------------------------------------------------------------
+\section{$\Omega_\pm$ 的值域：散射态空间 $\mathcal{R}_\pm$ 与束缚态空间 $\mathscr{B}$}
+\label{sec:1P-RangeBound}
+
+\begin{definition}[散射态、束缚态空间]
+\label{def:1P-RB}
+\begin{align*}
+  \mathcal{R}_\pm &\;\equiv\; \Ran(\Omega_\pm) \;=\; \Omega_\pm\Hilb
+  &&\text{(散射态空间)},\\
+  \mathscr{B} &\;\equiv\; \mathrm{span}\{\,|\phi_b\rangle:\,
+       \Hmat|\phi_b\rangle = E_b|\phi_b\rangle,\,E_b<0\,\}
+  &&\text{(束缚态空间)}.
+\end{align*}
+\end{definition}
+
+\begin{theorem}[正交性 $\mathcal{R}_\pm \perp \mathscr{B}$]
+\label{thm:1P-orth}
+满足前述三条适用条件的势，散射态空间与束缚态空间正交：
+$\mathcal{R}_+\perp\mathscr{B}$ 且 $\mathcal{R}_-\perp\mathscr{B}$。
+\end{theorem}
+
+\begin{proof*}
+取 $|\psi\rangle\in\mathcal{R}_+$，于是 $|\psi\rangle=\Omega_+
+|\psi_{\text{in}}\rangle$。再取束缚态 $|\phi\rangle\in\mathscr{B}$，
+$\Hmat|\phi\rangle=E|\phi\rangle$ ($E<0$)，则对任意 $t$
+\begin{align*}
+  \inn{\phi}{\psi}
+  &=\matel{\phi}{U(t)^{\dagger}U(t)}{\psi}\\
+  &= \rme^{\rmi E t}\,\matel{\phi}{U(t)}{\psi}\\
+  &= \lim_{t\to-\infty}\rme^{\rmi E t}\,\matel{\phi}{U(t)}{\psi}\\
+  &= \lim_{t\to-\infty}\rme^{\rmi E t}\,\matel{\phi}{U_0(t)}{\psi_{\text{in}}}\\
+  &= 0.
+\end{align*}
+关键一步是：$U(t)|\phi\rangle$ 始终是局域在势阱的束缚波包，模长不衰
+减；而 $U_0(t)|\psi_{\text{in}}\rangle$ 是自由波包，它会无限弥散开
+来——它在任一固定 $|\phi\rangle$ 上的投影 (内积) 趋于 $0$
+(\,Taylor 引理 1\hbox{-}f, eq.\,1.15\,)。$\Omega_-$ 同理。
+\end{proof*}
+
+\begin{remark}
+正是因为 $\mathcal{R}_\pm\subseteq \mathscr{B}^{\perp}$ 一般是真子集，
+$\Omega_\pm$ 才不可能是酉的：$\Omega_\pm \Omega_\pm^{\dagger}$ 是到
+$\mathcal{R}_\pm$ 的投影算符，而 $\Omega_\pm^{\dagger}\Omega_\pm =
+\mathbb{1}$。
+\end{remark}
+
+%-----------------------------------------------------------------------
+\section{渐近完备性 (Asymptotic completeness)}
+\label{sec:1P-completeness}
+
+\begin{definition}[Asymptotic completeness]
+\label{def:1P-AC}
+若
+\begin{equation}
+  \mathcal{R}_+ \;=\; \mathcal{R}_- \;\equiv\; \mathcal{R},\qquad
+  \mathcal{R} \oplus \mathscr{B} \;=\; \Hilb,
+  \label{eq:1P-AC}
+\end{equation}
+则称该散射理论 \emph{渐近完备 (asymptotically complete)}。
+\end{definition}
+
+物理含义：所有“具有入射渐近态的状态”、所有“具有出射渐近态的状
+态”、和“与束缚态正交的状态”三者重合。换言之，散射态与束缚态联
+合穷尽了 $\Hilb$。
+
+\begin{remark}
+对一般势严格证明渐近完备性是相当困难的 (Hörmander、Faddeev、Enss 等
+方法)。本讲义不展开证明，仅声明：满足
+\S\ref{ssec:1P-conditions} 三条适用性条件的势，其散射理论是渐近完备
+的。后续在固定能量平稳散射 (stationary scattering) 框架下我们会再以
+另一种方式重新得到该结论。
+\end{remark}
+
+\subsection{整体图像}
+\label{ssec:1P-bigPicture}
+
+把 \S\ref{sec:1P-Moller}--\S\ref{sec:1P-completeness} 的结果汇总：
+
+\begin{itemize}
+\item Hilbert 空间分解 $\Hilb = \mathcal{R}\oplus\mathscr{B}$。
+\item $\forall |\psi\rangle\in\mathcal{R}$，唯一确定一对渐近态
+  $|\psi_{\text{in}}\rangle$、$|\psi_{\text{out}}\rangle$，分别由
+\begin{equation}
+  |\psi\rangle \;=\; \Omega_+\,|\psi_{\text{in}}\rangle
+              \;=\; \Omega_-\,|\psi_{\text{out}}\rangle.
+  \label{eq:1P-psi-asym}
+\end{equation}
+\item 反过来，$\forall |\psi_{\text{in}}\rangle$ 或
+  $|\psi_{\text{out}}\rangle\in\Hilb$，由 \eqref{eq:1P-Omega-def} 唯一
+  决定 $\mathcal{R}$ 中的真实态。
+\item $\Omega_\pm$ 是 isometric，但只有当 $\mathscr{B}=\{0\}$
+  (无束缚态) 时才是酉算符。
+\item 束缚态 $|\phi_b\rangle\in\mathscr{B}$ 也唯一对应一个自由“入射
+  渐近态”——但意义不同：$U_0(t)|\phi_b\rangle$ 会弥散，但
+  $U(t)|\phi_b\rangle$ 始终局域，二者长时间后差距越来越大，故
+  $|\phi_b\rangle$ 不属于 $\mathcal{R}$。
+\end{itemize}
+
+示意图：
+\[
+  \begin{array}{c}
+  \Hilb \xrightarrow{\;\Omega_+\;} \Hilb=\mathscr{B}\oplus\mathcal{R},
+  \quad
+  \Omega_-^{\dagger}:\mathcal{R}\to\Hilb\\[2mm]
+  \Omega_\pm^{\dagger}\Omega_\pm = \mathbb{1},\qquad
+  \Omega_\pm\Omega_\pm^{\dagger}\bigr|_{\mathcal{R}}=\mathbb{1}_{\mathcal{R}},\qquad
+  \Omega_\pm\Omega_\pm^{\dagger}\bigr|_{\mathscr{B}}=0.
+  \end{array}
+\]
+
+%-----------------------------------------------------------------------
+\section{散射算符 $\Smat$}
+\label{sec:1P-Smat}
+
+实验问题被表述为：给定入射渐近态 $|\psi_{\text{in}}\rangle$，求出射
+渐近态 $|\psi_{\text{out}}\rangle$。从中间真实态 $|\psi\rangle$ 入手：
+\[
+  |\psi\rangle = \Omega_+\,|\psi_{\text{in}}\rangle
+              = \Omega_-\,|\psi_{\text{out}}\rangle
+  \;\Longrightarrow\;
+  |\psi_{\text{out}}\rangle = \Omega_-^{\dagger}\Omega_+\,|\psi_{\text{in}}\rangle.
+\]
+这里用了 $\Omega_-^{\dagger}\Omega_-=\mathbb{1}$，把它从左边乘到第二
+个等式。
+
+\begin{definition}[Scattering operator]
+\label{def:1P-S}
+\begin{equation}
+  \Smat \;\equiv\; \Omega_-^{\dagger}\,\Omega_+,\qquad
+  |\psi_{\text{out}}\rangle \;=\; \Smat\,|\psi_{\text{in}}\rangle.
+  \label{eq:1P-S-def}
+\end{equation}
+\end{definition}
+
+物理意义：$\Smat$ 把任一入射渐近态直接映成对应的出射渐近态，跳过
+中间过程。\emph{所有散射的实验信息都浓缩在 $\Smat$ 之中。}
+
+\subsection{跃迁概率}
+
+加速器制备 $|\psi_{\text{in}}\rangle=|\phi\rangle$ ($t=0$ 时
+$|\phi+\rangle=\Omega_+|\phi\rangle$)，探测器希望测到出射渐近态
+$|\psi_{\text{out}}\rangle=|\chi\rangle$ ($t=0$ 时
+$|\chi-\rangle=\Omega_-|\chi\rangle$)，则跃迁概率
+\begin{equation}
+  w(\chi\leftarrow\phi) \;=\;
+   \bigl|\inn{\chi-}{\phi+}\bigr|^2
+   \;=\; \bigl|\matel{\chi}{\Omega_-^{\dagger}\Omega_+}{\phi}\bigr|^2
+   \;=\; \bigl|\matel{\chi}{\Smat}{\phi}\bigr|^2 .
+  \label{eq:1P-prob}
+\end{equation}
+内积 $\matel{\chi}{\Smat}{\phi}$ 称为 \emph{$S$ 矩阵元 ($S$-matrix element)}。
+后续章节我们会把 \eqref{eq:1P-prob} 转化为可观测的微分散射截面
+${\rmd\sigma}/{\rmd\Omega}$。
+
+\subsection{$\Smat$ 的酉性}
+\label{ssec:1P-unitarity}
+
+\begin{theorem}[Unitarity]
+\label{thm:1P-unitarity}
+若散射理论渐近完备 ($\mathcal{R}_+=\mathcal{R}_-=\mathcal{R}$)，则
+$\Smat$ 是酉算符：
+\begin{equation}
+  \Smat^{\dagger}\Smat \;=\; \Smat\,\Smat^{\dagger} \;=\; \mathbb{1}.
+  \label{eq:1P-unitary}
+\end{equation}
+\end{theorem}
+
+\begin{proof*}
+由 $\Omega_\pm^{\dagger}\Omega_\pm=\mathbb{1}$，
+\begin{align*}
+  \Smat^{\dagger}\Smat
+  &= \Omega_+^{\dagger}\Omega_-\,\Omega_-^{\dagger}\Omega_+
+  = \Omega_+^{\dagger}\,P_{\mathcal{R}_-}\,\Omega_+
+  = \Omega_+^{\dagger}\,P_{\mathcal{R}}\,\Omega_+,
+\end{align*}
+其中 $P_{\mathcal{R}_-}=\Omega_-\Omega_-^{\dagger}$ 是到 $\mathcal{R}_-$
+的投影。由渐近完备 $\mathcal{R}_+ \subseteq\mathcal{R}_-=\mathcal{R}$，
+故 $P_{\mathcal{R}}\Omega_+ = \Omega_+$，因此
+$\Smat^{\dagger}\Smat = \Omega_+^{\dagger}\Omega_+=\mathbb{1}$。同理
+$\Smat\Smat^{\dagger}=\mathbb{1}$。
+\end{proof*}
+
+\textbf{物理意义——概率守恒：}
+\begin{equation}
+  \inn{\psi_{\text{in}}}{\psi_{\text{in}}} \;=\; 1
+  \;\Longrightarrow\;
+  \inn{\psi_{\text{out}}}{\psi_{\text{out}}}
+  \;=\; \matel{\psi_{\text{in}}}{\Smat^{\dagger}\Smat}{\psi_{\text{in}}}
+  \;=\; 1.
+  \label{eq:1P-probConserve}
+\end{equation}
+酉性是 $\Smat$ 最重要的性质，它保证从 $|\psi_{\text{in}}\rangle$ 到
+所有可能 $|\psi_{\text{out}}\rangle$ 的总跃迁概率为 $1$；这是渐近完备
+性的直接物理推论：所有散射通道之和不会丢失粒子。
+
+\subsection{能量守恒：$[\Smat,\Hmat_0]=0$}
+\label{ssec:1P-Senergy}
+
+由交织关系 \eqref{eq:1P-intertwine-U}，对任意 $\tau$
+\begin{align*}
+  U_0(\tau)\,\Smat
+  &= U_0(\tau)\,\Omega_-^{\dagger}\Omega_+
+   = \bigl(\Omega_-\,U_0(-\tau)\bigr)^{\dagger}\Omega_+
+   = \Omega_-^{\dagger}\,U(\tau)\,\Omega_+\\
+  &= \Omega_-^{\dagger}\Omega_+\,U_0(\tau)
+   = \Smat\,U_0(\tau).
+\end{align*}
+因此
+\begin{equation}
+  \bigl[\,\Smat,\;U_0(\tau)\,\bigr] \;=\; 0
+  \quad\Longleftrightarrow\quad
+  \bigl[\,\Smat,\;\Hmat_0\,\bigr] \;=\; 0.
+  \label{eq:1P-Scommute}
+\end{equation}
+此即\emph{$\Smat$ 与自由 Hamiltonian 对易}：散射过程保持自由能量
+$E=\mathbf{p}^2/(2m)$ 不变——能量守恒。在动量表象矩阵元上立刻给出
+\emph{在壳条件 (on-shell condition)}，下节展开。
+
+%-----------------------------------------------------------------------
+\section{动量表象矩阵元；$T$ 算符与在壳条件}
+\label{sec:1P-Tmatrix}
+
+实验上方便的“出射动量 $\mathbf{p}'$、入射动量 $\mathbf{p}$”矩阵元
+$\matel{\mathbf{p}'}{\Smat}{\mathbf{p}}$ 的结构由 \eqref{eq:1P-Scommute}
+强烈约束。在自由动量本征态 $\Hmat_0|\mathbf{p}\rangle =
+E_p|\mathbf{p}\rangle$, $E_p=p^2/(2m)$ 上：
+\begin{align}
+  \matel{\mathbf{p}'}{\Smat\,\Hmat_0}{\mathbf{p}}
+  &=E_p\,\matel{\mathbf{p}'}{\Smat}{\mathbf{p}}, \nonumber\\
+  \matel{\mathbf{p}'}{\Hmat_0\,\Smat}{\mathbf{p}}
+  &=E_{p'}\,\matel{\mathbf{p}'}{\Smat}{\mathbf{p}},\nonumber\\
+  \Longrightarrow\quad
+  (E_{p'}-E_p)\,\matel{\mathbf{p}'}{\Smat}{\mathbf{p}}
+  &=0.
+  \label{eq:1P-onshell-prepare}
+\end{align}
+因此 $\matel{\mathbf{p}'}{\Smat}{\mathbf{p}}\propto \delta(E_{p'}-E_p)$。
+通常的标准分解为
+\begin{equation}
+  \matel{\mathbf{p}'}{\Smat}{\mathbf{p}}
+  \;=\; \delta^3(\mathbf{p}'-\mathbf{p})
+   \;-\; 2\pi\rmi\,\delta(E_{p'}-E_p)\,
+        \matel{\mathbf{p}'}{\Tmat}{\mathbf{p}},
+  \label{eq:1P-StoT}
+\end{equation}
+\begin{equation}
+  \boxed{\;\Smat = \mathbb{1} - 2\pi\rmi\,\delta(E_f-E_i)\,\Tmat\;}
+\end{equation}
+其中 $\Tmat$ 称为\emph{$T$ 算符 ($T$-operator) / 跃迁算符
+(transition operator)}，其矩阵元
+$\matel{\mathbf{p}'}{\Tmat}{\mathbf{p}}$ 是研究散射截面的核心量。
+$\delta(E_{p'}-E_p)$ 即所谓\emph{在壳条件 (on-shell condition)}：散射前
+后自由能量相同，$|\mathbf{p}'|=|\mathbf{p}|$ (弹性)，仅方向改变。
+
+\begin{remark}
+$\delta^3(\mathbf{p}'-\mathbf{p})$ 来自 $\Smat$ 的“恒等”部分 (无散射
+通道)；$T$ 矩阵元描写真正的散射部分。后续章节我们将给出
+$\Tmat$ 与势 $\Vmat$、与 Møller 算符的关系
+$\Tmat = \Vmat\,\Omega_+ = \Vmat + \Vmat\,G(E+\rmi 0)\,\Vmat + \cdots$
+(Born 级数, Lippmann-Schwinger 方程, 见后面 Green 算符与 Born 级数章
+节)。
+\end{remark}
+
+%-----------------------------------------------------------------------
+\section{本章定理证明补全}
+\label{sec:1P-proofs}
+
+本节把前几节中以叙述性语言或粗略论证给出的几个核心结果整合成完整的、
+逐步可检的形式化证明。我们沿用之前的记号 $U(t)=\rme^{-\rmi\Hmat t}$、
+$U_0(t)=\rme^{-\rmi\Hmat_0 t}$、$\Vmat=\Hmat-\Hmat_0$。所有强极限均
+在 Hilbert 空间 $\Hilb=L^2(\R^3)$ 上理解。
+\providecommand{\slim}{\operatorname*{s\text{-}lim}}
+
+\subsection{Møller 算符存在性 (Cook 方法的完整版)}
+\label{ssec:1P-CookProof}
+
+\S\ref{sec:1P-proofAsym} 已对 $\Vmat\in L^2(\R^3)$ 给出概要证明。
+这里把它整理为标准的 \emph{Cook 判据 (Cook's method)}，并把适用类
+扩展到 $\Vmat\in L^2(\R^3) + L^\infty_\epsilon(\R^3)$ (即“$L^2$ 部分
+加上无穷远处快速衰减的 $L^\infty$ 部分”)。
+
+\begin{theorem}[Cook]
+\label{thm:1P-Cook}
+设 $\Hmat_0=-\Delta/(2m)$，$\Hmat=\Hmat_0+\Vmat$ 是自伴算符。若存在
+稠密集 $\mathcal{D}\subset \Hilb$ 使
+\begin{equation}
+  \int_{0}^{\pm\infty}\rmd\tau\;
+  \bigl\|\Vmat\,U_0(\tau)\,|\psi\rangle\bigr\|
+  \;<\;\infty,\qquad \forall |\psi\rangle\in\mathcal{D},
+  \label{eq:1P-CookCriterion}
+\end{equation}
+则强极限
+\begin{equation}
+  \Omega_\pm \;=\; \slim_{t\to\mp\infty} U(t)^{\dagger}U_0(t)
+  \label{eq:1P-Omega-slim}
+\end{equation}
+存在 (在整个 $\Hilb$ 上)，且 $\Omega_\pm$ 是等距算符。
+\end{theorem}
+
+\begin{proof*}
+对 $|\psi\rangle\in\mathcal{D}$，由 \eqref{eq:1P-Omega-integral}
+\[
+  W(t)|\psi\rangle\;\equiv\;U(t)^\dagger U_0(t)|\psi\rangle
+  \;=\;|\psi\rangle + \rmi\int_0^{t}\rmd\tau\;U(\tau)^\dagger\Vmat U_0(\tau)|\psi\rangle.
+\]
+对 $t_2>t_1$ (取 $t_i\to-\infty$ 或 $+\infty$ 一致处理)，
+\begin{align*}
+  \bigl\|W(t_2)|\psi\rangle - W(t_1)|\psi\rangle\bigr\|
+  &= \Bigl\|\int_{t_1}^{t_2}\rmd\tau\,U(\tau)^\dagger\Vmat U_0(\tau)|\psi\rangle\Bigr\|\\
+  &\le \int_{t_1}^{t_2}\rmd\tau\,\bigl\|U(\tau)^\dagger\Vmat U_0(\tau)|\psi\rangle\bigr\|\\
+  &= \int_{t_1}^{t_2}\rmd\tau\,\bigl\|\Vmat U_0(\tau)|\psi\rangle\bigr\|
+  \;\xrightarrow{t_1,t_2\to\mp\infty}\;0,
+\end{align*}
+其中倒数第二行用了 $U(\tau)^\dagger$ 的酉性 (保范数)，最后一步由
+Cauchy 判据和 \eqref{eq:1P-CookCriterion} 给出。故 $W(t)|\psi\rangle$
+在 $t\to\mp\infty$ 时 Cauchy，从而极限存在。
+
+由于 $\|W(t)|\psi\rangle\|=\|\psi\|$ (酉性) 对所有 $t$ 成立，强极限
+保持范数。$W(t)$ 在稠密集 $\mathcal{D}$ 上的强极限及一致有界性
+($\|W(t)\|=1$) 由 \emph{Banach-Steinhaus} 定理推广至整个 $\Hilb$，
+得 $\Omega_\pm$ 在 $\Hilb$ 上有定义、等距。具体地，对任一
+$|\chi\rangle\in\Hilb$ 与 $\epsilon>0$，取 $|\psi\rangle\in\mathcal{D}$
+满足 $\|\chi-\psi\|<\epsilon/3$，则
+\[
+  \|W(t_2)\chi - W(t_1)\chi\|
+  \le 2\|\chi-\psi\| + \|W(t_2)\psi-W(t_1)\psi\|
+  < 2\epsilon/3 + \epsilon/3 = \epsilon
+\]
+对 $|t_1|,|t_2|$ 充分大成立。
+\end{proof*}
+
+\begin{remark}[$\mathcal{D}$ 的选择与势的类]
+\label{rmk:1P-DChoice}
+\eqref{eq:1P-VU0-bound} 已对 $|\psi\rangle$ 取高斯波包验证了
+\eqref{eq:1P-CookCriterion}，前提是 $\Vmat\in L^2$。高斯波包的
+有限叠加在 $\Hilb$ 中稠密，故 $\mathcal{D}=\mathrm{span}\{$高斯$\}$
+合用。若 $\Vmat=\Vmat_2+\Vmat_\infty$，$\Vmat_2\in L^2$、
+$\Vmat_\infty\in L^\infty$ 且 $|\Vmat_\infty(\mathbf{x})|\le
+C(1+|\mathbf{x}|)^{-1-\epsilon}$，则相同估计仍然给出 \eqref{eq:1P-CookCriterion}。
+特别地 Yukawa 势、方形势、$L^2$ 势都满足。
+\end{remark}
+
+\subsection{交织关系的算子代数完整证明}
+\label{ssec:1P-IntertwineFull}
+
+\S\ref{ssec:1P-intertwine} 对 \eqref{eq:1P-intertwine-U} 给出代数推
+导；这里补全 \emph{无界} 算符 $\Hmat$、$\Hmat_0$ 之间从
+\eqref{eq:1P-intertwine-U} 到 \eqref{eq:1P-intertwine-H} 的精细一步。
+
+\begin{lemma}[定义域不变]
+\label{lem:1P-DomainInv}
+$\Omega_\pm\,\Dom(\Hmat_0)\subseteq \Dom(\Hmat)$。
+\end{lemma}
+
+\begin{proof*}
+设 $|\psi\rangle\in\Dom(\Hmat_0)$。由 \eqref{eq:1P-intertwine-U} 对
+$\tau$ 的强连续性以及 Stone 定理：$U(\tau)\Omega_\pm|\psi\rangle
+=\Omega_\pm U_0(\tau)|\psi\rangle$ 对每个 $\tau$ 成立。两侧对 $\tau$
+求强微商在 $\tau=0$ 的存在性等价于
+$U_0(\tau)|\psi\rangle$ 在 $\tau=0$ 处可微 (即
+$|\psi\rangle\in\Dom(\Hmat_0)$)，由 $\Omega_\pm$ 是有界算符，
+$\Omega_\pm U_0(\tau)|\psi\rangle$ 在 $\tau=0$ 同样可微，从而
+$U(\tau)\Omega_\pm|\psi\rangle$ 可微，即
+$\Omega_\pm|\psi\rangle\in\Dom(\Hmat)$。
+\end{proof*}
+
+\begin{theorem}[交织关系强形式]
+\label{thm:1P-IntertwineStrong}
+对 $\forall |\psi\rangle\in\Dom(\Hmat_0)$，
+\begin{equation}
+  \Hmat\,\Omega_\pm\,|\psi\rangle \;=\; \Omega_\pm\,\Hmat_0\,|\psi\rangle .
+  \label{eq:1P-IntertwineStrong}
+\end{equation}
+更一般，对任何 Borel 函数 $f:\R\to\C$，
+\begin{equation}
+  f(\Hmat)\,\Omega_\pm \;=\; \Omega_\pm\,f(\Hmat_0)\quad
+  \text{(在适当定义域上)}.
+  \label{eq:1P-IntertwineFunctional}
+\end{equation}
+\end{theorem}
+
+\begin{proof*}
+对 \eqref{eq:1P-intertwine-U} 两边作用 $-\rmi\,\partial_\tau|_{\tau=0}$：
+左侧 = $\Hmat\,\Omega_\pm|\psi\rangle$ (由引理 \ref{lem:1P-DomainInv}
+该量有定义)，右侧 = $\Omega_\pm\,\Hmat_0|\psi\rangle$。这给出
+\eqref{eq:1P-IntertwineStrong}。再取算符 Fourier 反演
+$f(\Hmat)=\int\rmd\tau\,\hat f(\tau)U(\tau)$，由 \eqref{eq:1P-intertwine-U}
+逐 $\tau$ 成立可得 \eqref{eq:1P-IntertwineFunctional}。等价地，谱定理
+告诉我们 $f(\Hmat)$ 的核 $\rmd E_{\Hmat}$ 与 $f(\Hmat_0)$ 的核
+$\rmd E_{\Hmat_0}$ 之间满足 $\Omega_\pm\,\rmd E_{\Hmat_0}(\lambda)
+=\rmd E_{\Hmat}(\lambda)\,\Omega_\pm$ (谱测度的交织)。
+\end{proof*}
+
+\subsection{$\Smat$ 酉性 (在渐近完备前提下) 的完整证明}
+\label{ssec:1P-UnitaryFull}
+
+\S\ref{ssec:1P-unitarity} 给出过简的论证。这里加入 $\Omega_\pm$ 与
+投影 $P_\mathcal{R}$ 的精确关系。
+
+\begin{lemma}[$\Omega_\pm\Omega_\pm^\dagger$ 是投影]
+\label{lem:1P-OmegaOmegaDag}
+$\Omega_\pm\Omega_\pm^{\dagger} = P_{\mathcal{R}_\pm}$，是到散射态空间
+$\mathcal{R}_\pm=\Ran(\Omega_\pm)$ 的正交投影。
+\end{lemma}
+
+\begin{proof*}
+设 $E_\pm=\Omega_\pm\Omega_\pm^\dagger$。由
+$\Omega_\pm^\dagger\Omega_\pm=\mathbb{1}$，
+\[
+  E_\pm^2 = \Omega_\pm(\Omega_\pm^\dagger\Omega_\pm)\Omega_\pm^\dagger
+  = \Omega_\pm\Omega_\pm^\dagger = E_\pm,
+\]
+$E_\pm^\dagger = E_\pm$ 显然，故 $E_\pm$ 是正交投影。它的值域含
+$\Ran(\Omega_\pm)=\mathcal{R}_\pm$；反之对任 $|\xi\rangle\in
+\Ran(E_\pm)$，$|\xi\rangle = \Omega_\pm(\Omega_\pm^\dagger|\xi\rangle)
+\in\Ran(\Omega_\pm)$，故 $\Ran(E_\pm)=\mathcal{R}_\pm$。
+\end{proof*}
+
+\begin{theorem}[$\Smat$ 酉]
+\label{thm:1P-SUnitaryFull}
+若理论渐近完备 ($\mathcal{R}_+=\mathcal{R}_-=\mathcal{R}$)，则
+$\Smat=\Omega_-^\dagger\Omega_+$ 是 $\Hilb$ 上的酉算符。
+\end{theorem}
+
+\begin{proof*}
+计算
+\begin{align*}
+  \Smat^\dagger\Smat
+  &= \Omega_+^\dagger\,(\Omega_-\Omega_-^\dagger)\,\Omega_+
+   = \Omega_+^\dagger\,P_{\mathcal{R}_-}\,\Omega_+
+   = \Omega_+^\dagger\,P_{\mathcal{R}}\,\Omega_+.
+\end{align*}
+由 $\Ran(\Omega_+)=\mathcal{R}_+=\mathcal{R}$，$P_\mathcal{R}\Omega_+
+=\Omega_+$，故
+\[
+  \Smat^\dagger\Smat = \Omega_+^\dagger\Omega_+ = \mathbb{1}_\Hilb.
+\]
+对偶地
+\[
+  \Smat\Smat^\dagger
+   = \Omega_-^\dagger\,P_{\mathcal{R}_+}\,\Omega_-
+   = \Omega_-^\dagger\,P_{\mathcal{R}}\,\Omega_-
+   = \Omega_-^\dagger\Omega_- = \mathbb{1}_\Hilb.
+\]
+两侧 = $\mathbb{1}$ 即 $\Smat$ 酉。
+\end{proof*}
+
+\begin{remark}[渐近完备性是核心假设]
+若 $\mathcal{R}_+\neq\mathcal{R}_-$ (有些“能进散射但不能再出去”的
+通道，如俘获)，则 $P_{\mathcal{R}_-}\Omega_+\neq\Omega_+$，
+$\Smat^\dagger\Smat\neq\mathbb{1}$，$\Smat$ 仅是 partial isometry。
+单粒子势散射满足 \S\ref{ssec:1P-conditions} 三条时，渐近完备性可以
+通过 Enss 时间相关方法 / 平稳法 (Faddeev-Ikebe) 严格证明
+(参考 Taylor §2-d 引文)。
+\end{remark}
+
+\subsection{$[\Smat,\Hmat_0]=0$ 的谱定理表述}
+\label{ssec:1P-SpectralEnergy}
+
+\eqref{eq:1P-Scommute} 已给出 $[\Smat,U_0(\tau)]=0$。把它放入谱定理
+给出更强的表述：
+
+\begin{theorem}[$\Smat$ 在能量直和分解下分块对角]
+\label{thm:1P-SBlockDiag}
+设 $\Hmat_0=\int_0^\infty E\,\rmd E_{\Hmat_0}(E)$ 是 $\Hmat_0$ 的谱
+分解。则 $\Smat$ 与每个谱投影对易：
+\begin{equation}
+  \bigl[\,\Smat,\;\rmd E_{\Hmat_0}(E)\,\bigr]\;=\;0,\qquad\forall E\ge 0.
+  \label{eq:1P-SspecCommute}
+\end{equation}
+等价地，存在能量同步分解
+\begin{equation}
+  \Hilb \;\simeq\; \int^{\oplus}_{[0,\infty)} \mathcal{H}_E\,\rmd E,\qquad
+  \Smat \;\simeq\; \int^{\oplus}_{[0,\infty)} S(E)\,\rmd E,
+  \label{eq:1P-SdirectInt}
+\end{equation}
+$\mathcal{H}_E\simeq L^2(S^2)$ (固定能量壳层上的角向 Hilbert 空间)，
+$S(E):\mathcal{H}_E\to\mathcal{H}_E$ 为\emph{在壳 $S$ 算符
+(on-shell $S$-operator)}，对每个 $E$ 是酉算符。
+\end{theorem}
+
+\begin{proof*}[证明梗概]
+由 \eqref{eq:1P-Scommute}，$[U_0(\tau),\Smat]=0$。Fourier 变换
+\[
+  \rmd E_{\Hmat_0}(E) = \frac{1}{2\pi}\int\rmd\tau\,\rme^{\rmi E\tau}\,U_0(\tau)
+\]
+(在分布意义下) 给出 \eqref{eq:1P-SspecCommute}。$\Hmat_0=\Op{\mathbf{p}}^2/(2m)$
+在动量表象上对角化：极坐标 $\mathbf{p}=p\hat{\mathbf{p}}$,
+$\rmd^3p = p^2\,\rmd p\,\rmd\hat{\mathbf{p}}=mp\,\rmd E\,\rmd\hat{\mathbf{p}}$
+($E=p^2/2m$)，故 $\Hilb=L^2(\R^3,\rmd^3p)$ 自然写为
+$\int^\oplus L^2(S^2,\rmd\hat{\mathbf{p}})\,(mp)\,\rmd E$。$\Smat$ 与
+$\Hmat_0$ 对易使其在该分解下分块对角，每块 $S(E)$ 由酉性
+$\Smat^\dagger\Smat=\mathbb{1}$ (定理 \ref{thm:1P-SUnitaryFull}) 直接
+逐 $E$ 给出 $S(E)^\dagger S(E)=\mathbb{1}_{\mathcal{H}_E}$。
+\end{proof*}
+
+\begin{corollary}[在壳条件 \eqref{eq:1P-StoT} 的根据]
+$\matel{\mathbf{p}'}{\Smat}{\mathbf{p}}\propto \delta(E_{p'}-E_p)$
+是 \eqref{eq:1P-SspecCommute} 的直接 distributional 结果；
+\eqref{eq:1P-StoT} 中 $-2\pi\rmi$ 的因子来自约定 (使
+$\Tmat = \Vmat\Omega_+$ 在 Born 极限给出
+$\matel{\mathbf{p}'}{\Tmat}{\mathbf{p}}\to\matel{\mathbf{p}'}{\Vmat}{\mathbf{p}}$，
+见 \S\ref{ch:born})。
+\end{corollary}
+
+%-----------------------------------------------------------------------
+\section{例题与典型势能}
+\label{sec:1P-examples}
+
+为把抽象的算符语言落到具体可算的对象，本节给出三类经典例题：球对称
+方阱、$\delta$-壳层势 (常用于解析示例)、与一维矩形势垒。它们都满足
+\S\ref{ssec:1P-conditions} 的适用条件 (除最后一个一维例外，但思路完全
+相同)。
+
+\subsection{例 1：球对称方阱 — Møller 算符在平面波上的作用}
+\label{ssec:1P-ex-square}
+
+取
+\begin{equation}
+  V(\mathbf{x}) \;=\; \begin{cases} -V_0 & r=|\mathbf{x}|<a\\ 0 & r>a\end{cases},
+  \qquad V_0>0.
+  \label{eq:1P-VsquareWell}
+\end{equation}
+显然 $V\in L^2(\R^3)$ ($\int|V|^2\,\rmd^3x=\frac{4\pi}{3}V_0^2 a^3<\infty$)，
+\S\ref{ssec:1P-conditions} 三条均满足，渐近完备。
+
+\paragraph{$\Omega_+$ 在动量本征“理想态”上的作用。}
+平面波 $|\mathbf{p}\rangle$ 不在 $L^2$ 内，要严格写需先做波包再取
+极限。结果 (Lippmann-Schwinger 方程，见 \S\ref{ch:stationary})：
+\begin{equation}
+  |\mathbf{p}+\rangle \;\equiv\; \Omega_+|\mathbf{p}\rangle
+  \;=\; |\mathbf{p}\rangle + \frac{1}{E_p-\Hmat_0+\rmi 0}\,\Vmat\,|\mathbf{p}+\rangle.
+  \label{eq:1P-ex-LS}
+\end{equation}
+位置表象波函数 $\psi^+_\mathbf{p}(\mathbf{x})=\langle\mathbf{x}|
+\mathbf{p}+\rangle$ 满足 $(-\nabla^2/2m + V)\psi^+_\mathbf{p}
+=E_p\psi^+_\mathbf{p}$ 并具有 $\rme^{\rmi\mathbf{p}\cdot\mathbf{x}}
++f(\theta)\rme^{\rmi p r}/r$ 的远场行为。\textbf{方阱内外的显式解}：
+分波 $\ell$ 的径向方程允许内 ($r<a$) 解 $A_\ell\,j_\ell(k'r)$，
+外 ($r>a$) 解 $B_\ell\,[\cos\delta_\ell j_\ell(kr)
+-\sin\delta_\ell n_\ell(kr)]$，其中
+\begin{equation}
+  k=\sqrt{2mE_p},\quad k'=\sqrt{2m(E_p+V_0)},
+  \label{eq:1P-ex-kkprime}
+\end{equation}
+匹配 $r=a$ 处的连续性与一阶导数连续性给出相位移
+\begin{equation}
+  \tan\delta_\ell(k)
+  \;=\;\frac{k\,j_\ell'(ka)\,j_\ell(k'a)
+            -k'\,j_\ell(ka)\,j_\ell'(k'a)}
+            {k\,n_\ell'(ka)\,j_\ell(k'a)
+            -k'\,n_\ell(ka)\,j_\ell'(k'a)}.
+  \label{eq:1P-ex-deltaL}
+\end{equation}
+$s$-波 ($\ell=0$) 时简化为
+\begin{equation}
+  \tan\delta_0(k) \;=\;
+  \frac{k\,\tan(k'a) - k'\,\tan(ka)}{k' + k\,\tan(ka)\tan(k'a)}.
+  \label{eq:1P-ex-deltaS}
+\end{equation}
+\textbf{Møller 算符的“分波元素”}：在固定 $E$、固定角动量 $\ell$ 的
+一维子空间 $\mathcal{H}_{E,\ell}\simeq\C$ 上，$\Omega_+$ 简化为乘
+\emph{Jost 因子} $\rme^{\rmi\delta_\ell(k)}\!\bigl/\!|\,\cdot\,|$ 之类常
+量；散射算符的分波 $S$ 矩阵元为
+\begin{equation}
+  S_\ell(E) \;=\; \rme^{2\rmi\delta_\ell(k)},\qquad
+  k=\sqrt{2mE}.
+  \label{eq:1P-ex-Sl}
+\end{equation}
+酉性 $|S_\ell|=1$ 自动成立 (相位移实)。这就把
+\eqref{eq:1P-SdirectInt} 的“在壳分解”具体化：每个 $(E,\ell)$ 通道
+上 $S(E)$ 是一个相位 $\rme^{2\rmi\delta_\ell(E)}$。
+
+\paragraph{束缚态。}
+若 $V_0$ 足够大，方阱有 $E_b<0$ 的束缚态 (例 $\ell=0$ 的最浅束缚态由
+$\cot(\kappa' a)=-\kappa/\kappa'$ 决定，$\kappa=\sqrt{-2mE_b}$，
+$\kappa'=\sqrt{2m(V_0-|E_b|)}$)。这些束缚态构成 $\mathscr{B}\neq\{0\}$，
+故 $\Omega_\pm$ 不酉，但 $\mathcal{R}=\mathscr{B}^\perp$ 仍由所有
+$|\mathbf{p}+\rangle$ 张成 (渐近完备)。
+
+\subsection{例 2：$\delta$-壳层势 — $\Smat$ 矩阵元的解析表达式}
+\label{ssec:1P-ex-shell}
+
+取
+\begin{equation}
+  V(\mathbf{x}) \;=\; \frac{\lambda}{2m}\,\delta(r-a),\qquad \lambda\in\R,
+  \label{eq:1P-ex-shellV}
+\end{equation}
+半径 $a>0$、强度 $\lambda$。它在 $\R^3$ 中是分布 (奇异于 $r=a$)，
+但所有动量平面波都很容易匹配，常被用作教学示例。径向解
+$u_\ell(r)=rR_\ell(r)$ 在 $r<a$、$r>a$ 内均自由：
+\begin{equation}
+  u_\ell^{(<)}(r) = A\,\hat j_\ell(kr),\qquad
+  u_\ell^{(>)}(r) = \cos\delta_\ell \hat j_\ell(kr) - \sin\delta_\ell \hat n_\ell(kr),
+  \label{eq:1P-ex-shellRad}
+\end{equation}
+$\hat j_\ell(z)=z j_\ell(z)$ 为 Riccati-Bessel。$r=a$ 处 $u_\ell$ 连续，
+而 $u_\ell'$ 跳跃 $\lambda u_\ell(a)$。代数运算给出闭式
+\begin{equation}
+  \tan\delta_\ell(k) \;=\;
+   \frac{\lambda\,\hat j_\ell(ka)^2 / k}
+        {1 - \lambda\,\hat j_\ell(ka)\hat n_\ell(ka)/k},
+  \label{eq:1P-ex-shellDelta}
+\end{equation}
+对应分波 $S_\ell(E) = \rme^{2\rmi\delta_\ell(k)}$ 与
+\begin{equation}
+  S_\ell(E) - 1 \;=\;
+   \frac{2\rmi\sin\delta_\ell\rme^{\rmi\delta_\ell}}{1}
+   \;=\; \frac{2\rmi\,\lambda\,\hat j_\ell(ka)^2/k}
+              {1 - \lambda\bigl[\hat j_\ell(ka)\hat n_\ell(ka)
+                              +\rmi\hat j_\ell(ka)^2\bigr]/k}.
+  \label{eq:1P-ex-shellSminusOne}
+\end{equation}
+
+\paragraph{完整 $\Smat$ 矩阵元。}
+合成各分波 (球谐展开 $\matel{\mathbf{p}'}{\hat\ell\hat m}{\mathbf{p}}
+=Y_{\ell m}^*(\hat{\mathbf{p}}')Y_{\ell m}(\hat{\mathbf{p}})/p^2$，
+能量 $\delta$ 已先抽出)：
+\begin{align}
+  \matel{\mathbf{p}'}{\Smat-\mathbb{1}}{\mathbf{p}}
+  &= -2\pi\rmi\,\delta(E_{p'}-E_p)\matel{\mathbf{p}'}{\Tmat}{\mathbf{p}},\nonumber\\
+  \matel{\mathbf{p}'}{\Tmat}{\mathbf{p}}
+  &= -\frac{1}{(2\pi)^2 m p}\sum_{\ell=0}^{\infty}(2\ell+1)
+     \frac{S_\ell(E)-1}{2\rmi}\,P_\ell(\cos\theta),\quad
+   \cos\theta=\hat{\mathbf{p}}'\cdot\hat{\mathbf{p}}.
+  \label{eq:1P-ex-shellTfull}
+\end{align}
+代入 \eqref{eq:1P-ex-shellSminusOne} 得到完全解析的 $T$ 矩阵元。
+$\ell=0$ 极限 $ka\ll 1$ 时
+$\hat j_0(ka)\approx ka-(ka)^3/6$, $\hat n_0(ka)\approx -1$，
+\begin{equation}
+  \tan\delta_0(k) \;\xrightarrow{ka\ll 1}\; -\,a_s\,k,\qquad
+  a_s = -\frac{\lambda a^2}{1+\lambda a},
+  \label{eq:1P-ex-shellScattLength}
+\end{equation}
+即\emph{散射长度} $a_s$ 的低能极限——这是 $\delta$-壳层势的经典结果。
+共振发生在 $1=\lambda \hat j_\ell(ka)\hat n_\ell(ka)/k$，给出窄共振峰。
+
+\subsection{例 3：一维矩形势垒 — 简明 $S$ 矩阵的酉性验证}
+\label{ssec:1P-ex-rect}
+
+虽然属一维问题 (此时 $\Hilb=L^2(\R)$)，整套形式不变，且代数极简，
+便于显式检验 $\Smat\Smat^\dagger=\mathbb{1}$。
+
+\begin{equation}
+  V(x) = \begin{cases} V_0 & 0<x<a\\ 0 & \text{其他} \end{cases},\qquad V_0>0.
+  \label{eq:1P-ex-rect}
+\end{equation}
+取入射自左 ($+$ 方向)，分别有反射 $r$ 与透射 $t$ 系数，能量 $E=k^2/2m$，
+$k'=\sqrt{2m(E-V_0)}$ ($E>V_0$ 时)。匹配波函数与导数：
+\begin{equation}
+  t(k) = \frac{4kk'\,\rme^{-\rmi ka}}
+              {(k+k')^2\rme^{-\rmi k'a} - (k-k')^2\rme^{\rmi k'a}},\quad
+  r(k) = \frac{(k^2-k'^2)\bigl(\rme^{\rmi k'a}-\rme^{-\rmi k'a}\bigr)}
+              {(k+k')^2\rme^{-\rmi k'a} - (k-k')^2\rme^{\rmi k'a}}.
+  \label{eq:1P-ex-rt}
+\end{equation}
+一维 $S$ 算符在能量 $E$、左/右两个进出通道下是 $2\times 2$ 阵：
+\begin{equation}
+  S(E) \;=\; \begin{pmatrix} t(k) & r'(k) \\ r(k) & t(k) \end{pmatrix},
+  \label{eq:1P-ex-Smatrix1D}
+\end{equation}
+($r'$ 为自右入射的反射，与 $r$ 在对称势下相等).
+\textbf{酉性的直接验证}：
+\begin{equation}
+  |t(k)|^2 + |r(k)|^2 \;=\; 1,
+  \label{eq:1P-ex-unitary1D}
+\end{equation}
+代入 \eqref{eq:1P-ex-rt}：分子 $|4kk'|^2$ 加上
+$|(k^2-k'^2)|^2|\rme^{\rmi k'a}-\rme^{-\rmi k'a}|^2
+=4(k^2-k'^2)^2\sin^2(k'a)$，分母模平方
+$|(k+k')^2\rme^{-\rmi k'a}-(k-k')^2\rme^{\rmi k'a}|^2
+= 16k^2k'^2 + 4(k^2-k'^2)^2\sin^2(k'a)$，正好相等，故
+\eqref{eq:1P-ex-unitary1D} 成立。这是
+$\Smat^\dagger\Smat=\mathbb{1}$ 在最简单情形的显式数值检验，
+也展示渐近完备性 (此处无束缚态当 $V_0>0$，$\mathcal{R}=\Hilb$)。
+
+\paragraph{隧穿区 $E<V_0$。}
+此时 $k'=\rmi\kappa$, $\kappa=\sqrt{2m(V_0-E)}$，
+\begin{equation}
+  |t|^2 = \Bigl[1 + \frac{V_0^2\,\sinh^2(\kappa a)}{4E(V_0-E)}\Bigr]^{-1},
+  \label{eq:1P-ex-tunnel}
+\end{equation}
+仍满足 $|t|^2+|r|^2=1$ (酉性对实代数自动)；这是经典的隧穿透射率
+公式。Møller 算符 $\Omega_+$ 在能量 $E$ 通道把入射平面波映为
+$|p+\rangle = $平面波 + 反射/透射散射波，是 \eqref{eq:1P-ex-LS} 的
+显式特例。
+
+\subsection{渐近完备性的具体验证 (方阱)}
+\label{ssec:1P-completeVerify}
+
+我们把 \S\ref{sec:1P-completeness} 的抽象命题在球对称方阱
+\eqref{eq:1P-VsquareWell} 上具体化：
+
+\begin{enumerate}
+  \item 束缚态空间 $\mathscr{B}$ 由有限个 $E_b<0$ 的本征态张成。对
+        $V_0,a$ 给定，束缚态数目有限 (Bargmann 限)。
+  \item 散射态空间 $\mathcal{R}$ 由全部 $\{|\mathbf{p}+\rangle:
+        \mathbf{p}\in\R^3\}$ (或等价 $|\mathbf{p}-\rangle$) 张成。
+        Lippmann-Schwinger 方程 \eqref{eq:1P-ex-LS} 保证
+        $\Omega_+|\mathbf{p}\rangle = |\mathbf{p}+\rangle$。
+  \item 完备性恒等式：把 $|\mathbf{p}+\rangle$ 当作连续谱本征态、
+        $|\phi_b\rangle$ 当作离散谱本征态，谱定理给出
+\begin{equation}
+  \mathbb{1} \;=\; \sum_b |\phi_b\rangle\langle\phi_b|
+            \;+\; \int\rmd^3p\;|\mathbf{p}+\rangle\langle\mathbf{p}+|
+       \;=\; P_\mathscr{B} + P_\mathcal{R}.
+  \label{eq:1P-CompletenessIdentity}
+\end{equation}
+        这\emph{就是}\,$\mathcal{R}\oplus\mathscr{B}=\Hilb$ 的算符化
+        断言。Faddeev-Ikebe 平稳法的核心便是直接构造该展开 (见
+        \S\ref{ch:stationary})。
+  \item 由 \eqref{eq:1P-CompletenessIdentity}，
+        $\Omega_+\Omega_+^\dagger = \int\rmd^3p\,|\mathbf{p}+\rangle
+        \langle\mathbf{p}+|\!\circ\!|\mathbf{p}\rangle\langle\mathbf{p}|^{-1}
+        = P_\mathcal{R}$ (各种归一化常数已吸收)。$\mathcal{R}_+=\mathcal{R}_-=\mathcal{R}$
+        即两条 LS 方程 (出射 / 入射边界条件) 给出的散射态空间相同——
+        在对称势下显然，一般势可由时间反演或谱论得到。
+\end{enumerate}
+
+\begin{remark}[渐近完备性失败的反例提示]
+若加 Coulomb 长程项 $-Z/r$，自由 $U_0(t)$ 与真实 $U(t)$ 的相位差不
+归零 (对数发散)，标准强极限 \eqref{eq:1P-Omega-def} 不存在，应换成
+\emph{Dollard 修正}：$\Omega^D_\pm = \slim_{t\to\mp\infty}U(t)^\dagger
+U_D(t)$，其中 $U_D(t) = \rme^{-\rmi(\Hmat_0 t + \mu(t))}$ 含
+对数相位 $\mu(t)\sim Z\ln(2|\Op{p}t|/m)/|\Op{p}|$。详见
+\S\ref{ch:stationary} 与多通道章 \S\ref{ch:multichannel}。
+\end{remark}
+
+%-----------------------------------------------------------------------
+\section{本章小结}
+\label{sec:1P-summary}
+
+\begin{itemize}
+\item 渐近条件把 Schrödinger 方程的解 $U(t)|\psi\rangle$ 与某个自由
+  波包 $U_0(t)|\psi_{\text{in/out}}\rangle$ 联系起来；其证明只用到
+  $\int|V|^2\rmd^3x<\infty$ 等温和条件。
+\item Møller 波算符 $\Omega_\pm = \lim_{t\to\mp\infty}U(t)^{\dagger}
+  U_0(t)$ 是 isometric ($\Omega_\pm^{\dagger}\Omega_\pm=\mathbb{1}$)、
+  满足交织关系 $\Hmat\Omega_\pm=\Omega_\pm\Hmat_0$，把渐近态映成
+  $t=0$ 真实态。
+\item 散射态空间 $\mathcal{R}_\pm=\Omega_\pm\Hilb$ 与束缚态空间
+  $\mathscr{B}$ 正交；渐近完备性 $\mathcal{R}_+=\mathcal{R}_-
+  =\mathcal{R}$, $\mathcal{R}\oplus\mathscr{B}=\Hilb$。
+\item 散射算符 $\Smat = \Omega_-^{\dagger}\Omega_+$，$|\psi_{\text{out}}
+  \rangle = \Smat|\psi_{\text{in}}\rangle$；渐近完备 $\Rightarrow$
+  $\Smat$ 酉 (概率守恒)。
+\item $[\Smat,\Hmat_0]=0$ 给出能量守恒；动量空间矩阵元
+  $\matel{\mathbf{p}'}{\Smat}{\mathbf{p}}=\delta^3(\mathbf{p}'-\mathbf{p})
+  -2\pi\rmi\,\delta(E_{p'}-E_p)\matel{\mathbf{p}'}{\Tmat}{\mathbf{p}}$，
+  $T$ 算符承载在壳散射的全部信息。
+\end{itemize}
+
+下一章我们将把 $T$ 矩阵元与可观测的微分散射截面 $\rmd\sigma/\rmd\Omega$
+联系起来，建立从形式理论到实验观测的桥梁。

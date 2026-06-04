@@ -1,0 +1,653 @@
+\chapter{Hilbert 空间与谱理论 (Hilbert Space and Spectral Theory)}\label{ch:hilbert}
+
+% --- local macros for this chapter ---
+\providecommand{\N}{\mathbb{N}}
+\providecommand{\Ker}{\operatorname{Ker}}
+
+本章对量子散射理论所依赖的数学骨架——Hilbert 空间、自伴算符、谱定理与函数演算——做一次较为系统的整理. 第~\ref{ch:qmreview} 章已对 Hilbert 空间做了``物理风格''的回顾, Taylor 在《Scattering Theory》第一章亦只给出最简明的提要; 但是在散射理论中, 一旦我们要严格谈论 Møller 算符 $\Omega_{\pm}$ 的存在性 (见第~\ref{ch:Smat1P} 章)、强极限与幺正极限的区别、谱的分解 (绝对连续谱 ${\rm ac}$、纯点谱 ${\rm pp}$、奇异连续谱 ${\rm sc}$)、$\Op{H}$ 的函数演算 $f(\Op{H})$ (Green 算符 $(\Op{H}-z)^{-1}$ 即一例, 见第~\ref{ch:green} 章), 这些粗略的回顾就远远不够. 本章试图填补这一空缺.
+
+行文上, 我们采取``物理学家的严格性''——重要定理给出准确的陈述并附带证明思路 (sketch), 读者可以参考 Reed--Simon 的四卷本或 Kato《Perturbation Theory for Linear Operators》获取完整证明. 主要参考: Taylor《Scattering Theory》第一章; Reed--Simon I, II, III; von Neumann《Mathematical Foundations of Quantum Mechanics》.
+
+\section{Hilbert 空间的公理化定义}\label{sec:hilbert-axioms}
+
+\subsection{内积空间}
+
+\begin{definition}[内积空间 inner-product space]\label{def:hilbert-inner}
+设 $V$ 是 $\C$ 上的线性空间. 一个 \emph{内积} (inner product) 是映射 $\inn{\cdot}{\cdot}:V\times V\to \C$ 满足:
+\begin{enumerate}
+    \item (共轭对称) $\inn{\psi}{\phi}=\overline{\inn{\phi}{\psi}}$;
+    \item (第二变元线性) $\inn{\psi}{a\phi_1+b\phi_2}=a\,\inn{\psi}{\phi_1}+b\,\inn{\psi}{\phi_2}$, $a,b\in\C$;
+    \item (正定) $\inn{\psi}{\psi}\geq 0$, 且 $\inn{\psi}{\psi}=0\Leftrightarrow\psi=0$.
+\end{enumerate}
+\end{definition}
+
+我们采用物理学家约定: 内积对第一变元 \emph{反线性}, 对第二变元 \emph{线性}. 由内积出发可定义范数
+\begin{equation}\label{eq:hilbert-norm}
+\|\psi\|=\sqrt{\inn{\psi}{\psi}}.
+\end{equation}
+
+\begin{lemma}[Cauchy--Schwarz 不等式]\label{lem:hilbert-cs}
+对任意 $\psi,\phi\in V$,
+\begin{equation}\label{eq:hilbert-cs}
+\bigl|\inn{\psi}{\phi}\bigr|\leq \|\psi\|\,\|\phi\|,
+\end{equation}
+等号成立当且仅当 $\psi,\phi$ 线性相关.
+\end{lemma}
+
+\begin{proof*}
+若 $\phi=0$ 显然成立. 否则取 $\lambda=\inn{\phi}{\psi}/\|\phi\|^2$, 则 $0\leq \|\psi-\lambda\phi\|^2=\|\psi\|^2-|\inn{\phi}{\psi}|^2/\|\phi\|^2$, 整理得式 \eqref{eq:hilbert-cs}.
+\end{proof*}
+
+由 Cauchy--Schwarz 立刻得到三角不等式 $\|\psi+\phi\|\leq\|\psi\|+\|\phi\|$, 从而 $\|\cdot\|$ 是范数, $V$ 是赋范空间.
+
+\subsection{完备性: 从内积空间到 Hilbert 空间}
+
+完备性是 Hilbert 空间相对于一般内积空间的关键性质. 它保证了``Cauchy 列必收敛'', 从而可以谈论极限 (这正是散射理论需要的, 因为我们要让 $t\to\pm\infty$).
+
+\begin{definition}[Cauchy 完备性]\label{def:hilbert-cauchy}
+内积空间 $V$ 中的序列 $\{\psi_n\}$ 称为 \emph{Cauchy 列}, 若 $\forall\epsilon>0$, $\exists N$ 使 $m,n\geq N$ 时 $\|\psi_m-\psi_n\|<\epsilon$. 空间 $V$ \emph{完备}, 若每个 Cauchy 列都在 $V$ 中收敛 (即 $\exists\psi\in V$ s.t. $\|\psi_n-\psi\|\to 0$).
+\end{definition}
+
+\begin{definition}[Hilbert 空间]\label{def:hilbert-space}
+\emph{Hilbert 空间} $\Hilb$ 是完备的复内积空间.
+\end{definition}
+
+\begin{definition}[可分性 separability]\label{def:hilbert-sep}
+$\Hilb$ 称为 \emph{可分的} (separable), 若存在可数稠密子集 $\{\psi_n\}_{n=1}^{\infty}\subset\Hilb$.
+\end{definition}
+
+\begin{theorem}[可分 Hilbert 空间的标准正交基]\label{thm:hilbert-basis}
+可分 Hilbert 空间 $\Hilb$ 必有可数标准正交基 (orthonormal basis) $\{e_n\}_{n\geq 1}$, 即 $\inn{e_m}{e_n}=\delta_{mn}$, 且每个 $\psi\in\Hilb$ 可展开为
+\begin{equation}\label{eq:hilbert-expansion}
+\psi=\sum_{n=1}^{\infty}\inn{e_n}{\psi}\,e_n,\qquad \|\psi\|^2=\sum_{n=1}^{\infty}|\inn{e_n}{\psi}|^2 \quad\text{(Parseval)}.
+\end{equation}
+\end{theorem}
+
+\begin{remark}
+量子力学只关心 \emph{可分的复 Hilbert 空间}. 一切实际系统的状态空间在适当的物理刻画下都是可分的 (例如自由度有限的多粒子系统是 $L^2$, 是可分的). Taylor《Scattering Theory》对此略而不谈, 但这是默认前提.
+\end{remark}
+
+\subsection{典型例子: \texorpdfstring{$L^2$}{L²} 与 \texorpdfstring{$\ell^2$}{ℓ²}}\label{subsec:hilbert-examples}
+
+\begin{example}[$\ell^2(\N)$]\label{ex:hilbert-l2}
+$\ell^2$ 是平方可和复序列空间:
+\begin{equation}\label{eq:hilbert-ell2}
+\ell^2=\Bigl\{(c_n)_{n\geq 1}\subset\C \mid \sum_{n=1}^{\infty}|c_n|^2<\infty\Bigr\},\quad \inn{c}{d}=\sum_{n=1}^{\infty}\overline{c_n}d_n.
+\end{equation}
+$\ell^2$ 是可分 Hilbert 空间, 标准基为 $e_n=(0,\ldots,0,1,0,\ldots)$.
+\end{example}
+
+\begin{example}[$L^2(\R^d)$]\label{ex:hilbert-L2}
+$L^2(\R^d)$ 是 Lebesgue 平方可积函数 (在零测集等同) 空间:
+\begin{equation}\label{eq:hilbert-L2}
+L^2(\R^d)=\Bigl\{\psi:\R^d\to\C \text{ 可测} \mid \int_{\R^d}|\psi(\mathbf{x})|^2\,\rmd^d x<\infty\Bigr\},
+\end{equation}
+内积 $\inn{\psi}{\phi}=\int\overline{\psi(\mathbf{x})}\phi(\mathbf{x})\rmd^d x$. $L^2(\R^d)$ 是可分 Hilbert 空间; Hermite 函数 $\{h_{\mathbf{n}}\}_{\mathbf{n}\in\N_0^d}$ 给出一组标准基.
+\end{example}
+
+按照第 \ref{ch:qmreview} 章的物理记号, 单粒子无自旋态空间为 $\Hilb=L^2(\R^3)$; $N$ 个无自旋粒子取 $L^2(\R^{3N})$; 自旋 $s$ 单粒子取 $L^2(\R^3)\otimes\C^{2s+1}$.
+
+\begin{theorem}[可分 Hilbert 空间唯一性]\label{thm:hilbert-unique}
+任意两个无穷维可分 Hilbert 空间在等距同构 (unitary equivalence) 意义下唯一. 从而 $L^2(\R^d)\cong\ell^2(\N)$.
+\end{theorem}
+
+证明思路即取标准正交基 $\{e_n\}$, 则 $U:\psi\mapsto(\inn{e_n}{\psi})_n$ 是从 $\Hilb$ 到 $\ell^2$ 的幺正算符. 这告诉我们 $\Hilb$ 在抽象上只有一个; 但具体应用时, $L^2(\R^3)$ 的位置/动量表象是物理上自然的工具.
+
+\subsection{对偶与 Riesz 表示}
+
+\begin{theorem}[Riesz 表示定理]\label{thm:hilbert-riesz}
+$\Hilb$ 上每个连续线性泛函 $\ell:\Hilb\to\C$ 必形如 $\ell(\psi)=\inn{\phi_\ell}{\psi}$, 其中 $\phi_\ell\in\Hilb$ 唯一.
+\end{theorem}
+
+Riesz 定理使得 Dirac 的 ``bra'' 记号有了严格意义: $\bra\phi\;\cdot\;\rangle$ 即是连续线性泛函 $\psi\mapsto\inn{\phi}{\psi}$. 但要小心: 像 $\bra{\mathbf{x}}$, $\bra{\mathbf{p}}$ 这种``反常基矢'' (improper kets/bras) 对应的不是 $\Hilb$ 中的元素 (它们不是平方可积的); 真正的严格框架需要 \emph{装备 Hilbert 空间} (rigged Hilbert space, Gelfand triple) $\Phi\subset\Hilb\subset\Phi'$, 见 Taylor 注脚 1-a-6 与第 \ref{ch:stationary} 章关于稳态散射态的讨论.
+
+\section{算符的基本概念}\label{sec:hilbert-operators}
+
+量子力学的可观测量、Hamilton 量、Møller 算符、$\Smat$ 矩阵无一例外都是 $\Hilb$ 上的线性算符. 然而很多重要算符 (如位置 $\Op{X}$、动量 $\Op{P}$、$\Op{H}=\Op{P}^2/2m+\Op{V}$) \emph{不是} 在整个 $\Hilb$ 上有定义的. 因此``算符的定义域'' (domain) 这件事必须严格对待.
+
+\subsection{有界算符}
+
+\begin{definition}[有界算符]\label{def:hilbert-bdd}
+$A:\Hilb\to\Hilb$ 是 \emph{有界} (bounded) 的, 若 $\|A\|:=\sup_{\|\psi\|=1}\|A\psi\|<\infty$. 全体有界算符记 $\mathcal{B}(\Hilb)$.
+\end{definition}
+
+$\mathcal{B}(\Hilb)$ 在算子范数下是 Banach 代数. 散射算符 $\Smat$、Møller 算符 $\Omega_\pm$、时间演化 $\Op{U}(t)=\rme^{-\rmi\Op{H}t}$ 都是有界的甚至幺正的 (见第 \ref{ch:Smat1P} 章).
+
+\subsection{无界算符与定义域}
+
+许多物理上重要的算符是无界的. 一个具体例子见 Taylor 第 11 页:
+
+\begin{example}[位置算符 $\Op{X}$ 在 $L^2(\R)$ 上]\label{ex:hilbert-position}
+$(\Op{X}\psi)(x):=x\psi(x)$. 但若 $\psi\in L^2(\R)$, $\Op{X}\psi$ 不一定在 $L^2(\R)$. 实际上
+\begin{equation}\label{eq:hilbert-domX}
+\Dom(\Op{X})=\Bigl\{\psi\in L^2(\R)\mid\int x^2|\psi(x)|^2\rmd x<\infty\Bigr\}\subsetneq L^2(\R).
+\end{equation}
+取 $\psi(x)=(1+x^2)^{-1/2}/\sqrt{\pi}$ 则 $\psi\in L^2$, 但 $x\psi\notin L^2$. 故 $\Op{X}$ 是无界算符.
+\end{example}
+
+\begin{example}[动量算符 $\Op{P}=-\rmi\partial_x$]\label{ex:hilbert-momentum}
+$\Op{P}$ 的``自然定义域'' Sobolev 空间 $H^1(\R)=\{\psi\in L^2(\R)\mid\hat\psi(p)\cdot p\in L^2\}$. 同样无界.
+\end{example}
+
+\begin{definition}[算符的图]\label{def:hilbert-graph}
+算符 $A$ 的 \emph{图} (graph) 为 $\Gamma(A)=\{(\psi,A\psi)\mid\psi\in\Dom(A)\}\subset\Hilb\oplus\Hilb$.
+\end{definition}
+
+\begin{definition}[闭算符]\label{def:hilbert-closed}
+$A$ 是 \emph{闭算符} (closed), 若 $\Gamma(A)$ 在 $\Hilb\oplus\Hilb$ (赋以图范数 $\|(\psi,\phi)\|^2=\|\psi\|^2+\|\phi\|^2$) 中是闭子集. 等价地: 若 $\psi_n\in\Dom(A)$, $\psi_n\to\psi$ 且 $A\psi_n\to\phi$, 则 $\psi\in\Dom(A)$ 且 $\phi=A\psi$.
+\end{definition}
+
+闭算符是无界算符理论中``可控'' 的对象——闭图定理 (closed graph theorem) 表明: 若 $A$ 闭且 $\Dom(A)=\Hilb$, 则 $A$ 有界. 由此, \emph{无界算符必定不能在整个 $\Hilb$ 上定义} (这正是 Taylor 注脚 1-c-7 想要警示的内容).
+
+\begin{definition}[算符的扩张/限制]\label{def:hilbert-extension}
+$B$ 是 $A$ 的 \emph{扩张}, 记 $A\subset B$, 若 $\Dom(A)\subset\Dom(B)$ 且 $A=B$ 在 $\Dom(A)$ 上.
+\end{definition}
+
+\begin{definition}[可闭算符]\label{def:hilbert-closable}
+$A$ \emph{可闭}, 若它有闭扩张. 此时最小闭扩张 $\bar A$ 称为 $A$ 的 \emph{闭包} (closure).
+\end{definition}
+
+\subsection{值域、零空间}
+
+记 $\Ran(A)=\{A\psi\mid\psi\in\Dom(A)\}$ (range), $\Ker(A)=\{\psi\in\Dom(A)\mid A\psi=0\}$. 则
+\begin{equation}\label{eq:hilbert-range-ker}
+\overline{\Ran(A)}=\Ker(A^\dagger)^{\perp},\qquad \Ker(A)=\overline{\Ran(A^\dagger)}^{\perp}
+\end{equation}
+(对闭稠定算符). 这是分析 Møller 算符值域 (\emph{渐近完备性} asymptotic completeness, 第 \ref{ch:Smat1P} 章) 的工具.
+
+\section{伴随、对称、自伴}\label{sec:hilbert-adjoint}
+
+\subsection{伴随算符}
+
+\begin{definition}[稠定算符的伴随]\label{def:hilbert-adjoint}
+设 $A$ 稠定 (即 $\Dom(A)$ 在 $\Hilb$ 中稠密). $A$ 的 \emph{伴随} $A^\dagger$ 由
+\begin{align}
+\Dom(A^\dagger)&=\{\phi\in\Hilb \mid \exists\eta\in\Hilb,\ \forall\psi\in\Dom(A),\ \inn{\phi}{A\psi}=\inn{\eta}{\psi}\},\notag\\
+A^\dagger\phi&:=\eta. \label{eq:hilbert-adjoint-def}
+\end{align}
+$\Dom(A)$ 稠密保证 $\eta$ 唯一. $A^\dagger$ 始终是闭算符.
+\end{definition}
+
+\begin{definition}[对称、自伴、本质自伴]\label{def:hilbert-sym-sa}
+设 $A$ 稠定. 称
+\begin{itemize}
+    \item $A$ \emph{对称} (symmetric, ``Hermitian''), 若 $A\subset A^\dagger$, 即 $\inn{\phi}{A\psi}=\inn{A\phi}{\psi}$ 对 $\phi,\psi\in\Dom(A)$ 成立;
+    \item $A$ \emph{自伴} (self-adjoint), 若 $A=A^\dagger$ (作为算符的相等, 包含 $\Dom(A)=\Dom(A^\dagger)$);
+    \item $A$ \emph{本质自伴} (essentially self-adjoint), 若 $A$ 对称且其闭包 $\bar A$ 是自伴.
+\end{itemize}
+\end{definition}
+
+物理学家几乎不区分 ``Hermitian'' 与 ``self-adjoint''; 但数学上自伴比对称严格得多. 例如 $\Op{P}=-\rmi\partial_x$ 在 $C_c^\infty([0,1])$ 上对称却不自伴: 改变 $\Dom$ 的边界条件 (周期边界 vs. Dirichlet) 给出不同的自伴扩张.
+
+\begin{remark}
+量子力学中 \emph{可观测量必须是自伴算符}, 而不仅仅是对称算符. 这是 von Neumann 的洞察, Taylor 在第 8 页的注脚里也指出 ``self-adjointness is the stronger property''. 自伴而非对称才能保证有谱定理, 才能定义函数演算 $f(A)$, 才能保证 $\rme^{-\rmi A t}$ 是良好定义的幺正群 (见 Stone 定理).
+\end{remark}
+
+\subsection{亏指数判据 (von Neumann)}
+
+如何判断对称算符是否本质自伴? Hilbert 空间理论的核心结果之一:
+
+\begin{theorem}[von Neumann 亏指数判据]\label{thm:hilbert-deficiency}
+设 $A$ 闭对称, 定义 \emph{亏空间} (deficiency subspaces)
+\begin{equation}\label{eq:hilbert-defspaces}
+\mathcal{K}_{\pm}=\Ker(A^\dagger\mp \rmi)=\Ran(A\pm \rmi)^{\perp},
+\end{equation}
+和 \emph{亏指数} (deficiency indices) $n_{\pm}=\dim\mathcal{K}_{\pm}$. 则:
+\begin{enumerate}
+    \item $A$ 自伴 $\iff$ $n_+=n_-=0$;
+    \item $A$ 有自伴扩张 $\iff$ $n_+=n_-$ (这时扩张的集合与 $\mathcal{K}_+\to\mathcal{K}_-$ 的幺正映射一一对应);
+    \item $n_+\neq n_-$: 没有自伴扩张.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof*}[证明思路]
+要判断对称算符 $A$ 是否自伴, 即看 $A$ 与 $A^\dagger$ 是否吻合. 关键观察: $A^\dagger$ 自动是闭的, 且
+\begin{equation*}
+\Dom(A^\dagger)=\Dom(\bar A)\dotplus\mathcal{K}_+\dotplus\mathcal{K}_-,\quad \text{(直和)}
+\end{equation*}
+这是 von Neumann 的``一阶分解''. 因此 $\bar A=A^\dagger$ 当且仅当 $\mathcal{K}_+=\mathcal{K}_-=\{0\}$. 自伴扩张则对应于在 $\mathcal{K}_+\oplus\mathcal{K}_-$ 中选 ``Cayley 变换''$U:\mathcal{K}_+\to\mathcal{K}_-$, 这要求 $\dim\mathcal{K}_+=\dim\mathcal{K}_-$. 详细见 Reed--Simon II, Thm. X.1.
+\end{proof*}
+
+\subsection{标准反例: 半直线动量算符}\label{subsec:hilbert-counterex}
+
+\begin{example}[$\Op{P}=-\rmi\partial_x$ 在 $L^2([0,\infty))$]\label{ex:hilbert-halfline}
+取 $\Dom(A)=C_c^\infty((0,\infty))$. 容易验证 $A$ 对称. 计算亏空间: $A^\dagger\phi=\rmi\phi$ 即 $-\rmi\phi'=\rmi\phi$, $\phi(x)=c\rme^{-x}\in L^2([0,\infty))$. 所以 $n_+=1$. 类似 $A^\dagger\phi=-\rmi\phi$ 给 $\phi(x)=c\rme^x\notin L^2$, 故 $n_-=0$. 故 $n_+\neq n_-$, $A$ \textbf{不可能}有自伴扩张! 这是经典反例: 半直线上的``动量算符''并不存在自伴版本——直观上, 边界 $x=0$ 上 ``概率流'' 只能流出, 不能进出对称, 故无法保持厄米性.
+\end{example}
+
+\begin{example}[{$\Op{P}=-\rmi\partial_x$ 在 $L^2([0,1])$}]
+亏指数 $n_\pm=1$, 自伴扩张构成 $U(1)$ 族, 对应边界条件 $\psi(1)=\rme^{\rmi\theta}\psi(0)$, $\theta\in[0,2\pi)$. 物理上即不同的相位边界条件.
+\end{example}
+
+\subsection{Kato--Rellich 定理}\label{subsec:hilbert-kato}
+
+散射理论中通常 $\Op{H}=\Op{H}_0+\Op{V}$, $\Op{H}_0=\Op{P}^2/2m$. 自伴性的标准工具:
+
+\begin{theorem}[Kato--Rellich]\label{thm:hilbert-kato}
+设 $\Op{H}_0$ 自伴, $\Op{V}$ 对称且 $\Op{H}_0$-有界 (即 $\Dom(\Op{H}_0)\subset\Dom(\Op{V})$ 且存在 $a<1$, $b\geq 0$ 使
+\begin{equation}\label{eq:hilbert-katobound}
+\|\Op{V}\psi\|\leq a\|\Op{H}_0\psi\|+b\|\psi\|,\quad \psi\in\Dom(\Op{H}_0)).
+\end{equation}
+则 $\Op{H}_0+\Op{V}$ 在 $\Dom(\Op{H}_0)$ 上自伴.
+\end{theorem}
+
+例如, 对于 Coulomb 势 $V=-Ze^2/r$ 在 $L^2(\R^3)$ 上, $\Op{V}$ 是 $\Op{H}_0=-\nabla^2/2m$-有界的 (Kato 不等式 $\|r^{-1}\psi\|\leq 2\|\nabla\psi\|$), 故 $\Op{H}=\Op{H}_0-Ze^2/r$ 自伴, 这正是氢原子 Hamilton 量自伴的证明 (见第 \ref{ch:qmreview} 章).
+
+\section{谱与预解集}\label{sec:hilbert-spectrum}
+
+\subsection{预解算符}
+
+\begin{definition}[谱、预解集]\label{def:hilbert-spectrum}
+设 $A$ 闭. \emph{预解集} (resolvent set)
+\begin{equation}\label{eq:hilbert-resolventset}
+\rho(A)=\{z\in\C\mid A-z:\Dom(A)\to\Hilb\text{ 双射}, (A-z)^{-1}\in\mathcal{B}(\Hilb)\}.
+\end{equation}
+对 $z\in\rho(A)$, $R(z;A):=(A-z)^{-1}$ 是 \emph{预解算符} (resolvent). \emph{谱} (spectrum) $\sigma(A)=\C\setminus\rho(A)$.
+\end{definition}
+
+预解算符 $R(z;A)$ 在物理上即 \emph{Green 算符} (见第 \ref{ch:green} 章). $\rho(A)$ 是开集, $z\mapsto R(z;A)$ 在 $\rho(A)$ 上解析 (operator-valued analytic), 且
+\begin{equation}\label{eq:hilbert-resolvent-id}
+R(z;A)-R(w;A)=(z-w)R(z;A)R(w;A)\quad \text{(第一预解恒等式)}.
+\end{equation}
+
+\subsection{谱的分类}
+
+\begin{definition}[谱的细分]\label{def:hilbert-spec-decomp}
+$\sigma(A)$ 划分为三个互不相交的子集:
+\begin{itemize}
+    \item \emph{点谱} (point spectrum) $\sigma_p(A)=\{\lambda\mid\Ker(A-\lambda)\neq\{0\}\}$, 即 \emph{本征值}集合;
+    \item \emph{连续谱} (continuous spectrum) $\sigma_c(A)=\{\lambda\notin\sigma_p\mid\overline{\Ran(A-\lambda)}=\Hilb,\ (A-\lambda)^{-1}\text{ 无界}\}$;
+    \item \emph{剩余谱} (residual spectrum) $\sigma_r(A)=\{\lambda\notin\sigma_p\mid\overline{\Ran(A-\lambda)}\neq\Hilb\}$.
+\end{itemize}
+\end{definition}
+
+\begin{theorem}\label{thm:hilbert-sa-spec}
+若 $A$ 自伴, 则:
+\begin{enumerate}
+    \item $\sigma(A)\subset\R$;
+    \item $\sigma_r(A)=\emptyset$ (自伴算符无剩余谱);
+    \item $\|R(z;A)\|\leq |\Im z|^{-1}$ for $\Im z\neq 0$.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof*}[(2) 的证明]
+若 $\lambda\in\sigma_r(A)$, 则 $\overline{\Ran(A-\lambda)}\neq\Hilb$, 故 $\exists\, 0\neq\eta\perp\Ran(A-\lambda)$. 由 \eqref{eq:hilbert-range-ker}, $\eta\in\Ker(A^\dagger-\bar\lambda)=\Ker(A-\bar\lambda)$ (因为 $A$ 自伴且 $\sigma\subset\R$, $\bar\lambda=\lambda$). 故 $\lambda\in\sigma_p$, 矛盾.
+\end{proof*}
+
+\subsection{谱映射定理 (基本版)}
+
+\begin{theorem}[多项式谱映射]\label{thm:hilbert-spec-mapping}
+设 $A$ 有界, $p\in\C[z]$. 则 $\sigma(p(A))=p(\sigma(A))$.
+\end{theorem}
+
+更一般的谱映射涉及连续函数演算, 见下节. 例如对 $\Op{H}\geq 0$ 自伴有 $\sigma(\Op{H}^2)=\sigma(\Op{H})^2$.
+
+\section{谱定理 (自伴算符)}\label{sec:hilbert-spectral-thm}
+
+谱定理是 Hilbert 空间理论的顶峰. 对自伴算符, 有三种等价形式: (i) 投影测度 (projection-valued measure, PVM) 形式; (ii) 乘法算符形式; (iii) 函数演算形式. 我们陈述前两种, 并简述思路.
+
+\subsection{投影测度形式}
+
+\begin{definition}[投影值测度 PVM]\label{def:hilbert-pvm}
+\emph{投影值测度} 是映射 $E:\mathcal{B}(\R)\to\mathcal{B}(\Hilb)$ ($\mathcal{B}(\R)$ 为 Borel $\sigma$-代数) 满足
+\begin{enumerate}
+    \item $E(\Omega)$ 是正交投影 ($E(\Omega)^2=E(\Omega)=E(\Omega)^\dagger$) 对每个 Borel 集 $\Omega\subset\R$;
+    \item $E(\emptyset)=0,\ E(\R)=\Op{1}$;
+    \item $E(\Omega_1\cap\Omega_2)=E(\Omega_1)E(\Omega_2)$;
+    \item ($\sigma$-可加) 若 $\{\Omega_n\}$ 互不相交, $E(\cup_n\Omega_n)=\sum_n E(\Omega_n)$ 强收敛.
+\end{enumerate}
+对每个 $\psi\in\Hilb$, $\mu_\psi(\Omega):=\inn{\psi}{E(\Omega)\psi}=\|E(\Omega)\psi\|^2$ 是 $\R$ 上的有限正测度 (\emph{谱测度} spectral measure).
+\end{definition}
+
+\begin{theorem}[谱定理 -- PVM 形式]\label{thm:hilbert-spec-pvm}
+设 $A$ 是 $\Hilb$ 上自伴算符. 存在 \emph{唯一} 的 PVM $E_A$ on $\R$ 使得
+\begin{equation}\label{eq:hilbert-spec-thm-pvm}
+A=\int_{\R}\lambda\,\rmd E_A(\lambda),\qquad \Dom(A)=\Bigl\{\psi\mid\int_\R \lambda^2\,\rmd\mu_\psi(\lambda)<\infty\Bigr\}.
+\end{equation}
+此外 $\sigma(A)={\rm supp}(E_A)=\{\lambda\in\R\mid E_A((\lambda-\epsilon,\lambda+\epsilon))\neq 0\,\forall\epsilon>0\}$.
+\end{theorem}
+
+物理上, $E_A((-\infty,\lambda])$ 即 ``$A\leq\lambda$ 的事件投影''; 谱测度 $\mu_\psi$ 即测量 $A$ 时取值 $\leq\lambda$ 的概率分布 $F_\psi(\lambda)=\|E_A((-\infty,\lambda])\psi\|^2$, 这就是 \emph{谱分解} 的物理意义.
+
+\subsection{乘法算符形式}
+
+\begin{theorem}[谱定理 -- 乘法算符形式]\label{thm:hilbert-spec-mult}
+设 $A$ 自伴. 存在测度空间 $(M,\mu)$ ($\mu$ $\sigma$-有限), 实值可测函数 $f:M\to\R$, 与幺正映射 $U:\Hilb\to L^2(M,\mu)$ 使
+\begin{equation}\label{eq:hilbert-spec-thm-mult}
+(UAU^{-1}\tilde\psi)(m)=f(m)\tilde\psi(m),
+\end{equation}
+即 $A$ 通过 $U$ 同构于 $L^2(M,\mu)$ 上的 \emph{乘 $f$} 算符. $\Dom(UAU^{-1})=\{\tilde\psi\mid f\tilde\psi\in L^2\}$.
+\end{theorem}
+
+直观地: \emph{所有自伴算符``在适当表象下都是位置算符''}. 这是 Dirac/$\delta$-基矢的严格化.
+
+\subsection{证明思路 (sketch)}
+
+证明谱定理通常分两步:
+
+\textbf{第一步: 有界自伴算符的连续函数演算.} 由多项式谱映射 \ref{thm:hilbert-spec-mapping}, 对 $A$ 有界自伴有 $\|p(A)\|=\sup_{\lambda\in\sigma(A)}|p(\lambda)|$. 由 Stone--Weierstrass, $p\mapsto p(A)$ 可延拓为 $C^*$-同态 $C(\sigma(A))\to\mathcal{B}(\Hilb)$, $f\mapsto f(A)$. 这是 \emph{连续函数演算}.
+
+\textbf{第二步: 由 Riesz--Markov 构造谱测度.} 对每个 $\psi$, $f\mapsto \inn{\psi}{f(A)\psi}$ 是 $C(\sigma(A))$ 上的正泛函, 由 Riesz--Markov 给出 Borel 测度 $\mu_\psi$. 极化得到 $\mu_{\psi,\phi}$. 由此 $\inn{\psi}{f(A)\phi}=\int f\,\rmd\mu_{\psi,\phi}$ 对 \emph{Borel 函数}延拓, 即得 PVM.
+
+\textbf{第三步: 无界算符的情形.} 通过 Cayley 变换 $U=(A-\rmi)(A+\rmi)^{-1}$ 把无界自伴 $A$ 化为幺正 (有界) 算符 $U$, 应用有界版本于 $U$, 然后逆变换. 见 Reed--Simon I, Thm. VIII.6.
+
+\subsection{对易自伴算符族的联合谱测度}
+
+\begin{theorem}[多个对易自伴算符]\label{thm:hilbert-joint-spec}
+设 $A_1,\ldots,A_n$ 自伴且预解算符两两对易. 存在 $\R^n$ 上的联合 PVM $E$ 使
+\begin{equation}
+A_k=\int_{\R^n}\lambda_k\,\rmd E(\lambda_1,\ldots,\lambda_n).
+\end{equation}
+\end{theorem}
+
+物理意义: 一组完备对易可观测量 (CSCO) 给出 $\Hilb$ 在它们公共本征值上的``连续基矢''. 例如 $\{\Op{X}_1,\Op{X}_2,\Op{X}_3\}$ 在 $L^2(\R^3)$ 上的联合 PVM 即位置表象.
+
+\section{函数演算}\label{sec:hilbert-functional-calc}
+
+\subsection{Borel 函数演算}
+
+由谱定理我们可以对 \emph{任何 Borel 可测} 函数 $f:\R\to\C$ 定义
+\begin{empheq}[box=\fbox]{equation}\label{eq:hilbert-fcalc}
+f(A)=\int_{\R}f(\lambda)\,\rmd E_A(\lambda),
+\end{empheq}
+$\Dom(f(A))=\{\psi\mid\int |f(\lambda)|^2\rmd\mu_\psi<\infty\}$. 性质:
+\begin{itemize}
+    \item $(fg)(A)=f(A)g(A)$, $\overline{f(A)}\subset \bar f(A)$;
+    \item $f$ 实值 $\Rightarrow$ $f(A)$ 自伴;
+    \item $|f|=1$ $\Rightarrow$ $f(A)$ 幺正;
+    \item $f\geq 0$ $\Rightarrow$ $f(A)\geq 0$;
+    \item 谱映射 $\sigma(f(A))=\overline{f(\sigma(A))}$ (对 $f$ 连续).
+\end{itemize}
+
+物理示例:
+\begin{itemize}
+    \item $\Op{U}(t)=\rme^{-\rmi\Op{H}t}=\int \rme^{-\rmi\lambda t}\rmd E_{\Op{H}}(\lambda)$: 时间演化 (见 \S\ref{sec:hilbert-stone});
+    \item $R(z;\Op{H})=(\Op{H}-z)^{-1}=\int(\lambda-z)^{-1}\rmd E_{\Op{H}}(\lambda)$: Green 算符 (见第 \ref{ch:green} 章);
+    \item $\Op{H}^{1/2}$ ($\Op{H}\geq 0$): 平方根; 用于动量空间 $|\mathbf{p}|=\sqrt{\Op{P}^2}$ 的相对论分散.
+\end{itemize}
+
+\subsection{Borel 函数演算的连续性}
+
+\begin{proposition}\label{prop:hilbert-fcalc-cont}
+设 $f_n\to f$ 逐点 (Borel 可测) 且 $|f_n|\leq M$ (一致). 则 $f_n(A)\to f(A)$ 强收敛, 即 $f_n(A)\psi\to f(A)\psi$ 对每个 $\psi\in\Hilb$.
+\end{proposition}
+
+这一``强收敛''而非``一致''将在第 \ref{ch:Smat1P} 章 Møller 算符存在性中起决定作用.
+
+\section{Stone 定理与单参数幺正群}\label{sec:hilbert-stone}
+
+量子力学的核心方程 Schrödinger 方程
+\begin{equation}\label{eq:hilbert-schroedinger}
+\rmi\frac{\rmd}{\rmd t}\ket{\psi_t}=\Op{H}\ket{\psi_t}
+\end{equation}
+其解 $\ket{\psi_t}=\Op{U}(t)\ket{\psi_0}$, $\Op{U}(t)=\rme^{-\rmi\Op{H}t}$, 是一个 \emph{强连续单参数幺正群}.
+
+\begin{definition}[强连续单参数幺正群]\label{def:hilbert-spgroup}
+$\{U(t)\}_{t\in\R}$ 是 \emph{强连续单参数幺正群} (one-parameter unitary group), 若
+\begin{enumerate}
+    \item 每个 $U(t)$ 是 $\Hilb$ 上幺正算符;
+    \item $U(s+t)=U(s)U(t)$, $U(0)=\Op{1}$;
+    \item $t\mapsto U(t)\psi$ 对每个 $\psi\in\Hilb$ 强连续.
+\end{enumerate}
+\end{definition}
+
+\begin{theorem}[Stone 定理]\label{thm:hilbert-stone}
+$\{U(t)\}$ 与 $\Hilb$ 上自伴算符 $A$ 一一对应, 关系为
+\begin{equation}\label{eq:hilbert-stone}
+U(t)=\rme^{-\rmi A t},\qquad A\psi=\rmi\frac{\rmd}{\rmd t}\Big|_{t=0}U(t)\psi,\quad \psi\in\Dom(A),
+\end{equation}
+其中 $\Dom(A)=\{\psi\mid \lim_{t\to 0}t^{-1}(U(t)\psi-\psi)\text{ 存在}\}$ (称 \emph{无穷小生成元}).
+\end{theorem}
+
+证明思路: ($\Leftarrow$) 由谱定理直接定义 $U(t)=\int \rme^{-\rmi\lambda t}\rmd E_A(\lambda)$, 验证三条性质. ($\Rightarrow$) 给定 $U$, 形式定义 $A=\rmi U'(0)$, 关键技术是用积分 $\int_0^t U(s)\psi\,\rmd s$ 构造 $\Dom(A)$ 中的稠密子集 (Gårding 域), 然后扩张. 见 Reed--Simon I, Thm. VIII.7.
+
+\begin{remark}[Stone 定理的物理意义]
+Stone 定理说明自伴 $\Op{H}$ 与酉时间演化 $\rme^{-\rmi\Op{H}t}$ 是同一物理事实的两种描述. 自伴性是\emph{概率守恒} ($\|\Op{U}(t)\psi\|=\|\psi\|$) 的数学等价物.
+
+特别地, 散射问题中我们将比较两组演化:
+\begin{equation}\label{eq:hilbert-twoevolutions}
+\Op{U}_0(t)=\rme^{-\rmi\Op{H}_0 t},\qquad \Op{U}(t)=\rme^{-\rmi\Op{H} t},
+\end{equation}
+其中 $\Op{H}=\Op{H}_0+\Op{V}$. Møller 算符
+\begin{equation}\label{eq:hilbert-moller}
+\Omega_\pm=\lim_{t\to\mp\infty}\Op{U}(t)^\dagger\,\Op{U}_0(t),
+\end{equation}
+正是 Stone 定理保证的两个幺正群的``渐近比较''. 它们的存在性、值域、完备性是第 \ref{ch:Smat1P} 章的核心.
+\end{remark}
+
+\section{谱的细分: 纯点 / 绝对连续 / 奇异连续}\label{sec:hilbert-spec-decomp-fine}
+
+$\sigma(A)$ 的``点谱/连续谱/剩余谱''分类对自伴算符并不够细. 散射理论中真正有用的是 \emph{Lebesgue 分解}.
+
+\subsection{谱测度的 Lebesgue 分解}
+
+任意 $\R$ 上 Borel 测度 $\mu$ 有 \emph{唯一}的 Lebesgue 分解
+\begin{equation}\label{eq:hilbert-lebesgue}
+\mu=\mu_{\rm pp}+\mu_{\rm ac}+\mu_{\rm sc},
+\end{equation}
+其中 $\mu_{\rm pp}$ 集中在可数集 (\emph{纯点}); $\mu_{\rm ac}\ll\rmd\lambda$ (\emph{绝对连续}, 关于 Lebesgue 测度); $\mu_{\rm sc}$ \emph{奇异连续} (集中在 Lebesgue 零测集但无原子, 例 Cantor 测度).
+
+\subsection{$\Hilb$ 的谱分解}
+
+\begin{definition}[谱子空间]\label{def:hilbert-spec-subsp}
+对自伴 $A$, 定义
+\begin{equation}\label{eq:hilbert-spec-subspaces}
+\Hilb_{\bullet}(A):=\{\psi\in\Hilb\mid \mu_\psi^A\text{ 是 } \bullet\text{-型}\},\quad \bullet\in\{{\rm pp},{\rm ac},{\rm sc}\}.
+\end{equation}
+则
+\begin{equation}\label{eq:hilbert-spec-decomp-H}
+\Hilb=\Hilb_{\rm pp}(A)\oplus\Hilb_{\rm ac}(A)\oplus\Hilb_{\rm sc}(A),
+\end{equation}
+每个子空间 $A$-不变.
+\end{definition}
+
+定义 $\sigma_{\rm pp}(A), \sigma_{\rm ac}(A), \sigma_{\rm sc}(A)$ 为 $A$ 限制在相应子空间上的谱.
+
+\begin{itemize}
+    \item $\Hilb_{\rm pp}(A)$ 由 $A$ 的本征向量张成. \emph{束缚态} (bound states) 都在这里.
+    \item $\Hilb_{\rm ac}(A)$ 是\emph{散射态} (scattering states) 的天然位置: 从这里出发的态在能量 (即 $A=\Op{H}$ 时) 上``连续''分布, 满足 RAGE 类的``逃逸到无穷''性质.
+    \item $\Hilb_{\rm sc}(A)$ 是奇异连续部分. 物理上``反常'', 出现于 fractal 势/拟周期 Schrödinger 算符等. 短程势 + Coulomb 修正下通常 $\Hilb_{\rm sc}=\{0\}$.
+\end{itemize}
+
+\subsection{RAGE 定理}
+
+谱分解的物理意义由 Ruelle--Amrein--Georgescu--Enss (RAGE) 定理刻画:
+
+\begin{theorem}[RAGE 定理 (粗略版)]\label{thm:hilbert-rage}
+设 $\Op{H}$ 自伴, $C$ 紧算符. 则:
+\begin{enumerate}
+    \item 对 $\psi\in\Hilb_{\rm pp}(\Op{H})$,
+    \begin{equation}\label{eq:hilbert-rage-pp}
+    \sup_{t\in\R}\|C\rme^{-\rmi\Op{H}t}\psi\|<\infty,
+    \end{equation}
+    甚至 $C\rme^{-\rmi\Op{H}t}\psi$ 是 $\R$ 上的 (近) 周期函数;
+    \item 对 $\psi\in\Hilb_{\rm c}(\Op{H})=\Hilb_{\rm ac}\oplus\Hilb_{\rm sc}$,
+    \begin{equation}\label{eq:hilbert-rage-c}
+    \frac{1}{T}\int_0^T \|C\rme^{-\rmi\Op{H}t}\psi\|^2\,\rmd t \xrightarrow[T\to\infty]{} 0;
+    \end{equation}
+    \item 对 $\psi\in\Hilb_{\rm ac}(\Op{H})$, 上式的时间平均加强为
+    \begin{equation}\label{eq:hilbert-rage-ac}
+    \|C\rme^{-\rmi\Op{H}t}\psi\|\xrightarrow[t\to\pm\infty]{}0.
+    \end{equation}
+\end{enumerate}
+\end{theorem}
+
+物理解释: 取 $C=\chi_{|\mathbf{x}|<R}$ (空间紧支撑特征函数, 是紧算符当 $\Op{H}=-\nabla^2/2m$). 则
+\begin{itemize}
+    \item 束缚态 ($\Hilb_{\rm pp}$) 一直留在有限区域内: $\|\chi_{|\mathbf{x}|<R}\rme^{-\rmi\Op{H}t}\psi\|^2\to\|\psi\|^2$ 在 $R$ 大时;
+    \item 散射态 ($\Hilb_{\rm ac}$) 在 $|t|\to\infty$ 时跑到无穷远: $\|\chi_{|\mathbf{x}|<R}\rme^{-\rmi\Op{H}t}\psi\|\to 0$.
+\end{itemize}
+
+这就是``束缚态/散射态''的精确数学定义. Taylor 第 10 页朴素地写下 $\Hilb=\mathcal{R}\oplus\mathcal{B}$ (scattering ${\oplus}$ bound), 严格的版本即 $\mathcal{B}=\Hilb_{\rm pp}(\Op{H})$, $\mathcal{R}=\Hilb_{\rm ac}(\Op{H})$ (假设 $\Hilb_{\rm sc}=0$). \emph{渐近完备性} (asymptotic completeness) 的真正陈述就是
+\begin{equation}\label{eq:hilbert-asymptcomp}
+\Ran\Omega_+=\Ran\Omega_-=\Hilb_{\rm ac}(\Op{H})\quad (\text{且 }\Hilb_{\rm sc}(\Op{H})=\{0\}).
+\end{equation}
+详见第 \ref{ch:Smat1P} 章.
+
+\section{算符的收敛模式}\label{sec:hilbert-conv}
+
+散射理论与 Møller 算符的存在性问题, 关键在于不同收敛模式间的差别. Taylor \S 1-f, 1-g 已对此作了物理风味讨论, 这里给出严格的对比.
+
+\subsection{三种收敛}
+
+\begin{definition}[范数 / 强 / 弱收敛]\label{def:hilbert-conv}
+设 $\{A_n\}\subset\mathcal{B}(\Hilb)$, $A\in\mathcal{B}(\Hilb)$.
+\begin{itemize}
+    \item \emph{范数收敛} (norm / uniform): $\|A_n-A\|\to 0$, 记 $A_n\xrightarrow{\|\cdot\|}A$.
+    \item \emph{强收敛} (strong): $\|A_n\psi-A\psi\|\to 0$ 对每个 $\psi\in\Hilb$, 记 $A_n\xrightarrow{s}A$.
+    \item \emph{弱收敛} (weak): $\inn{\phi}{A_n\psi}\to\inn{\phi}{A\psi}$ 对每对 $\phi,\psi\in\Hilb$, 记 $A_n\xrightarrow{w}A$.
+\end{itemize}
+\end{definition}
+
+\begin{theorem}[蕴含关系]\label{thm:hilbert-conv-impl}
+范数收敛 $\Rightarrow$ 强收敛 $\Rightarrow$ 弱收敛, 反向蕴含一般 \emph{不成立}.
+\end{theorem}
+
+类似地对态矢: 强 $\|\psi_n-\psi\|\to 0$ vs.\ 弱 $\inn{\phi}{\psi_n}\to\inn{\phi}{\psi}$ 对所有 $\phi$.
+
+\subsection{反例: 反向蕴含失败}
+
+Taylor 第 18 页就已给出强收敛不蕴含范数收敛的关键例子:
+
+\begin{example}[自由波包 -- 弱不强]\label{ex:hilbert-freewavepacket}
+$\ket{\psi_t}=\rme^{-\rmi\Op{H}_0 t}\ket{\psi_0}$, $\Op{H}_0=\Op{P}^2/2m$. 则对每个固定 $\ket{\phi}\in L^2(\R^3)$,
+\begin{equation}\label{eq:hilbert-freedisp}
+\inn{\phi}{\psi_t}\xrightarrow{|t|\to\infty} 0,
+\end{equation}
+但 $\|\psi_t\|=\|\psi_0\|=1$ 不变. 即 $\ket{\psi_t}\xrightarrow{w}0$ 而 \emph{不}强收敛到 $0$. 物理解释: 自由波包不断弥散, 在任意有限区域 (代表 $\ket\phi$) 中的概率趋零.
+
+证明思路: 取 $\ket\phi$ 为 Gauss 包, 显式计算 $\inn{\phi}{\psi_t}$ 利用稳相法得 $|\inn{\phi}{\psi_t}|\sim t^{-3/2}$. 一般情形由 Gauss 函数稠密性逼近.
+\end{example}
+
+\begin{example}[等距非幺正算符 (Taylor \S 1-e)]\label{ex:hilbert-isometric}
+取 $\ell^2$ 上 \emph{右移算符} $\Omega:e_n\mapsto e_{n+1}$. 则 $\Omega$ 等距 ($\Omega^\dagger\Omega=\Op{1}$) 但 \emph{不}幺正 ($\Omega\Omega^\dagger=\Op{1}-|e_1\rangle\langle e_1|$). 这正是 Taylor 第 14--15 页指出的``等距 $\not\Rightarrow$ 幺正''. 物理上: Møller 算符 $\Omega_\pm$ 在不存在束缚态的特殊情形是幺正; 一般情形仅是等距 (其值域是 $\Hilb_{\rm ac}(\Op{H})\subsetneq\Hilb$).
+\end{example}
+
+\subsection{乘积的连续性}
+
+\begin{proposition}\label{prop:hilbert-product-cont}
+设 $A_n\xrightarrow{s}A$, $B_n\xrightarrow{s}B$, 且 $\sup_n\|A_n\|<\infty$. 则 $A_nB_n\xrightarrow{s}AB$.
+
+但: $A_n\xrightarrow{w}A$ 与 $B_n\xrightarrow{w}B$ 一般 \emph{不蕴含} $A_nB_n\xrightarrow{w}AB$.
+\end{proposition}
+
+\begin{proof*}[(强情形)]
+$\|A_nB_n\psi-AB\psi\|\leq\|A_n\|\|B_n\psi-B\psi\|+\|(A_n-A)B\psi\|\to 0$.
+\end{proof*}
+
+\begin{proposition}\label{prop:hilbert-adjoint-noncont}
+$A_n\xrightarrow{s}A$ \emph{不蕴含} $A_n^\dagger\xrightarrow{s}A^\dagger$ (但 $\xrightarrow{w}$ 蕴含 $\xrightarrow{w}$).
+\end{proposition}
+
+Taylor \S 1-g 末段对此评论: ``If $A_t\to A$ it is not necessarily true that $A_t^\dagger\to A^\dagger$.'' 这正是 Møller 算符存在但 \emph{逆} 不存在的根源.
+
+\subsection{应用于 Møller 算符}
+
+定义
+\begin{equation}\label{eq:hilbert-moller-strong}
+\Omega_\pm\psi:=\lim_{t\to\mp\infty}\rme^{\rmi\Op{H}t}\rme^{-\rmi\Op{H}_0 t}\psi.
+\end{equation}
+极限取 \emph{强意义}. Cook 判据给出充分条件:
+
+\begin{theorem}[Cook 判据]\label{thm:hilbert-cook}
+若存在 $\psi_0\in\Dom(\Op{H})\cap\Dom(\Op{H}_0)$ 的稠密子集, 使
+\begin{equation}\label{eq:hilbert-cook}
+\int_{0}^{\infty}\|\Op{V}\rme^{-\rmi\Op{H}_0 t}\psi_0\|\,\rmd t<\infty,
+\end{equation}
+则强极限 $\Omega_-$ 在 $\psi_0$ 上存在 (对 $\Omega_+$ 相应地积分 $\int_{-\infty}^0$).
+\end{theorem}
+
+\begin{proof*}[思路]
+利用 Stone 定理与基本定理:
+\begin{equation*}
+\rme^{\rmi\Op{H}t}\rme^{-\rmi\Op{H}_0 t}\psi_0-\psi_0
+=\rmi\int_0^t\rme^{\rmi\Op{H}s}\Op{V}\rme^{-\rmi\Op{H}_0 s}\psi_0\,\rmd s.
+\end{equation*}
+被积式范数 $=\|\Op{V}\rme^{-\rmi\Op{H}_0 s}\psi_0\|$ ($\rme^{\rmi\Op{H}s}$ 幺正不改变范数). 由 \eqref{eq:hilbert-cook} 该积分绝对收敛, 故 $t\mapsto \rme^{\rmi\Op{H}t}\rme^{-\rmi\Op{H}_0 t}\psi_0$ 满足 Cauchy 判据 (式 (1.13)--(1.14) 即 Taylor 用于此处的具体技术).
+\end{proof*}
+
+这正是 Taylor 第 18 页\eqref{eq:hilbert-cook}-类型条件对应的严格化, 在第 \ref{ch:Smat1P} 章对短程势 $|V|\leq C(1+|\mathbf{x}|)^{-1-\epsilon}$ 验证.
+
+\section{紧算符与 Riesz--Schauder 理论}\label{sec:hilbert-compact}
+
+Faddeev 型多体散射分析、Born 级数收敛性 (第 \ref{ch:born} 章)、Fredholm 型积分方程 (第 \ref{ch:partial} 章) 都依赖于紧算符理论.
+
+\subsection{紧算符}
+
+\begin{definition}[紧算符]\label{def:hilbert-compact}
+$K\in\mathcal{B}(\Hilb)$ 是 \emph{紧算符} (compact / completely continuous), 若它把 $\Hilb$ 中有界集映为 \emph{相对紧} 集 (即闭包紧). 等价地: 对每个有界序列 $\{\psi_n\}$, $\{K\psi_n\}$ 有收敛子列.
+
+紧算符全体 $\mathcal{K}(\Hilb)\subset\mathcal{B}(\Hilb)$ 是双侧闭理想.
+\end{definition}
+
+\begin{theorem}[紧算符的等价描述]\label{thm:hilbert-compact-eq}
+$K\in\mathcal{B}(\Hilb)$ 紧 $\iff$ $K$ 是有限秩算符的范数极限 $\iff$ $K$ 把弱收敛序列变为强收敛序列.
+\end{theorem}
+
+例: 在 $L^2(\R^3)$ 上, Hilbert--Schmidt 积分算符 $(K\psi)(\mathbf{x})=\int K(\mathbf{x},\mathbf{y})\psi(\mathbf{y})\rmd^3 y$ 当 $\iint|K|^2\rmd^3 x\rmd^3 y<\infty$ 时紧 (并且事实上 Hilbert--Schmidt). Born 级数中的算符 $\Op{V}^{1/2}R_0(z)\Op{V}^{1/2}$ 在适当 $\Op{V}$ 假设下紧, 这是 $z$ 解析延拓的核心.
+
+\subsection{Riesz--Schauder 谱定理}
+
+\begin{theorem}[Riesz--Schauder]\label{thm:hilbert-riesz-schauder}
+设 $K\in\mathcal{K}(\Hilb)$. 则
+\begin{enumerate}
+    \item $\sigma(K)\setminus\{0\}$ 由至多可数个 \emph{有限重}本征值组成, 它们只能在 $0$ 处聚点;
+    \item 对每个 $\lambda\in\sigma(K)\setminus\{0\}$, 广义本征空间 $\Ker((K-\lambda)^n)$ 有限维, 在某 $n$ 后稳定;
+    \item Fredholm 二择: $\Ker(K-\lambda)=\{0\}\iff\Ran(K-\lambda)=\Hilb$.
+\end{enumerate}
+\end{theorem}
+
+Fredholm 二择对积分方程理论极其重要. 第 \ref{ch:partial} 章中 Lippmann--Schwinger 方程 $(1-G_0V)\psi=\psi_0$ 形式上即 $(\Op{1}-K)\psi=\psi_0$ 型, 当 $K$ 紧时 Fredholm 替换 给出``共振 / 解''的简洁刻画.
+
+\subsection{紧自伴算符的谱定理}
+
+\begin{theorem}[Hilbert--Schmidt]\label{thm:hilbert-HS}
+$K$ 紧自伴 $\iff$ $\Hilb$ 有标准正交基 $\{e_n\}$ 由 $K$ 本征向量构成, 本征值 $\lambda_n\in\R$, $\lambda_n\to 0$, 且
+\begin{equation}\label{eq:hilbert-HSdiag}
+K=\sum_n \lambda_n |e_n\rangle\langle e_n|\quad \text{(范数收敛)}.
+\end{equation}
+\end{theorem}
+
+\subsection{Schatten 类 (附录)}
+
+\begin{definition}\label{def:hilbert-schatten}
+对紧算符 $K$ 设 $\mu_n(K)=\lambda_n((K^\dagger K)^{1/2})$ 为奇异值. 定义
+\begin{itemize}
+    \item \emph{迹类} $\mathcal{S}_1$: $\|K\|_1=\sum\mu_n<\infty$;
+    \item \emph{Hilbert--Schmidt 类} $\mathcal{S}_2$: $\|K\|_2^2=\sum\mu_n^2=\Tr(K^\dagger K)<\infty$;
+    \item \emph{Schatten-$p$ 类} $\mathcal{S}_p$: $\|K\|_p^p=\sum\mu_n^p<\infty$.
+\end{itemize}
+$\mathcal{S}_1\subset\mathcal{S}_2\subset\mathcal{K}(\Hilb)\subset\mathcal{B}(\Hilb)$.
+\end{definition}
+
+迹 $\Tr(K)=\sum_n \inn{e_n}{K e_n}$ 定义良好对 $K\in\mathcal{S}_1$, 与基的选择无关. 物理上密度算符 $\rho\in\mathcal{S}_1$ 且 $\Tr\rho=1$ (见第 \ref{ch:morespin} 章).
+
+\section{小结与对后续章节的指向}\label{sec:hilbert-summary}
+
+我们建立了散射理论的``无形脚手架'':
+
+\begin{enumerate}
+    \item Hilbert 空间 (\S\ref{sec:hilbert-axioms}) 与算符 (\S\ref{sec:hilbert-operators}) 的严格定义, 区分有界/无界, 强调定义域;
+    \item 自伴性 (\S\ref{sec:hilbert-adjoint}) 是物理可观测量的正确数学条件, 由亏指数判据 \ref{thm:hilbert-deficiency} 与 Kato--Rellich \ref{thm:hilbert-kato} 验证;
+    \item 谱 (\S\ref{sec:hilbert-spectrum}) 与谱定理 (\S\ref{sec:hilbert-spectral-thm}) 给出``可观测量 $\leftrightarrow$ 概率分布'' 的精确版本;
+    \item 函数演算 (\S\ref{sec:hilbert-functional-calc}) 让我们给出 $\rme^{-\rmi\Op{H}t}, R(z;\Op{H}), \Op{H}^{1/2}\ldots$ 严格意义;
+    \item Stone 定理 (\S\ref{sec:hilbert-stone}) 让 Schrödinger 方程的求解、自由演化和全演化都有同一框架;
+    \item 谱的精细分解 (\S\ref{sec:hilbert-spec-decomp-fine}) 与 RAGE 定理 \ref{thm:hilbert-rage} 给出``束缚态 / 散射态''的严格定义;
+    \item 算符收敛模式 (\S\ref{sec:hilbert-conv}) 区分使我们能讨论 Møller 算符 (式 \eqref{eq:hilbert-moller}) 的强极限 $\lim_{t\to\mp\infty}\rme^{\rmi\Op{H}t}\rme^{-\rmi\Op{H}_0 t}$, 而 Cook 判据 \ref{thm:hilbert-cook} 给出存在性的具体条件;
+    \item 紧算符 (\S\ref{sec:hilbert-compact}) 与 Riesz--Schauder 准备 Fredholm 替换、Lippmann--Schwinger 方程 (第 \ref{ch:partial} 章) 与 Faddeev 多体方程的解析框架.
+\end{enumerate}
+
+接下来, 第 \ref{ch:Smat1P} 章将正式定义 Møller 算符 $\Omega_\pm$, 散射算符 $\Smat=\Omega_-^\dagger\Omega_+$, 并讨论渐近完备性 \eqref{eq:hilbert-asymptcomp}. 第 \ref{ch:cross} 章把 $\Smat$ 的矩阵元 (on-shell $\Tmat$) 翻译为可测量的微分截面. 第 \ref{ch:green} 章引入 Green 算符 $R(z;\Op{H})$, 利用本章式 \eqref{eq:hilbert-resolvent-id} 与 Stone 公式
+\begin{equation}\label{eq:hilbert-stone-formula}
+\frac{1}{2\pi\rmi}\bigl[R(\lambda+\rmi 0;\Op{H})-R(\lambda-\rmi 0;\Op{H})\bigr]=\frac{\rmd E_{\Op{H}}^{\rm ac}}{\rmd\lambda}+(\text{point and singular parts}),
+\end{equation}
+将谱测度与预解算符的边界值联系起来——这是 Lippmann--Schwinger 方程 (第 \ref{ch:stationary} 章) 与 $S$-矩阵解析延拓 (第 \ref{ch:analytic} 章)、共振 (第 \ref{ch:resonance} 章) 的共同根源.
+
+\begin{remark}[读者建议]
+本章对许多定理只给出梗概证明. 进一步阅读:
+\begin{itemize}
+    \item M.\ Reed, B.\ Simon, \emph{Methods of Modern Mathematical Physics}, 卷 I (Functional Analysis), 卷 II (Fourier Analysis, Self-Adjointness), 卷 III (Scattering Theory), 卷 IV (Analysis of Operators);
+    \item T.\ Kato, \emph{Perturbation Theory for Linear Operators};
+    \item J.\ von Neumann, \emph{Mathematical Foundations of Quantum Mechanics};
+    \item W.\ Amrein, \emph{Hilbert Space Methods in Quantum Mechanics}.
+\end{itemize}
+\end{remark}

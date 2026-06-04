@@ -1,0 +1,997 @@
+\chapter{两粒子散射 (Two-Particle Scattering)}\label{ch:scat2p}
+
+前面两章我们讨论了单粒子在外加靶势 $V(\bm{x})$ 中的散射：靶被理想化为产生固定外势的源，自身没有动力学自由度。本章把这一图像推广到\textbf{两个无自旋粒子的弹性散射 (elastic scattering of two spinless particles)}。我们将看到，对于只依赖相对坐标 $\bm{x}_1-\bm{x}_2$ 的相互作用，引入质心 (center-of-mass, CM) 与相对坐标后，两体问题在质心系中完全退化为一个具有约化质量的等效单粒子势散射问题；先前建立的所有概念——渐近条件、波算符 $\Op{\Omega}_{\pm}$、$S$ 算符、跃迁矩阵 $\Tmat$、微分截面——可以原样移植。本章重点处理：
+\begin{itemize}
+  \item 两粒子 Hilbert 空间的张量积结构；
+  \item Hamiltonian 的质心–相对分解；
+  \item 自由演化算符的因子化与渐近条件；
+  \item 波算符与 $S$ 算符的两体形式；
+  \item 实验室系 (lab) 与质心系 (CM) 之间运动学转换以及微分截面变换的 Jacobian；
+  \item 总能量、总动量守恒在 $S$ 矩阵元上的体现。
+\end{itemize}
+我们暂时只考虑\textbf{非全同 (non-identical)} 粒子的情形；全同粒子需要引入交换对称性，将在后续章节处理。
+
+%==============================================================
+\section{两粒子 Hilbert 空间与张量积结构}
+
+\subsection{两体波函数与张量积}
+
+设两个粒子的位置坐标分别为 $\bm{x}_1\in\R^3$ 与 $\bm{x}_2\in\R^3$。在量子力学中，第 $i$ 个粒子的态空间为
+\begin{equation}
+  \Hilb_i = L^2(\R^3,\rmd^3 x_i), \qquad i=1,2.
+  \label{eq:single-particle-hilbert-2p}
+\end{equation}
+两粒子系统的态空间是张量积
+\begin{equation}
+  \Hilb \;=\; \Hilb_1 \otimes \Hilb_2.
+  \label{eq:tensor-product-hilbert}
+\end{equation}
+任意两体波函数 $\psi(\bm{x}_1,\bm{x}_2)$ 都属于 $L^2(\R^6) \cong \Hilb_1\otimes\Hilb_2$。一类特殊的态——\textbf{乘积态 (product states)}——具有可分形式
+\begin{equation}
+  \psi(\bm{x}_1,\bm{x}_2) = \phi(\bm{x}_1)\,\chi(\bm{x}_2), \qquad |\psi\rangle = |\phi\rangle_1\otimes|\chi\rangle_2.
+  \label{eq:product-state}
+\end{equation}
+一般两体态可以写为这种乘积态的叠加：
+\begin{equation}
+  |\psi\rangle = \sum_{mn} c_{nm}\,|n\rangle_1\otimes|m\rangle_2,
+  \label{eq:general-2body-state}
+\end{equation}
+其中 $\{|n\rangle_1\}$、$\{|m\rangle_2\}$ 分别是 $\Hilb_1$、$\Hilb_2$ 的一组完备基。系数中 $c_{nm}$ 一般不能写为 $a_n b_m$ 的乘积形式，这正反映了量子\textbf{纠缠 (entanglement)} 的存在。
+
+\paragraph{内积。} 张量积空间的内积由因子空间的内积给出
+\begin{equation}
+  \big({}_1\langle\phi'|\otimes{}_2\langle\chi'|\big)\big(|\phi\rangle_1\otimes|\chi\rangle_2\big) = \inn{\phi'}{\phi}\,\inn{\chi'}{\chi}.
+  \label{eq:tensor-inner-product}
+\end{equation}
+对于一般态则按双线性扩展。
+
+\begin{remark}
+  实际上张量积空间没有比单空间“多”出本质上的新结构——它只是\emph{多了一个独立自由度}，因此可以用张量积来表示。例如，对于带自旋的单粒子，全 Hilbert 空间也可写为
+  \[
+    \Hilb = \Hilb_{\text{space}} \otimes \Hilb_{\text{spin}},
+  \]
+  其中空间自由度与自旋自由度独立分布。
+\end{remark}
+
+\subsection{张量积空间中的算符}
+
+算符的张量积按下式作用于乘积态：
+\begin{equation}
+  (A\otimes B)\big(|\phi\rangle\otimes|\chi\rangle\big) = (A|\phi\rangle)\otimes(B|\chi\rangle).
+  \label{eq:tensor-operator-action}
+\end{equation}
+特别地，单空间算符在张量积空间中的“嵌入”如下：若 $A$ 原本作用于 $\Hilb_1$，则在 $\Hilb_1\otimes\Hilb_2$ 中应理解为 $A\otimes \mathbf{1}_2$；同理 $\Hilb_2$ 中的 $B$ 应看作 $\mathbf{1}_1\otimes B$。两者的乘积即为
+\begin{equation}
+  AB \;\equiv\; A\otimes B \;=\; (A\otimes\mathbf{1}_2)(\mathbf{1}_1\otimes B),
+  \qquad [A\otimes\mathbf{1}_2,\;\mathbf{1}_1\otimes B]=0.
+  \label{eq:tensor-commute}
+\end{equation}
+这意味着：作用于不同因子空间的算符总是对易。
+
+\begin{example}
+  系统的总动量算符为
+  \begin{equation}
+    \bm{P} \;=\; \bm{P}_1 + \bm{P}_2 \;=\; \bm{P}_1\otimes\mathbf{1}_2 + \mathbf{1}_1\otimes\bm{P}_2,
+    \label{eq:total-momentum}
+  \end{equation}
+  其中 $\bm{P}_i$ 是第 $i$ 个粒子的动量。类似地，总位置算符 $\bm{X}_1+\bm{X}_2$ 等都是这种“单粒子算符之和”的形式。
+\end{example}
+
+%==============================================================
+\section{质心–相对坐标分解}
+
+张量积分解 $\Hilb=\Hilb_1\otimes\Hilb_2$ 并不唯一——任意两个独立自由度都可以作为分解的“两个因子”。对于平移不变的相互作用，最有用的因子化是把六维位形空间 $(\bm{x}_1,\bm{x}_2)$ 重新参数化为质心坐标与相对坐标。
+
+\subsection{坐标与动量变换}
+
+定义
+\begin{equation}
+  \bar{\bm{x}} \;=\; \frac{m_1\bm{x}_1 + m_2\bm{x}_2}{m_1 + m_2}, \qquad
+  \bm{x} \;=\; \bm{x}_1 - \bm{x}_2,
+  \label{eq:CM-rel-coords}
+\end{equation}
+其中 $\bar{\bm{x}}$ 是\textbf{质心坐标}，$\bm{x}$ 是\textbf{相对坐标}。对应地，定义
+\begin{equation}
+  \bar{\bm{P}} \;=\; \bm{P}_1 + \bm{P}_2,\qquad
+  \bm{P} \;=\; \frac{m_2\bm{P}_1 - m_1\bm{P}_2}{m_1+m_2}.
+  \label{eq:CM-rel-momenta}
+\end{equation}
+$\bar{\bm{P}}$ 是\textbf{总动量}，$\bm{P}$ 是\textbf{相对动量}。引入
+\begin{equation}
+  M \;=\; m_1+m_2 \quad (\text{总质量}), \qquad
+  m \;=\; \frac{m_1 m_2}{m_1+m_2} \quad (\text{约化质量}).
+  \label{eq:total-reduced-mass}
+\end{equation}
+\textbf{反变换}（容易直接验证）
+\begin{equation}
+  \bm{x}_1 = \bar{\bm{x}} + \frac{m_2}{M}\bm{x},\quad
+  \bm{x}_2 = \bar{\bm{x}} - \frac{m_1}{M}\bm{x},\quad
+  \bm{P}_1 = \frac{m_1}{M}\bar{\bm{P}} + \bm{P},\quad
+  \bm{P}_2 = \frac{m_2}{M}\bar{\bm{P}} - \bm{P}.
+\end{equation}
+
+\begin{proposition}[新坐标系下的正则对易关系]
+  $\bar{\bm{X}},\bm{X},\bar{\bm{P}},\bm{P}$ 满足
+  \begin{equation}
+    [\bar{P}^a,\bar{X}^b]=-\rmi\hbar\,\delta^{ab},\quad
+    [P^a,X^b]=-\rmi\hbar\,\delta^{ab},\quad
+    [\bar{P}^a,X^b]=0,\quad [P^a,\bar{X}^b]=0,
+    \label{eq:CCR-CM-rel}
+  \end{equation}
+  其中 $a,b=1,2,3$。也就是说，$(\bar{\bm{X}},\bar{\bm{P}})$ 与 $(\bm{X},\bm{P})$ 是两套独立的、互相对易的正则共轭对。
+\end{proposition}
+
+\begin{proof*}
+  以 $[\bar{P}^a,\bar{X}^b]$ 为例：
+  \[
+    [\bar P^a,\bar X^b]
+    = \bigl[P_1^a+P_2^a,\;\tfrac{m_1 X_1^b + m_2 X_2^b}{M}\bigr]
+    = \tfrac{m_1}{M}[P_1^a,X_1^b] + \tfrac{m_2}{M}[P_2^a,X_2^b]
+    = -\rmi\hbar\,\delta^{ab},
+  \]
+  其中用到了 $[P_i^a,X_j^b]=-\rmi\hbar\,\delta^{ab}\delta_{ij}$ 与不同粒子的算符对易。其余可类似验证。
+\end{proof*}
+
+\subsection{Hilbert 空间的另一种因子化}
+
+正则对易关系\eqref{eq:CCR-CM-rel}表明 $(\bar{\bm{X}},\bar{\bm{P}})$ 与 $(\bm{X},\bm{P})$ 各自构成一个三维位形–动量代数，且彼此独立。因此可以\textbf{重新因子化}\:Hilbert 空间：
+\begin{equation}
+  \Hilb \;=\; \Hilb_1 \otimes \Hilb_2 \;=\; \Hilb_{\text{cm}} \otimes \Hilb_{\text{rel}},
+  \label{eq:cm-rel-factorization}
+\end{equation}
+其中 $\Hilb_{\text{cm}} = L^2(\R^3,\rmd^3\bar{x})$ 是质心坐标 Hilbert 空间，$\Hilb_{\text{rel}} = L^2(\R^3,\rmd^3 x)$ 是相对坐标 Hilbert 空间。同一个二体态既可以写作 $\psi(\bm{x}_1,\bm{x}_2)$，也可以写作 $\widetilde\psi(\bar{\bm{x}},\bm{x})$；二者通过\eqref{eq:CM-rel-coords}互相变换。
+
+\begin{remark}
+  这个分解的意义在于：当相互作用势只依赖 $\bm{x}_1-\bm{x}_2=\bm{x}$ 时，质心运动与相对运动\textbf{解耦}，从而可以分别求解。
+\end{remark}
+
+%==============================================================
+\section{Hamiltonian 的分解}
+
+\subsection{动能项的重写}
+
+考察相互作用势只依赖于相对坐标的两粒子 Hamiltonian
+\begin{equation}
+  H \;=\; \frac{\bm{P}_1^2}{2m_1} + \frac{\bm{P}_2^2}{2m_2} + V(\bm{x}_1-\bm{x}_2)
+       \;\equiv\; H_0 + V.
+  \label{eq:full-Hamiltonian-2p}
+\end{equation}
+利用 $\bm{P}_1=\frac{m_1}{M}\bar{\bm{P}}+\bm{P}$，$\bm{P}_2=\frac{m_2}{M}\bar{\bm{P}}-\bm{P}$，直接代入：
+\begin{align}
+  \frac{\bm{P}_1^2}{2m_1}+\frac{\bm{P}_2^2}{2m_2}
+  &= \frac{1}{2m_1}\Big(\tfrac{m_1}{M}\bar{\bm{P}}+\bm{P}\Big)^2
+    +\frac{1}{2m_2}\Big(\tfrac{m_2}{M}\bar{\bm{P}}-\bm{P}\Big)^2 \notag\\
+  &= \frac{1}{2}\Big(\tfrac{m_1+m_2}{M^2}\Big)\bar{\bm{P}}^2
+    + \frac{1}{2}\Big(\tfrac{1}{m_1}+\tfrac{1}{m_2}\Big)\bm{P}^2
+    + \Big(\tfrac{1}{M}-\tfrac{1}{M}\Big)\bar{\bm{P}}\!\cdot\!\bm{P} \notag\\
+  &= \frac{\bar{\bm{P}}^2}{2M} + \frac{\bm{P}^2}{2m}.
+  \label{eq:KE-decomposition}
+\end{align}
+交叉项之所以消失，是因为 $\frac{1}{m_1}\cdot\frac{m_1}{M}-\frac{1}{m_2}\cdot\frac{m_2}{M}=0$。代入 $V=V(\bm{x})$ 得
+\begin{equation}
+  \boxed{
+    H \;=\; \underbrace{\frac{\bar{\bm{P}}^2}{2M}}_{\equiv H_{\text{cm}}}
+       \;+\; \underbrace{\Big[\frac{\bm{P}^2}{2m} + V(\bm{x})\Big]}_{\equiv H_{\text{rel}}}
+       \;=\; H_{\text{cm}} + H_{\text{rel}}.
+  }
+  \label{eq:H-decomposition}
+\end{equation}
+
+\subsection{$H_{\text{cm}}$ 与 $H_{\text{rel}}$ 的对易性}
+
+$H_{\text{cm}}$ 只用到 $\bar{\bm{P}}$（因此只作用在 $\Hilb_{\text{cm}}$ 上）；$H_{\text{rel}}$ 只用到 $\bm{P}$ 与 $\bm{X}$（只作用在 $\Hilb_{\text{rel}}$ 上）。由\eqref{eq:CCR-CM-rel}立即得
+\begin{equation}
+  [H_{\text{cm}},H_{\text{rel}}] = 0.
+  \label{eq:Hcm-Hrel-commute}
+\end{equation}
+
+\begin{remark}[作业 3-1]
+  作为练习，请验证：
+  \begin{enumerate}
+    \item Hamiltonian 分解\eqref{eq:H-decomposition}；
+    \item 正则对易关系\eqref{eq:CCR-CM-rel}；
+    \item 由此推出 $[H_{\text{cm}},H_{\text{rel}}]=0$。
+  \end{enumerate}
+\end{remark}
+
+\subsection{时间演化算符的因子化}
+
+由 $[H_{\text{cm}},H_{\text{rel}}]=0$，全 Hamiltonian 的时间演化算符可以分解：
+\begin{equation}
+  U(t) \;=\; \rme^{-\rmi H t}
+        \;=\; \rme^{-\rmi(H_{\text{cm}}+H_{\text{rel}})t}
+        \;=\; \rme^{-\rmi H_{\text{cm}}t}\,\rme^{-\rmi H_{\text{rel}}t}
+        \;=\; \rme^{-\rmi H_{\text{cm}}t}\otimes \rme^{-\rmi H_{\text{rel}}t}.
+  \label{eq:U-factorization}
+\end{equation}
+\textbf{物理含义}：
+\begin{itemize}
+  \item 质心运动与相对运动相互独立；
+  \item $H_{\text{cm}}=\bar{\bm{P}}^2/(2M)$ 是质量为 $M$ 的自由粒子 Hamiltonian——质心永远是自由运动；
+  \item $H_{\text{rel}}=\bm{P}^2/(2m)+V(\bm{x})$ 与一个质量为 $m$、在外势 $V(\bm{x})$ 中运动的单粒子 Hamiltonian 形式完全相同。
+\end{itemize}
+
+类似地，自由两粒子演化算符 $U_0(t)=\rme^{-\rmi H_0 t}$ 也分解为：
+\begin{align}
+  H_0 &= \frac{\bm{P}_1^2}{2m_1}+\frac{\bm{P}_2^2}{2m_2}
+       = \frac{\bar{\bm{P}}^2}{2M}+\frac{\bm{P}^2}{2m}
+       = H_{\text{cm}}+H_{0,\text{rel}}, \label{eq:H0-decomposition}\\
+  U_0(t) &= \rme^{-\rmi H_{\text{cm}}t}\otimes \rme^{-\rmi H_{0,\text{rel}}t},
+  \label{eq:U0-factorization}
+\end{align}
+其中
+\begin{equation}
+  H_{0,\text{rel}} \;\equiv\; \frac{\bm{P}^2}{2m}.
+  \label{eq:H0rel}
+\end{equation}
+注意 $H$ 和 $H_0$ 的\emph{质心部分完全相同}——所有相互作用都被吸收到相对运动的 $H_{\text{rel}}$ 里了。
+
+%==============================================================
+\section{两体散射的渐近条件与波算符}
+
+两粒子散射问题在数学结构上与单粒子势散射问题等价。我们要求散射态 $\psi$ 在远未来与远过去趋于自由两粒子态：
+
+\begin{definition}[两体渐近条件]
+  对每一散射态 $|\psi\rangle\in\Hilb$，存在自由态 $|\psi_{\text{in}/\text{out}}\rangle\in\Hilb$ 使
+  \begin{equation}
+    \lim_{t\to\mp\infty}\big\| U(t)|\psi\rangle - U_0(t)|\psi_{\text{in}/\text{out}}\rangle \big\| = 0.
+    \label{eq:asymptotic-condition-2p}
+  \end{equation}
+\end{definition}
+
+\subsection{波算符的因子化}
+
+将\eqref{eq:U-factorization}\eqref{eq:U0-factorization}代入 $U^{\dagger}(t)U_0(t)$：
+\begin{align}
+  U^{\dagger}(t)\,U_0(t)
+  &= \big(\rme^{\rmi H_{\text{cm}}t}\otimes \rme^{\rmi H_{\text{rel}}t}\big)
+     \big(\rme^{-\rmi H_{\text{cm}}t}\otimes \rme^{-\rmi H_{0,\text{rel}}t}\big) \notag\\
+  &= \mathbf{1}_{\text{cm}} \otimes \big(\rme^{\rmi H_{\text{rel}}t}\,\rme^{-\rmi H_{0,\text{rel}}t}\big).
+  \label{eq:U-dag-U0-fact}
+\end{align}
+质心因子完全相消，剩下的恰好是相对运动的“单粒子型”波算符。如果 $H_{\text{rel}}$ 与 $H_{0,\text{rel}}$ 满足前面单粒子散射的存在性条件（势 $V(\bm{x})$ 在无穷远处衰减得足够快），则强极限存在：
+\begin{equation}
+  \Op{\Omega}_{\pm}^{\text{rel}}
+  \;=\; \mathop{\text{s-lim}}_{t\to\mp\infty} \rme^{\rmi H_{\text{rel}}t}\,\rme^{-\rmi H_{0,\text{rel}}t}.
+  \label{eq:Omega-rel}
+\end{equation}
+对应的两体波算符为
+\begin{equation}
+  \Op{\Omega}_{\pm} \;=\; \mathbf{1}_{\text{cm}} \otimes \Op{\Omega}_{\pm}^{\text{rel}},\qquad
+  |\psi\rangle = \Op{\Omega}_{\pm}|\psi_{\text{in}/\text{out}}\rangle.
+  \label{eq:Omega-2body}
+\end{equation}
+
+\subsection{渐近完备}
+
+只要在相对运动这一支上（即把 $H_{\text{rel}}$ 当作单粒子 Hamiltonian）满足渐近完备条件，所有结论都可以原样照搬：
+\begin{equation}
+  \Op{\Omega}_{+}\Hilb \;=\; \Op{\Omega}_{-}\Hilb \;=\; \mathcal{R}, \qquad
+  \Hilb \;=\; \mathcal{R}\oplus \mathcal{B},
+  \label{eq:asymptotic-completeness-2p}
+\end{equation}
+其中 $\mathcal{R}$ 是散射态空间，$\mathcal{B}$ 是束缚态空间（来自 $H_{\text{rel}}$ 的负本征值）。
+
+\subsection{$S$ 算符}
+
+定义两体 $S$ 算符
+\begin{equation}
+  \Smat \;=\; \Op{\Omega}_{-}^{\dagger}\,\Op{\Omega}_{+}.
+  \label{eq:S-2body}
+\end{equation}
+利用\eqref{eq:Omega-2body}：
+\begin{equation}
+  \Smat \;=\; \big(\mathbf{1}_{\text{cm}}\otimes\Op{\Omega}_{-}^{\text{rel}\,\dagger}\big)
+              \big(\mathbf{1}_{\text{cm}}\otimes\Op{\Omega}_{+}^{\text{rel}}\big)
+       \;=\; \mathbf{1}_{\text{cm}} \otimes \Smat^{\text{rel}},
+  \label{eq:S-factorization}
+\end{equation}
+其中 $\Smat^{\text{rel}}=\Op{\Omega}_{-}^{\text{rel}\,\dagger}\Op{\Omega}_{+}^{\text{rel}}$ 是按相对运动 $H_{\text{rel}}$ 计算得到的“单粒子”$S$ 算符。$\Smat$ 是\textbf{幺正算符 (unitary)}（继承自 $\Smat^{\text{rel}}$ 的幺正性），将每个进态唯一对应到出态：
+\begin{equation}
+  |\psi_{\text{out}}\rangle \;=\; \Smat\,|\psi_{\text{in}}\rangle.
+  \label{eq:S-mapping}
+\end{equation}
+
+%==============================================================
+\section{能量动量守恒}
+
+\subsection{总动量守恒}
+
+由\eqref{eq:S-factorization}，$\Smat$ 在质心因子上是恒等算符，故
+\begin{equation}
+  [\Smat,\bar{\bm{P}}]=0,
+  \label{eq:S-Pbar-commute}
+\end{equation}
+即\textbf{总动量守恒}。事实上 $\bar{\bm{P}}$ 与 $\Op{\Omega}_{\pm}$ 也对易，所以总动量在散射前后逐分量守恒。
+
+\subsection{总能量守恒}
+
+由 $[\Smat,H_0]=0$（来自波算符的截获关系 $H\Op{\Omega}_{\pm}=\Op{\Omega}_{\pm}H_0$），总能量守恒。在非相对论情形下
+\begin{equation}
+  E_i \;=\; \frac{\bm{p}_i^2}{2m_i},\qquad i=1,2,
+\end{equation}
+故 $E_1+E_2$ 在散射前后不变。
+
+\subsection{$S$ 矩阵元的结构}
+
+取动量本征态 $|\bm{p}_1,\bm{p}_2\rangle$，由动量守恒与能量守恒
+\begin{equation}
+  \matel{\bm{p}_1'\bm{p}_2'}{\Smat}{\bm{p}_1\bm{p}_2}
+  \;\sim\; \delta_3(\bm{p}_1+\bm{p}_2-\bm{p}_1'-\bm{p}_2')\,\delta(E_1+E_2-E_1'-E_2').
+  \label{eq:S-matrix-deltas}
+\end{equation}
+
+\subsubsection*{动量基底之间的变换}
+
+$\{\bm{P}_1,\bm{P}_2\}$ 与 $\{\bar{\bm{P}},\bm{P}\}$ 是两套互相对易的可观测组，因此有共同本征态：
+\begin{equation}
+  |\bm{p}_1,\bm{p}_2\rangle \;=\; |\bar{\bm{p}},\bm{p}\rangle, \qquad
+  \bar{\bm{p}}=\bm{p}_1+\bm{p}_2,\quad \bm{p}=\frac{m_2\bm{p}_1-m_1\bm{p}_2}{M}.
+\end{equation}
+两种坐标表象下的本征函数（取适当归一化）通过对 $\bar{\bm{x}},\bm{x}$ 的变换\eqref{eq:CM-rel-coords}相互一致：
+\begin{equation}
+  \rme^{\rmi(\bm{p}_1\cdot\bm{x}_1+\bm{p}_2\cdot\bm{x}_2)}
+  \;=\; \rme^{\rmi(\bar{\bm{p}}\cdot\bar{\bm{x}}+\bm{p}\cdot\bm{x})}.
+  \label{eq:plane-wave-identity}
+\end{equation}
+（可由把 $\bm{x}_i,\bm{p}_i$ 用 $\bar{\bm{x}},\bm{x},\bar{\bm{p}},\bm{p}$ 展开后直接代入验证；这是\textbf{作业 3-2}。）
+
+\subsubsection*{$S$ 矩阵元的具体形式}
+
+由\eqref{eq:S-factorization}，
+\begin{align}
+  \matel{\bm{p}_1'\bm{p}_2'}{\Smat}{\bm{p}_1\bm{p}_2}
+  &= \matel{\bar{\bm{p}}'\,\bm{p}'}{\mathbf{1}_{\text{cm}}\otimes\Smat^{\text{rel}}}{\bar{\bm{p}}\,\bm{p}} \notag\\
+  &= \delta_3(\bar{\bm{p}}-\bar{\bm{p}}')\,\matel{\bm{p}'}{\Smat^{\text{rel}}}{\bm{p}}.
+  \label{eq:S-matrix-CM-form}
+\end{align}
+由 $\Smat^{\text{rel}}$ 的单粒子结构（参见前面单粒子情形），可以引入相对运动的 $t$ 矩阵元：
+\begin{equation}
+  \matel{\bm{p}'}{\Smat^{\text{rel}}}{\bm{p}}
+  \;=\; \delta_3(\bm{p}'-\bm{p}) - 2\pi\rmi\,\delta(E_p-E_{p'})\,t(\bm{p}'\!\leftarrow\!\bm{p}),
+  \label{eq:t-matrix-rel}
+\end{equation}
+其中 $E_p=\bm{p}^2/(2m)=E_{\text{rel}}$。代回\eqref{eq:S-matrix-CM-form}：
+\begin{align}
+  \matel{\bm{p}_1'\bm{p}_2'}{\Smat}{\bm{p}_1\bm{p}_2}
+  &= \delta_3(\bar{\bm{p}}-\bar{\bm{p}}')\,\delta_3(\bm{p}'-\bm{p})
+     -2\pi\rmi\,\delta_3(\bar{\bm{p}}-\bar{\bm{p}}')\,\delta(E_p-E_{p'})\,t(\bm{p}'\!\leftarrow\!\bm{p}) \notag\\
+  &= \delta_3(\bm{p}_1'-\bm{p}_1)\,\delta_3(\bm{p}_2'-\bm{p}_2) \notag\\
+  &\quad -2\pi\rmi\,\delta_3\Big(\sum_i\bm{p}_i-\sum_i\bm{p}_i'\Big)
+     \delta\Big(\sum_i E_i-\sum_i E_i'\Big)\,t(\bm{p}'\!\leftarrow\!\bm{p}).
+  \label{eq:S-matrix-final}
+\end{align}
+\textbf{注意}：上式中
+\begin{equation}
+  \sum_i E_i \;=\; E_{\text{cm}} + E_{\text{rel}}, \qquad E_p=E_{\text{rel}},
+\end{equation}
+能量 delta 函数实际上仅约束相对动能；总动能 delta 同时由动量 delta 自动给出。换言之，质心动能因总动量守恒而自动守恒，剩下的能量守恒就是相对动能 $\bm{p}^2/(2m)$ 的守恒。
+
+%==============================================================
+\section{实验室系与质心系：运动学}
+
+\subsection{两类常用参考系}
+
+\begin{itemize}
+  \item \textbf{实验室系 (laboratory frame)}：初始时\emph{靶粒子}（设为粒子 2）静止；入射束（粒子 1）的初动量为 $\bm{p}_1^{\text{lab}}\neq 0$，$\bm{p}_2^{\text{lab}}=0$。
+  \item \textbf{质心系 (CM frame)}：质心总动量 $\bar{\bm{p}}=\bm{p}_1+\bm{p}_2=0$，即两粒子动量大小相等方向相反 $\bm{p}_1=-\bm{p}_2=\bm{p}$。
+\end{itemize}
+两个系都是惯性系；在它们之间 Galilei 变换为
+\begin{equation}
+  \bm{V}_{\text{cm-relative-to-lab}} \;=\; \frac{\bar{\bm{p}}^{\text{lab}}}{M}
+  \;=\; \frac{\bm{p}_1^{\text{lab}}}{M},
+  \label{eq:lab-to-cm-velocity}
+\end{equation}
+质心相对实验室系沿入射方向以速度 $\bm{V}$ 平动。
+
+\subsection{散射截面的不变性}
+
+考虑入射动量为 $\bm{p}_1,\bm{p}_2$，向立体角元 $\Delta\Omega$ 散射的事件数：
+\begin{equation}
+  N_{\text{sc}}(\Delta\Omega \leftarrow \bm{p}_1,\bm{p}_2)
+  \;=\; n_{\text{inc}}(\bm{p}_1,\bm{p}_2)\,\sigma(\Delta\Omega \leftarrow \bm{p}_1,\bm{p}_2),
+  \label{eq:Nsc-2p}
+\end{equation}
+其中 $n_{\text{inc}}$ 为单位面积入射粒子数（与相对动量垂直方向的“柱密度”）。当我们换到另一个参考系（动量变为 $\bm{p}_1',\bm{p}_2'$，立体角元变为 $\Delta\Omega'$）时：
+\begin{itemize}
+  \item 散射到 $\Delta\Omega$ 与 $\Delta\Omega'$ 的\emph{粒子数}与参考系无关：$N_{\text{sc}}(\Delta\Omega\leftarrow\bm{p}_1,\bm{p}_2)=N_{\text{sc}}(\Delta\Omega'\leftarrow\bm{p}_1',\bm{p}_2')$；
+  \item 入射柱密度 $n_{\text{inc}}$ 也是相对动量垂直方向上的密度，与参考系无关：$n_{\text{inc}}(\bm{p}_1,\bm{p}_2)=n_{\text{inc}}(\bm{p}_1',\bm{p}_2')$。
+\end{itemize}
+故\textbf{有限立体角的散射截面不变}：
+\begin{equation}
+  \sigma(\Delta\Omega \leftarrow \bm{p}_1,\bm{p}_2) \;=\; \sigma(\Delta\Omega' \leftarrow \bm{p}_1',\bm{p}_2').
+  \label{eq:sigma-frame-invariant}
+\end{equation}
+
+\subsection{微分截面与立体角变换 Jacobian}
+
+对于微分截面，由于不同参考系下散射方向不同，立体角元 $\rmd\Omega$ 会变换：
+\begin{equation}
+  \Big(\frac{\rmd\sigma}{\rmd\Omega'}\Big)(\rmd\Omega'\leftarrow \bm{p}_1',\bm{p}_2')
+  \;=\; \Big(\frac{\rmd\sigma}{\rmd\Omega}\Big)\frac{\rmd\Omega}{\rmd\Omega'}.
+  \label{eq:diff-cs-jacobian}
+\end{equation}
+这里 $\rmd\Omega/\rmd\Omega'$ 即立体角变换的 Jacobian。下面推导非相对论质心系到实验室系的具体公式。
+
+\subsubsection*{入射粒子在两参考系中的速度关系}
+
+设质心系中入射粒子 1 的散射方向相对于入射方向 ($\hat{\bm{z}}$ 方向) 的极角为 $\theta_{\text{cm}}$，方位角为 $\phi$；其速度为 $\bm{u}_1$，$|\bm{u}_1|=u$。质心相对实验室系的速度沿 $\hat{\bm{z}}$ 方向，大小为 $V$。粒子 1 在实验室系中的速度
+\begin{equation}
+  \bm{u}_1^{\text{lab}} \;=\; \bm{u}_1^{\text{cm}} + \bm{V}.
+\end{equation}
+粒子 1 在 CM 系中的速度大小（弹性散射后）等于入射前的大小 $u$；在初始 CM 系中粒子 1 的速度 $u_{1,\text{cm,init}}=\frac{m_2}{M}u_{\text{rel}}$（其中 $u_{\text{rel}}=u_1^{\text{lab}}$）。重要的是\textbf{实验室系中粒子 1 散射后的速度大小并不简单地等于入射大小}，需要由几何关系算出。
+
+引入比例参数
+\begin{equation}
+  \lambda \;=\; \frac{V}{u} \;=\; \frac{m_1}{m_2},
+  \label{eq:lambda-def}
+\end{equation}
+（最后一个等号在弹性散射时成立：$V=\frac{m_1}{M}u_1^{\text{lab}}=\frac{m_1}{M}u_{\text{rel}}$，而 $u=\frac{m_2}{M}u_{\text{rel}}$，故 $V/u=m_1/m_2$。）
+
+\subsubsection*{角度关系}
+
+设实验室系中散射极角为 $\theta_{\text{lab}}$。由速度合成
+\[
+  \bm{u}_1^{\text{lab}} = u\sin\theta_{\text{cm}}\hat{\bm{e}}_{\perp} + (u\cos\theta_{\text{cm}}+V)\hat{\bm{z}},
+\]
+故
+\begin{equation}
+  \tan\theta_{\text{lab}} \;=\; \frac{u\sin\theta_{\text{cm}}}{u\cos\theta_{\text{cm}}+V}
+  \;=\; \frac{\sin\theta_{\text{cm}}}{\cos\theta_{\text{cm}}+\lambda}.
+  \label{eq:theta-lab-cm}
+\end{equation}
+方位角不变 $\phi_{\text{lab}}=\phi_{\text{cm}}$。
+
+\subsubsection*{Jacobian 计算}
+
+\begin{equation}
+  \frac{\rmd\Omega_{\text{cm}}}{\rmd\Omega_{\text{lab}}}
+  \;=\; \frac{\sin\theta_{\text{cm}}\,\rmd\theta_{\text{cm}}}{\sin\theta_{\text{lab}}\,\rmd\theta_{\text{lab}}}
+  \;=\; \frac{\rmd(\cos\theta_{\text{cm}})}{\rmd(\cos\theta_{\text{lab}})}.
+\end{equation}
+由\eqref{eq:theta-lab-cm}可推出
+\begin{equation}
+  \cos\theta_{\text{lab}} \;=\; \frac{\cos\theta_{\text{cm}}+\lambda}{\sqrt{1+2\lambda\cos\theta_{\text{cm}}+\lambda^2}}.
+  \label{eq:cos-theta-lab}
+\end{equation}
+对 $\cos\theta_{\text{cm}}$ 求导（设 $u=\cos\theta_{\text{cm}}$）：
+\begin{align}
+  \frac{\rmd\cos\theta_{\text{lab}}}{\rmd u}
+  &= \frac{\sqrt{1+2\lambda u+\lambda^2}-(u+\lambda)\cdot\frac{\lambda}{\sqrt{1+2\lambda u+\lambda^2}}}{1+2\lambda u+\lambda^2} \notag\\
+  &= \frac{(1+2\lambda u+\lambda^2)-\lambda(u+\lambda)}{(1+2\lambda u+\lambda^2)^{3/2}}
+  \;=\; \frac{1+\lambda u}{(1+2\lambda u+\lambda^2)^{3/2}}.
+\end{align}
+故
+\begin{equation}
+  \boxed{\;
+  \Big(\frac{\rmd\sigma}{\rmd\Omega}\Big)_{\text{lab}}
+  \;=\; \Big(\frac{\rmd\sigma}{\rmd\Omega}\Big)_{\text{cm}}\,
+        \frac{(1+2\lambda\cos\theta_{\text{cm}}+\lambda^2)^{3/2}}{|1+\lambda\cos\theta_{\text{cm}}|},
+        \qquad \lambda=\frac{m_1}{m_2}.
+  \;}
+  \label{eq:diff-cs-lab-cm}
+\end{equation}
+
+\begin{remark}[作业 3-3]
+  请补全推导：从角度关系\eqref{eq:theta-lab-cm}出发，推出微分截面变换公式\eqref{eq:diff-cs-lab-cm}。
+\end{remark}
+
+\begin{remark}[特殊情形]
+  \begin{itemize}
+    \item $\lambda\to 0$（即 $m_1\ll m_2$，靶很重）：$\theta_{\text{lab}}\approx\theta_{\text{cm}}$，Jacobian $\to 1$，质心系与实验室系几乎重合（如电子散射在重核上）。
+    \item $\lambda=1$（$m_1=m_2$）：$\theta_{\text{lab}}=\theta_{\text{cm}}/2$（等质量碰撞的著名结果）；最大散射角 $\theta_{\text{lab}}^{\max}=\pi/2$。
+    \item $\lambda>1$（入射比靶重）：实验室系存在最大散射角，$\sin\theta_{\text{lab}}^{\max}=1/\lambda$；同一 $\theta_{\text{lab}}$ 对应两个 $\theta_{\text{cm}}$，截面要把两支贡献相加。
+  \end{itemize}
+\end{remark}
+
+%==============================================================
+\section{质心系中的微分截面与散射振幅}
+
+\subsection{波包形式的入射态}
+
+在质心系中，入射波包主要集中于 $\bar{\bm{p}}\approx 0$、$\bm{p}_1=-\bm{p}_2=\bm{p}$ 附近。一般入射态可写为
+\begin{equation}
+  \psi_{\text{in}}(\bar{\bm{p}},\bm{p}) \;\sim\; \phi_1(\bm{p}_1)\,\phi_2(\bm{p}_2),
+  \label{eq:in-packet-form}
+\end{equation}
+其中 $\phi_1$ 集中于 $\bm{p}_1=\bm{p}_0$，$\phi_2$ 集中于 $\bm{p}_2=-\bm{p}_0$；从而总分布 $\psi_{\text{in}}(\bar{\bm{p}},\bm{p})$ 主要集中在 $\bar{\bm{p}}=0,\bm{p}=\bm{p}_0$。
+
+\subsection{出射态}
+
+利用\eqref{eq:S-matrix-final}和波包计算，对相对运动按单粒子情形得（积分掉 $\bar{\bm{p}}$ 守恒并保留 $\bm{p}'$ 的能量壳层）：
+\begin{equation}
+  \psi_{\text{out}}(\bar{\bm{p}},\bm{p})
+  \;=\; \psi_{\text{in}}(\bar{\bm{p}},\bm{p})
+        + \frac{\rmi}{2\pi m}\!\int\! \rmd^3 p'\,\delta(E_p-E_{p'})\,
+          f(\bm{p}\!\leftarrow\!\bm{p}')\,\psi_{\text{in}}(\bar{\bm{p}},\bm{p}'),
+  \label{eq:psi-out-2p}
+\end{equation}
+其中 $f$ 是相对运动的散射振幅（与单粒子情形定义相同，但用约化质量 $m$）。
+
+\subsection{随机碰撞参数的入射}
+
+考虑入射粒子 1 具有随机碰撞参数 $\bm{\rho}\perp\bm{p}_0$ 的情形：用空间平移
+\[
+  \psi_{\text{in}}(\bar{\bm{p}},\bm{p}) = \rme^{-\rmi\bm{\rho}\cdot\bm{p}_1}\phi_1(\bm{p}_1)\phi_2(\bm{p}_2),
+\]
+对碰撞参数求和：
+\begin{equation}
+  N_{\text{sc}}(\rmd\Omega\leftarrow\phi)
+  \;=\; \sum_i w(\rmd\Omega\leftarrow\phi_{\bm{\rho}_i})
+  \;=\; n_{\text{inc}}\!\int\! \rmd^2\rho\, w(\rmd\Omega\leftarrow\phi_{\bm{\rho}})
+  \;=\; n_{\text{inc}}\,\sigma(\rmd\Omega\leftarrow\phi).
+  \label{eq:Nsc-impact}
+\end{equation}
+
+\subsection{质心系微分截面与散射振幅的关系}
+
+类似单粒子情形，考虑到 $\psi_{\text{in}}$ 主要集中在 $\bar{\bm{p}}=0,\bm{p}=\bm{p}_0$，且 $\rmd\Omega$ 不包含向前散射方向 $\bm{p}_0$，可得
+\begin{equation}
+  \sigma(\rmd\Omega\leftarrow\phi) \;=\; \rmd\Omega\,\big|f(\bm{p}\!\leftarrow\!\bm{p}')\big|^2.
+\end{equation}
+由于该结果与具体波包形状 $\phi$ 无关，故
+\begin{equation}
+  \boxed{\;
+  \frac{\rmd\sigma}{\rmd\Omega}\big(\bm{p}\!\leftarrow\!\bm{p}_0\big)
+  \;=\; \big|f(\bm{p}\!\leftarrow\!\bm{p}_0)\big|^2.
+  \;}
+  \label{eq:diff-cs-cm}
+\end{equation}
+这就是质心系微分散射截面的最终公式：与“等效单粒子”——质量为约化质量 $m$，在外势 $V(\bm{x})$ 中散射——的微分截面公式形式上完全一致。
+
+\begin{remark}[作业 3-4 / Taylor 4.2 题]
+  \begin{enumerate}
+    \item[(a)] 详细推导用散射振幅表达的质心系微分散射截面，即\eqref{eq:diff-cs-cm}。本章中引入了额外的变量 $\bar{\bm{p}}$ 与积分 $\int \rmd^3\bar{p}$；这些应在计算中保留下来，并在最后的归一化积分中作消去。还要注意：粒子 1 的随机位移给出因子 $\rme^{-\rmi\bm{\rho}\cdot\bm{p}_1}$，但若用 $\bar{\bm{p}},\bm{p}$ 表达 $\bm{p}_1$，则应得到 $\rme^{-\rmi\bm{\rho}\cdot\bm{p}}$。
+    \item[(b)] 证明若把粒子 1 当作“靶”、粒子 2 当作“弹”，对 $\bm{\rho}$ 的随机平均会得到同一答案。（实际实验中两种平均都是同时进行的：束流中有许多粒子，给出粒子 1 的碰撞参数平均；靶中有许多粒子，给出粒子 2 的位置平均。）
+  \end{enumerate}
+\end{remark}
+
+%==============================================================
+\section{小结}
+
+本章把单粒子势散射的整个框架推广到了非全同两粒子的弹性散射。核心结论可以概括如下：
+
+\begin{enumerate}
+  \item \textbf{Hilbert 空间}：$\Hilb=\Hilb_1\otimes\Hilb_2=\Hilb_{\text{cm}}\otimes\Hilb_{\text{rel}}$，两种因子化均合法。
+  \item \textbf{Hamiltonian}：当 $V=V(\bm{x}_1-\bm{x}_2)$ 时，$H=H_{\text{cm}}+H_{\text{rel}}$，两者对易。
+  \item \textbf{时间演化}：$U(t)=\rme^{-\rmi H_{\text{cm}}t}\otimes\rme^{-\rmi H_{\text{rel}}t}$；$U_0(t)$ 同样分解。
+  \item \textbf{波算符与 $S$ 算符}：$\Op{\Omega}_{\pm}=\mathbf{1}_{\text{cm}}\otimes\Op{\Omega}_{\pm}^{\text{rel}}$，$\Smat=\mathbf{1}_{\text{cm}}\otimes\Smat^{\text{rel}}$。
+  \item \textbf{守恒律}：总动量 $\bar{\bm{P}}$、总能量都与 $\Smat$ 对易；$S$ 矩阵元含 $\delta_3(\sum\bm{p}_i-\sum\bm{p}_i')\,\delta(\sum E_i-\sum E_i')$。
+  \item \textbf{运动学}：质心系与实验室系通过 Galilei 变换相联系，比例参数 $\lambda=m_1/m_2$；微分截面通过 Jacobian
+        \[
+          \Big(\frac{\rmd\sigma}{\rmd\Omega}\Big)_{\text{lab}}
+          = \Big(\frac{\rmd\sigma}{\rmd\Omega}\Big)_{\text{cm}}
+            \frac{(1+2\lambda\cos\theta_{\text{cm}}+\lambda^2)^{3/2}}{|1+\lambda\cos\theta_{\text{cm}}|}
+        \]
+        相联系；对应粒子数与有限立体角截面则是不变量。
+  \item \textbf{质心系微分截面}：$\rmd\sigma/\rmd\Omega(\bm{p}\!\leftarrow\!\bm{p}_0)=|f(\bm{p}\!\leftarrow\!\bm{p}_0)|^2$，与单粒子情形完全一致——只需把质量替换为约化质量 $m$。
+\end{enumerate}
+
+至此，两体弹性散射在数学上彻底归结为以约化质量 $m$ 在外势 $V(\bm{x})$ 中运动的等效单粒子散射问题。下一章我们将考虑粒子带自旋的情形。
+
+%==============================================================
+\section{本章主要定理证明补全}\label{sec:2P-proofs}
+
+前面几节为了叙述的连贯，部分关键结论（Hamiltonian 分解、$\Smat$ 因子化、立体角 Jacobian）只给出了大致推导。本节集中给出更严格、更完整的证明，以备查阅。所采用的记号与第\ref{ch:hilbert}章 Hilbert 空间结构、第\ref{ch:qmreview}章量子力学回顾、第\ref{ch:Smat1P}章单粒子 $S$ 算符、第\ref{ch:cross}章微分截面定义保持一致。
+
+\subsection{正则变换的 Jacobian 与 Hamiltonian 分解}
+
+考察相空间变换
+\begin{equation}
+  (\bm{x}_1,\bm{x}_2,\bm{p}_1,\bm{p}_2) \;\longmapsto\; (\bar{\bm{x}},\bm{x},\bar{\bm{p}},\bm{p}),
+  \label{eq:2P-canonical-map}
+\end{equation}
+按\eqref{eq:CM-rel-coords}\eqref{eq:CM-rel-momenta}定义。我们要证明：
+\begin{enumerate}
+  \item 该变换是\textbf{正则变换 (canonical transformation)}：保持 Poisson 括号 / 正则对易关系；
+  \item 量子化后体积测度不变：$\rmd^3 x_1\,\rmd^3 x_2 = \rmd^3\bar{x}\,\rmd^3 x$；同样 $\rmd^3 p_1\,\rmd^3 p_2 = \rmd^3\bar{p}\,\rmd^3 p$；
+  \item 在新的 $(\bar{\bm{X}},\bm{X},\bar{\bm{P}},\bm{P})$ 表象下 $H$ 分解为\eqref{eq:H-decomposition}。
+\end{enumerate}
+
+\begin{theorem}[质心–相对分解]\label{thm:2P-cm-rel-decomp}
+  设两体 Hamiltonian
+  \[
+    H = \frac{\bm{P}_1^2}{2m_1} + \frac{\bm{P}_2^2}{2m_2} + V(\bm{X}_1-\bm{X}_2),
+  \]
+  其中 $V$ 为一仅依赖相对坐标的势。在变换\eqref{eq:CM-rel-coords}\eqref{eq:CM-rel-momenta}下，
+  \begin{equation}
+    H = H_{\rm cm} + H_{\rm rel},\qquad
+    H_{\rm cm} = \frac{\bar{\bm{P}}^2}{2M},\qquad
+    H_{\rm rel} = \frac{\bm{P}^2}{2m} + V(\bm{X}),
+    \label{eq:2P-H-decomp-thm}
+  \end{equation}
+  且 $[H_{\rm cm},H_{\rm rel}]=0$，从而 $H_{\rm cm}$ 与 $H_{\rm rel}$ 各自只作用在因子空间 $\Hilb_{\rm cm}$、$\Hilb_{\rm rel}$ 上。
+\end{theorem}
+
+\begin{proof*}
+\textit{第一步：正则对易关系。} 由\eqref{eq:CCR-CM-rel}已给出（前面命题已证）：$(\bar{\bm{X}},\bar{\bm{P}})$ 与 $(\bm{X},\bm{P})$ 是两套互相对易的、各自满足 Heisenberg 代数的正则共轭对。具体地：
+\begin{align}
+  [\bar P^a,\bar X^b]
+  &= \tfrac{m_1}{M}\underbrace{[P_1^a,X_1^b]}_{-\rmi\hbar\delta^{ab}}
+   + \tfrac{m_2}{M}\underbrace{[P_2^a,X_2^b]}_{-\rmi\hbar\delta^{ab}}
+   = -\rmi\hbar\,\delta^{ab}, \label{eq:2P-comm1}\\
+  [P^a,X^b]
+  &= \tfrac{m_2}{M}\underbrace{[P_1^a,X_1^b]}_{-\rmi\hbar\delta^{ab}}
+    -\Big(-\tfrac{m_1}{M}\Big)\underbrace{[P_2^a,X_2^b]}_{-\rmi\hbar\delta^{ab}} \notag\\
+  &= \tfrac{m_2}{M}(-\rmi\hbar\delta^{ab}) + \tfrac{m_1}{M}(-\rmi\hbar\delta^{ab})
+   = -\rmi\hbar\,\delta^{ab}, \label{eq:2P-comm2}\\
+  [\bar P^a,X^b]
+  &= [P_1^a+P_2^a,\;X_1^b-X_2^b]
+   = -\rmi\hbar\delta^{ab} - (-\rmi\hbar\delta^{ab}) = 0, \label{eq:2P-comm3}\\
+  [P^a,\bar X^b]
+  &= \big[\tfrac{m_2 P_1^a-m_1 P_2^a}{M},\;\tfrac{m_1 X_1^b+m_2 X_2^b}{M}\big] \notag\\
+  &= \tfrac{m_1 m_2}{M^2}(-\rmi\hbar\delta^{ab})
+   - \tfrac{m_1 m_2}{M^2}(-\rmi\hbar\delta^{ab}) = 0. \label{eq:2P-comm4}
+\end{align}
+
+\textit{第二步：体积测度不变。} 经典的变换雅可比为
+\[
+  J_{\rm coord}=\det\frac{\partial(\bm{x}_1,\bm{x}_2)}{\partial(\bar{\bm{x}},\bm{x})}.
+\]
+由
+\[
+  \bm{x}_1 = \bar{\bm{x}} + \tfrac{m_2}{M}\bm{x},\qquad
+  \bm{x}_2 = \bar{\bm{x}} - \tfrac{m_1}{M}\bm{x},
+\]
+对每个空间分量
+\[
+  \frac{\partial(x_1,x_2)}{\partial(\bar x,x)}
+  = \det\begin{pmatrix} 1 & m_2/M \\ 1 & -m_1/M \end{pmatrix}
+  = -\tfrac{m_1+m_2}{M} = -1.
+\]
+取绝对值并对三个空间分量取乘积：$|J_{\rm coord}|=1$，故 $\rmd^3 x_1\,\rmd^3 x_2=\rmd^3\bar{x}\,\rmd^3 x$。同理对动量
+\[
+  \bm{p}_1 = \tfrac{m_1}{M}\bar{\bm{p}}+\bm{p},\qquad
+  \bm{p}_2 = \tfrac{m_2}{M}\bar{\bm{p}}-\bm{p},
+\]
+\[
+  \det\begin{pmatrix} m_1/M & 1 \\ m_2/M & -1 \end{pmatrix} = -\tfrac{m_1+m_2}{M} = -1,
+\]
+$\rmd^3 p_1\,\rmd^3 p_2=\rmd^3\bar{p}\,\rmd^3 p$。这保证了 Hilbert 空间因子化\eqref{eq:cm-rel-factorization}下的内积一致：以 $\widetilde{\psi}(\bar{\bm{x}},\bm{x})\equiv\psi(\bm{x}_1(\bar{\bm{x}},\bm{x}),\bm{x}_2(\bar{\bm{x}},\bm{x}))$ 重新表示波函数，
+\[
+  \int|\psi|^2\rmd^3 x_1\rmd^3 x_2 = \int|\widetilde{\psi}|^2\rmd^3\bar{x}\,\rmd^3 x.
+\]
+单位变换 $\Op{U}:\psi\mapsto\widetilde\psi$ 是 $L^2(\R^3)\otimes L^2(\R^3)\to L^2(\R^3)\otimes L^2(\R^3)$ 之间的幺正变换；这给出\eqref{eq:cm-rel-factorization}的严格意义。
+
+\textit{第三步：动能项分解。} 在\eqref{eq:KE-decomposition}中已给出代数恒等式
+\[
+  \frac{\bm{P}_1^2}{2m_1}+\frac{\bm{P}_2^2}{2m_2}=\frac{\bar{\bm{P}}^2}{2M}+\frac{\bm{P}^2}{2m}.
+\]
+关键是\textbf{交叉项消失}：把 $\bm{P}_1=\frac{m_1}{M}\bar{\bm{P}}+\bm{P}$ 平方
+\[
+  \bm{P}_1^2 = \tfrac{m_1^2}{M^2}\bar{\bm{P}}^2 + \bm{P}^2 + \tfrac{2 m_1}{M}\bar{\bm{P}}\!\cdot\!\bm{P},
+\]
+（注意 $[\bar{\bm{P}},\bm{P}]=0$，故无序问题），$\bm{P}_2$ 同理：
+\[
+  \bm{P}_2^2 = \tfrac{m_2^2}{M^2}\bar{\bm{P}}^2 + \bm{P}^2 - \tfrac{2 m_2}{M}\bar{\bm{P}}\!\cdot\!\bm{P}.
+\]
+代入并合并：
+\begin{align*}
+  \frac{\bm{P}_1^2}{2m_1}+\frac{\bm{P}_2^2}{2m_2}
+  &= \frac{1}{2}\Big(\tfrac{m_1}{M^2}+\tfrac{m_2}{M^2}\Big)\bar{\bm{P}}^2
+    + \frac{1}{2}\Big(\tfrac{1}{m_1}+\tfrac{1}{m_2}\Big)\bm{P}^2
+    + \Big(\tfrac{1}{M}-\tfrac{1}{M}\Big)\bar{\bm{P}}\!\cdot\!\bm{P} \\
+  &= \frac{\bar{\bm{P}}^2}{2M}+\frac{\bm{P}^2}{2m}.
+\end{align*}
+势项 $V(\bm{X}_1-\bm{X}_2)=V(\bm{X})$ 直接化为相对坐标的函数。
+
+\textit{第四步：对易性。} $H_{\rm cm}$ 仅由 $\bar{\bm{P}}$ 构造；$H_{\rm rel}$ 仅由 $\bm{X},\bm{P}$ 构造。由\eqref{eq:2P-comm3}\eqref{eq:2P-comm4}，$\bar{\bm{P}}$ 与 $\bm{X},\bm{P}$ 互相对易，故
+\[
+  [H_{\rm cm},H_{\rm rel}]=0,
+\]
+亦即 $H_{\rm cm}\otimes\mathbf{1}_{\rm rel}$ 与 $\mathbf{1}_{\rm cm}\otimes H_{\rm rel}$ 在 $\Hilb_{\rm cm}\otimes\Hilb_{\rm rel}$ 上对易。 $\square$
+\end{proof*}
+
+\subsection{$\Smat$ 的因子化定理}
+
+\begin{theorem}[$\Smat$ 因子化]\label{thm:2P-S-factorization}
+  设两体 Hamiltonian 满足定理 \ref{thm:2P-cm-rel-decomp}，且假设相对运动 $H_{\rm rel}$ 与 $H_{0,\rm rel}=\bm{P}^2/(2m)$ 满足通常的渐近完备条件（如第\ref{ch:Smat1P}章对单粒子情形所要求的：势 $V$ 在无穷远短程衰减、$L^2_{\rm loc}$ 等）。则两体波算符存在并因子化为
+  \begin{equation}
+    \Op{\Omega}_{\pm} \;=\; \mathbf{1}_{\rm cm}\otimes\Op{\Omega}_{\pm}^{\rm rel},
+    \label{eq:2P-Omega-fact-thm}
+  \end{equation}
+  从而
+  \begin{equation}
+    \Smat \;=\; \Op{\Omega}_{-}^{\dagger}\Op{\Omega}_{+}
+        \;=\; \mathbf{1}_{\rm cm}\otimes \Smat^{\rm rel}.
+    \label{eq:2P-S-fact-thm}
+  \end{equation}
+\end{theorem}
+
+\begin{proof*}
+\textit{第一步：自由演化的因子化。} 因 $[H_{\rm cm},H_{0,\rm rel}]=0$ 且分别只作用于 $\Hilb_{\rm cm}$、$\Hilb_{\rm rel}$，所以
+\[
+  \rme^{-\rmi H_0 t} = \rme^{-\rmi H_{\rm cm}t}\otimes \rme^{-\rmi H_{0,\rm rel}t}.
+\]
+同理因 $[H_{\rm cm},H_{\rm rel}]=0$，
+\[
+  \rme^{-\rmi H t} = \rme^{-\rmi H_{\rm cm}t}\otimes \rme^{-\rmi H_{\rm rel}t}.
+\]
+
+\textit{第二步：$U^\dagger U_0$ 的形式。} 对 $\Op{A}\otimes\Op{B}$ 与 $\Op{C}\otimes\Op{D}$ 形式算符乘积有 $(\Op{A}\otimes\Op{B})(\Op{C}\otimes\Op{D})=(\Op{A}\Op{C})\otimes(\Op{B}\Op{D})$（按张量积的代数定义）。因此
+\begin{align*}
+  U^\dagger(t) U_0(t)
+  &= \big(\rme^{\rmi H_{\rm cm}t}\otimes \rme^{\rmi H_{\rm rel}t}\big)
+     \big(\rme^{-\rmi H_{\rm cm}t}\otimes \rme^{-\rmi H_{0,\rm rel}t}\big) \\
+  &= \big(\rme^{\rmi H_{\rm cm}t}\rme^{-\rmi H_{\rm cm}t}\big)\otimes
+     \big(\rme^{\rmi H_{\rm rel}t}\rme^{-\rmi H_{0,\rm rel}t}\big) \\
+  &= \mathbf{1}_{\rm cm}\otimes \Op{W}_{\rm rel}(t),
+\end{align*}
+其中 $\Op{W}_{\rm rel}(t)\equiv\rme^{\rmi H_{\rm rel}t}\rme^{-\rmi H_{0,\rm rel}t}$。
+
+\textit{第三步：取强极限。} 取 $|\Phi\rangle = |\bar\phi\rangle\otimes|\phi\rangle$ 为乘积态：
+\[
+  \big[\mathbf{1}_{\rm cm}\otimes \Op{W}_{\rm rel}(t)\big]|\Phi\rangle
+  = |\bar\phi\rangle \otimes \big[\Op{W}_{\rm rel}(t)|\phi\rangle\big].
+\]
+当 $t\to\mp\infty$ 时，由相对运动的渐近完备性假设
+\[
+  \Op{W}_{\rm rel}(t)|\phi\rangle \xrightarrow{\;\text{strong}\;} \Op{\Omega}_{\pm}^{\rm rel}|\phi\rangle.
+\]
+张量积 $|\bar\phi\rangle\otimes\Op{W}_{\rm rel}(t)|\phi\rangle \to |\bar\phi\rangle\otimes\Op{\Omega}_{\pm}^{\rm rel}|\phi\rangle$ 在 $\Hilb$ 范数下成立（因为
+\[
+  \|\,|\bar\phi\rangle\otimes\Op{W}_{\rm rel}(t)|\phi\rangle - |\bar\phi\rangle\otimes\Op{\Omega}_{\pm}^{\rm rel}|\phi\rangle\,\|^2
+  = \|\bar\phi\|^2\,\|\Op{W}_{\rm rel}(t)|\phi\rangle - \Op{\Omega}_{\pm}^{\rm rel}|\phi\rangle\|^2 \to 0\big).
+\]
+对乘积态构成的稠密集成立，且 $\mathbf{1}_{\rm cm}\otimes\Op{W}_{\rm rel}(t)$ 在范数 $\|\cdot\|=1$ 下一致有界（同 $\Op{W}_{\rm rel}(t)$ 一样为部分等距 / 等距），故强极限可以扩张到全 $\Hilb$，给出
+\[
+  \Op{\Omega}_{\pm} = \mathbf{1}_{\rm cm}\otimes\Op{\Omega}_{\pm}^{\rm rel}.
+\]
+
+\textit{第四步：$\Smat$ 因子化。} 对张量积取 Hermitian 共轭：$(\mathbf{1}_{\rm cm}\otimes A)^\dagger=\mathbf{1}_{\rm cm}\otimes A^\dagger$。所以
+\begin{align*}
+  \Smat &= \Op{\Omega}_{-}^\dagger \Op{\Omega}_{+}
+   = (\mathbf{1}_{\rm cm}\otimes\Op{\Omega}_{-}^{\rm rel\,\dagger})
+     (\mathbf{1}_{\rm cm}\otimes\Op{\Omega}_{+}^{\rm rel}) \\
+   &= \mathbf{1}_{\rm cm}\otimes(\Op{\Omega}_{-}^{\rm rel\,\dagger}\Op{\Omega}_{+}^{\rm rel})
+   = \mathbf{1}_{\rm cm}\otimes \Smat^{\rm rel}.
+\end{align*}
+$\Smat$ 的幺正性 / Hermiticity 等性质继承自 $\Smat^{\rm rel}$。 $\square$
+\end{proof*}
+
+\begin{corollary}[守恒律]\label{cor:2P-conservation}
+  $[\Smat,\bar{\bm{P}}]=0$（总动量守恒）；$[\Smat,H_0]=0$（总能量守恒，因 $H_0=H_{\rm cm}+H_{0,\rm rel}$ 而 $\Smat$ 在 $\Hilb_{\rm cm}$ 上为恒等、在 $\Hilb_{\rm rel}$ 上由波算符截获关系$[\Smat^{\rm rel},H_{0,\rm rel}]=0$）。从而
+  \[
+    \matel{\bm{p}_1'\bm{p}_2'}{\Smat-\mathbf{1}}{\bm{p}_1\bm{p}_2}
+    \propto \delta_3\Big(\sum_i\bm{p}_i'-\sum_i\bm{p}_i\Big)\,\delta\Big(\sum_i E_i'-\sum_i E_i\Big).
+  \]
+\end{corollary}
+
+详细证明见第\ref{ch:invariance}章关于平移与时间平移不变性的一般性讨论。
+
+\subsection{Lab\,$\to$\,CM 立体角 Jacobian 的逐步推导}\label{sec:2P-jacobian-detailed}
+
+我们重新逐步给出微分截面变换公式\eqref{eq:diff-cs-lab-cm}的完整推导。设入射粒子 1 在实验室系动能为 $T_{\rm lab}$，靶粒子 2 静止；记 $u_{\rm rel}=u_1^{\rm lab}=\sqrt{2T_{\rm lab}/m_1}$。
+
+\subsubsection*{第一步：质心相对实验室系的速度}
+
+总动量 $\bar{\bm{p}}^{\rm lab}=m_1\bm{u}_1^{\rm lab}+0=m_1 u_{\rm rel}\hat{\bm{z}}$，质心速度
+\[
+  \bm{V} = \frac{\bar{\bm{p}}^{\rm lab}}{M} = \frac{m_1}{M}u_{\rm rel}\hat{\bm{z}}.
+\]
+
+\subsubsection*{第二步：粒子 1 在 CM 系中的速度}
+
+入射时
+\[
+  \bm{u}_1^{\rm cm,init} = \bm{u}_1^{\rm lab}-\bm{V} = \Big(1-\tfrac{m_1}{M}\Big)u_{\rm rel}\hat{\bm{z}} = \tfrac{m_2}{M}u_{\rm rel}\hat{\bm{z}}.
+\]
+记 $u\equiv\frac{m_2}{M}u_{\rm rel}$。\textbf{弹性散射}下，粒子 1 在 CM 系中的速度大小不变（CM 系中动量大小相等方向相反，能量守恒 + 动量守恒迫使各自速率不变），仅方向改变到 $(\theta_{\rm cm},\phi)$：
+\[
+  \bm{u}_1^{\rm cm,fin} = u\,(\sin\theta_{\rm cm}\cos\phi,\,\sin\theta_{\rm cm}\sin\phi,\,\cos\theta_{\rm cm}).
+\]
+
+\subsubsection*{第三步：实验室系出射方向}
+
+\[
+  \bm{u}_1^{\rm lab,fin} = \bm{u}_1^{\rm cm,fin}+\bm{V}
+  = (u\sin\theta_{\rm cm}\cos\phi,\,u\sin\theta_{\rm cm}\sin\phi,\,u\cos\theta_{\rm cm}+V).
+\]
+所以
+\begin{align}
+  \tan\theta_{\rm lab} &= \frac{u\sin\theta_{\rm cm}}{u\cos\theta_{\rm cm}+V}
+   = \frac{\sin\theta_{\rm cm}}{\cos\theta_{\rm cm}+\lambda},
+   \qquad \lambda\equiv\frac{V}{u}=\frac{m_1}{m_2},
+   \label{eq:2P-tan-theta-lab}\\
+  \phi_{\rm lab} &= \phi_{\rm cm}.
+\end{align}
+
+\subsubsection*{第四步：$\cos\theta_{\rm lab}$ 与 $\sin\theta_{\rm lab}$}
+
+由\eqref{eq:2P-tan-theta-lab}与三角恒等式
+\[
+  1+\tan^2\theta_{\rm lab} = \frac{(\cos\theta_{\rm cm}+\lambda)^2+\sin^2\theta_{\rm cm}}{(\cos\theta_{\rm cm}+\lambda)^2}
+  = \frac{1+2\lambda\cos\theta_{\rm cm}+\lambda^2}{(\cos\theta_{\rm cm}+\lambda)^2}.
+\]
+故
+\begin{empheq}[box=\fbox]{align}
+  \cos\theta_{\rm lab} &= \frac{\cos\theta_{\rm cm}+\lambda}{\sqrt{1+2\lambda\cos\theta_{\rm cm}+\lambda^2}},
+   \label{eq:2P-cos-theta-lab}\\
+  \sin\theta_{\rm lab} &= \frac{\sin\theta_{\rm cm}}{\sqrt{1+2\lambda\cos\theta_{\rm cm}+\lambda^2}}.
+   \label{eq:2P-sin-theta-lab}
+\end{empheq}
+
+\subsubsection*{第五步：立体角 Jacobian}
+
+立体角元 $\rmd\Omega=\sin\theta\,\rmd\theta\,\rmd\phi=-\rmd(\cos\theta)\,\rmd\phi$。因 $\phi$ 不变：
+\begin{equation}
+  \frac{\rmd\Omega_{\rm lab}}{\rmd\Omega_{\rm cm}}
+  = \frac{\rmd(\cos\theta_{\rm lab})}{\rmd(\cos\theta_{\rm cm})}.
+  \label{eq:2P-jac-def}
+\end{equation}
+设 $u\equiv\cos\theta_{\rm cm}$，$F(u)\equiv 1+2\lambda u+\lambda^2$。则\eqref{eq:2P-cos-theta-lab}写为 $\cos\theta_{\rm lab}=(u+\lambda)F(u)^{-1/2}$。求导：
+\begin{align}
+  \frac{\rmd\cos\theta_{\rm lab}}{\rmd u}
+  &= F^{-1/2} - (u+\lambda)\cdot\tfrac{1}{2}F^{-3/2}\cdot 2\lambda \notag\\
+  &= F^{-3/2}\big[F - \lambda(u+\lambda)\big] \notag\\
+  &= F^{-3/2}\big[1+2\lambda u+\lambda^2 - \lambda u - \lambda^2\big] \notag\\
+  &= \frac{1+\lambda u}{(1+2\lambda u+\lambda^2)^{3/2}}.
+  \label{eq:2P-dcos-derivative}
+\end{align}
+
+\subsubsection*{第六步：微分截面公式}
+
+由不变性 $\rmd\sigma_{\rm lab}=\rmd\sigma_{\rm cm}$：
+\[
+  \Big(\frac{\rmd\sigma}{\rmd\Omega}\Big)_{\rm lab}\rmd\Omega_{\rm lab}
+  = \Big(\frac{\rmd\sigma}{\rmd\Omega}\Big)_{\rm cm}\rmd\Omega_{\rm cm}.
+\]
+故
+\begin{empheq}[box=\fbox]{equation}
+  \Big(\frac{\rmd\sigma}{\rmd\Omega}\Big)_{\rm lab}
+  \;=\; \Big(\frac{\rmd\sigma}{\rmd\Omega}\Big)_{\rm cm}\,\frac{\rmd\Omega_{\rm cm}}{\rmd\Omega_{\rm lab}}
+  \;=\; \Big(\frac{\rmd\sigma}{\rmd\Omega}\Big)_{\rm cm}\,
+        \frac{(1+2\lambda\cos\theta_{\rm cm}+\lambda^2)^{3/2}}{|1+\lambda\cos\theta_{\rm cm}|}.
+  \label{eq:2P-final-jacobian}
+\end{empheq}
+绝对值号是为了在 $\lambda>1$ 时（实验室系存在最大散射角附近 $1+\lambda\cos\theta_{\rm cm}=0$）保证 Jacobian 的正性——在该点 Jacobian 发散，对应实验室系微分截面在 $\theta_{\rm lab}^{\max}$ 附近的运动学奇异性。
+
+%==============================================================
+\section{典型例题}\label{sec:2P-examples}
+
+下面用三个例子检验上述变换：等质量弹性碰撞、重靶极限、以及一个具体的核物理数值计算。
+
+\subsection{例 1：等质量弹性碰撞 ($m_1=m_2$)}
+
+\begin{example}[等质量碰撞，$\theta_{\rm lab}^{\max}=\pi/2$]\label{ex:2P-equal-mass}
+取 $m_1=m_2$，故 $\lambda=1$。
+\begin{enumerate}
+\item[(a)] 由\eqref{eq:2P-tan-theta-lab}：
+\[
+  \tan\theta_{\rm lab}
+  = \frac{\sin\theta_{\rm cm}}{1+\cos\theta_{\rm cm}}
+  = \frac{2\sin(\theta_{\rm cm}/2)\cos(\theta_{\rm cm}/2)}{2\cos^2(\theta_{\rm cm}/2)}
+  = \tan\!\Big(\frac{\theta_{\rm cm}}{2}\Big),
+\]
+故
+\begin{equation}
+  \theta_{\rm lab} = \frac{\theta_{\rm cm}}{2}.
+  \label{eq:2P-equal-mass-half}
+\end{equation}
+\item[(b)] 由 $\theta_{\rm cm}\in[0,\pi]$，得 $\theta_{\rm lab}\in[0,\pi/2]$，即\textbf{弹与靶等质量时实验室系散射角不超过 $\pi/2$}：
+\begin{equation}
+  \boxed{\;\theta_{\rm lab}^{\max} = \pi/2.\;}
+  \label{eq:2P-equal-mass-max}
+\end{equation}
+反冲粒子在实验室系中的方向亦为 $\frac{\pi-\theta_{\rm cm}}{2}$（见后面），故弹与反冲粒子在实验室系中夹角恒为 $\pi/2$——这是等质量 Newton 弹性碰撞的经典结果（如台球碰撞）。
+\item[(c)] 微分截面：由\eqref{eq:2P-final-jacobian}，
+\[
+  \Big(\frac{\rmd\sigma}{\rmd\Omega}\Big)_{\rm lab}
+  = \Big(\frac{\rmd\sigma}{\rmd\Omega}\Big)_{\rm cm}\,
+    \frac{(2+2\cos\theta_{\rm cm})^{3/2}}{|1+\cos\theta_{\rm cm}|}
+  = 4\cos\theta_{\rm lab}\,\Big(\frac{\rmd\sigma}{\rmd\Omega}\Big)_{\rm cm}\bigg|_{\theta_{\rm cm}=2\theta_{\rm lab}},
+\]
+其中用了 $1+\cos\theta_{\rm cm}=2\cos^2(\theta_{\rm cm}/2)=2\cos^2\theta_{\rm lab}$。
+\end{enumerate}
+\end{example}
+
+\subsection{例 2：重靶极限 $m_2/m_1\to\infty$}
+
+\begin{example}[重靶恢复单粒子结果]\label{ex:2P-heavy-target}
+取 $m_2\to\infty$（$\lambda=m_1/m_2\to 0$）。
+\begin{enumerate}
+\item[(a)] 约化质量
+\[
+  m = \frac{m_1 m_2}{m_1+m_2} \xrightarrow{m_2\to\infty} m_1.
+\]
+即约化质量约化为入射粒子的质量。
+\item[(b)] 质心速度
+\[
+  \bm{V} = \tfrac{m_1}{M}u_{\rm rel}\hat{\bm z}\to 0.
+\]
+故质心系几乎与实验室系重合。
+\item[(c)] 角度关系：$\lambda\to 0$，
+\[
+  \tan\theta_{\rm lab} = \frac{\sin\theta_{\rm cm}}{\cos\theta_{\rm cm}+\lambda}\to \tan\theta_{\rm cm},
+  \quad\therefore\quad \theta_{\rm lab}\to\theta_{\rm cm}.
+\]
+\item[(d)] Jacobian：
+\[
+  \frac{\rmd\Omega_{\rm cm}}{\rmd\Omega_{\rm lab}}
+  = \frac{|1+\lambda\cos\theta_{\rm cm}|}{(1+2\lambda\cos\theta_{\rm cm}+\lambda^2)^{3/2}}\to 1.
+\]
+\item[(e)] 全 Hamiltonian
+\[
+  H_{\rm rel} = \frac{\bm{P}^2}{2m}+V(\bm{x}) \xrightarrow{m_2\to\infty} \frac{\bm{P}^2}{2m_1}+V(\bm{x}),
+\]
+即\textbf{完全恢复}第\ref{ch:Smat1P}章中的单粒子在外势中散射图像。这说明前几章“固定外势”的近似在物理上对应$m_2\gg m_1$（如电子散射在原子核上、慢中子散射在重核上）。
+\end{enumerate}
+\end{example}
+
+\subsection{例 3：14 MeV 中子打 $^{12}$C 核（数值算例）}
+
+\begin{example}[14 MeV 中子–碳核弹性散射]\label{ex:2P-n-C12}
+考虑 D-T 聚变产生的 14\,MeV 中子（$m_1=m_n\approx 1.008665\,\rm{u}$）打静止的 $^{12}$C 靶（$m_2=12.000\,\rm{u}$）。这是常用的中子源屏蔽与低能反应分析中的标准问题。我们计算质心系散射角 $\theta_{\rm cm}=90^\circ$ 对应的实验室系运动学。
+
+\textbf{基本参数：}
+\[
+  \lambda \;=\; \frac{m_1}{m_2} \;=\; \frac{1.008665}{12.000} \;\approx\; 0.084055.
+\]
+
+\textbf{(a) 实验室系散射角。} 由\eqref{eq:2P-tan-theta-lab}（$\theta_{\rm cm}=\pi/2$，$\cos\theta_{\rm cm}=0$，$\sin\theta_{\rm cm}=1$）：
+\[
+  \tan\theta_{\rm lab} = \frac{1}{0+\lambda} = \frac{1}{\lambda} \approx 11.897,
+  \quad\therefore\quad \theta_{\rm lab} \approx 85.20^{\circ}.
+\]
+即 CM 系中的 $90^\circ$ 散射在实验室系中观测为约 $85.2^\circ$，仅比 $90^\circ$ 略小，反映 $\lambda\ll 1$ 时两参考系接近重合。
+
+\textbf{(b) 立体角 Jacobian。} 由\eqref{eq:2P-final-jacobian}：
+\[
+  \frac{(\rmd\sigma/\rmd\Omega)_{\rm lab}}{(\rmd\sigma/\rmd\Omega)_{\rm cm}}
+  = \frac{(1+0+\lambda^2)^{3/2}}{|1+0|} = (1+\lambda^2)^{3/2}
+  \approx (1+0.00707)^{3/2} \approx 1.0106.
+\]
+故实验室系微分截面比质心系大约 $1\%$。
+
+\textbf{(c) 出射中子的实验室能量。} 利用 CM 系守恒推导（参见 Taylor 第 3 章习题），出射中子在实验室系的动能与入射动能之比
+\[
+  \frac{T_n^{\rm lab,out}}{T_n^{\rm lab,in}}
+  = \frac{1+\lambda^2+2\lambda\cos\theta_{\rm cm}}{(1+\lambda)^2}.
+\]
+代入 $\theta_{\rm cm}=\pi/2$：
+\[
+  \frac{T_n^{\rm out}}{T_n^{\rm in}} = \frac{1+\lambda^2}{(1+\lambda)^2}
+  \approx \frac{1.00707}{1.17517} \approx 0.8569,
+\]
+即 $T_n^{\rm out}\approx 12.0$\,MeV，损失约 $2.0$\,MeV 给 $^{12}$C 反冲核。等价地：能量传递分数
+\[
+  \frac{\Delta T}{T_{\rm in}} = \frac{4 m_1 m_2}{(m_1+m_2)^2}\sin^2\!\frac{\theta_{\rm cm}}{2}
+  = \frac{4\times 1.008665\times 12}{13.008665^2}\times\frac{1}{2}
+  \approx 0.1431.
+\]
+（最大能量传递为 $\theta_{\rm cm}=\pi$，分数为 $4 m_1 m_2/(m_1+m_2)^2\approx 0.286$；这就是\textbf{中子慢化常数 $\xi$} 的来源——轻核（$^{1}$H、$^{2}$D、$^{12}$C）作为慢化剂能高效降低中子能量。）
+
+\textbf{(d) 反冲 $^{12}$C 核的实验室角。} 由动量守恒，反冲核在 CM 系中速度方向为 $\pi-\theta_{\rm cm}=\pi/2$。其速度大小 $u_2=\frac{m_1}{M}u_{\rm rel}=V$，故 $V/u_2=1$，即对反冲核而言 $\lambda_{\rm recoil}=1$（“等质量”情形）。由例 \ref{ex:2P-equal-mass}，
+\[
+  \psi_{\rm lab}^{\rm recoil} = \frac{\pi-\theta_{\rm cm}}{2} = 45.0^\circ.
+\]
+（这一“反冲角是 CM 散射余角的一半”的结果对任意 $m_2/m_1$ 都成立，因为反冲核的 $\lambda_{\rm recoil}\equiv V/u_2=1$ 与质量无关。）
+
+\textbf{(e) 物理意义检验。}
+\begin{itemize}
+  \item 若 $^{12}$C 改为 $^{1}$H（即 n-p 散射，$m_1=m_2$）：$\lambda\to 1$，$\theta_{\rm cm}=\pi/2$ 对应 $\theta_{\rm lab}=\pi/4$，能量传递 $1/2$（每次碰撞均匀损失约一半），中子对氢的慢化效率最高。
+  \item 若靶为 $^{238}$U（$\lambda\approx 1/238$）：$\theta_{\rm lab}\approx 89.76^\circ$，能量损失分数 $\approx 4 m_1 m_2/M^2\approx 0.0167$（每次碰撞最多损 $1.7\%$），慢化效率极低。
+\end{itemize}
+\end{example}
+
+汇总数值（$^{12}$C 例）：
+\begin{center}
+\begin{tabular}{lc}
+  \hline
+  量 & 值\\
+  \hline
+  $\lambda=m_n/m_C$ & $0.0841$ \\
+  $\theta_{\rm cm}$ & $90.00^\circ$ \\
+  $\theta_{\rm lab}$（中子） & $85.20^\circ$ \\
+  $\psi_{\rm lab}$（$^{12}$C 反冲） & $45.00^\circ$ \\
+  $(\rmd\sigma/\rmd\Omega)_{\rm lab}/(\rmd\sigma/\rmd\Omega)_{\rm cm}$ & $1.0106$ \\
+  $T_n^{\rm out}/T_n^{\rm in}$ & $0.857$ \\
+  $T_n^{\rm out}$ & $12.0$\,MeV \\
+  反冲 $^{12}$C 动能 & $2.0$\,MeV \\
+  \hline
+\end{tabular}
+\end{center}
+
+\begin{remark}
+  这些公式将在第\ref{ch:spin2p}章扩展到带自旋粒子（极化转移）、第\ref{ch:invariance}章的不变性原理给出更系统的处理、以及第\ref{ch:multichannel}章引入非弹性道时的能量守恒约束 $E_{\rm rel}=E_{\rm rel}'+\Delta Q$（$Q$ 值修正运动学）。
+\end{remark}

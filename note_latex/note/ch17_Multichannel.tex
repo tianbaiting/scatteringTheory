@@ -1,0 +1,1033 @@
+\chapter{多通道与反应散射 (Multichannel Scattering and Reactions)}\label{ch:multichannel}
+
+到目前为止，从第~\ref{ch:Smat1P} 章到第~\ref{ch:resonance} 章，我们一直
+集中讨论\emph{单通道散射 (single-channel scattering)}：一个粒子被一个固定
+势散射，或两个粒子之间发生纯弹性碰撞。然而绝大多数实验中真正发生的过程
+都涉及\emph{复合粒子}（原子、分子、原子核等等）——它们在碰撞中可以被
+激发、电离，或被重新组合成新的束缚体系。例如原子物理中
+\begin{equation}
+  e + \text{H} \;\longrightarrow\;
+  \begin{cases}
+    e + \text{H}        & \text{(弹性, elastic)}\\
+    e + \text{H}^*       & \text{(激发, excitation)}\\
+    e + e + p           & \text{(电离, ionization / breakup)}
+  \end{cases}
+\end{equation}
+核物理中
+\begin{equation}
+  p + {}^{12}\text{C}\;\longrightarrow\;
+  \begin{cases}
+    p + {}^{12}\text{C}\\
+    n + {}^{12}\text{N}     & \text{(电荷交换 charge exchange)}\\
+    \alpha + {}^{9}\text{B}, \cdots & \text{(重排 rearrangement)}
+  \end{cases}
+\end{equation}
+每一种可能的渐近末态粒子组合称为一个\emph{通道 (channel)}，因此
+这种过程统称为\emph{多通道散射 (multichannel scattering)}或\emph{反应
+散射 (reaction scattering)}。
+
+本章把第~\ref{ch:Smat1P} 章建立的散射算符理论以及
+第~\ref{ch:cross} 章的截面公式推广到多通道情形：先用希尔伯特空间的
+直和分解 (direct-sum decomposition) 给出严格的通道概念，再引入
+\emph{通道哈密顿量} $H_\alpha$ 与\emph{通道波算符} $\Omega_\pm^\alpha$，
+进而构造作用在所有渐近态空间上的酉散射算符 $\Smat$，由其矩阵元
+$\Smat_{\beta\alpha}$ 读出从通道 $\alpha$ 入射、向通道 $\beta$ 出射的截面
+$\sigma_{\beta\alpha}$。我们也会简述阈值行为 (Wigner cusp)、广义光学
+定理与细致平衡 (detailed balance)、光学势 (optical potential) 思想，以及
+三体散射中 Faddeev 方程概念性图像。本章主要依据 Taylor《Scattering Theory》
+第~16--19 章。
+
+%-------------------------------------------------------------------------
+\section{通道的概念与希尔伯特空间分解}
+\label{sec:multich-channels}
+
+\subsection{安排通道与三体模型}
+
+为简化起见，先考虑三个无自旋粒子 $a,b,c$ 通过短程二体势相互作用，
+完整哈密顿量
+\begin{equation}
+  H \;=\; \frac{\mathbf{P}_a^2}{2m_a} + \frac{\mathbf{P}_b^2}{2m_b}
+        + \frac{\mathbf{P}_c^2}{2m_c}
+       + V_{ab}(\mathbf{x}_{ab}) + V_{ac}(\mathbf{x}_{ac}) + V_{bc}(\mathbf{x}_{bc})
+       \;\equiv\; H_0 + V .
+  \label{eq:multich-Hfull}
+\end{equation}
+设两体势仅产生有限多个束缚态：$(bc)$ 有基态与一激发态 $(bc)^*$，$(ac)$ 有
+唯一束缚态 $(ac)$，$(ab)$ 无束缚态，且无三体束缚态。则\emph{所有可能的
+渐近粒子组合}列于表~\ref{tab:multich-channels}。
+\begin{table}[h]
+  \centering
+  \begin{tabular}{c|cccc}
+    \hline
+    通道编号 $\alpha$ & 0 & 1 & 2 & 3\\
+    \hline
+    通道  & $a+b+c$ & $a+(bc)$ & $a+(bc)^*$ & $b+(ac)$\\
+    阈值 $W_\alpha$ & $0$ & $E_{(bc)}$ & $E_{(bc)^*}$ & $E_{(ac)}$\\
+    \hline
+  \end{tabular}
+  \caption{三体模型的通道列表与各自阈值能（以三粒子无穷分离静止态为零点）。}
+  \label{tab:multich-channels}
+\end{table}
+
+\begin{definition}[通道与安排通道]\label{def:multich-channel}
+  在 $N$ 体散射中，一个\emph{通道 (channel)} $\alpha$ 是把
+  $N$ 个粒子划分成 $n_\alpha$ ($2\le n_\alpha\le N$) 个稳定碎片
+  (stable fragment) 的某种方式，并指定每个碎片所处的具体束缚态。
+  仅按粒子的分组（不区分碎片内部状态）相同的一组通道称为同一个
+  \emph{安排通道 (arrangement channel)}。
+\end{definition}
+
+例如表~\ref{tab:multich-channels} 中通道 1 与 2 同为安排 $a+(bc)$，但
+对应于 $bc$ 的不同束缚态；它们属于同一个安排通道而是不同通道。我们
+约定 $\alpha=0$ 总是表示\emph{完全裂解 (breakup)} 通道，即所有粒子自由
+运动。
+
+\subsection{通道哈密顿量}
+
+对于通道 $\alpha$，定义
+\begin{equation}
+  V_\alpha \;\equiv\; \sum_{(ij)\in\alpha} V_{ij} ,
+  \qquad
+  H_\alpha \;\equiv\; H - V^{\,\alpha}, \qquad V^{\,\alpha}\equiv H-H_\alpha,
+  \label{eq:multich-Halpha}
+\end{equation}
+其中 $V_\alpha$ 是\emph{通道内 (intra-fragment)} 的全部相互作用——
+即把同一个碎片内部的粒子粘合在一起的势——而 $V^{\,\alpha}$ 是
+\emph{通道间 (inter-fragment)} 的相互作用，它在 $\alpha$ 渐近态远离时变弱。
+因此 $H_\alpha$ 描写各个碎片\emph{自由地相对运动}、但内部仍处于束缚态：
+\begin{equation}
+  H_\alpha \;=\; H_0^{\alpha} + V_{\rm bound}^{\alpha},
+\end{equation}
+其中 $H_0^\alpha$ 是各碎片质心运动的动能之和，$V_{\rm bound}^\alpha$ 是
+保持各碎片束缚的势 $V_\alpha$。
+
+例如在三体模型中
+\begin{align}
+  H^0 &= \tfrac{\mathbf{P}_a^2}{2m_a}+\tfrac{\mathbf{P}_b^2}{2m_b}+\tfrac{\mathbf{P}_c^2}{2m_c} ,\\
+  H^1 &= \tfrac{\mathbf{P}_a^2}{2m_a}+\tfrac{\mathbf{P}_b^2}{2m_b}+\tfrac{\mathbf{P}_c^2}{2m_c}+V_{bc} ,\\
+  H^3 &= \tfrac{\mathbf{P}_a^2}{2m_a}+\tfrac{\mathbf{P}_b^2}{2m_b}+\tfrac{\mathbf{P}_c^2}{2m_c}+V_{ac} ,
+\end{align}
+而 $H^2=H^1$（同一安排通道，不同内部态）。
+
+\subsection{通道子空间 \(\Hilb_\alpha\)}
+
+整个三粒子系统的希尔伯特空间是
+$\Hilb=L^2(\R^9)$（再乘上自旋空间，若有）。
+对每个通道 $\alpha$ 定义\emph{通道子空间} $\Hilb_\alpha\subset\Hilb$
+为\emph{所有可以作为通道 $\alpha$ 中的入或出渐近态的向量}所张成的子空间。
+具体地，$\Hilb_\alpha$ 由形如
+\begin{equation}
+  \Psi_\alpha(\mathbf{y}_1,\dots,\mathbf{y}_{n_\alpha};\,z_1,\dots,z_{n_\alpha})
+  \;=\; \chi(\mathbf{y}_1,\dots,\mathbf{y}_{n_\alpha})\;
+        \phi_1(z_1)\cdots\phi_{n_\alpha}(z_{n_\alpha})
+  \label{eq:multich-channel-wavefn}
+\end{equation}
+的波函数张成，其中 $\mathbf{y}_\nu$ 是各碎片的质心坐标，$z_\nu$ 是碎片
+内部坐标，$\phi_\nu$ 是该碎片的束缚态波函数（若碎片只有一个粒子则取
+$\phi_\nu\equiv 1$），$\chi$ 是任意可平方可积函数。直观地说，
+$\Hilb_\alpha$ 中的态\,——\,内部冻结在指定的束缚态、外部任意——\,
+正是\emph{一旦各碎片远离时其形状就不变的}那部分态。
+
+\begin{remark}\label{rmk:multich-H0}
+  对于完全裂解通道 $\alpha=0$，$\Hilb_0=\Hilb$ 本身（任何波函数
+  都可作为 $a+b+c$ 的渐近态）。对于其它通道，$\Hilb_\alpha$ 是
+  $\Hilb$ 的真子空间。
+\end{remark}
+
+\subsection{束缚态空间与散射态空间}
+
+把所有 $N$ 粒子的真束缚态张成的子空间记为 $\Hilb_{\rm bound}\subset\Hilb$，
+它由 $\Hmat$ 的离散谱本征向量构成。$\Hilb_{\rm bound}$ 中的态在任意时刻
+所有粒子都不分开，因而\emph{不能}作为任何通道的渐近态。我们期望
+\begin{equation}
+  \Hilb \;=\; \Hilb_{\rm bound}\,\oplus\,\Hilb_{\rm scatt} ,
+  \label{eq:multich-Hsplit}
+\end{equation}
+其中 $\Hilb_{\rm scatt}$ 是散射态子空间。下一节我们将通过通道波算符
+进一步把 $\Hilb_{\rm scatt}$ 拆成通道贡献的直和。
+
+%-------------------------------------------------------------------------
+\section{通道波算符与渐近完备性}
+\label{sec:multich-moller}
+
+\subsection{渐近条件}
+
+对于通道 $\alpha$，自由演化由通道哈密顿量 $H_\alpha$ 给出：在
+$\Hilb_\alpha$ 中的向量 $|\psi_{\rm in}^\alpha\rangle$ 经
+$\rme^{-\rmi H_\alpha t}$ 演化时，碎片之间渐行渐远，碎片内部仍束缚
+不变。多通道版本的渐近条件断言：对每个 $\alpha$，存在唯一的真态
+$|\psi\rangle\in\Hilb$ 满足
+\begin{equation}
+  \rme^{-\rmi H t}|\psi\rangle
+  \;\xrightarrow[t\to-\infty]{}\;
+  \rme^{-\rmi H_\alpha t}|\psi_{\rm in}^\alpha\rangle
+  \quad(\,|\psi_{\rm in}^\alpha\rangle\in\Hilb_\alpha\,) .
+  \label{eq:multich-asym}
+\end{equation}
+
+\begin{definition}[通道 Møller 算符]\label{def:multich-moller}
+  对每个通道 $\alpha$，定义\emph{通道波算符 (channel Møller operator)}
+  \begin{empheq}[box=\fbox]{align}
+    \Omega_+^\alpha &\;\equiv\;
+        \lim_{t\to-\infty} \rme^{\rmi H t}\,\rme^{-\rmi H_\alpha t}
+        \quad \text{(强极限, on $\Hilb_\alpha$)},\nonumber\\
+    \Omega_-^\alpha &\;\equiv\;
+        \lim_{t\to+\infty} \rme^{\rmi H t}\,\rme^{-\rmi H_\alpha t}
+        \quad \text{(强极限, on $\Hilb_\alpha$)} .
+    \label{eq:multich-Omegapm}
+  \end{empheq}
+  其定义域为通道子空间 $\Hilb_\alpha$，值域记为
+  $\Ran(\Omega_\pm^\alpha)\equiv\Hilb_\pm^\alpha\subset\Hilb$。
+\end{definition}
+
+\begin{theorem}[强极限存在性]\label{thm:multich-existence}
+  设两体势 $V_{ij}(\mathbf{x})$ 在无穷远处衰减得足够快
+  （短程势加适当条件，或排除 Coulomb 类长程力），则极限
+  \eqref{eq:multich-Omegapm} 在 $\Hilb_\alpha$ 上的每个向量上
+  都存在，并且
+  \[
+    \Omega_\pm^\alpha :\; \Hilb_\alpha \to \Hilb_\pm^\alpha
+    \quad\text{是等距的 (isometric)} ,
+  \]
+  即 $\Omega_\pm^{\alpha\dagger}\Omega_\pm^\alpha=\mathbb{1}_{\Hilb_\alpha}$。
+\end{theorem}
+
+\noindent\emph{证明梗概.} 与单通道情形（参见第~\ref{ch:Smat1P} 章）类似，
+取任一光滑波包 $|\psi_{\rm in}^\alpha\rangle\in\Hilb_\alpha$，写
+\begin{equation}
+  \Omega_+^\alpha|\psi_{\rm in}^\alpha\rangle
+  \;=\; |\psi_{\rm in}^\alpha\rangle
+   + \rmi\!\int_{-\infty}^{0}\!\rmd t\;
+       \rme^{\rmi H t}\,V^{\,\alpha}\,\rme^{-\rmi H_\alpha t}\,|\psi_{\rm in}^\alpha\rangle .
+\end{equation}
+关键观察是 $V^{\,\alpha}=H-H_\alpha$ 仅含\emph{通道间}相互作用，仅当不同
+碎片相互靠近时才不为零。在通道 $\alpha$ 的自由演化下，碎片之间相对距离
+按 $|\mathbf{y}_\nu-\mathbf{y}_{\nu'}|\sim t$ 线性增大，故对适当波包
+$\|V^{\,\alpha}\rme^{-\rmi H_\alpha t}|\psi_{\rm in}^\alpha\rangle\|$
+按 $|t|^{-3/2}$（高斯型波包）衰减，积分收敛，强极限存在。\hfill$\square$
+
+\subsection{通道间正交性定理}
+
+\begin{theorem}[正交性定理]\label{thm:multich-orth}
+  设 $\alpha\ne\alpha'$，则
+  \begin{align}
+    \Hilb_+^\alpha &\perp \Hilb_+^{\alpha'} ,\qquad
+    \Hilb_-^\alpha \perp \Hilb_-^{\alpha'} ,\\
+    \Hilb_{\rm bound} &\perp \Hilb_\pm^\alpha\quad(\,\forall\alpha\,) .
+  \end{align}
+\end{theorem}
+
+\noindent\emph{证明梗概.} 取
+$|\psi\rangle=\Omega_+^\alpha|\psi_{\rm in}\rangle$，
+$|\psi'\rangle=\Omega_+^{\alpha'}|\psi_{\rm in}'\rangle$。由内积的时间无关性，
+\begin{equation}
+  \inn{\psi'}{\psi}
+  \;=\;\lim_{t\to-\infty}
+  \matel{\psi_{\rm in}'}{\rme^{\rmi H_{\alpha'} t}\rme^{-\rmi H_\alpha t}}{\psi_{\rm in}} .
+\end{equation}
+若 $\alpha,\alpha'$ 属于不同安排，则 $t\to-\infty$ 时两套渐近态对应于
+不同的粒子分组（碎片远离方向不同），重叠积分在空间上指数衰减；
+若 $\alpha,\alpha'$ 属于同安排但内部态不同，则内部束缚态正交，
+$\inn{\phi_{(bc)^*}}{\phi_{(bc)}}=0$。两种情形下都有
+$\inn{\psi'}{\psi}=0$。$\Hilb_{\rm bound}$ 与 $\Hilb_\pm^\alpha$ 的
+正交性来自束缚态空间局域、散射态扩散这一时间渐近行为差异。
+\hfill$\square$
+
+\begin{remark}[$\Hilb_+^\alpha\not\perp\Hilb_-^{\alpha'}$ 一般成立]
+  注意定理只断言\emph{同号}波算符的值域两两正交。
+  $\Hilb_+^\alpha$ 与 $\Hilb_-^{\alpha'}$（即来自通道 $\alpha$ 入射、
+  落入通道 $\alpha'$ 出射的真态）一般\emph{不}正交——否则
+  $\alpha\to\alpha'$ 的非弹过程概率为零，与实验事实矛盾。
+\end{remark}
+
+\subsection{渐近完备性}
+
+经过定理~\ref{thm:multich-orth}，我们已经把
+\begin{equation}
+  \Hilb_+ \;\equiv\; \bigoplus_{\alpha} \Hilb_+^\alpha ,\qquad
+  \Hilb_- \;\equiv\; \bigoplus_{\alpha} \Hilb_-^\alpha
+\end{equation}
+分别构造为彼此正交分量的（外部）直和。物理上 $\Hilb_+$ 是
+\emph{所有具有某个入渐近态的真态}，$\Hilb_-$ 是\emph{所有具有某个出
+渐近态的真态}。如果系统真的是“可以散射的”，则除了束缚态以外的所有
+真态都应当既来自某入渐近态，也将走向某出渐近态。这就是
+
+\begin{definition}[多通道渐近完备性]\label{def:multich-AC}
+  称 $N$ 体散射理论是\emph{渐近完备 (asymptotically complete)} 的，若
+  \begin{empheq}[box=\fbox]{equation}
+    \Hilb \;=\; \Hilb_{\rm bound}\,\oplus\,\Hilb_{\rm scatt}\,,\qquad
+    \Hilb_{\rm scatt}=\Hilb_+ = \Hilb_-
+    \;=\;\bigoplus_{\alpha}\Hilb_\pm^\alpha .
+    \label{eq:multich-AC}
+  \end{empheq}
+\end{definition}
+
+也就是说：(i) 每个非束缚态在 $t\to-\infty$ 看起来都像某个通道的自由
+渐近态，并在 $t\to+\infty$ 时也分解为某通道的自由渐近态；
+(ii) 反过来每个通道渐近态都对应一个真实散射态。
+\eqref{eq:multich-AC} 是 Faddeev (1965) 对三体短程势严格证明的结果，
+后来 Hepp (1969) 将其推广到 $N$ 体；其证明远比单通道情形复杂，但
+物理上完全合理。本章后续将\emph{假设}渐近完备成立。
+
+\subsection{广义渐近态：$\Hilb_{\rm as}$}
+
+注意一般入态可能是\emph{多通道叠加}的：
+\begin{equation}
+  \rme^{-\rmi H t}|\psi\rangle
+  \;\xrightarrow{t\to-\infty}\;
+  \sum_\alpha \rme^{-\rmi H_\alpha t}|\psi_{\rm in}^\alpha\rangle ,\qquad
+  |\psi\rangle = \sum_\alpha \Omega_+^\alpha|\psi_{\rm in}^\alpha\rangle .
+\end{equation}
+为统一处理，引入\emph{渐近态空间}
+\begin{equation}
+  \Hilb_{\rm as} \;\equiv\; \bigoplus_\alpha \Hilb_\alpha ,
+  \label{eq:multich-Has}
+\end{equation}
+其向量是序列 $\{|\psi_{\rm in}^\alpha\rangle\}_\alpha$，每分量取自
+$\Hilb_\alpha$。在 $\Hilb_{\rm as}$ 上定义
+\begin{equation}
+  \Omega_\pm \;\equiv\; \sum_\alpha \Omega_\pm^\alpha ,
+\end{equation}
+理解为：作用在序列 $\{|\psi_{\rm in}^\alpha\rangle\}$ 上得到
+$\sum_\alpha\Omega_\pm^\alpha|\psi_{\rm in}^\alpha\rangle\in\Hilb_{\rm scatt}$。
+渐近完备性等价于
+\begin{equation}
+  \Omega_\pm:\;\Hilb_{\rm as}\;\xrightarrow{\text{onto}}\;\Hilb_{\rm scatt} ,
+  \quad \Omega_\pm^\dagger\Omega_\pm = \mathbb{1}_{\Hilb_{\rm as}} .
+\end{equation}
+
+%-------------------------------------------------------------------------
+\section{多通道 \boldmath$\Smat$ 算符与通道矩阵元}
+\label{sec:multich-S}
+
+\subsection{多通道散射算符的定义}
+
+\begin{definition}[多通道 $\Smat$]\label{def:multich-S}
+  作用在渐近态空间 $\Hilb_{\rm as}$ 上，定义
+  \begin{empheq}[box=\fbox]{equation}
+    \Smat \;\equiv\; \Omega_-^{\dagger}\,\Omega_+ :\;\Hilb_{\rm as}\to\Hilb_{\rm as}.
+    \label{eq:multich-Sdef}
+  \end{empheq}
+\end{definition}
+
+由 $\Omega_\pm$ 是从 $\Hilb_{\rm as}$ 到同一空间 $\Hilb_{\rm scatt}$
+的等距同构，$\Smat$ 是 $\Hilb_{\rm as}$ 上的酉算符：
+\begin{equation}
+  \Smat^\dagger \Smat = \Smat\Smat^\dagger = \mathbb{1}_{\Hilb_{\rm as}} .
+\end{equation}
+作用关系
+\begin{equation}
+  |\psi\rangle = \Omega_+|\psi_{\rm in}\rangle = \Omega_-|\psi_{\rm out}\rangle
+  \;\;\Longrightarrow\;\;
+  |\psi_{\rm out}\rangle = \Smat\,|\psi_{\rm in}\rangle
+\end{equation}
+正是单通道情形的直接推广（参考第~\ref{ch:Smat1P} 章）。
+
+\subsection{通道分块矩阵元 $\Smat_{\beta\alpha}$}
+
+把 $\Hilb_{\rm as}=\bigoplus_\alpha\Hilb_\alpha$ 视为带通道指标的“矢量
+空间”，则 $\Smat$ 自然有矩阵分块结构：
+\begin{equation}
+  (\Smat)_{\beta\alpha} \;\equiv\;
+  \Omega_-^{\beta\dagger}\,\Omega_+^\alpha ,\qquad
+  \Smat_{\beta\alpha}:\;\Hilb_\alpha\to\Hilb_\beta .
+  \label{eq:multich-Sblocks}
+\end{equation}
+物理意义：$\Smat_{\beta\alpha}$ 把通道 $\alpha$ 的入渐近态映射为
+通道 $\beta$ 的出渐近态分量；$|\matel{\phi_\beta}{\Smat_{\beta\alpha}}{\phi_\alpha}|^2$
+即从通道 $\alpha$ 入射、落入通道 $\beta$ 出射的概率振幅模平方。
+
+酉性 $\Smat^\dagger\Smat=\mathbb{1}$ 写成分块形式即
+\begin{empheq}[box=\fbox]{equation}
+  \sum_\beta \Smat_{\beta\alpha}^\dagger\,\Smat_{\beta\alpha'}
+   \;=\; \delta_{\alpha\alpha'}\,\mathbb{1}_{\Hilb_\alpha} .
+  \label{eq:multich-Sunitarity}
+\end{empheq}
+取对角项 $\alpha=\alpha'$、对一个动量本征态求矩阵元，即得
+\emph{概率守恒}
+\begin{equation}
+  \sum_\beta\,|\Smat_{\beta\alpha}|^2 \;=\; 1
+  \quad\text{(对每个固定入态)} ,
+\end{equation}
+继而通过正比性给出截面之和等于总截面（详见 \S\ref{sec:multich-cross}）：
+\begin{equation}
+  \sum_\beta \sigma_{\beta\leftarrow\alpha} \;=\; \sigma_{\rm tot}^{(\alpha)} .
+  \label{eq:multich-sigmasum}
+\end{equation}
+
+\subsection{动量基与能量守恒}
+
+为了从抽象算符过渡到实验可观测量，引入\emph{动量基}。
+对通道 $\alpha$，碎片有 $n_\alpha$ 个，记其动量为
+$\underline{p}\equiv(\mathbf{p}_1,\dots,\mathbf{p}_{n_\alpha})$；
+则通道基向量
+\begin{equation}
+  |\underline{p};\alpha\rangle \in \Hilb_\alpha,\qquad
+  H_\alpha|\underline{p};\alpha\rangle = E_{\underline{p}}^{\,\alpha}|\underline{p};\alpha\rangle ,
+\end{equation}
+其中通道总能量
+\begin{equation}
+  E_{\underline{p}}^{\,\alpha} \;=\;
+  \sum_\nu\frac{\mathbf{p}_\nu^2}{2 M_\nu^\alpha} + W_\alpha ,
+\end{equation}
+$W_\alpha$ 是通道阈值（碎片内部束缚态能量之和；以三粒子无穷分离静止
+态为零点）。$\Smat$ 在该基下有矩阵元
+$\matel{\underline{p}',\beta}{\Smat}{\underline{p},\alpha}$。
+
+由于 $\Omega_\pm^\alpha$ 满足缠绕关系 $H\Omega_\pm^\alpha=\Omega_\pm^\alpha H_\alpha$
+（参考第~\ref{ch:Smat1P} 章），故
+\begin{equation}
+  H\,\Omega_\pm^\alpha = \Omega_\pm^\alpha H_\alpha\;\;
+  \Longrightarrow\;\;
+  (E'-E)\,\matel{\underline{p}',\beta}{\Smat}{\underline{p},\alpha}=0 .
+\end{equation}
+即 $\Smat$ 矩阵元仅在能量守恒 $E'=E$ 时不为零：
+\begin{equation}
+  \matel{\underline{p}',\beta}{\Smat}{\underline{p},\alpha}
+  \;=\;\delta_{\beta\alpha}\,\delta(\underline{p}'-\underline{p})
+   - 2\pi\rmi\,\delta(E'-E)\,\delta_3(\bar{\mathbf{P}}'-\bar{\mathbf{P}})\,
+     t(\underline{p}',\beta\leftarrow\underline{p},\alpha) ,
+  \label{eq:multich-Tmat}
+\end{equation}
+其中 $\delta_3(\bar{\mathbf{P}}'-\bar{\mathbf{P}})$ 来自总动量守恒，
+$t(\underline{p}',\beta\leftarrow\underline{p},\alpha)$ 是
+\emph{在能壳上的多通道 $T$ 矩阵元}，仅依赖各通道的相对动量。
+
+%-------------------------------------------------------------------------
+\section{截面：弹性、激发与重排}
+\label{sec:multich-cross}
+
+设入态固定在通道 $\alpha$（实验上常见情形），由波包
+$\phi(\mathbf{p})$ 表征其相对动量分布。仿照第~\ref{ch:cross} 章
+推导，可得末态在通道 $\beta$ 中、动量落入体元 $\rmd\underline{p}'$
+的截面
+\begin{equation}
+  \sigma(\Delta',\,\beta\leftarrow\mathbf{p},\alpha)
+  \;=\;(2\pi)^4\,\frac{m}{p}\!\int_{\Delta'}\!\rmd\underline{p}'\;
+       \delta(E'-E)\,
+       |t(\underline{p}',\beta\leftarrow\mathbf{p},\alpha)|^2 ,
+\end{equation}
+其中 $m$ 是入射通道的二体约化质量，$p=|\mathbf{p}|$ 是入射相对动量。
+
+\subsection{两体出射通道：微分截面}
+
+最常用的情形是末态也是两体通道（弹性、激发或重排）。这时末态
+仅由一个相对动量 $\mathbf{p}'$ 描述，体元简化为 $\rmd\Omega'$。
+能量守恒固定 $|\mathbf{p}'|$：
+\begin{equation}
+  \frac{p'^2}{2m'}+W_\beta \;=\; \frac{p^2}{2m}+W_\alpha ,
+\end{equation}
+其中 $m'$ 是出射通道的约化质量。微分截面
+\begin{empheq}[box=\fbox]{equation}
+  \frac{\rmd\sigma}{\rmd\Omega}(\mathbf{p}',\beta\leftarrow\mathbf{p},\alpha)
+  \;=\;(2\pi)^4\,m\,m'\,\frac{p'}{p}\,
+       |t(\mathbf{p}',\beta\leftarrow\mathbf{p},\alpha)|^2 .
+  \label{eq:multich-dsigma}
+\end{empheq}
+若按惯例引入散射振幅
+\begin{equation}
+  f(\mathbf{p}',\beta\leftarrow\mathbf{p},\alpha)
+  \;\equiv\; -(2\pi)^2(m\,m')^{1/2}\,
+            t(\mathbf{p}',\beta\leftarrow\mathbf{p},\alpha) ,
+\end{equation}
+则微分截面具有标准形式
+\begin{empheq}[box=\fbox]{equation}
+  \frac{\rmd\sigma}{\rmd\Omega}(\mathbf{p}',\beta\leftarrow\mathbf{p},\alpha)
+  \;=\;\frac{p'}{p}\,
+       |f(\mathbf{p}',\beta\leftarrow\mathbf{p},\alpha)|^2 .
+  \label{eq:multich-dsigma-f}
+\end{empheq}
+注意因子 $p'/p$（运动学相空间因子）是\emph{多通道弹性反应区别于单通道
+弹性的标志}：在单通道情形 $p'=p$，该因子等于 1。
+
+按 $\alpha=\beta$ 与 $\alpha\ne\beta$ 区分得到三类截面：
+\begin{itemize}
+  \item \emph{弹性散射 (elastic)} $\alpha\to\alpha$：
+    $p'=p$，$f_{\alpha\alpha}$ 一般同时含有干涉项（详见
+    \S\ref{sec:multich-optical}）。
+  \item \emph{非弹激发 (inelastic excitation)} $a+(bc)\to a+(bc)^*$：
+    粒子分组不变，内部态不同，$p'<p$。
+  \item \emph{重排反应 (rearrangement)} $a+(bc)\to b+(ac)$：粒子分组改变，
+    $p'$ 由能量守恒决定，且约化质量 $m'\ne m$。
+\end{itemize}
+
+\subsection{多体出射：电离/裂解}
+
+若末态为三体（如 $e+e+p$ 电离），微分体元由两个出射动量 $\mathbf{p}_a,\mathbf{p}_b$
+描述（$\mathbf{p}_c$ 由总动量守恒固定），三重微分截面
+\begin{equation}
+  \frac{\rmd^3\sigma}{\rmd\Omega_a\,\rmd\Omega_b\,\rmd E_b}
+  \;=\;(2\pi)^4\,\frac{m_a^2 m_b\,p_a p_b}{p}\,
+       |t(\mathbf{p}_a,\mathbf{p}_b;\beta\leftarrow\mathbf{p},\alpha)|^2 .
+\end{equation}
+对 $\Omega_b,E_b$ 积分得到 $\rmd\sigma/\rmd\Omega_a$，对全部末态动量
+积分得到通道间总截面 $\sigma(\beta\leftarrow\mathbf{p},\alpha)$。
+
+\subsection{阈值行为：Wigner 阈值定律}
+
+考虑通道 $\beta$ 在能量 $E$ 略高于其阈值 $W_\beta$ 时打开。此时
+$p_\beta=\sqrt{2 m_\beta(E-W_\beta)}$ 很小，而入射动量 $p_\alpha$ 仍接近
+原值。在能量阈值附近，$T$ 矩阵元的行为可由
+\emph{Wigner 阈值定律 (Wigner threshold law)} 描述：
+设末态出射轨道角动量为 $\ell_\beta$（同样适用入态），则
+\begin{empheq}[box=\fbox]{equation}
+  |t(\mathbf{p}',\beta\leftarrow\mathbf{p},\alpha)|^2
+  \;\propto\; p_\beta^{2\ell_\beta}\,p_\alpha^{2\ell_\alpha}\,
+              \bigl[1+O(p_\beta^2)\bigr] .
+\end{empheq}
+代入 \eqref{eq:multich-dsigma}，并用 $p'=p_\beta$，得
+\begin{equation}
+  \sigma_{\beta\leftarrow\alpha}(E)\;\sim\;
+  \frac{p_\beta^{2\ell_\beta+1}}{p_\alpha^{2\ell_\alpha+1}}\cdot p_\alpha^{2\ell_\alpha}
+  \;=\;\frac{p_\beta^{2\ell_\beta+1}}{p_\alpha},
+  \label{eq:multich-Wigner}
+\end{equation}
+即在通道 $\beta$ 刚刚打开时，$\sigma_{\beta\leftarrow\alpha}\propto k_\beta^{2\ell_\beta+1}$，
+特别 $s$ 波出射（$\ell_\beta=0$）下截面如 $k_\beta\propto\sqrt{E-W_\beta}$
+缓慢上升，在 $E=W_\beta$ 处其能量导数发散，这就是反应截面在通道阈值处的
+\emph{Wigner cusp}（详见 \S\ref{sec:multich-threshold}）。
+
+\subsection{细致平衡（detailed balance）}
+
+第~\ref{ch:invariance} 章的时间反演不变性 $\Smat=\Tmat^\dagger\Smat^\dagger\Tmat$
+（其中 $\Tmat$ 是反幺正时间反演算符）经合适的相位约定可推得
+\begin{equation}
+  \matel{\underline{p}',\beta}{\Smat}{\underline{p},\alpha}
+  \;=\;\matel{-\underline{p},\alpha}{\Smat}{-\underline{p}',\beta} ,
+\end{equation}
+即 $\alpha\to\beta$ 与 $\beta\to\alpha$（粒子动量反向）的振幅相等。
+取模平方并求和平均自旋方向后得到
+\begin{empheq}[box=\fbox]{equation}
+  (2s_1+1)(2s_2+1)\,p^2\,\sigma_{\beta\leftarrow\alpha}(E)
+  \;=\;
+  (2s_3+1)(2s_4+1)\,p'^2\,\sigma_{\alpha\leftarrow\beta}(E) ,
+  \label{eq:multich-detbal}
+\end{empheq}
+其中 $s_1,s_2$ 是入射通道 $\alpha$ 中两碎片自旋，$s_3,s_4$ 是出射通道
+$\beta$ 中两碎片自旋，$p,p'$ 分别是两通道的相对动量；总能量 $E$ 一致。
+这是\emph{细致平衡定理 (detailed balance / reciprocity)}。
+
+历史上最著名的实验检验之一是 Bodansky 等 (1966) 对反应
+$p+{}^{25}\text{Mg}\rightleftharpoons d+{}^{24}\text{Mg}$ 的截面比测量，
+在 0.4\% 的实验精度下与时间反演不变性一致。
+
+\begin{remark}\label{rmk:multich-no-detbal-pT}
+  注意：仅有空间反射 (parity)+T 不变性时，得到的是
+  $\matel{\underline{p}',\beta}{\Smat}{\underline{p},\alpha}=
+   \matel{\underline{p},\alpha}{\Smat}{\underline{p}',\beta}$，即
+  $\Smat$ 矩阵\emph{对称性}。区分 \eqref{eq:multich-detbal} 与
+  $\Smat$ 对称性有时被混淆为同一“detailed balance”，请按
+  Taylor 第 17.5 节明确区别。
+\end{remark}
+
+%-------------------------------------------------------------------------
+\section{广义光学定理与弹/非弹分解}
+\label{sec:multich-optical}
+
+\subsection{分波多通道 $S$ 矩阵}
+
+若 $H$ 具有转动不变性，则在角动量基下 $\Smat$ 在每个 $(E,\ell)$ 子空间
+内分块。设当前能量上有 $n$ 个开放通道（仅考虑两体通道以简化），分波
+$S$ 矩阵
+\begin{equation}
+  s^\ell(E)\;=\;\bigl[s^{\,\ell}_{\beta\alpha}(E)\bigr]_{\beta,\alpha=1,\dots,n}
+\end{equation}
+是 $n\times n$ 酉矩阵：$s^{\ell\dagger} s^\ell = \mathbb{1}$。
+\eqref{eq:multich-Sunitarity} 在分波形式下成为
+\begin{equation}
+  \sum_{\beta=1}^{n} |s_{\beta\alpha}^\ell(E)|^2 \;=\; 1 .
+  \label{eq:multich-pwunitarity}
+\end{equation}
+
+定义\emph{多通道分波振幅}
+\begin{equation}
+  f_{\beta\alpha}^\ell(E)\;=\;
+  \frac{s_{\beta\alpha}^\ell(E)-\delta_{\beta\alpha}}{2\rmi\,(p_\alpha p_\beta)^{1/2}} .
+\end{equation}
+对弹性元 $\alpha=\beta$，记 $s_{\alpha\alpha}^\ell(E)=\eta_\ell\rme^{2\rmi\delta_\ell}$，
+其中 $0\le \eta_\ell\le 1$ 是\emph{非弹性因子 (inelasticity)}：
+\begin{equation}
+  \eta_\ell^2 \;=\; |s_{\alpha\alpha}^\ell|^2
+  \;=\;1-\sum_{\beta\ne\alpha}|s_{\beta\alpha}^\ell|^2 .
+\end{equation}
+即弹性分波点 $f_{\alpha\alpha}^\ell$ 不再位于幺正圆上，而落入半径 1/2 的
+Argand 圆\emph{内部}。
+
+\subsection{广义光学定理}
+
+\begin{theorem}[多通道光学定理]\label{thm:multich-opt}
+  对任何二体入射通道 $\alpha$，前向弹性振幅 $f_{\alpha\alpha}(\theta=0)$
+  的虚部与该通道的总截面相联系：
+  \begin{empheq}[box=\fbox]{equation}
+    \Im f_{\alpha\alpha}(\mathbf{p},\alpha\leftarrow\mathbf{p},\alpha)
+    \;=\; \frac{p_\alpha}{4\pi}\,\sigma_{\rm tot}^{(\alpha)}(p_\alpha) ,
+    \label{eq:multich-opt}
+  \end{empheq}
+  其中 $\sigma_{\rm tot}^{(\alpha)}(p_\alpha)
+   =\sum_\beta\sigma_{\beta\leftarrow\alpha}(p_\alpha)$ 是从通道 $\alpha$
+  入射、所有可能末态通道的截面之和（包括弹性和所有非弹性、重排、裂解过程）。
+\end{theorem}
+
+\noindent\emph{证明.} 由分波酉性 \eqref{eq:multich-pwunitarity}，
+\begin{align}
+  2\,\Im s_{\alpha\alpha}^\ell
+  &= \rmi(s_{\alpha\alpha}^{\ell *}-s_{\alpha\alpha}^{\ell})\nonumber\\
+  &= 1-\sum_{\beta\ne\alpha}|s_{\beta\alpha}^\ell|^2 -|s_{\alpha\alpha}^\ell|^2 +\text{重排…}\\
+  &= 2 p_\alpha\,\Im f_{\alpha\alpha}^\ell .
+\end{align}
+（详细推导与第~\ref{ch:Smat1P} 章中单通道光学定理同构。）
+对 $\ell$ 求和并把右边写成截面，即得 \eqref{eq:multich-opt}。\hfill$\square$
+
+\subsection{弹性、反应与吸收截面分解}
+
+按总截面拆分：
+\begin{align}
+  \sigma_{\rm tot}^{(\alpha)} &= \sigma_{\rm el}^{(\alpha)} + \sigma_{\rm reac}^{(\alpha)} ,\\
+  \sigma_{\rm el}^{(\alpha)} &= \frac{\pi}{p_\alpha^2}\sum_\ell(2\ell+1)\,|1-s_{\alpha\alpha}^\ell|^2 ,\\
+  \sigma_{\rm reac}^{(\alpha)} &= \frac{\pi}{p_\alpha^2}\sum_\ell(2\ell+1)\,(1-\eta_\ell^2) .
+\end{align}
+两者均为非负，且
+$\sigma_{\rm tot}^{(\alpha)}=\frac{2\pi}{p_\alpha^2}\sum_\ell(2\ell+1)
+ (1-\Re s_{\alpha\alpha}^\ell)$，与光学定理一致。
+$\sigma_{\rm reac}^{(\alpha)}$ 称为\emph{反应截面}（或\emph{吸收截面},
+若把所有非弹过程合并视作流的“损失”）。
+
+\subsection{光学势的物理图像}
+\label{sec:multich-optpot}
+
+把多通道散射严格“折叠”到单通道弹性问题上，需引入\emph{光学势
+(optical potential)}：在 $\Hilb_\alpha$ 上构造非局域、能量依赖、
+一般非厄米的有效势 $V_{\rm opt}(E)$，使得弹性波函数
+$\eta_\alpha(\mathbf{x})$ 严格满足
+\begin{equation}
+  \Bigl[-\frac{\nabla^2}{2m}+V_{\rm opt}(E)\Bigr]\eta_\alpha
+  \;=\;(E-W_\alpha)\,\eta_\alpha ,
+  \label{eq:multich-optpot}
+\end{equation}
+具有一通道形式但完全准确再现弹性截面（参见 Taylor 第 19-d 节）。
+$V_{\rm opt}$ 的反厄米部分负定，对应于流量从通道 $\alpha$\emph{流出}
+进入其它非弹/反应通道的“吸收”。这一思想在核物理中十分重要：
+通常用唯象形式 $V_{\rm opt}=U(r)+\rmi W(r)$（实部+负虚部，类比于光在
+吸收介质中的传播），以少量参数拟合大量散射数据。
+
+\begin{remark}[复折射率类比]
+  把 \eqref{eq:multich-optpot} 类比于光在吸收介质中的传播：
+  实部 $U(r)$ 给出折射 (refraction)，相当于弹性散射；负虚部 $W(r)$ 给出
+  指数衰减 (absorption)，相当于反应通道。这就是“optical model”名字的来源。
+\end{remark}
+
+%-------------------------------------------------------------------------
+\section{Feshbach 投影与光学势的严格推导}\label{sec:multich-Feshbach}
+
+上一节给出的光学势 $V_{\rm opt}$ 仅是\emph{唯象}图像; 本节按 Feshbach (1958, 1962) 的投影算符方法\textbf{严格地}从多通道 Schrödinger 方程
+导出 $V_{\rm opt}$, 并由此说明光学势的反厄米部分如何从耦合
+到非弹通道的虚激发产生, 同时为\emph{Feshbach 共振} (跨阈共振) 提供
+形式基础.
+
+\subsection{$P$ 与 $Q$ 投影}\label{sec:multich-PQ}
+
+把全 Hilbert 空间 $\Hilb=\bigoplus_\alpha\Hilb_\alpha$ (见 \S\ref{sec:multich-channels}) 划分成两部分:
+\begin{itemize}
+  \item $P$ \emph{开通道空间} (open channels): 包含所有在所考虑能量 $E$ 下能量在阈值以上 ($W_\alpha\le E$) 的通道, 即\emph{可以渐近自由产生粒子}的通道. 典型情形仅包含一个弹性通道.
+  \item $Q$ \emph{闭通道空间} (closed channels): 包含所有阈值 $W_\beta>E$ 的通道. 这些通道无法渐近产生粒子, 但在中间过程可作为"虚激发"出现.
+\end{itemize}
+形式上 $P,Q$ 是 $\Hilb$ 上正交投影算符:
+\begin{equation}
+  P+Q=\mathbb 1,\qquad P^2=P=P^\dagger,\quad Q^2=Q=Q^\dagger,\quad PQ=QP=0.
+  \label{eq:multich-PQ}
+\end{equation}
+
+\begin{remark}[更灵活的选取]
+  $P$ 不必"恰好等于开通道全空间". 实践中常更狭义地取 $P=\bigl|\phi_{\rm el}^{\rm gs}\bigr\rangle\bigl\langle\phi_{\rm el}^{\rm gs}\bigr|\otimes\mathbb 1_{\rm orb}$, 即\emph{只投到弹性通道、靶处于基态}的子空间; 其余 (所有激发态 + 反应通道) 都归入 $Q$. 这是光学模型的常规选法.
+\end{remark}
+
+\subsection{Feshbach 投影下的 Schrödinger 方程}\label{sec:multich-Feshbach-eqs}
+
+设 $(H-E)|\Psi\rangle=0$ (稳态). 拆 $|\Psi\rangle=P|\Psi\rangle+Q|\Psi\rangle\equiv|\Psi_P\rangle+|\Psi_Q\rangle$, 把方程 $P$ 和 $Q$ 投影:
+\begin{align}
+  (PHP-E)|\Psi_P\rangle+PHQ|\Psi_Q\rangle&=0,\label{eq:multich-Feshbach-P}\\
+  QHP|\Psi_P\rangle+(QHQ-E)|\Psi_Q\rangle&=0.\label{eq:multich-Feshbach-Q}
+\end{align}
+由 \eqref{eq:multich-Feshbach-Q} 解出闭通道分量
+\begin{equation}
+  |\Psi_Q\rangle=\frac{1}{E^+-QHQ}\,QHP|\Psi_P\rangle,
+  \label{eq:multich-PsiQ}
+\end{equation}
+其中 $E^+=E+\rmi 0$ 选\emph{推迟}边界条件 (虚激发态衰变回开通道, 而不是从无穷远入射). 代回 \eqref{eq:multich-Feshbach-P}:
+\begin{empheq}[box=\fbox]{equation}
+  \bigl[PHP+W_{\rm opt}(E)-E\bigr]|\Psi_P\rangle=0,
+  \label{eq:multich-effSch}
+\end{empheq}
+其中
+\begin{equation}
+  \boxed{\;W_{\rm opt}(E)\equiv PHQ\,\frac{1}{E^+-QHQ}\,QHP.\;}
+  \label{eq:multich-Wopt}
+\end{equation}
+\eqref{eq:multich-effSch} 是闭通道经过完全消除后, 仅作用在开通道空间 $P\Hilb$ 上的\textbf{有效 Schrödinger 方程}; $W_{\rm opt}(E)$ 就是\emph{光学势} (有时称 \emph{Feshbach 有效势}).
+
+\subsection{光学势的关键性质}\label{sec:multich-Wopt-properties}
+
+\paragraph{1. 能量依赖.}\quad $W_{\rm opt}(E)$ 显式依赖于能量 $E$, 因为消除闭通道时引入的传播子 $(E^+-QHQ)^{-1}$ 是能量函数. 这\emph{打破}了普通势 $V(\bm x)$ 不依赖于 $E$ 的常规结构. 物理含义: 在不同能量下虚激发的权重不同.
+
+\paragraph{2. 非局域 (nonlocal).}\quad $QHQ$ 在闭通道空间中传播一段时间, 然后通过 $PHQ$ 跳回开通道. 这造成 $W_{\rm opt}$ 在坐标表象下是
+\begin{equation}
+  W_{\rm opt}(\bm x,\bm x';E)\neq W_{\rm loc}(\bm x)\delta(\bm x-\bm x'),
+\end{equation}
+即\emph{非局域核}. 在唯象光学模型中常做局域近似 (Perey--Buck 近似).
+
+\paragraph{3. 自洽分解为实部 + 虚部.}\quad 把 $QHQ$ 在其本征基上展开
+\begin{equation}
+  QHQ=\sum_n\epsilon_n|\Phi_n\rangle\langle\Phi_n|+\int_{\rm cont}\rmd\epsilon\,\epsilon|\Phi_\epsilon\rangle\langle\Phi_\epsilon|,
+\end{equation}
+其中本征值 $\epsilon_n$ (分立) 与 $\epsilon$ (连续) 都\emph{大于}阈值 $E$ (因 $Q$ 投到闭通道, 阈值之上对该投影空间是连续谱), 但若闭通道有束缚态 $\epsilon_n<E$ 则它们是嵌入连续谱的离散态. Sokhotski--Plemelj 公式
+\begin{equation}
+  \frac{1}{E^+-\epsilon}=\mathcal{P}\frac{1}{E-\epsilon}-\rmi\pi\delta(E-\epsilon),
+\end{equation}
+给
+\begin{align}
+  W_{\rm opt}(E)
+  &=\underbrace{\mathcal P\!\sum\!\!\!\!\!\int_n\frac{PHQ|\Phi_n\rangle\langle\Phi_n|QHP}{E-\epsilon_n}}_{\equiv \Delta(E),\;\rm 实部, Hermitian}\nonumber\\
+  &\;\;-\rmi\pi\underbrace{\sum\!\!\!\!\!\int_n PHQ|\Phi_n\rangle\langle\Phi_n|QHP\,\delta(E-\epsilon_n)}_{\equiv \tfrac{1}{2}\Gamma(E)\ge 0,\;\rm 反厄米部分}.
+  \label{eq:multich-Wopt-decomp}
+\end{align}
+即
+\begin{equation}
+  \boxed{\;W_{\rm opt}(E)=\Delta(E)-\rmi\,\tfrac{1}{2}\Gamma(E),\quad \Gamma(E)\ge 0\text{ (作为算符).}\;}
+  \label{eq:multich-Wopt-final}
+\end{equation}
+反厄米部分 $-\rmi\Gamma/2$ \emph{负}于厄米共轭, 对应"开通道流向闭通道虚激发"的吸收. 这就是唯象光学模型中 $W(r)<0$ 的微观来源.
+
+\paragraph{4. 流量损失.}\quad 计算 $\rmd\langle\Psi_P|\Psi_P\rangle/\rmd t$ 在 \eqref{eq:multich-effSch} 下的演化:
+\begin{equation}
+  \rmd_t\langle\Psi_P|\Psi_P\rangle
+  =-\langle\Psi_P|\Gamma(E)|\Psi_P\rangle/\hbar\le 0,
+  \label{eq:multich-flux-loss}
+\end{equation}
+即 $P$ 子空间内的概率\emph{不守恒}; 流量经反应通道流入 $Q$. 与上一节 \eqref{eq:multich-flux-loss} 一致地给出反应截面 $\sigma_{\rm reac}>0$.
+
+\subsection{光学势的 Born 级数展开}\label{sec:multich-Wopt-Born}
+
+把 $(E^+-QHQ)^{-1}$ 展开 $H=H_0+V$:
+\begin{equation}
+  \frac{1}{E^+-QHQ}=\frac{1}{E^+-QH_0Q}+\frac{1}{E^+-QH_0Q}QVQ\frac{1}{E^+-QHQ}+\cdots,
+\end{equation}
+最低阶 (单次虚激发):
+\begin{equation}
+  W_{\rm opt}^{(2)}(E)=PVQ\,\frac{1}{E^+-QH_0Q}\,QVP.
+  \label{eq:multich-Wopt-2nd}
+\end{equation}
+对原子物理 $e$--$\rm H(1s)$ 散射, $P$ 投到 $|1s\rangle$, $Q$ 投到 $\{|nlm\rangle:n>1\}\cup\{\rm ionized\}$, $V$ 为 $e$--$e$ 与 $e$--$p$ Coulomb 之和. \eqref{eq:multich-Wopt-2nd} 给\emph{二阶光学势} (polarization potential)
+\begin{equation}
+  W_{\rm pol}(r)\xrightarrow{r\to\infty}-\frac{\alpha_{\rm pol}}{2r^4},
+\end{equation}
+其中 $\alpha_{\rm pol}=\frac{9}{2}a_0^3$ 是氢原子静电极化率. 这是\emph{长程感应偶极} ($-1/r^4$ tail) 的微观来源.
+
+\subsection{Feshbach 共振}\label{sec:multich-Feshbach-res}
+
+\eqref{eq:multich-Wopt-decomp} 的实部 $\Delta(E)$ 包含一族能量 $\epsilon_n$ 处的极点 (考虑闭通道空间的离散本征值, 如 $Q$ 子空间内的双激发态). 当入射能量 $E$ 扫过某个 $\epsilon_n$ 时, $W_{\rm opt}(E)$ 中出现一个共振结构:
+\begin{equation}
+  W_{\rm opt}(E)\xrightarrow{E\to\epsilon_n}\frac{|PHQ|\Phi_n\rangle|^2}{E-\epsilon_n+\rmi 0},
+\end{equation}
+即弹性振幅在 $E=\epsilon_n$ 处有\textbf{Feshbach 共振}极点. 它的物理图像:
+\begin{itemize}
+  \item 入射粒子 + 靶 (开通道, 能量 $E$) 暂时\emph{虚激发}为闭通道中的束缚态 $|\Phi_n\rangle$ (能量 $\epsilon_n$ 与 $E$ 接近);
+  \item 该束缚态衰变回开通道 $P$, 形成共振.
+\end{itemize}
+共振宽度
+\begin{equation}
+  \Gamma_n=2\pi\bigl|\langle\Phi_n|HP|\Psi_E^{(0)}\rangle\bigr|^2,
+  \label{eq:multich-Fano}
+\end{equation}
+其中 $|\Psi_E^{(0)}\rangle$ 是\emph{不带 $W_{\rm opt}$} 时 $PHP$ 在能量 $E$ 的散射态. 这是\textbf{Fano 公式}, 给出 Feshbach 共振宽度的"金规则"形式.
+
+\paragraph{与第~\ref{ch:resonance}~章 shape resonance 的对比.}\quad
+\begin{itemize}
+  \item Shape resonance: \emph{单通道}内, 共振对应势垒后面的准束缚态; 极点完全由势的形状 (角动量势垒) 决定.
+  \item Feshbach resonance: \emph{多通道}必需, 共振对应闭通道中的束缚态, 通过通道耦合"借"给开通道.
+\end{itemize}
+两者解析性上都是 $\Smat_l(E)$ 在下半平面的极点, 但物理机制不同. 冷原子物理中通过磁场调节 Feshbach 共振 (改变 $\epsilon_n$ 与 $E$ 的相对位置) 来\emph{调节散射长度} $a_0(B)$, 是 BEC 与 BCS-BEC crossover 实验的基础.
+
+\subsection{$\Smat$ 的 Feshbach 形式}\label{sec:multich-Smat-Feshbach}
+
+记不带 $W_{\rm opt}$ 时 $PHP$ 的 $S$ 矩阵元为 $\Smat^{\rm bg}$ (背景, "potential scattering" 部分). 完整 $\Smat$ 在共振附近写成
+\begin{equation}
+  \boxed{\;\Smat(E)=\Smat^{\rm bg}(E)\,\frac{E-\epsilon_n-\rmi\Gamma_n/2}{E-\epsilon_n+\rmi\Gamma_n/2}\;}
+  \label{eq:multich-Smat-Feshbach}
+\end{equation}
+(对单道弹性, 多道情形为矩阵推广). 这给出 \emph{Breit--Wigner 共振}的微观推导, 同时显示共振相移 $\delta_{\rm res}=\arctan[(\Gamma/2)/(E-\epsilon_n)]$ 与背景相移 $\delta_{\rm bg}$ 的可加性 (与第~\ref{ch:resonance}~章 \eqref{ssec:bound-zeros} 一致).
+
+%-------------------------------------------------------------------------
+\section{时间无关多通道理论：稳态 Lippmann–Schwinger 方程}
+\label{sec:multich-LS}
+
+\subsection{多通道稳态散射态}
+
+仿照第~\ref{ch:Smat1P}--\ref{ch:resonance} 章的推广：定义\emph{多通道
+稳态散射态}
+\begin{equation}
+  |\underline{p},\alpha\pm\rangle \;\equiv\; \Omega_\pm^\alpha\,|\underline{p},\alpha\rangle ,
+  \qquad
+  H\,|\underline{p},\alpha\pm\rangle \;=\; E_{\underline{p}}^{\,\alpha}\,|\underline{p},\alpha\pm\rangle .
+\end{equation}
+利用与单通道相同的 Damping 因子推导（参考第~\ref{ch:Smat1P} 章），
+有积分表达
+\begin{equation}
+  |\underline{p},\alpha\pm\rangle
+  \;=\; |\underline{p},\alpha\rangle
+   + G(E_{\underline{p}}^{\,\alpha}\pm\rmi 0)\,V^{\,\alpha}\,
+        |\underline{p},\alpha\rangle ,
+\end{equation}
+其中 $G(z)=(z-H)^{-1}$ 是\emph{完整}的格林算符。
+
+\subsection{多通道 Lippmann–Schwinger 方程}
+
+引入\emph{通道格林算符} $G^\alpha(z)\equiv(z-H_\alpha)^{-1}$。利用
+预解集恒等式 $G=G^\alpha+G^\alpha V^\alpha G$，得到
+\begin{empheq}[box=\fbox]{equation}
+  |\underline{p},\alpha\pm\rangle
+  \;=\;|\underline{p},\alpha\rangle
+   +G^\alpha(E_{\underline{p}}^{\,\alpha}\pm\rmi 0)\,V^{\,\alpha}\,
+   |\underline{p},\alpha\pm\rangle .
+  \label{eq:multich-LS}
+\end{empheq}
+这就是\emph{多通道 Lippmann–Schwinger 方程}。能壳上 $T$ 矩阵元两种
+等价形式（“prior”和“post”）：
+\begin{align}
+  t(\underline{p}',\beta\leftarrow\underline{p},\alpha)
+  &=\matel{\underline{p}',\beta-}{V^{\,\alpha}}{\underline{p},\alpha}
+  \quad\text{(prior, 入通道势)},\\
+  t(\underline{p}',\beta\leftarrow\underline{p},\alpha)
+  &=\matel{\underline{p}',\beta}{V^{\,\beta}}{\underline{p},\alpha+}
+  \quad\text{(post, 出通道势)} .
+\end{align}
+两者在能壳上完全相等（off-shell 一般不等）。
+
+\subsection{Born 近似}
+
+低阶近似（高能或弱通道间作用）：把 \eqref{eq:multich-LS} 中的
+$|\underline{p},\alpha\pm\rangle$ 用 $|\underline{p},\alpha\rangle$ 替换，得
+\emph{多通道 Born 近似}：
+\begin{equation}
+  t^{\rm B}(\underline{p}',\beta\leftarrow\underline{p},\alpha)
+  \;\approx\;
+  \matel{\underline{p}',\beta}{V^{\,\alpha}}{\underline{p},\alpha} .
+  \label{eq:multich-Born}
+\end{equation}
+对最简单情形 $a+(bc)\to a+(bc)$ 弹性、$a+(bc)\to a+(bc)^*$ 激发：
+\begin{align}
+  t^{\rm B}_{\rm el} &= \int\rmd^3 x_a\,\rme^{-\rmi\mathbf{q}\cdot\mathbf{x}_a}
+                       \,\bar V_{ab}(\mathbf{x}_a)
+                       \;=\; t_{ab}^{\rm B}(\mathbf{q})\,g_1(\mathbf{q}) ,\\
+  t^{\rm B}_{\rm exc} &= t_{ab}^{\rm B}(\mathbf{q})\,g_2(\mathbf{q}) ,
+\end{align}
+其中 $\mathbf{q}=\mathbf{p}'-\mathbf{p}$，$\bar V_{ab}$ 是用 $|\phi_1|^2$
+平均的有效势，$g_1(\mathbf{q})=\int|\phi_1|^2\rme^{\rmi\mathbf{q}\cdot\mathbf{x}_b}\rmd^3 x_b$
+是\emph{弹性形状因子 (elastic form factor)}，
+$g_2(\mathbf{q})=\int\phi_2^*\phi_1\rme^{\rmi\mathbf{q}\cdot\mathbf{x}_b}\rmd^3 x_b$
+是\emph{非弹性形状因子}，描述靶内部跃迁结构。
+
+这是原子物理中 Born 近似巨大成功的形式根源：高能电子打氢原子
+$1s\to 2p$ 激发的截面与实验在 100\,eV 以上吻合甚好（Taylor 图 18.2）。
+
+\subsection{用靶态展开：耦合通道方程}
+
+把全多体波函数按目标态展开
+\begin{equation}
+  \langle\mathbf{x},\underline{x}_{\rm tar}|\underline{p},1+\rangle
+  \;=\;\sum\!\!\!\!\int_\alpha \eta_\alpha(\mathbf{x})\,\phi_\alpha(\underline{x}_{\rm tar}) ,
+  \label{eq:multich-tarexp}
+\end{equation}
+代入 Schrödinger 方程并对 $\phi_\beta^*$ 投影，得到
+\emph{耦合通道方程 (coupled-channel equations)}
+\begin{empheq}[box=\fbox]{equation}
+  -\frac{\nabla^2}{2m}\eta_\alpha(\mathbf{x})
+  +\sum_{\alpha'} \bar V_{\alpha\alpha'}(\mathbf{x})\,\eta_{\alpha'}(\mathbf{x})
+  \;=\;(E-E_\alpha)\,\eta_\alpha(\mathbf{x}) ,
+  \label{eq:multich-coupled}
+\end{empheq}
+其中势耦合矩阵
+\begin{equation}
+  \bar V_{\alpha\alpha'}(\mathbf{x})
+  \;=\;\int\rmd\underline{x}_{\rm tar}\,\phi_\alpha^*\,V^{1}\,\phi_{\alpha'} .
+\end{equation}
+实际计算中，对低能区域只保留少数最重要的开通道（例如 $e+\text{H}$ 在
+$n=2$ 阈附近用 1$s$,2$s$,2$p$ 三态近似），称为\emph{紧耦合 (close-coupling)}
+近似。耦合通道方程是当前原子分子碰撞计算的主流框架。
+
+%-------------------------------------------------------------------------
+\section{阈值现象与 Wigner cusp}
+\label{sec:multich-threshold}
+
+\subsection{阈值打开与酉性约束}
+
+考虑 $E$ 由低增大经过新通道 $\beta$ 的阈值 $W_\beta$。在 $E<W_\beta$
+时，$\beta$ 是\emph{闭通道 (closed channel)}（$p_\beta^2$ 为负，
+对应解析延拓后的指数衰减解）；在 $E>W_\beta$ 时打开。
+$E$ 沿实轴穿过 $W_\beta$ 时，分波 $S$ 矩阵
+\begin{equation}
+  s_{\alpha\alpha}^\ell(E)\;=\;\eta_\ell(E)\,\rme^{2\rmi\delta_\ell(E)}
+\end{equation}
+经历一个奇点：刚低于阈值时 $\eta_\ell=1$（弹性是唯一开过程，幺正约束
+强加 $|s_{\alpha\alpha}^\ell|=1$），刚高于阈值时 $\eta_\ell<1$ 开始发生
+通道流出。
+
+\subsection{Wigner 阈值定律重述}
+
+由 \eqref{eq:multich-Wigner}，反应截面在阈值附近行为
+\begin{equation}
+  \sigma_{\beta\leftarrow\alpha}(E)\;\sim\;
+  C_\ell\,(E-W_\beta)^{\ell_\beta+1/2}\,/\,\sqrt{E-W_\alpha} ,\qquad E\to W_\beta^+ .
+\end{equation}
+特别 $\ell_\beta=0$ 出射时 $\sigma\propto\sqrt{E-W_\beta}$；$\ell_\beta=1$
+时 $\sigma\propto (E-W_\beta)^{3/2}$，等等。
+
+\subsection{Wigner cusp}
+
+由酉性约束，闭通道 $\beta$ 打开时弹性 $S$ 矩阵的实部
+$\Re s_{\alpha\alpha}^\ell(E)$ 在 $E=W_\beta$ 处必须发生
+\emph{尖角 (cusp)}：$\sigma_{\rm el}(E)$ 的导数从两侧不连续。
+
+\begin{theorem}[Wigner cusp]\label{thm:multich-cusp}
+  设通道 $\beta$ 在 $W_\beta$ 处刚刚打开，出射部分波相对动量
+  $p_\beta=\sqrt{2 m_\beta(E-W_\beta)}$。则在阈值附近弹性 $S$ 矩阵元
+  具有展开
+  \begin{equation}
+    s_{\alpha\alpha}^\ell(E)\;=\;
+    s_{\alpha\alpha}^\ell(W_\beta)\bigl(1-2\rmi A\,p_\beta^{2\ell_\beta+1}\bigr)
+     +O(p_\beta^{2\ell_\beta+2}) ,
+  \end{equation}
+  其中 $A>0$ 与 $\beta$ 的耦合强度有关。对 $\ell_\beta=0$，
+  $p_\beta\propto\sqrt{E-W_\beta}$，$\sigma_{\rm el}(E)$ 在 $E=W_\beta^+$
+  作 $\sqrt{E-W_\beta}$ 行为；在 $E<W_\beta$ 一侧 $p_\beta\to\rmi|p_\beta|$，
+  贡献变为虚相位平移，弹性截面斜率不同。
+\end{theorem}
+
+经典实验例证：中子打 ${}^{12}\text{C}$ 弹性截面在新核子激发态阈处的
+尖锐扭折。在原子物理中，电子打氢原子的弹性截面在 $n=2$ 阈
+（$10.2\,\text{eV}$）处也观测到此类 cusp。
+
+\begin{remark}\label{rmk:multich-virtual-cusp}
+  阈值附近的奇异性也可以从 $S$ 矩阵在能量复平面的解析结构看出：
+  $E=W_\beta$ 是新通道 $p_\beta(E)=\sqrt{2m_\beta(E-W_\beta)}$ 的
+  支点 (branch point)，分波振幅在该点附近有 $\sqrt{E-W_\beta}$ 型支割线。
+  Wigner cusp 即此支割线在物理片上对实轴投影的体现，与共振极点
+  （第~\ref{ch:resonance} 章）共同决定阈值附近的丰富现象。
+\end{remark}
+
+%-------------------------------------------------------------------------
+\section{三体散射与 Faddeev 方程概述}
+\label{sec:multich-faddeev}
+
+三体散射不是形式上把单通道 Lippmann–Schwinger 方程“原样推广”就能解决的：
+事实上，Lippmann–Schwinger 方程 \eqref{eq:multich-LS} 在重排过程
+$a+(bc)\to b+(ac)$ 中\emph{解不唯一}。本节给出该困难的来源与
+Faddeev 方程的解决方案概念。
+
+\subsection{Lippmann–Schwinger 方程的非唯一性}
+
+考虑三粒子 $T$ 算符 $T^{\beta\alpha}(z)=V^\alpha+V^\beta G(z)V^\alpha$。
+其完整的“非齐次”LS 方程
+\begin{equation}
+  T^{\beta\alpha}(z)\;=\;V^\alpha + V^\beta G^\beta(z)\,T^{\beta\alpha}(z) .
+\end{equation}
+关键问题是：当 $\alpha\ne\beta$（即真正的重排）时，方程的核
+$V^\beta G^\beta$ 包含\emph{双连续}部分（一个粒子可以连续动量地与束缚
+对相分离），因此方程是\emph{奇异 Fredholm 方程 (singular Fredholm equation)}：
+其核对应的算符在 $L^2$ 上\emph{不是紧 (compact) 的}，解的唯一性失败、
+Fredholm 替换性 (Fredholm alternative) 失效。
+
+物理上的根源是：在三粒子系统里，$z-H_\beta$ 的连续谱中嵌入了通道 $\beta$
+本身的两体束缚态，使得 $G^\beta(z)$ 在能壳附近有“多余”的奇异结构。
+Weinberg 与 Lovelace 等人首先注意到，单纯把单粒子方法搬过来会得到
+冗余的零空间解。
+
+\subsection{Faddeev 的“通道分解”策略}
+
+Faddeev (1960--1965) 的核心思想是把全 $T$ 矩阵\emph{按最后一次相互作用
+对}分解。对三粒子系统，定义两体子系 $T$ 算符
+\begin{equation}
+  T_\gamma(z)\;\equiv\;V_\gamma + V_\gamma G_0(z)\,T_\gamma(z),
+  \quad \gamma\in\{(ab),(ac),(bc)\},
+\end{equation}
+其中 $G_0(z)=(z-H_0)^{-1}$ 是\emph{完全自由}三粒子格林算符，$V_\gamma$
+是某一对粒子的二体势。引入“分量” $T_\gamma^{\beta\alpha}$ 满足
+\begin{empheq}[box=\fbox]{equation}
+  T_\gamma^{\beta\alpha}\;=\;\delta_{\gamma\alpha}\,T_\gamma
+   + T_\gamma\,G_0\,\sum_{\gamma'\ne\gamma} T_{\gamma'}^{\beta\alpha} ,
+   \quad \gamma=(ab),(ac),(bc) .
+  \label{eq:multich-faddeev}
+\end{empheq}
+\eqref{eq:multich-faddeev} 是\emph{Faddeev 方程组}。其重要性质：
+\begin{enumerate}
+  \item \emph{不再奇异}：方程的核 $T_\gamma G_0\sum_{\gamma'\ne\gamma}$
+    只含\emph{不同对}的两体 $T$ 算符与一个连接它们的传播子，由数学上
+    可以证明（Faddeev 1965）该核在迭代两次后变成紧算符；从而 Fredholm
+    理论适用，解唯一存在。
+  \item \emph{对称地处理三个安排通道}：$T^{\beta\alpha}=\sum_\gamma T_\gamma^{\beta\alpha}$
+    自动包含弹性、激发、重排与裂解全部过程，且每条通道在物理上
+    “平等”进入方程。
+  \item \emph{两体输入}：仅需两体 $T_\gamma(z)$ 作为输入即可数值求解；
+    在核物理与原子物理 $n+d$、$p+d$ 散射等三体系统中，Faddeev 方程
+    是首选的数值方法。
+\end{enumerate}
+
+进一步，对四体系统则有 Yakubovsky (1967) 推广方程；其结构更复杂，
+但思路类似：按所有可能的“分簇 (cluster)”对全 $T$ 矩阵作完全分解，
+保证每个分量方程的核紧致。
+
+\begin{remark}[本笔记的范围]\label{rmk:multich-faddeev-scope}
+  Faddeev 方程的严格推导与紧致性证明涉及大量算子理论分析，超出本课程
+  范围，可参见原文 Faddeev (1965) 或 Newton (1966) 第 17 章。
+  这里仅以介绍性的方式说明：三体散射比两体散射在数学结构上有质的差别，
+  Lippmann–Schwinger 方程必须重新组织才能正确处理重排。
+\end{remark}
+
+%-------------------------------------------------------------------------
+\section{小结}
+\label{sec:multich-summary}
+
+本章的要点可总结如下：
+
+\begin{enumerate}
+  \item \textbf{通道分解}：希尔伯特空间分裂
+    $\Hilb=\Hilb_{\rm bound}\oplus\bigoplus_\alpha\Hilb_\pm^\alpha$
+    （渐近完备性）；每个通道有自己的渐近哈密顿量
+    $H_\alpha=H_0^\alpha+V_{\rm bound}^\alpha$ 和通道波算符
+    $\Omega_\pm^\alpha:\Hilb_\alpha\to\Hilb_\pm^\alpha$。
+  \item \textbf{$\Smat$ 算符}：
+    $\Smat=\Omega_-^\dagger\Omega_+$ 在 $\Hilb_{\rm as}=\bigoplus_\alpha\Hilb_\alpha$
+    上酉。其分块 $\Smat_{\beta\alpha}$ 由通道 $\alpha$ 入态映为通道
+    $\beta$ 出态。酉性 $\sum_\beta\Smat_{\beta\alpha}^\dagger\Smat_{\beta\alpha}=\mathbb{1}$
+    给出截面守恒 $\sum_\beta\sigma_{\beta\leftarrow\alpha}=\sigma_{\rm tot}^{(\alpha)}$。
+  \item \textbf{微分截面}：
+    $\dfrac{\rmd\sigma}{\rmd\Omega}_{\beta\leftarrow\alpha}=
+    \dfrac{p'}{p}|f_{\beta\alpha}|^2$；新增的 $p'/p$ 因子是
+    多通道反应的运动学标志。阈值附近 Wigner 定律
+    $\sigma_{\beta\leftarrow\alpha}\sim k_\beta^{2\ell_\beta+1}/k_\alpha$。
+  \item \textbf{光学定理}：$\Im f_{\alpha\alpha}(0)=k_\alpha\sigma_{\rm tot}^{(\alpha)}/(4\pi)$
+    通过\emph{所有}通道总和实现幺正性。弹性 + 反应：
+    $\sigma_{\rm tot}=\sigma_{\rm el}+\sigma_{\rm reac}$。
+  \item \textbf{细致平衡}：T-不变下
+    $(2s_1+1)(2s_2+1)p^2\sigma_{\beta\leftarrow\alpha}=
+     (2s_3+1)(2s_4+1)p'^2\sigma_{\alpha\leftarrow\beta}$。
+  \item \textbf{光学势}：把多通道折叠到弹性单通道问题需引入
+    非局域、能量依赖、非厄米的有效势 $V_{\rm opt}$。
+  \item \textbf{时间无关理论}：多通道 LS 方程
+    $|\underline{p},\alpha\pm\rangle=|\underline{p},\alpha\rangle
+    +G^\alpha(E\pm\rmi 0)V^\alpha|\underline{p},\alpha\pm\rangle$；
+    Born 近似得到形状因子表示；耦合通道方程是 close-coupling 计算的
+    实用框架。
+  \item \textbf{Wigner cusp}：通道阈值处 $\Smat$ 矩阵有 $\sqrt{E-W_\beta}$ 型支
+    割线，导致弹性截面在阈值处的尖角。
+  \item \textbf{三体困难}：朴素 LS 方程对重排过程解不唯一；Faddeev 方程
+    通过按“最后相互作用对”分解 $T$ 矩阵，得到紧致核的方程组，
+    给出三体散射的严格数学框架。
+\end{enumerate}
+
+至此，从第~\ref{ch:hilbert} 章的希尔伯特空间出发、经第~\ref{ch:Smat1P}--\ref{ch:cross} 章
+单粒子散射算符与截面、第~\ref{ch:scat2p}--\ref{ch:invariance} 章
+两粒子与不变性、第~\ref{ch:Smat1P}（Born 级数）--\ref{ch:resonance}（共振）章
+解析性质，最后到本章多通道与反应散射，构成了一个相对完整的非相对论散射
+理论框架。复合粒子的内部结构、激发与重排现象、以及多体效应（Faddeev
+方程、光学势、close-coupling 数值方法）等丰富内容，正是这一框架在原子、
+分子、核物理实验中持续焕发生命力的所在。

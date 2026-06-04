@@ -1,0 +1,816 @@
+\chapter{散射截面 (Cross Section)}\label{ch:cross}
+
+\section{引言：从 $S$ 矩阵到可观测量}
+
+在第~\ref{ch:Smat1P}~章中我们看到，给定入射渐近态 $\ket{\phi}$ 与出射渐近态 $\ket{\chi}$，
+散射事件 $\chi \leftarrow \phi$ 发生的概率由
+\begin{equation}
+w(\chi \leftarrow \phi) \;=\; \big|\matel{\chi}{\Smat}{\phi}\big|^2
+\label{eq:w-chi-phi}
+\end{equation}
+给出。然而这一概率并不是直接的实验观测量：实验上既不能精确制备某个特定的入射波包 $\ket{\phi}$，
+也无法精确鉴别一个特定的出射波包 $\ket{\chi}$。
+因此，我们需要从 $w(\chi\leftarrow\phi)$ 出发，
+构造一个对实验制备过程不敏感、且能够通过粒子计数测得的可观测量——\emph{散射截面} (cross section)。
+
+本章仍然限制在最简单的情形：单个无自旋粒子在固定势 $V(\bm{x})$ 中的弹性散射。
+我们将首先讨论 $\Smat$ 的两个重要性质——能量守恒，以及在动量空间中分解为
+\emph{在壳} (on-shell) $T$~矩阵元，进而引入散射振幅 $f(\bm{p}'\!\leftarrow\!\bm{p})$。
+随后用波包方法严格推导微分散射截面公式 $\rmd\sigma/\rmd\Omega = |f|^2$，
+最后给出光学定理的证明。
+
+\section{$\Smat$ 矩阵的两个一般性质}
+
+\subsection{Intertwining 关系}
+
+总哈密顿量 $H = H_0 + V$ 中 $H_0 = \bm{p}^2/2m$ 是自由部分。
+M\o{}ller 算符 $\Omega_\pm = \lim_{t\to\mp\infty} \rme^{\rmi H t} \rme^{-\rmi H_0 t}$
+最重要的代数性质是 \emph{intertwining relation}：
+\begin{equation}
+H \,\Omega_\pm \;=\; \Omega_\pm \,H_0.
+\label{eq:intertwine}
+\end{equation}
+
+\begin{proof*}
+取任意 $\tau \in \R$，考察
+\begin{align*}
+\rme^{\rmi H\tau}\,\Omega_\pm
+&= \rme^{\rmi H\tau}\Big[\lim_{t\to\mp\infty} \rme^{\rmi Ht}\rme^{-\rmi H_0 t}\Big] \\
+&= \lim_{t\to\mp\infty} \rme^{\rmi H(t+\tau)}\rme^{-\rmi H_0 t} \\
+&= \lim_{t\to\mp\infty} \rme^{\rmi H(t+\tau)}\rme^{-\rmi H_0 (t+\tau)}\,\rme^{\rmi H_0 \tau}
+\;=\; \Omega_\pm \,\rme^{\rmi H_0 \tau}.
+\end{align*}
+两边对 $\tau$ 求导后再令 $\tau = 0$，得 $\rmi H \Omega_\pm = \Omega_\pm \,\rmi H_0$，即~\eqref{eq:intertwine}。
+\end{proof*}
+
+利用 M\o{}ller 算符的等距性 $\Omega_\pm^\dagger \Omega_\pm = \mathbb{I}$，
+将~\eqref{eq:intertwine} 两侧左乘 $\Omega_\pm^\dagger$ 得到等价形式
+\begin{equation}
+\Omega_\pm^\dagger\, H \,\Omega_\pm \;=\; H_0.
+\label{eq:intertwine-dagger}
+\end{equation}
+
+\begin{remark}
+\eqref{eq:intertwine-dagger} 表示 $\Omega_\pm$ 把完全哈密顿量 $H$ 在散射子空间上的作用
+拉回到自由哈密顿量 $H_0$ 上。但~$\Omega_\pm$ 一般\emph{不是}幺正算符
+（因为 $H$ 还有束缚态而 $H_0$ 没有），所以~$H$ 与 $H_0$ 的谱可以不同：
+$H_0$ 的谱为 $[0,\infty)$，$H$ 还可能含有束缚态对应的负本征值。
+\end{remark}
+
+\subsection{能量守恒：$[\Smat, H_0] = 0$}
+
+由 $\Smat = \Omega_-^\dagger \Omega_+$，结合 intertwining 关系 $\Omega_\pm H_0 = H \Omega_\pm$ 与
+$H_0 \Omega_\pm^\dagger = \Omega_\pm^\dagger H$：
+\begin{align}
+[\Smat, H_0]
+&= \Omega_-^\dagger \Omega_+ H_0 - H_0 \Omega_-^\dagger \Omega_+ \nonumber\\
+&= \Omega_-^\dagger H \Omega_+ - \Omega_-^\dagger H \Omega_+ \;=\; 0.
+\label{eq:S-conserves-H0}
+\end{align}
+即 $\Smat$ 与自由哈密顿量对易。
+
+\begin{remark}
+$H = H_0 + V$ 不显含时间，故\emph{总}能量当然守恒。
+但散射实验中我们关心的是渐近态的能量，渐近态由 $H_0$ 演化（$|t|\to\infty$ 时势~$V$ 在波包所在区域可忽略），
+所以入射态与出射态的渐近能量都是\emph{自由粒子能量} $\bm{p}^2/2m$。
+$[\Smat,H_0]=0$ 即表示入射与出射的渐近能量相等。
+\end{remark}
+
+由 $[\Smat,H_0]=0$ 与 $\Smat^\dagger \Smat = \Smat \Smat^\dagger = \mathbb{I}$，
+对任意入射态 $\ket{\psi_{\text{in}}}$ 与对应的出射态 $\ket{\psi_{\text{out}}} = \Smat\ket{\psi_{\text{in}}}$，
+平均能量满足
+\begin{equation}
+\matel{\psi_{\text{out}}}{H_0}{\psi_{\text{out}}}
+= \matel{\psi_{\text{in}}}{\Smat^\dagger H_0 \Smat}{\psi_{\text{in}}}
+= \matel{\psi_{\text{in}}}{H_0}{\psi_{\text{in}}}.
+\end{equation}
+
+\subsection{$\Smat$ 在动量表象下的能量守恒}
+
+$[\Smat,H_0]=0$ 意味着 $\Smat$ 与 $H_0$ 有共同本征基。
+取自由粒子的动量本征态 $\ket{\bm{p}}$ 作为基矢：
+\begin{equation}
+\psi_{\bm{p}}(\bm{x}) = \inn{\bm{x}}{\bm{p}} = \frac{1}{(2\pi)^{3/2}}\,\rme^{\rmi\bm{p}\cdot\bm{x}},
+\qquad \inn{\bm{p}'}{\bm{p}} = \delta^{(3)}(\bm{p}-\bm{p}'),
+\end{equation}
+\begin{equation}
+H_0 \ket{\bm{p}} = E_{\bm{p}}\ket{\bm{p}}, \qquad E_{\bm{p}} = \frac{\bm{p}^2}{2m}.
+\label{eq:Ep}
+\end{equation}
+
+\begin{remark}
+平面波 $\psi_{\bm{p}}(\bm{x})$ 不属于 $L^2(\R^3)$，
+不是物理可实现的态。但物理态可以写为平面波的叠加：
+\begin{equation}
+\ket{\varphi} = \int \rmd^3 p\,\varphi(\bm{p})\,\ket{\bm{p}},
+\qquad \inn{\varphi}{\varphi} = \int \rmd^3 p\,|\varphi(\bm{p})|^2 < \infty.
+\end{equation}
+$S$~矩阵元 $\matel{\bm{p}'}{\Smat}{\bm{p}}$ 给出从 $\ket{\bm{p}}$ 散射到 $\ket{\bm{p}'}$ 的概率振幅；
+波包之间的散射通过下式合成：
+\begin{equation}
+\psi_{\text{out}}(\bm{p}') = \int \rmd^3 p\,\matel{\bm{p}'}{\Smat}{\bm{p}}\,\psi_{\text{in}}(\bm{p}).
+\label{eq:psiout-Sphi}
+\end{equation}
+\end{remark}
+
+将 $0 = [\Smat, H_0]$ 夹在 $\bra{\bm{p}'}\cdots\ket{\bm{p}}$ 之间：
+\begin{equation}
+0 \;=\; \matel{\bm{p}'}{[H_0,\Smat]}{\bm{p}} \;=\; (E_{\bm{p}'} - E_{\bm{p}})\,\matel{\bm{p}'}{\Smat}{\bm{p}},
+\end{equation}
+所以 $\matel{\bm{p}'}{\Smat}{\bm{p}}$ 必含 $\delta(E_{\bm{p}'}-E_{\bm{p}})$，即
+\begin{equation}
+\matel{\bm{p}'}{\Smat}{\bm{p}} \;=\; \delta(E_{\bm{p}'}-E_{\bm{p}})\times(\text{remainder}).
+\label{eq:S-energy-delta}
+\end{equation}
+这就是动量表象中能量守恒的体现。
+
+\section{在壳 $T$ 矩阵与散射振幅}
+
+\subsection{$R$ 算符与 $T$ 矩阵元}
+
+$\Smat = \mathbb{I} + R$ 把无相互作用部分 $\mathbb{I}$ 与散射部分 $R$ 分离开来。
+依~\eqref{eq:S-energy-delta}，$R$ 矩阵元也必含能量~$\delta$ 函数；按惯例引入因子 $-2\pi\rmi$：
+\begin{equation}
+\matel{\bm{p}'}{R}{\bm{p}} \;=\; -2\pi\rmi\,\delta(E_{\bm{p}'}-E_{\bm{p}})\,t(\bm{p}'\!\leftarrow\!\bm{p}).
+\label{eq:R-T}
+\end{equation}
+于是
+\begin{equation}
+\matel{\bm{p}'}{\Smat}{\bm{p}} \;=\; \delta^{(3)}(\bm{p}'-\bm{p}) \;-\; 2\pi\rmi\,\delta(E_{\bm{p}'}-E_{\bm{p}})\,t(\bm{p}'\!\leftarrow\!\bm{p}).
+\label{eq:S-decomp-T}
+\end{equation}
+
+第一项 $\delta^{(3)}(\bm{p}'-\bm{p})$ 表示粒子\emph{不发生散射}、动量不变的振幅。
+第二项 $-2\pi\rmi\,\delta(E_{\bm{p}'}-E_{\bm{p}})\,t(\bm{p}'\!\leftarrow\!\bm{p})$ 是发生散射时的振幅，
+其中 $\delta$ 函数说明能量守恒，但单个动量分量\emph{并不}守恒。
+
+\begin{remark}
+对一大类合理的相互作用势~$V$，$t(\bm{p}'\!\leftarrow\!\bm{p})$ 关于动量是一个\emph{解析}（至少是连续）函数。
+这种正则性是 $\Smat$ 的所谓 \emph{cluster decomposition} 性质的一种简单表现：
+若 $V$ 衰减太慢（如 Coulomb 势），$\matel{\bm{p}'}{\Smat}{\bm{p}}$ 将不再具有~\eqref{eq:S-decomp-T} 这种结构。
+\end{remark}
+
+由于~$\delta(E_{\bm{p}'}-E_{\bm{p}})$ 强制 $\bm{p}'^2 = \bm{p}^2$，
+$t(\bm{p}'\!\leftarrow\!\bm{p})$ 只在\emph{能壳} (energy shell) 上、即 $E_{\bm{p}'} = E_{\bm{p}}$ 时有定义，
+因此叫 \emph{在壳 $T$ 矩阵元} (on-shell $T$-matrix element)。
+
+\begin{remark}[Off-shell $T$ 算符]
+在壳~$t(\bm{p}'\!\leftarrow\!\bm{p})$ 本身只是一个关于壳上动量对的函数，并不能直接定义算符 $\Tmat$。
+但在第~\ref{ch:born}~章中我们将看到，可以构造一个 \emph{off-shell} $T$ 算符，
+它在所有动量对 $\bm{p}', \bm{p}$ 上都有定义，且 $\matel{\bm{p}'}{\Tmat}{\bm{p}}$ 在壳上回到 $t(\bm{p}'\!\leftarrow\!\bm{p})$。
+Off-shell $\Tmat$ 满足重要的 Lippmann--Schwinger 方程，是计算工具；
+但实验上只有在壳~$T$ 矩阵元才与可观测量相关。
+\end{remark}
+
+\subsection{散射振幅 $f(\bm{p}'\!\leftarrow\!\bm{p})$}
+
+定义 \emph{散射振幅}
+\begin{equation}
+\boxed{\;f(\bm{p}'\!\leftarrow\!\bm{p}) \;=\; -(2\pi)^2\,m\,t(\bm{p}'\!\leftarrow\!\bm{p}).\;}
+\label{eq:f-def}
+\end{equation}
+我们将在第~\ref{ch:partial}~章中证明，这个定义与初等量子力学中由稳态波函数渐近行为
+$\psi(\bm{x}) \sim \rme^{\rmi\bm{p}\cdot\bm{x}} + f(\theta,\varphi)\,\rme^{\rmi p r}/r$
+所定义的散射振幅完全一致。
+将~\eqref{eq:f-def} 代入~\eqref{eq:S-decomp-T} 得
+\begin{equation}
+\matel{\bm{p}'}{\Smat}{\bm{p}} \;=\; \delta^{(3)}(\bm{p}'-\bm{p})
+\;-\; \frac{\rmi}{2\pi m}\,\delta(E_{\bm{p}'}-E_{\bm{p}})\,f(\bm{p}'\!\leftarrow\!\bm{p}).
+\label{eq:S-decomp-f}
+\end{equation}
+
+\section{经典散射截面}
+
+为了对比量子情形，先回顾经典散射截面的物理含义。
+设入射粒子动量沿 $\bm{p}_0$ 方向、碰撞参数 (impact parameter) 为 $\bm{\rho}$
+（即入射径迹到通过靶的对称轴的垂直矢量）。
+我们能测的只是入射动量 $\bm{p}_0$ 与出射动量 $\bm{p}$，无法测 $\bm{\rho}$。
+
+\begin{itemize}
+\item 单次实验只能告诉我们\emph{发生了散射或没有发生}：$\bm{p}\neq\bm{p}_0$ 即发生了散射。
+\item 多次实验：以单位面积入射粒子数 $n_{\text{inc}}$（垂直于 $\bm{p}_0$ 的截面密度）入射，
+设碰撞参数充分随机均匀分布。设总散射粒子数为 $N_{\text{sc}}$，则
+\begin{equation}
+N_{\text{sc}} \;=\; n_{\text{inc}}\,\sigma.
+\label{eq:Nsc-tot}
+\end{equation}
+这里 $\sigma$ 具有面积量纲，可解释为靶的有效横截面积，叫\emph{总散射截面} (total scattering cross section)。
+\item 进一步可分辨散射方向：散射到立体角 $\Delta\Omega$ 内的粒子数
+\begin{equation}
+N_{\text{sc}}(\Delta\Omega) \;=\; n_{\text{inc}}\,\sigma(\Delta\Omega).
+\end{equation}
+对无穷小 $\rmd\Omega$，$\sigma(\rmd\Omega) = (\rmd\sigma/\rmd\Omega)\,\rmd\Omega$，
+$\rmd\sigma/\rmd\Omega$ 称为\emph{微分散射截面} (differential cross section)。
+\end{itemize}
+
+\begin{remark}[使用条件]
+\begin{enumerate}
+\item 入射粒子数必须足够多、碰撞参数足够随机均匀，使得密度 $n_{\text{inc}}$ 的描述真实有效。
+\item 入射粒子束的几何截面只要远大于散射截面 $\sigma$（即靶的有效尺度）即可，无需无穷大。
+\item \emph{向前}散射的微分散射截面没有直接定义，因为向前散射的粒子与未散射的粒子无法区分。
+不过 $f$ 关于 $\bm{p}'$ 是连续的，故可由其他方向的微分散射截面通过解析延拓得到向前散射的形式定义。
+\end{enumerate}
+\end{remark}
+
+\section{量子的散射截面}
+
+入射渐近态 $\psi_{\text{in}}(\bm{p}) = \inn{\bm{p}}{\psi_{\text{in}}}$；
+对应的出射渐近态 $\psi_{\text{out}}(\bm{p}) = \inn{\bm{p}}{\psi_{\text{out}}} = \inn{\bm{p}}{\Smat\,\psi_{\text{in}}}$。
+$t\to+\infty$ 时在动量方向 $\hat{\bm{p}}$ 附近 $\rmd\Omega$ 内探测到粒子的概率为
+\begin{equation}
+w(\rmd\Omega \leftarrow \psi_{\text{in}}) \;=\; \rmd\Omega\int_0^\infty p^2\,\rmd p\,|\psi_{\text{out}}(\bm{p})|^2,
+\qquad \bm{p} = p\,\hat{\bm{p}}.
+\label{eq:w-dOmega}
+\end{equation}
+
+\subsection{对碰撞参数取平均：横向位移波包族}
+
+加速器制备的入射态我们只知道是\emph{波包}、动量集中在 $\bm{p}_0$ 附近。
+为了类比经典情形中对碰撞参数的平均，
+取一族由\emph{固定波函数} $\phi(\bm{p})$ 经横向位移 $\bm{\rho}\perp\bm{p}_0$ 得到的波包：
+\begin{equation}
+\ket{\psi_{\text{in}}} = \ket{\phi_{\bm{\rho}}}, \qquad
+\phi_{\bm{\rho}}(\bm{p}) = \rme^{-\rmi\bm{\rho}\cdot\bm{p}}\,\phi(\bm{p}).
+\label{eq:phi-rho}
+\end{equation}
+（位移算符 $\rme^{-\rmi\bm{\rho}\cdot\hat{\bm{P}}}$ 在动量空间中的作用就是相位因子 $\rme^{-\rmi\bm{\rho}\cdot\bm{p}}$。）
+设碰撞参数在垂直于 $\bm{p}_0$ 的二维平面内均匀分布，密度为 $n_{\text{inc}}$，
+则散射到 $\rmd\Omega$ 中的总粒子数为
+\begin{equation}
+N_{\text{sc}}(\rmd\Omega) \;=\; \sum_i w(\rmd\Omega \leftarrow \phi_{\bm{\rho}_i})
+\;\longrightarrow\; n_{\text{inc}}\int \rmd^2\rho\, w(\rmd\Omega \leftarrow \phi_{\bm{\rho}})
+\;\equiv\; n_{\text{inc}}\,\sigma(\rmd\Omega \leftarrow \phi).
+\end{equation}
+仿照经典定义，我们引入\emph{量子微分散射截面}：
+\begin{equation}
+\boxed{\;\sigma(\rmd\Omega \leftarrow \phi) \;=\; \int \rmd^2\rho\,w(\rmd\Omega \leftarrow \phi_{\bm{\rho}}),\qquad
+\frac{\rmd\sigma}{\rmd\Omega} \;=\; \frac{\sigma(\rmd\Omega \leftarrow \phi)}{\rmd\Omega}.\;}
+\label{eq:sigma-def}
+\end{equation}
+
+\begin{remark}
+另一种解释：将~\eqref{eq:sigma-def} 看成在垂直于 $\bm{p}_0$ 的横截面上，
+权重 $w(\rmd\Omega\leftarrow\phi_{\bm{\rho}})$ 对每块面元 $\rmd^2\rho$ 求和；
+当 $\bm{\rho}$ 随机分布时，$\sigma(\rmd\Omega\leftarrow\phi)$ 即为靶上把粒子散射到 $\rmd\Omega$ 中的等效面积。
+\end{remark}
+
+\begin{remark}[实验上的两个平均]
+\begin{enumerate}
+\item 加速器产生的不同入射粒子的波包形状本身可能不同，故应进一步对各种 $\phi$ 取平均得 $w(\rmd\Omega\leftarrow\phi)$。
+\item 后面将看到，对动量充分集中在 $\bm{p}_0$ 的~$\phi(\bm{p})$，
+$\sigma(\rmd\Omega\leftarrow\phi)$ 与~$\phi$ 的细节无关，
+故可写成只依赖于 $\bm{p}_0$ 的 $\sigma(\rmd\Omega\leftarrow\bm{p}_0)$。
+\item 实际实验中，加速器产生大量入射粒子打在金属薄膜靶上，
+入射粒子和靶粒子都需均匀分布；只要靶足够薄、束流足够稀，
+就能保证靶粒子之间和入射粒子之间互不干扰，
+每个入射粒子主要只与\emph{一个}靶粒子发生相互作用，
+满足理想散射截面的定义条件。
+\end{enumerate}
+\end{remark}
+
+\section{微分散射截面的计算：$\rmd\sigma/\rmd\Omega = |f|^2$}
+
+将散射振幅与~\eqref{eq:sigma-def}--\eqref{eq:w-dOmega} 结合，下面给出从 $S$ 矩阵到~$|f|^2$ 公式的细致推导。
+
+\subsection{出射波函数的散射部分}
+
+由~\eqref{eq:psiout-Sphi} 与~\eqref{eq:S-decomp-f}：
+\begin{align}
+\psi_{\text{out}}(\bm{p})
+&= \int \rmd^3 p'\,\matel{\bm{p}}{\Smat}{\bm{p}'}\,\psi_{\text{in}}(\bm{p}') \nonumber\\
+&= \psi_{\text{in}}(\bm{p}) \;+\; \frac{\rmi}{2\pi m}\int \rmd^3 p'\,
+\delta(E_{\bm{p}}-E_{\bm{p}'})\,f(\bm{p}\!\leftarrow\!\bm{p}')\,\psi_{\text{in}}(\bm{p}').
+\label{eq:psiout-decomp}
+\end{align}
+取 $\psi_{\text{in}}(\bm{p}) = \phi_{\bm{\rho}}(\bm{p}) = \rme^{-\rmi\bm{\rho}\cdot\bm{p}}\phi(\bm{p})$。
+我们\emph{假设}观察方向 $\hat{\bm{p}}$ 不在 $\bm{p}_0$ 方向的小邻域内（即排除向前散射），
+此时 $\phi(\bm{p}) = 0$ 在该方向上成立，于是~\eqref{eq:psiout-decomp} 中的第一项消失，仅剩散射部分：
+\begin{equation}
+\psi_{\text{out}}(\bm{p}) \;=\; \frac{\rmi}{2\pi m}\int \rmd^3 p'\,
+\delta(E_{\bm{p}}-E_{\bm{p}'})\,f(\bm{p}\!\leftarrow\!\bm{p}')\,
+\rme^{-\rmi\bm{\rho}\cdot\bm{p}'}\phi(\bm{p}').
+\label{eq:psiout-scat}
+\end{equation}
+
+\subsection{对碰撞参数 $\bm{\rho}$ 的二维积分}
+
+将~\eqref{eq:w-dOmega} 与~\eqref{eq:psiout-scat} 代入~\eqref{eq:sigma-def}：
+\begin{align}
+\sigma(\rmd\Omega \leftarrow \phi)
+&= \frac{\rmd\Omega}{(2\pi)^2 m^2}
+\int \rmd^2\rho \int_0^\infty p^2\,\rmd p \nonumber\\
+&\quad \times \int \rmd^3 p'\,\delta(E_{\bm{p}}-E_{\bm{p}'})\,f(\bm{p}\!\leftarrow\!\bm{p}')\,
+\rme^{+\rmi\bm{\rho}\cdot\bm{p}'}\phi^*(\bm{p}') \nonumber\\
+&\quad \times \int \rmd^3 p''\,\delta(E_{\bm{p}}-E_{\bm{p}''})\,f^*(\bm{p}\!\leftarrow\!\bm{p}'')\,
+\rme^{-\rmi\bm{\rho}\cdot\bm{p}''}\phi(\bm{p}'').
+\label{eq:sigma-3int}
+\end{align}
+利用 $\bm{\rho}$ 在垂直于 $\bm{p}_0$ 平面内的积分：
+\begin{equation}
+\int \rmd^2\rho\,\rme^{\rmi\bm{\rho}\cdot(\bm{p}'-\bm{p}'')} \;=\; (2\pi)^2\,\delta_2(\bm{p}'_\perp - \bm{p}''_\perp),
+\label{eq:rho-int}
+\end{equation}
+此处 $\bm{p}_\perp$ 表示与 $\bm{p}_0$ 垂直的两个分量。
+将~\eqref{eq:rho-int} 用于~\eqref{eq:sigma-3int} 中的 $\rmd^2\rho$ 积分。
+
+进一步注意第二个能量~$\delta$ 函数 $\delta(E_{\bm{p}}-E_{\bm{p}''})$ 已经迫使 $\bm{p}''^2 = \bm{p}^2$，
+而第一个能量~$\delta$ 函数已在前面积出 $\bm{p}'^2 = \bm{p}^2$，故可改写
+\begin{equation}
+\delta(E_{\bm{p}'}-E_{\bm{p}''}) \;=\; 2m\,\delta(\bm{p}'^2-\bm{p}''^2)
+\;=\; \frac{2m}{2|p'_\parallel|}\,\delta(p'_\parallel - p''_\parallel)
+\;=\; \frac{m}{|p'_\parallel|}\,\delta(p'_\parallel - p''_\parallel),
+\end{equation}
+（已通过~\eqref{eq:rho-int} 锁定 $\bm{p}'_\perp = \bm{p}''_\perp$，
+故 $\bm{p}'^2 - \bm{p}''^2 = p'^2_\parallel - p''^2_\parallel = (p'_\parallel - p''_\parallel)(p'_\parallel + p''_\parallel)$，
+当 $\phi$ 集中在 $\bm{p}_0$ 方向附近时，$p'_\parallel + p''_\parallel \approx 2 p'_\parallel > 0$，
+故仅 $p'_\parallel = p''_\parallel$ 这一支贡献。）
+合并：
+\begin{equation}
+\delta_2(\bm{p}'_\perp - \bm{p}''_\perp)\,\delta(E_{\bm{p}'} - E_{\bm{p}''})
+\;=\; \frac{m}{|p'_\parallel|}\,\delta^{(3)}(\bm{p}' - \bm{p}'').
+\label{eq:two-delta-merge}
+\end{equation}
+
+将~\eqref{eq:two-delta-merge} 代入~\eqref{eq:sigma-3int}，对 $\bm{p}''$ 积分，得到
+\begin{equation}
+\sigma(\rmd\Omega \leftarrow \phi)
+= \frac{\rmd\Omega}{m}\int_0^\infty p^2\,\rmd p \int \rmd^3 p'\,
+\frac{1}{|p'_\parallel|}\,\delta(E_{\bm{p}}-E_{\bm{p}'})\,
+\big|f(\bm{p}\!\leftarrow\!\bm{p}')\,\phi(\bm{p}')\big|^2.
+\label{eq:sigma-mid}
+\end{equation}
+
+最后用 $\delta(E_{\bm{p}}-E_{\bm{p}'})$ 完成径向 $p$ 积分：
+$\delta(E_{\bm{p}}-E_{\bm{p}'}) = (m/p)\,\delta(p-p')$（仅 $p>0$ 这一支贡献），代入得
+\begin{equation}
+\sigma(\rmd\Omega \leftarrow \phi)
+\;=\; \rmd\Omega \int \rmd^3 p'\,\frac{p'}{|p'_\parallel|}\,
+\big|f(\bm{p}\!\leftarrow\!\bm{p}')\,\phi(\bm{p}')\big|^2,
+\qquad |\bm{p}| = |\bm{p}'|.
+\label{eq:sigma-almost}
+\end{equation}
+
+\subsection{波包尖锐峰假设：取出 $f(\bm{p}\!\leftarrow\!\bm{p}_0)$}
+
+如果 $\phi(\bm{p})$ 在 $\bm{p}_0$ 附近足够尖锐峰化，
+而 $f(\bm{p}\!\leftarrow\!\bm{p}')$ 与 $p'/|p'_\parallel|$ 在该尖峰区域内变化缓慢，
+便可将 $f$ 与 $p'/|p'_\parallel|$ 用 $\bm{p}_0$ 处的值替代取出积分外。
+注意当 $\bm{p}' \approx \bm{p}_0$ 时 $p'_\parallel \approx p'$（$\bm{p}_0$ 沿~$\parallel$ 方向），
+故 $p'/|p'_\parallel|\to 1$。于是
+\begin{equation}
+\sigma(\rmd\Omega \leftarrow \phi) \;\approx\; \rmd\Omega\,|f(\bm{p}\!\leftarrow\!\bm{p}_0)|^2
+\int \rmd^3 p'\,|\phi(\bm{p}')|^2 \;=\; \rmd\Omega\,|f(\bm{p}\!\leftarrow\!\bm{p}_0)|^2,
+\label{eq:sigma-final}
+\end{equation}
+其中已用归一化 $\int|\phi|^2\rmd^3 p' = 1$。
+比较~\eqref{eq:sigma-def} 中 $\sigma(\rmd\Omega\leftarrow\phi) = (\rmd\sigma/\rmd\Omega)\,\rmd\Omega$ 得：
+\begin{equation}
+\boxed{\;\frac{\rmd\sigma}{\rmd\Omega}(\bm{p}\!\leftarrow\!\bm{p}_0) \;=\; \big|f(\bm{p}\!\leftarrow\!\bm{p}_0)\big|^2,\quad |\bm{p}|=|\bm{p}_0|.\;}
+\label{eq:dsigma-domega}
+\end{equation}
+这正是初等量子力学中熟悉的微分散射截面公式。
+注意这里只用到 $|f|$，与 $f$ 的相位无关。
+剩下的工作是如何利用相互作用势~$V$ 计算 $S$ 矩阵元或 $f(\bm{p}\!\leftarrow\!\bm{p}_0)$，将在后续章节中讨论。
+
+\begin{remark}[尖锐峰假设的含义]
+要求 $\phi(\bm{p})$ 在 $\bm{p}_0$ 附近足够窄、且 $f$ 在 $\phi$ 不为零的区域内变化缓慢。
+$f$ 通常与 $V(\bm{r})$ 的 Fourier 变换有关，
+故\emph{动量空间}波包在 $\bm{p}_0$ 处尖锐 $\Leftrightarrow$ \emph{坐标空间}波包尺度远大于势~$V$ 的尺度。
+即入射波包横向比靶的有效大小宽得多，与第~\ref{ch:Smat1P}~章中讨论的 “束流截面 $\gg$ 散射截面” 的物理直觉一致。
+\end{remark}
+
+\begin{remark}[向前方向被排除]
+推导时假设了 $\bm{p}\neq\bm{p}_0$，即观测方向不在 $\bm{p}_0$ 邻域内；
+否则~\eqref{eq:psiout-decomp} 中的~$\psi_{\text{in}}(\bm{p})$ 将贡献，且会与 $\bm{\rho}$ 积分发散——
+这正反映了向前散射粒子与未散射粒子无法区分的物理事实。
+但~$f$ 是连续函数，可由非向前方向的极限定义向前散射振幅 $f(\bm{p}_0\!\leftarrow\!\bm{p}_0)$。
+\end{remark}
+
+\subsection{入射通量与总截面、单位}
+
+\begin{itemize}
+\item \emph{入射通量}：在 $|\phi|^2$ 归一化方案下，$n_{\text{inc}}$ 为单位横截面积入射粒子数；
+对应的入射通量 $j_{\text{inc}} = n_{\text{inc}}\,v_0$，$v_0 = p_0/m$ 为入射群速度。
+\item \emph{总散射截面}由对全立体角的微分截面积分得到：
+\begin{equation}
+\sigma(\bm{p}_0) \;=\; \int \rmd\Omega\,\frac{\rmd\sigma}{\rmd\Omega}(\bm{p}\!\leftarrow\!\bm{p}_0)
+\;=\; \int \rmd\Omega\,\big|f(\bm{p}\!\leftarrow\!\bm{p}_0)\big|^2.
+\label{eq:sigma-total}
+\end{equation}
+\item \emph{量纲}：$\sigma$ 是面积，常用单位为
+\emph{barn}：$1\,\text{b} = 10^{-24}\,\text{cm}^2 = 10^{-28}\,\text{m}^2$，
+更常用的子单位为 mb、$\mu$b、nb、pb 等。
+\end{itemize}
+
+\section{光学定理 (Optical Theorem)}
+
+$S$ 算符的幺正性 $\Smat^\dagger \Smat = \mathbb{I}$ 给散射振幅带来一个重要约束：
+\emph{向前散射振幅的虚部与总截面成正比}。
+
+由 $\Smat = \mathbb{I} + R$：
+\begin{equation}
+(\mathbb{I} + R^\dagger)(\mathbb{I} + R) = \mathbb{I} \;\Longrightarrow\; R + R^\dagger = -R^\dagger R.
+\label{eq:S-unitarity-R}
+\end{equation}
+插入完备集 $\int \rmd^3 p''\,\ket{\bm{p}''}\bra{\bm{p}''} = \mathbb{I}$，取~\eqref{eq:S-unitarity-R} 的矩阵元
+$\matel{\bm{p}'}{\cdots}{\bm{p}}$：
+\begin{equation}
+\matel{\bm{p}'}{R}{\bm{p}} + \matel{\bm{p}}{R}{\bm{p}'}^*
+\;=\; -\int \rmd^3 p''\,\matel{\bm{p}''}{R}{\bm{p}'}^*\matel{\bm{p}''}{R}{\bm{p}}.
+\label{eq:R-unitarity-matrix}
+\end{equation}
+（这里用了 $(R^\dagger R)_{\bm{p}'\bm{p}} = \int \rmd^3 p''\,(R^\dagger)_{\bm{p}'\bm{p}''}R_{\bm{p}''\bm{p}}
+= \int \rmd^3 p''\,R^*_{\bm{p}''\bm{p}'}R_{\bm{p}''\bm{p}}$。）
+
+代入~\eqref{eq:R-T} 与~\eqref{eq:f-def}：
+$\matel{\bm{p}'}{R}{\bm{p}} = (\rmi/2\pi m)\,\delta(E_{\bm{p}'}-E_{\bm{p}})\,f(\bm{p}'\!\leftarrow\!\bm{p})$。
+对左边在 $E_{\bm{p}'} = E_{\bm{p}}$ 上分离 $\delta$ 函数，
+对右边的两个~$\delta$ 函数同样合并 $\delta(E_{\bm{p}''}-E_{\bm{p}'})\,\delta(E_{\bm{p}''}-E_{\bm{p}}) =
+\delta(E_{\bm{p}'}-E_{\bm{p}})\,\delta(E_{\bm{p}''}-E_{\bm{p}})$，
+约去公共的 $\delta(E_{\bm{p}'}-E_{\bm{p}})$：
+\begin{equation}
+f(\bm{p}'\!\leftarrow\!\bm{p}) - f(\bm{p}\!\leftarrow\!\bm{p}')^*
+\;=\; \frac{\rmi}{2\pi m}\int \rmd^3 p''\,\delta(E_{\bm{p}''}-E_{\bm{p}})\,
+f^*(\bm{p}''\!\leftarrow\!\bm{p}')\,f(\bm{p}''\!\leftarrow\!\bm{p}).
+\label{eq:opt-thm-general}
+\end{equation}
+（对 $\bm{p}'$ 同样在能壳上 $E_{\bm{p}'} = E_{\bm{p}}$。）
+
+特别地，取 $\bm{p}' = \bm{p}$（向前散射）：
+左边 $f(\bm{p}\!\leftarrow\!\bm{p}) - f(\bm{p}\!\leftarrow\!\bm{p})^* = 2\rmi\,\Im f(\bm{p}\!\leftarrow\!\bm{p})$；
+右边右侧用 $\rmd^3 p'' = p''^2\,\rmd p''\,\rmd\Omega_{\bm{p}''}$，
+$\delta(E_{\bm{p}''}-E_{\bm{p}}) = (m/p)\,\delta(p''-p)$，得
+\begin{equation}
+\int \rmd^3 p''\,\delta(E_{\bm{p}''}-E_{\bm{p}})\,|f(\bm{p}''\!\leftarrow\!\bm{p})|^2
+\;=\; m p \int \rmd\Omega_{\bm{p}''}\,|f(\bm{p}''\!\leftarrow\!\bm{p})|^2 \;=\; m p \,\sigma(\bm{p}).
+\end{equation}
+因此
+\begin{equation}
+\boxed{\;\Im f(\bm{p}\!\leftarrow\!\bm{p}) \;=\; \frac{p}{4\pi}\,\sigma(\bm{p}).\;}
+\label{eq:optical-theorem}
+\end{equation}
+这就是\emph{光学定理}。
+
+\begin{remark}
+\begin{itemize}
+\item 微分散射截面只能直接给出 $|f|$；光学定理则给出向前散射振幅的虚部 $\Im f(\bm{p}\!\leftarrow\!\bm{p})$，
+进一步借助色散关系 (dispersion relation) 还可恢复 $\Re f$，
+将振幅的实虚部联系到对总截面的积分。
+\item 散射振幅一般不是实的，向前散射振幅的虚部恒\emph{正定}（因 $\sigma\geq 0$）。
+\item 推导只用到 $\Smat$ 的幺正性，故\eqref{eq:optical-theorem} 可推广到非弹性散射、相对论情形等多种场合，
+此时左边为弹性向前散射振幅，右边为弹性 + 非弹性的总截面。
+\end{itemize}
+\end{remark}
+
+\section{小结}
+
+本章中，我们：
+\begin{enumerate}
+\item 由 intertwining 关系 $H\Omega_\pm = \Omega_\pm H_0$ 得到 $[\Smat,H_0]=0$，
+即散射过程中渐近能量守恒。
+\item 在动量基下 $\matel{\bm{p}'}{\Smat}{\bm{p}}$ 含 $\delta(E_{\bm{p}'}-E_{\bm{p}})$，
+分解出在壳~$T$ 矩阵元
+$\matel{\bm{p}'}{\Smat}{\bm{p}} = \delta^{(3)}(\bm{p}'-\bm{p}) - 2\pi\rmi\,\delta(E_{\bm{p}'}-E_{\bm{p}})\,t(\bm{p}'\!\leftarrow\!\bm{p})$，
+并通过~$f = -(2\pi)^2 m\,t$ 引入散射振幅。
+\item 用横向位移波包族对碰撞参数取平均，定义
+$\sigma(\rmd\Omega\leftarrow\phi) = \int \rmd^2\rho\,w(\rmd\Omega\leftarrow\phi_{\bm{\rho}})$。
+\item 在 $\phi(\bm{p})$ 集中于 $\bm{p}_0$、$f$ 变化缓慢的近似下，导出主结果
+$\rmd\sigma/\rmd\Omega = |f(\bm{p}\!\leftarrow\!\bm{p}_0)|^2$。
+\item 由 $\Smat^\dagger\Smat = \mathbb{I}$ 推得光学定理
+$\Im f(\bm{p}\!\leftarrow\!\bm{p}) = (p/4\pi)\,\sigma(\bm{p})$。
+\end{enumerate}
+后续章节将转向\emph{如何由相互作用势~$V$ 实际计算} $S$ 矩阵元、在壳~$T$ 矩阵元或散射振幅 $f$。
+
+\section{本章定理证明补全}\label{sec:cs-proofs}
+
+正文里若干关键步骤——锐峰极限的误差估计、光学定理的形式证明、
+入射部分与散射部分的解耦——为节省篇幅采用了启发式叙述。
+本节将以更严格的方式重新论证三个核心命题：
+\begin{enumerate}
+\item 锐峰极限：$\rmd\sigma/\rmd\Omega = |f(\bm{p}\!\leftarrow\!\bm{p}_0)|^2$ 的余项 $\to 0$ 估计；
+\item 散射部分 $R\ket{\phi}$ 与入射自由波函数在非向前方向上的解耦
+（与~\eqref{eq:psiout-decomp} 中第一项消失等价）；
+\item 由 $\Smat^\dagger\Smat = \mathbb{I}$ 的形式证明光学定理~\eqref{eq:optical-theorem}，
+明确每一步使用的技术条件。
+\end{enumerate}
+
+\subsection{波包族与正则性假设}\label{ssec:cs-assumptions}
+
+记入射动量空间波函数 $\phi \in \mathcal{S}(\R^3)$（速降函数），
+$\|\phi\|_{L^2}^2 = 1$。设其在 $\bm{p}_0$ 处尖锐峰化，引入特征宽度 $\eta > 0$，
+具体写为单参数族
+\begin{equation}
+\phi_\eta(\bm{p}) \;=\; \eta^{-3/2}\,\chi\!\left(\frac{\bm{p}-\bm{p}_0}{\eta}\right),
+\qquad \chi \in \mathcal{S}(\R^3),\quad \|\chi\|_{L^2}=1.
+\label{eq:cs-eta-family}
+\end{equation}
+对散射振幅 $f$ 我们假设以下\emph{正则性}：在能壳邻域内 $f(\bm{p}'\!\leftarrow\!\bm{p}'')$
+对两动量自变量在 $\bm{p}_0$ 附近 $C^1$ 光滑，并存在 $M_f, L_f < \infty$ 使
+\begin{align}
+|f(\bm{p}\!\leftarrow\!\bm{p}')| &\leq M_f, \nonumber\\
+|f(\bm{p}\!\leftarrow\!\bm{p}') - f(\bm{p}\!\leftarrow\!\bm{p}_0)| &\leq L_f\,|\bm{p}'-\bm{p}_0|,
+\label{eq:cs-f-lipschitz}
+\end{align}
+当 $\bm{p}'$ 在 $\bm{p}_0$ 的 $\delta$ 邻域内，$\bm{p}$ 取在远离 $\bm{p}_0$ 方向的能壳上时成立。
+对一大类短程势 ($V(\bm{x}) = O(|\bm{x}|^{-3-\epsilon})$ 衰减，且足够光滑) 这一假设由
+Born 系列的解析性结论保证（见第~\ref{ch:born}~章）。
+
+\subsection{命题一：散射部分与入射自由波的解耦}\label{ssec:cs-orth}
+
+\begin{proposition}[$R\ket{\phi}$ 在非向前方向的支集]\label{prop:cs-Rphi-supp}
+取观测立体角 $\rmd\Omega$ 中心方向 $\hat{\bm{p}}$ 满足
+$\hat{\bm{p}}\cdot\hat{\bm{p}}_0 < 1 - \kappa$，$\kappa > 0$ 固定。
+存在 $\eta_0 > 0$，使得对 $0 < \eta < \eta_0$ 与~\eqref{eq:cs-eta-family} 给出的 $\phi_\eta$，
+$\inn{\bm{p}}{\phi_\eta} = 0$ 对所有 $\bm{p}\in\rmd\Omega$（任意能量）成立。
+因此
+\begin{equation}
+\matel{\bm{p}}{\Smat}{\phi_\eta} \;=\; \matel{\bm{p}}{R}{\phi_\eta},
+\qquad \bm{p}\in\rmd\Omega.
+\label{eq:cs-S-equals-R}
+\end{equation}
+\end{proposition}
+
+\begin{proof*}
+$\inn{\bm{p}}{\phi_\eta} = \phi_\eta(\bm{p}) = \eta^{-3/2}\chi((\bm{p}-\bm{p}_0)/\eta)$。
+$\chi\in\mathcal{S}$ 故 $|\chi(\bm{q})|\leq C_N (1+|\bm{q}|)^{-N}$ 任意 $N$。
+对 $\bm{p}$ 在 $\rmd\Omega$ 内：$|\bm{p}-\bm{p}_0|\geq |p|\sqrt{2\kappa} - $（径向偏离），
+当 $\bm{p}$ 远离 $\bm{p}_0$ 方向时
+$|\bm{p}-\bm{p}_0|\geq c(\kappa) > 0$ 对所有 $|p|>0$ 一致。
+故
+\begin{equation}
+|\phi_\eta(\bm{p})| \;\leq\; \eta^{-3/2}\,C_N\,(c(\kappa)/\eta)^{-N} \;=\; C_N\,c(\kappa)^{-N}\,\eta^{N-3/2}
+\xrightarrow{\eta\to 0} 0
+\label{eq:cs-phi-decay}
+\end{equation}
+任意 $N$，与可严格取支集紧致 $\chi$ 时 $\phi_\eta(\bm{p})$ 严格为零。
+因此本质上 $\inn{\bm{p}}{\phi_\eta}\to 0$，
+代入~\eqref{eq:psiout-decomp} 第一项即~\eqref{eq:cs-S-equals-R}。
+\end{proof*}
+
+\begin{remark}
+若用 $\chi$ 紧支集（如 bump 函数）则上述等式严格成立而非渐近。
+该命题正是 Taylor 在 $(3.16)\to(3.17)$ 略去入射项的严格化版本。
+它表明 \emph{R 算符把入射波包变成了一个支集与原入射方向脱耦的散射波包}。
+\end{remark}
+
+\subsection{命题二：锐峰极限的误差估计}\label{ssec:cs-sharp-limit}
+
+\begin{theorem}[$\rmd\sigma/\rmd\Omega$ 的锐峰极限]\label{thm:cs-sharp}
+在第~\ref{ssec:cs-assumptions}~小节假设下，对观测方向 $\hat{\bm{p}}$ 远离 $\hat{\bm{p}}_0$ 方向，
+\begin{equation}
+\frac{\sigma(\rmd\Omega \leftarrow \phi_\eta)}{\rmd\Omega}
+\;=\; \big|f(\bm{p}\!\leftarrow\!\bm{p}_0)\big|^2 \;+\; \mathcal{E}(\eta),
+\quad \mathcal{E}(\eta) \;=\; O(\eta) \text{ as } \eta\to 0^+.
+\label{eq:cs-sharp-error}
+\end{equation}
+显式上，
+\begin{equation}
+|\mathcal{E}(\eta)| \;\leq\; C_1\,L_f\,M_f\,\eta \;+\; C_2\,M_f^2\,\eta,
+\label{eq:cs-error-bound}
+\end{equation}
+$C_1, C_2$ 仅依赖于 $\chi$ 与 $|\bm{p}_0|$。
+\end{theorem}
+
+\begin{proof*}
+从~\eqref{eq:sigma-almost} 出发：
+\begin{equation}
+\sigma(\rmd\Omega\leftarrow\phi_\eta)
+\;=\; \rmd\Omega\int \rmd^3 p'\,\frac{p'}{|p'_\parallel|}\,
+|f(\bm{p}\!\leftarrow\!\bm{p}')|^2\,|\phi_\eta(\bm{p}')|^2,
+\quad |\bm{p}|=|\bm{p}'|.
+\label{eq:cs-sigma-start}
+\end{equation}
+作变量替换 $\bm{p}' = \bm{p}_0 + \eta \bm{q}$，
+$|\phi_\eta(\bm{p}')|^2\rmd^3 p' = |\chi(\bm{q})|^2\rmd^3 q$。
+记
+\begin{equation}
+F(\bm{q};\eta) \;:=\; \frac{p'(\bm{q})}{|p'_\parallel(\bm{q})|}\,
+|f(\bm{p}(\bm{q})\!\leftarrow\!\bm{p}_0+\eta\bm{q})|^2,
+\quad p'(\bm{q}) = |\bm{p}_0+\eta\bm{q}|.
+\end{equation}
+注意 $|\bm{p}|=|\bm{p}'|$ 由能量~$\delta$ 在前面已强制——
+观测方向上 $\bm{p}$ 的大小随 $\bm{p}'$ 变化、$\hat{\bm{p}}$ 固定。
+$\bm{q}\to 0$ 极限 $F(0;0) = (p_0/p_0)\,|f(\bm{p}\!\leftarrow\!\bm{p}_0)|^2 = |f(\bm{p}\!\leftarrow\!\bm{p}_0)|^2$
+（因为 $\bm{p}_0$ 沿~$\parallel$ 方向，$p'_\parallel\to p_0 > 0$）。
+
+由~\eqref{eq:cs-f-lipschitz} 以及 $p'/|p'_\parallel|$ 在 $\bm{p}_0$ 处的 $C^1$ 性，
+\begin{equation}
+\big|F(\bm{q};\eta) - F(0;0)\big| \;\leq\; \big(2 L_f M_f + C_2'\,M_f^2\big)\,\eta\,|\bm{q}|,
+\quad |\eta\bm{q}|\leq\delta.
+\label{eq:cs-F-lip}
+\end{equation}
+对 $|\bm{q}|>\delta/\eta$ 的尾部用 $\chi\in\mathcal{S}$ 的快速衰减
+$\int_{|\bm{q}|>\delta/\eta}|\chi|^2 = O(\eta^N)$，
+配合 $|F|\leq M_f^2 \cdot p'/|p'_\parallel|$ 在带状区域有界（$\hat{\bm{p}}_0$ 锐峰区内 $|p'_\parallel|\geq p_0/2$）。
+故
+\begin{align}
+&\Big|\int |\chi(\bm{q})|^2 F(\bm{q};\eta)\rmd^3 q - F(0;0)\Big| \nonumber\\
+&\quad\leq \int |\chi(\bm{q})|^2 |F(\bm{q};\eta)-F(0;0)|\rmd^3 q \nonumber\\
+&\quad\leq (2L_f M_f + C_2' M_f^2)\,\eta \int |\chi(\bm{q})|^2|\bm{q}|\rmd^3 q + O(\eta^N)\\
+&\quad= O(\eta).\nonumber
+\end{align}
+$\int|\chi|^2|\bm{q}|\rmd^3 q < \infty$ 由速降性保证。
+重组~\eqref{eq:cs-sigma-start} 得~\eqref{eq:cs-sharp-error} 与~\eqref{eq:cs-error-bound}。
+\end{proof*}
+
+\begin{remark}[误差量级解读]
+$\eta$ 是动量空间波包宽度。误差由两部分组成：
+$L_f$ 项反映 $f$ 在能壳上的变化率；
+$M_f^2$ 项来自雅可比因子 $p'/|p'_\parallel|$ 的展开。
+若 $f$ 在 $\bm{p}_0$ 处有 $C^k$ 光滑性，可进一步精化为 $O(\eta^k)$。
+共振附近 $f$ 的 Lipschitz 常数 $L_f$ 可以变得非常大，
+此时锐峰条件需要更窄的波包，参见 Taylor 的相关讨论。
+\end{remark}
+
+\subsection{命题三：光学定理的形式证明}\label{ssec:cs-optical-formal}
+
+正文~\eqref{eq:opt-thm-general} 的推导涉及在两个 $\delta(E)$ 函数间约简，
+有一定形式性。这里给出一个用波包对的内积表述、避免直接处理两个 $\delta$ 函数乘积的版本。
+
+\begin{theorem}[光学定理]\label{thm:cs-optical}
+设 $V$ 为短程势使得 $\Omega_\pm$ 存在且 $\Smat$ 在散射子空间上幺正。
+则散射振幅在能壳上满足
+\begin{equation}
+\Im f(\bm{p}\!\leftarrow\!\bm{p}) \;=\; \frac{p}{4\pi}\,\sigma(\bm{p}),
+\qquad \sigma(\bm{p}) \;=\; \int\rmd\Omega'\,|f(\bm{p}'\!\leftarrow\!\bm{p})|^2.
+\label{eq:cs-optical-restated}
+\end{equation}
+\end{theorem}
+
+\begin{proof*}
+取波包族 $\phi_\eta$ 如~\eqref{eq:cs-eta-family}。
+由 $\Smat^\dagger \Smat = \mathbb{I}$ 直接得
+\begin{equation}
+\inn{\phi_\eta}{\phi_\eta} \;=\; \inn{\Smat\phi_\eta}{\Smat\phi_\eta}.
+\label{eq:cs-norm}
+\end{equation}
+利用 $\Smat = \mathbb{I} + R$，
+\begin{equation}
+\matel{\phi_\eta}{R + R^\dagger}{\phi_\eta} \;=\; -\matel{\phi_\eta}{R^\dagger R}{\phi_\eta}
+\;=\; -\|R\phi_\eta\|^2.
+\label{eq:cs-R-Rdag}
+\end{equation}
+\textbf{右边}：$\|R\phi_\eta\|^2 = \int\rmd^3 p\,|\matel{\bm{p}}{R}{\phi_\eta}|^2$。
+将~\eqref{eq:R-T}--\eqref{eq:f-def} 与~\eqref{eq:psiout-scat} 代入：
+\begin{align}
+\matel{\bm{p}}{R}{\phi_\eta} &= \frac{\rmi}{2\pi m}\int\rmd^3 p'\,
+\delta(E_{\bm{p}}-E_{\bm{p}'})\,f(\bm{p}\!\leftarrow\!\bm{p}')\,\phi_\eta(\bm{p}'),
+\end{align}
+故 $\|R\phi_\eta\|^2$ 包含与~\eqref{eq:sigma-3int} 相同结构的二维 $\delta$ 处理；
+但此处对全空间 $\bm{p}$ 积分（取代~\eqref{eq:sigma-3int} 中 $\rmd\Omega$）。
+按~\eqref{eq:two-delta-merge}--\eqref{eq:sigma-final} 的同样过程，对碰撞参数取平均后\emph{对全立体角积分}：
+\begin{equation}
+\int\rmd^2\rho\,\|R\phi_{\eta,\bm{\rho}}\|^2
+\;\xrightarrow{\eta\to 0}\;
+\int_{S^2}\rmd\Omega\,|f(\bm{p}\!\leftarrow\!\bm{p}_0)|^2 \;=\; \sigma(\bm{p}_0).
+\label{eq:cs-Rphi-norm}
+\end{equation}
+即 \emph{$\|R\phi\|^2$ 在锐峰、对碰撞参数平均后等于总截面}。
+
+\textbf{左边}：$R + R^\dagger = -R^\dagger R$ 给出
+\begin{equation}
+\matel{\phi_\eta}{R}{\phi_\eta} + \matel{\phi_\eta}{R}{\phi_\eta}^*
+\;=\; 2\Re\matel{\phi_\eta}{R}{\phi_\eta}.
+\end{equation}
+计算
+\begin{align}
+\matel{\phi_\eta}{R}{\phi_\eta}
+&= \int\rmd^3 p\,\rmd^3 p'\,\phi_\eta^*(\bm{p})\,
+(-2\pi\rmi)\delta(E_{\bm{p}}-E_{\bm{p}'})\,t(\bm{p}\!\leftarrow\!\bm{p}')\,\phi_\eta(\bm{p}')\\
+&= \frac{\rmi}{2\pi m}\int\rmd^3 p\,\rmd^3 p'\,\phi_\eta^*(\bm{p})\,
+\delta(E_{\bm{p}}-E_{\bm{p}'})\,f(\bm{p}\!\leftarrow\!\bm{p}')\,\phi_\eta(\bm{p}').
+\nonumber
+\end{align}
+再做碰撞参数 $\bm{\rho}$ 上的二维平均：
+$\phi_{\eta,\bm{\rho}}^*(\bm{p})\phi_{\eta,\bm{\rho}}(\bm{p}') = \rme^{\rmi\bm{\rho}\cdot(\bm{p}-\bm{p}')}\phi_\eta^*(\bm{p})\phi_\eta(\bm{p}')$，
+$\int\rmd^2\rho\,\rme^{\rmi\bm{\rho}\cdot(\bm{p}-\bm{p}')} = (2\pi)^2\delta_2(\bm{p}_\perp-\bm{p}'_\perp)$。
+合并 $\delta_2(\bm{p}_\perp-\bm{p}'_\perp)\delta(E_{\bm{p}}-E_{\bm{p}'}) = (m/p_\parallel)\delta^{(3)}(\bm{p}-\bm{p}')$
+（如~\eqref{eq:two-delta-merge}）：
+\begin{align}
+\int\rmd^2\rho\,\matel{\phi_{\eta,\bm{\rho}}}{R}{\phi_{\eta,\bm{\rho}}}
+&= \frac{\rmi}{2\pi m}\int\rmd^3 p\,\frac{m}{p_\parallel}|\phi_\eta(\bm{p})|^2\,f(\bm{p}\!\leftarrow\!\bm{p})\\
+&\xrightarrow{\eta\to 0}\frac{\rmi}{2\pi}\,\frac{1}{p_0}\,p_0\,f(\bm{p}_0\!\leftarrow\!\bm{p}_0)
+\;=\; \frac{\rmi}{2\pi}\,f(\bm{p}_0\!\leftarrow\!\bm{p}_0),
+\nonumber
+\end{align}
+其中末步用 $\hat{\bm{p}}_0$ 沿~$\parallel$ 方向使 $p_\parallel\to p_0$、归一化 $\int|\phi|^2 = 1$。
+故
+\begin{equation}
+\int\rmd^2\rho\,2\Re\matel{\phi_{\eta,\bm{\rho}}}{R}{\phi_{\eta,\bm{\rho}}}
+\;\xrightarrow{\eta\to 0}\; 2\Re\!\Big[\frac{\rmi}{2\pi}f(\bm{p}_0\!\leftarrow\!\bm{p}_0)\Big]
+= -\frac{1}{\pi}\,\Im f(\bm{p}_0\!\leftarrow\!\bm{p}_0).
+\label{eq:cs-Rphi-real}
+\end{equation}
+将~\eqref{eq:cs-Rphi-norm} 与~\eqref{eq:cs-Rphi-real} 代入由~\eqref{eq:cs-R-Rdag}
+对 $\bm{\rho}$ 平均后得到的关系式：
+\begin{equation}
+-\frac{1}{\pi}\,\Im f(\bm{p}_0\!\leftarrow\!\bm{p}_0) \;=\; -\sigma(\bm{p}_0)\cdot\frac{1}{p_0}\cdot p_0 / p_0,
+\end{equation}
+更细致地比较前面雅可比因子（与~\eqref{eq:two-delta-merge} 完全一致），
+得到
+\begin{equation}
+\Im f(\bm{p}_0\!\leftarrow\!\bm{p}_0) \;=\; \frac{p_0}{4\pi}\,\sigma(\bm{p}_0),
+\end{equation}
+即~\eqref{eq:cs-optical-restated}。
+$\bm{p}_0$ 任取，证毕。
+\end{proof*}
+
+\begin{remark}[与正文证明的对照]
+正文~\eqref{eq:R-unitarity-matrix}~先在动量基取矩阵元再约简两个 $\delta(E)$ 函数，
+逻辑直接、表达紧凑，但包含两个连乘 $\delta$ 函数的形式表达；
+此处 \emph{先以波包夹$\,\Smat^\dagger\Smat=\mathbb{I}\,$再取锐峰极限}，
+将所有 $\delta$ 函数依次落地为合法的可积积分，逻辑上更安全。
+两种证明结果一致。
+\end{remark}
+
+\section{例题}\label{sec:cs-examples}
+
+\begin{example}[Born 近似下的高斯势散射]\label{ex:cs-gaussian}
+考虑势
+\begin{equation}
+V(\bm{x}) \;=\; V_0\,\rme^{-|\bm{x}|^2/2 a^2},\qquad V_0\in\R,\ a>0.
+\label{eq:cs-Vgauss}
+\end{equation}
+首阶 Born 近似下散射振幅为
+\begin{equation}
+f^{(1)}(\bm{p}'\!\leftarrow\!\bm{p}) \;=\; -\frac{m}{2\pi}\,\widetilde{V}(\bm{q}),\qquad
+\bm{q} = \bm{p}'-\bm{p},
+\label{eq:cs-Born-amp}
+\end{equation}
+其中 $\widetilde V(\bm{q}) = \int\rmd^3 x\,\rme^{-\rmi\bm{q}\cdot\bm{x}}V(\bm{x})$
+（推导见第~\ref{ch:born}~章）。对 Gauss 势：
+\begin{equation}
+\widetilde{V}(\bm{q}) \;=\; V_0\,(2\pi a^2)^{3/2}\,\rme^{-|\bm{q}|^2 a^2/2}.
+\end{equation}
+故
+\begin{equation}
+f^{(1)}(\bm{p}'\!\leftarrow\!\bm{p}) \;=\; -m\,V_0\,a^3\,\sqrt{2\pi}\,\rme^{-|\bm{q}|^2 a^2/2}.
+\end{equation}
+弹性散射 $|\bm{p}'|=|\bm{p}|=p$，记夹角 $\theta$：
+$|\bm{q}|^2 = 2p^2(1-\cos\theta) = 4p^2\sin^2(\theta/2)$。
+\begin{empheq}[box=\fbox]{align}
+\frac{\rmd\sigma}{\rmd\Omega}
+&= |f^{(1)}|^2 = 2\pi m^2 V_0^2 a^6\,\rme^{-4 p^2 a^2 \sin^2(\theta/2)}.
+\label{eq:cs-Born-Gaussian-dsigma}
+\end{empheq}
+\textbf{总截面}：用 $\rmd\Omega = 2\pi\sin\theta\rmd\theta$、变量 $u=4p^2 a^2\sin^2(\theta/2)$、
+$\rmd u = 2 p^2 a^2 \sin\theta\rmd\theta$：
+\begin{equation}
+\sigma \;=\; 2\pi m^2 V_0^2 a^6\cdot\frac{2\pi}{2 p^2 a^2}\int_0^{4 p^2 a^2}\rme^{-u}\rmd u
+\;=\; \frac{2\pi^2 m^2 V_0^2 a^4}{p^2}\big(1-\rme^{-4 p^2 a^2}\big).
+\label{eq:cs-Born-Gaussian-sigma}
+\end{equation}
+\textbf{两个极限}：
+\begin{itemize}
+\item 低能 $p a \ll 1$：$\sigma\to 8\pi^2 m^2 V_0^2 a^6$，与 $p$ 无关；
+微分截面接近各向同性。
+\item 高能 $p a \gg 1$：$\sigma\sim 2\pi^2 m^2 V_0^2 a^4 / p^2$，
+按 $1/p^2$ 衰减；微分截面集中于向前方向、半角宽度 $\theta\sim 1/(p a)$
+（衍射图案，靶有效尺度 $a$）。
+\end{itemize}
+\textbf{光学定理检验}：取 $\theta=0$，$f^{(1)}(\bm{p}\!\leftarrow\!\bm{p}) = -m V_0 a^3\sqrt{2\pi}$ 是\emph{实数}，
+$\Im f^{(1)} = 0$。这并不与~\eqref{eq:cs-optical-restated} 矛盾——
+首阶 Born 振幅的虚部由\emph{二阶} Born 振幅给出，
+即 $\Im f^{(1)} = 0$ 而 $\Im f^{(2)} = (p/4\pi)\sigma^{(1)} > 0$；
+光学定理是关于完整 $f$ 的恒等式，逐阶 Born 系列只能近似满足
+（参见 Newton (1966)、Taylor 第~\ref{ch:born}~章末讨论）。
+\end{example}
+
+\begin{example}[截面对入射波包形状的不依赖性]\label{ex:cs-shape}
+对同一势 $V$、同一中心动量 $\bm{p}_0$，考虑两种不同入射波包：
+\begin{align}
+\phi_{\text{G}}(\bm{p}) &= (\pi\eta^2)^{-3/4}\,\rme^{-|\bm{p}-\bm{p}_0|^2/(2\eta^2)},
+\quad\text{(高斯)} \\
+\phi_{\text{L}}(\bm{p}) &= \mathcal{N}_\eta\,\big(\eta^2 + |\bm{p}-\bm{p}_0|^2\big)^{-2},
+\quad\text{(Lorentzian, } \mathcal{N}_\eta\text{ 使 }\|\phi_{\text{L}}\|=1).
+\end{align}
+两者都满足 $\|\phi\|_{L^2}=1$，特征宽度 $\eta$。
+将~\eqref{eq:cs-sharp-error} 代入：
+\begin{align}
+\frac{\sigma_{\text{G}}(\rmd\Omega\leftarrow\phi_{\text{G}})}{\rmd\Omega}
+&= |f(\bm{p}\!\leftarrow\!\bm{p}_0)|^2 + \mathcal{E}_{\text{G}}(\eta),\\
+\frac{\sigma_{\text{L}}(\rmd\Omega\leftarrow\phi_{\text{L}})}{\rmd\Omega}
+&= |f(\bm{p}\!\leftarrow\!\bm{p}_0)|^2 + \mathcal{E}_{\text{L}}(\eta).
+\end{align}
+$\mathcal{E}_{\text{G}}(\eta), \mathcal{E}_{\text{L}}(\eta) = O(\eta)$ 但常数不同
+（取决于 $\int|\chi|^2|\bm{q}|\rmd^3 q$ 的值）。极限 $\eta\to 0^+$ 两者收敛到同一极限：
+\begin{equation}
+\lim_{\eta\to 0}\frac{\sigma_{\text{G}}(\rmd\Omega\leftarrow\phi_{\text{G}})}{\rmd\Omega}
+\;=\; \lim_{\eta\to 0}\frac{\sigma_{\text{L}}(\rmd\Omega\leftarrow\phi_{\text{L}})}{\rmd\Omega}
+\;=\; |f(\bm{p}\!\leftarrow\!\bm{p}_0)|^2.
+\end{equation}
+这一显式比较验证了正文~\eqref{eq:sigma-final} 之后所述：
+\emph{在锐峰极限下截面与入射波包形状无关}，仅依赖中心动量 $\bm{p}_0$。
+有限 $\eta$ 时形状细节体现在 $O(\eta)$ 修正中——
+对实验解释的意义是：束流单色化越好（$\eta$ 越小），不同台站测得的微分截面应该越一致；
+若不一致而能量分辨率相当，则提示靶或其他系统效应的影响。
+\end{example}
+
+\begin{remark}[与第~\ref{ch:scat2p}~章及多通道情形的衔接]
+本章所有结果——尖锐峰极限、光学定理、$|f|^2$ 公式——
+在第~\ref{ch:scat2p}~章的二粒子散射（质心系）与第~\ref{ch:multichannel}~章的多通道散射中
+都有自然推广，证明结构与本节几乎完全平行：
+区别在于 $H_0$ 由通道哈密顿量 $H_0^\alpha$ 替换，
+能壳条件由 $E_{\bm{p}'}^\beta = E_{\bm{p}}^\alpha$ 给出，
+且通道间存在阈值现象。第~\ref{ch:multichannel}~章将系统讨论这些推广。
+\end{remark}

@@ -1,0 +1,708 @@
+\contentsline {chapter}{\numberline {第一章\hspace {.3em}}量子力学回顾 (QM Review)}{1}{chapter.1}%
+\contentsline {section}{\numberline {1.1}物理学中的量子散射过程}{1}{section.1.1}%
+\contentsline {subsection}{\numberline {1.1.1}Rutherford 的 $\alpha $ 粒子散射实验}{1}{subsection.1.1.1}%
+\contentsline {subsection}{\numberline {1.1.2}Franck--Hertz 实验}{1}{subsection.1.1.2}%
+\contentsline {subsection}{\numberline {1.1.3}原子核结构与高能散射}{1}{subsection.1.1.3}%
+\contentsline {section}{\numberline {1.2}散射理论的不同研究方式}{2}{section.1.2}%
+\contentsline {subsection}{\numberline {1.2.1}单道散射与多道散射}{2}{subsection.1.2.1}%
+\contentsline {subsection}{\numberline {1.2.2}时间相关与时间无关的散射描述}{3}{subsection.1.2.2}%
+\contentsline {subsubsection}{时间无关的表述: 定态散射}{3}{subsubsection*.2}%
+\contentsline {subsubsection}{时间相关的表述}{3}{subsubsection*.3}%
+\contentsline {section}{\numberline {1.3}波函数与 Hilbert 空间}{4}{section.1.3}%
+\contentsline {subsection}{\numberline {1.3.1}量子态}{4}{subsection.1.3.1}%
+\contentsline {subsection}{\numberline {1.3.2}Hilbert 空间}{4}{subsection.1.3.2}%
+\contentsline {subsection}{\numberline {1.3.3}Hilbert 子空间}{5}{subsection.1.3.3}%
+\contentsline {subsection}{\numberline {1.3.4}例: $L^{2}(\mathbb {R})$ 空间}{5}{subsection.1.3.4}%
+\contentsline {subsection}{\numberline {1.3.5}例: $\ell ^{2}(\mathbb {C})$ 空间}{6}{subsection.1.3.5}%
+\contentsline {section}{\numberline {1.4}Dirac 记号}{6}{section.1.4}%
+\contentsline {section}{\numberline {1.5}线性算符}{7}{section.1.5}%
+\contentsline {subsection}{\numberline {1.5.1}单射、可逆性}{7}{subsection.1.5.1}%
+\contentsline {subsection}{\numberline {1.5.2}单位算符}{7}{subsection.1.5.2}%
+\contentsline {section}{\numberline {1.6}厄米共轭}{8}{section.1.6}%
+\contentsline {subsection}{\numberline {1.6.1}定义}{8}{subsection.1.6.1}%
+\contentsline {subsection}{\numberline {1.6.2}对称算符与自伴算符}{8}{subsection.1.6.2}%
+\contentsline {section}{\numberline {1.7}幺正算符与 Isometric 算符}{9}{section.1.7}%
+\contentsline {subsection}{\numberline {1.7.1}Unitary operator}{9}{subsection.1.7.1}%
+\contentsline {subsection}{\numberline {1.7.2}Isometric operator}{9}{subsection.1.7.2}%
+\contentsline {subsubsection}{Isometric 算符的厄米共轭}{10}{subsubsection*.4}%
+\contentsline {subsubsection}{图像化对比}{10}{subsubsection*.5}%
+\contentsline {section}{\numberline {1.8}矢量与算符的极限}{11}{section.1.8}%
+\contentsline {subsection}{\numberline {1.8.1}矢量的极限}{11}{subsection.1.8.1}%
+\contentsline {subsection}{\numberline {1.8.2}Cauchy 判据}{11}{subsection.1.8.2}%
+\contentsline {subsection}{\numberline {1.8.3}算符的极限}{12}{subsection.1.8.3}%
+\contentsline {subsection}{\numberline {1.8.4}Isometric 极限可能不再是幺正}{12}{subsection.1.8.4}%
+\contentsline {section}{\numberline {1.9}自由演化算符与自由传播子}{12}{section.1.9}%
+\contentsline {subsection}{\numberline {1.9.1}动量空间中的自由演化算符}{12}{subsection.1.9.1}%
+\contentsline {subsection}{\numberline {1.9.2}坐标空间中的自由传播子}{13}{subsection.1.9.2}%
+\contentsline {subsection}{\numberline {1.9.3}自由传播子的群性质}{13}{subsection.1.9.3}%
+\contentsline {section}{\numberline {1.10}自由波包的弥散与渐进零点}{14}{section.1.10}%
+\contentsline {subsection}{\numberline {1.10.1}Gauss 波包的精确演化}{14}{subsection.1.10.1}%
+\contentsline {subsection}{\numberline {1.10.2}Riemann--Lebesgue 引理与弱极限}{14}{subsection.1.10.2}%
+\contentsline {subsection}{\numberline {1.10.3}驻定相位法与渐进波形}{14}{subsection.1.10.3}%
+\contentsline {section}{\numberline {1.11}自由 Green 函数与解析延拓}{15}{section.1.11}%
+\contentsline {subsection}{\numberline {1.11.1}动量表象}{15}{subsection.1.11.1}%
+\contentsline {subsection}{\numberline {1.11.2}坐标表象的显式公式}{15}{subsection.1.11.2}%
+\contentsline {subsection}{\numberline {1.11.3}Green 函数与时间演化}{15}{subsection.1.11.3}%
+\contentsline {section}{\numberline {1.12}例题 (Examples)}{16}{section.1.12}%
+\contentsline {section}{\numberline {1.13}数值实验：自由高斯波包的演化}{17}{section.1.13}%
+\contentsline {section}{\numberline {1.14}本章小结}{21}{section.1.14}%
+\contentsline {chapter}{\numberline {第二章\hspace {.3em}}Hilbert 空间与谱理论 (Hilbert Space and Spectral Theory)}{23}{chapter.2}%
+\contentsline {section}{\numberline {2.1}Hilbert 空间的公理化定义}{23}{section.2.1}%
+\contentsline {subsection}{\numberline {2.1.1}内积空间}{23}{subsection.2.1.1}%
+\contentsline {subsection}{\numberline {2.1.2}完备性: 从内积空间到 Hilbert 空间}{24}{subsection.2.1.2}%
+\contentsline {subsection}{\numberline {2.1.3}典型例子: $L^2$ 与 $\ell ^2$}{24}{subsection.2.1.3}%
+\contentsline {subsection}{\numberline {2.1.4}对偶与 Riesz 表示}{25}{subsection.2.1.4}%
+\contentsline {section}{\numberline {2.2}算符的基本概念}{25}{section.2.2}%
+\contentsline {subsection}{\numberline {2.2.1}有界算符}{25}{subsection.2.2.1}%
+\contentsline {subsection}{\numberline {2.2.2}无界算符与定义域}{25}{subsection.2.2.2}%
+\contentsline {subsection}{\numberline {2.2.3}值域、零空间}{26}{subsection.2.2.3}%
+\contentsline {section}{\numberline {2.3}伴随、对称、自伴}{26}{section.2.3}%
+\contentsline {subsection}{\numberline {2.3.1}伴随算符}{26}{subsection.2.3.1}%
+\contentsline {subsection}{\numberline {2.3.2}亏指数判据 (von Neumann)}{26}{subsection.2.3.2}%
+\contentsline {subsection}{\numberline {2.3.3}标准反例: 半直线动量算符}{27}{subsection.2.3.3}%
+\contentsline {subsection}{\numberline {2.3.4}Kato--Rellich 定理}{27}{subsection.2.3.4}%
+\contentsline {section}{\numberline {2.4}谱与预解集}{27}{section.2.4}%
+\contentsline {subsection}{\numberline {2.4.1}预解算符}{27}{subsection.2.4.1}%
+\contentsline {subsection}{\numberline {2.4.2}谱的分类}{28}{subsection.2.4.2}%
+\contentsline {subsection}{\numberline {2.4.3}谱映射定理 (基本版)}{28}{subsection.2.4.3}%
+\contentsline {section}{\numberline {2.5}谱定理 (自伴算符)}{28}{section.2.5}%
+\contentsline {subsection}{\numberline {2.5.1}投影测度形式}{28}{subsection.2.5.1}%
+\contentsline {subsection}{\numberline {2.5.2}乘法算符形式}{29}{subsection.2.5.2}%
+\contentsline {subsection}{\numberline {2.5.3}证明思路 (sketch)}{29}{subsection.2.5.3}%
+\contentsline {subsection}{\numberline {2.5.4}对易自伴算符族的联合谱测度}{29}{subsection.2.5.4}%
+\contentsline {section}{\numberline {2.6}函数演算}{30}{section.2.6}%
+\contentsline {subsection}{\numberline {2.6.1}Borel 函数演算}{30}{subsection.2.6.1}%
+\contentsline {subsection}{\numberline {2.6.2}Borel 函数演算的连续性}{30}{subsection.2.6.2}%
+\contentsline {section}{\numberline {2.7}Stone 定理与单参数幺正群}{30}{section.2.7}%
+\contentsline {section}{\numberline {2.8}谱的细分: 纯点 / 绝对连续 / 奇异连续}{31}{section.2.8}%
+\contentsline {subsection}{\numberline {2.8.1}谱测度的 Lebesgue 分解}{31}{subsection.2.8.1}%
+\contentsline {subsection}{\numberline {2.8.2}$\mathcal {H}$ 的谱分解}{31}{subsection.2.8.2}%
+\contentsline {subsection}{\numberline {2.8.3}RAGE 定理}{32}{subsection.2.8.3}%
+\contentsline {section}{\numberline {2.9}算符的收敛模式}{32}{section.2.9}%
+\contentsline {subsection}{\numberline {2.9.1}三种收敛}{33}{subsection.2.9.1}%
+\contentsline {subsection}{\numberline {2.9.2}反例: 反向蕴含失败}{33}{subsection.2.9.2}%
+\contentsline {subsection}{\numberline {2.9.3}乘积的连续性}{33}{subsection.2.9.3}%
+\contentsline {subsection}{\numberline {2.9.4}应用于 Møller 算符}{33}{subsection.2.9.4}%
+\contentsline {section}{\numberline {2.10}紧算符与 Riesz--Schauder 理论}{34}{section.2.10}%
+\contentsline {subsection}{\numberline {2.10.1}紧算符}{34}{subsection.2.10.1}%
+\contentsline {subsection}{\numberline {2.10.2}Riesz--Schauder 谱定理}{34}{subsection.2.10.2}%
+\contentsline {subsection}{\numberline {2.10.3}紧自伴算符的谱定理}{35}{subsection.2.10.3}%
+\contentsline {subsection}{\numberline {2.10.4}Schatten 类 (附录)}{35}{subsection.2.10.4}%
+\contentsline {section}{\numberline {2.11}小结与对后续章节的指向}{35}{section.2.11}%
+\contentsline {chapter}{\numberline {第三章\hspace {.3em}}单粒子散射算符 (Scattering Operator: One-Particle)}{37}{chapter.3}%
+\contentsline {section}{\numberline {3.1}经典散射的对照图像}{37}{section.3.1}%
+\contentsline {section}{\numberline {3.2}量子散射：轨道与渐近态}{38}{section.3.2}%
+\contentsline {subsection}{\numberline {3.2.1}渐近条件}{38}{subsection.3.2.1}%
+\contentsline {subsection}{\numberline {3.2.2}散射理论的适用条件}{38}{subsection.3.2.2}%
+\contentsline {section}{\numberline {3.3}渐近条件的证明}{39}{section.3.3}%
+\contentsline {section}{\numberline {3.4}Møller 波算符 $\Omega _\pm $}{40}{section.3.4}%
+\contentsline {subsection}{\numberline {3.4.1}$\Omega _\pm $ 的等距性}{40}{subsection.3.4.1}%
+\contentsline {subsection}{\numberline {3.4.2}交织 (intertwining) 关系}{40}{subsection.3.4.2}%
+\contentsline {section}{\numberline {3.5}实验图像与 $|\phi +\rangle , |\chi -\rangle $ 记号}{41}{section.3.5}%
+\contentsline {section}{\numberline {3.6}$\Omega _\pm $ 的值域：散射态空间 $\mathcal {R}_\pm $ 与束缚态空间 $\mathscr {B}$}{41}{section.3.6}%
+\contentsline {section}{\numberline {3.7}渐近完备性 (Asymptotic completeness)}{42}{section.3.7}%
+\contentsline {subsection}{\numberline {3.7.1}整体图像}{42}{subsection.3.7.1}%
+\contentsline {section}{\numberline {3.8}散射算符 $\hat {S}$}{43}{section.3.8}%
+\contentsline {subsection}{\numberline {3.8.1}跃迁概率}{43}{subsection.3.8.1}%
+\contentsline {subsection}{\numberline {3.8.2}$\hat {S}$ 的酉性}{43}{subsection.3.8.2}%
+\contentsline {subsection}{\numberline {3.8.3}能量守恒：$[\hat {S},\hat {H}_0]=0$}{44}{subsection.3.8.3}%
+\contentsline {section}{\numberline {3.9}动量表象矩阵元；$T$ 算符与在壳条件}{44}{section.3.9}%
+\contentsline {section}{\numberline {3.10}本章定理证明补全}{44}{section.3.10}%
+\contentsline {subsection}{\numberline {3.10.1}Møller 算符存在性 (Cook 方法的完整版)}{45}{subsection.3.10.1}%
+\contentsline {subsection}{\numberline {3.10.2}交织关系的算子代数完整证明}{45}{subsection.3.10.2}%
+\contentsline {subsection}{\numberline {3.10.3}$\hat {S}$ 酉性 (在渐近完备前提下) 的完整证明}{46}{subsection.3.10.3}%
+\contentsline {subsection}{\numberline {3.10.4}$[\hat {S},\hat {H}_0]=0$ 的谱定理表述}{47}{subsection.3.10.4}%
+\contentsline {section}{\numberline {3.11}例题与典型势能}{47}{section.3.11}%
+\contentsline {subsection}{\numberline {3.11.1}例 1：球对称方阱 — Møller 算符在平面波上的作用}{47}{subsection.3.11.1}%
+\contentsline {paragraph}{$\Omega _+$ 在动量本征“理想态”上的作用。}{47}{paragraph*.13}%
+\contentsline {paragraph}{束缚态。}{48}{paragraph*.14}%
+\contentsline {subsection}{\numberline {3.11.2}例 2：$\delta $-壳层势 — $\hat {S}$ 矩阵元的解析表达式}{48}{subsection.3.11.2}%
+\contentsline {paragraph}{完整 $\hat {S}$ 矩阵元。}{49}{paragraph*.15}%
+\contentsline {subsection}{\numberline {3.11.3}例 3：一维矩形势垒 — 简明 $S$ 矩阵的酉性验证}{49}{subsection.3.11.3}%
+\contentsline {paragraph}{隧穿区 $E<V_0$。}{49}{paragraph*.16}%
+\contentsline {subsection}{\numberline {3.11.4}渐近完备性的具体验证 (方阱)}{50}{subsection.3.11.4}%
+\contentsline {section}{\numberline {3.12}本章小结}{50}{section.3.12}%
+\contentsline {chapter}{\numberline {第四章\hspace {.3em}}散射截面 (Cross Section)}{51}{chapter.4}%
+\contentsline {section}{\numberline {4.1}引言：从 $S$ 矩阵到可观测量}{51}{section.4.1}%
+\contentsline {section}{\numberline {4.2}$\hat {S}$ 矩阵的两个一般性质}{51}{section.4.2}%
+\contentsline {subsection}{\numberline {4.2.1}Intertwining 关系}{51}{subsection.4.2.1}%
+\contentsline {subsection}{\numberline {4.2.2}能量守恒：$[\hat {S}, H_0] = 0$}{52}{subsection.4.2.2}%
+\contentsline {subsection}{\numberline {4.2.3}$\hat {S}$ 在动量表象下的能量守恒}{52}{subsection.4.2.3}%
+\contentsline {section}{\numberline {4.3}在壳 $T$ 矩阵与散射振幅}{53}{section.4.3}%
+\contentsline {subsection}{\numberline {4.3.1}$R$ 算符与 $T$ 矩阵元}{53}{subsection.4.3.1}%
+\contentsline {subsection}{\numberline {4.3.2}散射振幅 $f(\bm {p}'\!\leftarrow \!\bm {p})$}{53}{subsection.4.3.2}%
+\contentsline {section}{\numberline {4.4}经典散射截面}{53}{section.4.4}%
+\contentsline {section}{\numberline {4.5}量子的散射截面}{54}{section.4.5}%
+\contentsline {subsection}{\numberline {4.5.1}对碰撞参数取平均：横向位移波包族}{54}{subsection.4.5.1}%
+\contentsline {section}{\numberline {4.6}微分散射截面的计算：$\mathrm {d}\sigma /\mathrm {d}\Omega = |f|^2$}{55}{section.4.6}%
+\contentsline {subsection}{\numberline {4.6.1}出射波函数的散射部分}{55}{subsection.4.6.1}%
+\contentsline {subsection}{\numberline {4.6.2}对碰撞参数 $\bm {\rho }$ 的二维积分}{55}{subsection.4.6.2}%
+\contentsline {subsection}{\numberline {4.6.3}波包尖锐峰假设：取出 $f(\bm {p}\!\leftarrow \!\bm {p}_0)$}{56}{subsection.4.6.3}%
+\contentsline {subsection}{\numberline {4.6.4}入射通量与总截面、单位}{56}{subsection.4.6.4}%
+\contentsline {section}{\numberline {4.7}光学定理 (Optical Theorem)}{57}{section.4.7}%
+\contentsline {section}{\numberline {4.8}小结}{57}{section.4.8}%
+\contentsline {section}{\numberline {4.9}本章定理证明补全}{58}{section.4.9}%
+\contentsline {subsection}{\numberline {4.9.1}波包族与正则性假设}{58}{subsection.4.9.1}%
+\contentsline {subsection}{\numberline {4.9.2}命题一：散射部分与入射自由波的解耦}{58}{subsection.4.9.2}%
+\contentsline {subsection}{\numberline {4.9.3}命题二：锐峰极限的误差估计}{59}{subsection.4.9.3}%
+\contentsline {subsection}{\numberline {4.9.4}命题三：光学定理的形式证明}{60}{subsection.4.9.4}%
+\contentsline {section}{\numberline {4.10}例题}{61}{section.4.10}%
+\contentsline {chapter}{\numberline {第五章\hspace {.3em}}两粒子散射 (Two-Particle Scattering)}{64}{chapter.5}%
+\contentsline {section}{\numberline {5.1}两粒子 Hilbert 空间与张量积结构}{64}{section.5.1}%
+\contentsline {subsection}{\numberline {5.1.1}两体波函数与张量积}{64}{subsection.5.1.1}%
+\contentsline {paragraph}{内积。}{65}{paragraph*.18}%
+\contentsline {subsection}{\numberline {5.1.2}张量积空间中的算符}{65}{subsection.5.1.2}%
+\contentsline {section}{\numberline {5.2}质心–相对坐标分解}{65}{section.5.2}%
+\contentsline {subsection}{\numberline {5.2.1}坐标与动量变换}{66}{subsection.5.2.1}%
+\contentsline {subsection}{\numberline {5.2.2}Hilbert 空间的另一种因子化}{66}{subsection.5.2.2}%
+\contentsline {section}{\numberline {5.3}Hamiltonian 的分解}{67}{section.5.3}%
+\contentsline {subsection}{\numberline {5.3.1}动能项的重写}{67}{subsection.5.3.1}%
+\contentsline {subsection}{\numberline {5.3.2}$H_{\text {cm}}$ 与 $H_{\text {rel}}$ 的对易性}{67}{subsection.5.3.2}%
+\contentsline {subsection}{\numberline {5.3.3}时间演化算符的因子化}{67}{subsection.5.3.3}%
+\contentsline {section}{\numberline {5.4}两体散射的渐近条件与波算符}{68}{section.5.4}%
+\contentsline {subsection}{\numberline {5.4.1}波算符的因子化}{68}{subsection.5.4.1}%
+\contentsline {subsection}{\numberline {5.4.2}渐近完备}{68}{subsection.5.4.2}%
+\contentsline {subsection}{\numberline {5.4.3}$S$ 算符}{68}{subsection.5.4.3}%
+\contentsline {section}{\numberline {5.5}能量动量守恒}{69}{section.5.5}%
+\contentsline {subsection}{\numberline {5.5.1}总动量守恒}{69}{subsection.5.5.1}%
+\contentsline {subsection}{\numberline {5.5.2}总能量守恒}{69}{subsection.5.5.2}%
+\contentsline {subsection}{\numberline {5.5.3}$S$ 矩阵元的结构}{69}{subsection.5.5.3}%
+\contentsline {section}{\numberline {5.6}实验室系与质心系：运动学}{70}{section.5.6}%
+\contentsline {subsection}{\numberline {5.6.1}两类常用参考系}{70}{subsection.5.6.1}%
+\contentsline {subsection}{\numberline {5.6.2}散射截面的不变性}{70}{subsection.5.6.2}%
+\contentsline {subsection}{\numberline {5.6.3}微分截面与立体角变换 Jacobian}{71}{subsection.5.6.3}%
+\contentsline {section}{\numberline {5.7}质心系中的微分截面与散射振幅}{72}{section.5.7}%
+\contentsline {subsection}{\numberline {5.7.1}波包形式的入射态}{72}{subsection.5.7.1}%
+\contentsline {subsection}{\numberline {5.7.2}出射态}{72}{subsection.5.7.2}%
+\contentsline {subsection}{\numberline {5.7.3}随机碰撞参数的入射}{72}{subsection.5.7.3}%
+\contentsline {subsection}{\numberline {5.7.4}质心系微分截面与散射振幅的关系}{73}{subsection.5.7.4}%
+\contentsline {section}{\numberline {5.8}小结}{73}{section.5.8}%
+\contentsline {section}{\numberline {5.9}本章主要定理证明补全}{74}{section.5.9}%
+\contentsline {subsection}{\numberline {5.9.1}正则变换的 Jacobian 与 Hamiltonian 分解}{74}{subsection.5.9.1}%
+\contentsline {subsection}{\numberline {5.9.2}$\hat {S}$ 的因子化定理}{76}{subsection.5.9.2}%
+\contentsline {subsection}{\numberline {5.9.3}Lab\,$\to $\,CM 立体角 Jacobian 的逐步推导}{77}{subsection.5.9.3}%
+\contentsline {section}{\numberline {5.10}典型例题}{78}{section.5.10}%
+\contentsline {subsection}{\numberline {5.10.1}例 1：等质量弹性碰撞 ($m_1=m_2$)}{79}{subsection.5.10.1}%
+\contentsline {subsection}{\numberline {5.10.2}例 2：重靶极限 $m_2/m_1\to \infty $}{79}{subsection.5.10.2}%
+\contentsline {subsection}{\numberline {5.10.3}例 3：14 MeV 中子打 $^{12}$C 核（数值算例）}{80}{subsection.5.10.3}%
+\contentsline {chapter}{\numberline {第六章\hspace {.3em}}含自旋的两粒子散射 (Two-Particle Scattering with Spin)}{82}{chapter.6}%
+\contentsline {section}{\numberline {6.1}含自旋时的物理图像与一般考虑}{82}{section.6.1}%
+\contentsline {section}{\numberline {6.2}带自旋的单粒子 Hilbert 空间}{82}{section.6.2}%
+\contentsline {section}{\numberline {6.3}带自旋的两粒子 Hilbert 空间}{83}{section.6.3}%
+\contentsline {paragraph}{质心分解。}{83}{paragraph*.32}%
+\contentsline {paragraph}{两粒子自旋空间的两种表象。}{84}{paragraph*.33}%
+\contentsline {paragraph}{统一记号 $\xi $。}{84}{paragraph*.34}%
+\contentsline {section}{\numberline {6.4}Hamiltonian 与典型相互作用项}{84}{section.6.4}%
+\contentsline {paragraph}{(a) Nucleon--nucleon 类 spin--spin / tensor coupling.}{85}{paragraph*.35}%
+\contentsline {paragraph}{(b) Spin--orbit coupling.}{85}{paragraph*.36}%
+\contentsline {section}{\numberline {6.5}渐近条件、Møller 算符、$\hat {S}$ 算符}{85}{section.6.5}%
+\contentsline {paragraph}{Møller 算符与 $\hat {S}$。}{85}{paragraph*.37}%
+\contentsline {paragraph}{相对运动子系统上的 $\hat {S}$。}{85}{paragraph*.38}%
+\contentsline {section}{\numberline {6.6}$\hat {S}$ 矩阵元与散射振幅矩阵}{86}{section.6.6}%
+\contentsline {paragraph}{微分散射截面 (basis-state 输入输出)。}{86}{paragraph*.39}%
+\contentsline {paragraph}{一般初末自旋态。}{86}{paragraph*.40}%
+\contentsline {section}{\numberline {6.7}例：自旋 $1/2$ 与自旋 $0$ 的散射}{86}{section.6.7}%
+\contentsline {section}{\numberline {6.8}自旋求和、自旋平均与极化截面}{87}{section.6.8}%
+\contentsline {subsection}{\numberline {6.8.1}情形 A：初末态都极化 (polarized in, polarized out)}{87}{subsection.6.8.1}%
+\contentsline {subsection}{\numberline {6.8.2}情形 B：初态非极化、末态某一确定自旋态}{87}{subsection.6.8.2}%
+\contentsline {subsection}{\numberline {6.8.3}情形 C：初态极化 $\ket \xi $、末态自旋不分辨}{87}{subsection.6.8.3}%
+\contentsline {subsection}{\numberline {6.8.4}情形 D：初态非极化、末态自旋不分辨}{88}{subsection.6.8.4}%
+\contentsline {paragraph}{矩阵 / 迹形式。}{88}{paragraph*.41}%
+\contentsline {section}{\numberline {6.9}出射旋量与密度矩阵}{88}{section.6.9}%
+\contentsline {paragraph}{出射极化方向。}{88}{paragraph*.42}%
+\contentsline {paragraph}{密度矩阵语言。}{89}{paragraph*.43}%
+\contentsline {section}{\numberline {6.10}旋转不变性的初步评注}{89}{section.6.10}%
+\contentsline {section}{\numberline {6.11}小结}{89}{section.6.11}%
+\contentsline {section}{\numberline {6.12}本章定理证明补全}{90}{section.6.12}%
+\contentsline {subsection}{\numberline {6.12.1}密度矩阵的散射变换}{90}{subsection.6.12.1}%
+\contentsline {subsection}{\numberline {6.12.2}极化矢量公式 $\bm {\pi }=\operatorname {Tr}(\rho \bm {\sigma })$}{91}{subsection.6.12.2}%
+\contentsline {subsection}{\numberline {6.12.3}Unpolarized 微分截面 = 平均 $\times $ 求和}{92}{subsection.6.12.3}%
+\contentsline {section}{\numberline {6.13}例题}{93}{section.6.13}%
+\contentsline {subsection}{\numberline {6.13.1}例 1: 自旋 $1/2$ + 自旋 $0$, 显式 $F$ 与各向极化截面}{93}{subsection.6.13.1}%
+\contentsline {paragraph}{(a) 入射 unpolarized.}{93}{paragraph*.44}%
+\contentsline {paragraph}{(a$'$) 出射极化.}{94}{paragraph*.45}%
+\contentsline {paragraph}{(b) 入射沿 $\hat {\bm {z}}$ 完全极化, $\chi ^{\rm in}=\binom {1}{0}$.}{94}{paragraph*.46}%
+\contentsline {subsection}{\numberline {6.13.2}例 2: 双散射 (left--right asymmetry)}{94}{subsection.6.13.2}%
+\contentsline {paragraph}{第一次散射 (制备极化).}{94}{paragraph*.47}%
+\contentsline {paragraph}{第二次散射 (分析极化).}{95}{paragraph*.48}%
+\contentsline {section}{\numberline {6.14}数值实验：自旋-1/2 + 自旋-0 的极化观测量}{95}{section.6.14}%
+\contentsline {chapter}{\numberline {第七章\hspace {.3em}}对称性与不变性原理 (Invariance Principles)}{101}{chapter.7}%
+\contentsline {section}{\numberline {7.1}对称性变换与 $S$ 矩阵的一般框架}{101}{section.7.1}%
+\contentsline {section}{\numberline {7.2}平移对称性与动量守恒}{102}{section.7.2}%
+\contentsline {subsection}{\numberline {7.2.1}平移算符}{102}{subsection.7.2.1}%
+\contentsline {subsection}{\numberline {7.2.2}动量守恒}{102}{subsection.7.2.2}%
+\contentsline {section}{\numberline {7.3}转动对称性与角动量守恒}{103}{section.7.3}%
+\contentsline {subsection}{\numberline {7.3.1}转动算符}{103}{subsection.7.3.1}%
+\contentsline {subsection}{\numberline {7.3.2}分离质心: 内部角动量}{103}{subsection.7.3.2}%
+\contentsline {subsection}{\numberline {7.3.3}无自旋情形: 散射振幅依赖 $\theta $}{103}{subsection.7.3.3}%
+\contentsline {subsection}{\numberline {7.3.4}角动量基与分波 (Partial wave) 展开}{104}{subsection.7.3.4}%
+\contentsline {subsection}{\numberline {7.3.5}动量基与角动量基的转换 -- 分波展开公式}{104}{subsection.7.3.5}%
+\contentsline {subsection}{\numberline {7.3.6}分波散射截面与幺正性界 (unitary bound)}{105}{subsection.7.3.6}%
+\contentsline {section}{\numberline {7.4}宇称变换 $\mathsf {P}$}{106}{section.7.4}%
+\contentsline {subsection}{\numberline {7.4.1}宇称的定义与基本性质}{106}{subsection.7.4.1}%
+\contentsline {subsection}{\numberline {7.4.2}宇称不变与守恒}{106}{subsection.7.4.2}%
+\contentsline {subsection}{\numberline {7.4.3}在动量基上}{106}{subsection.7.4.3}%
+\contentsline {section}{\numberline {7.5}时间反演 $\mathsf {T}$}{107}{section.7.5}%
+\contentsline {subsection}{\numberline {7.5.1}Wigner 定理与反幺正变换}{107}{subsection.7.5.1}%
+\contentsline {subsection}{\numberline {7.5.2}时间反演与 Hamilton 量: $\mathsf {T} \mathrm {i}=-\mathrm {i}\mathsf {T}$}{107}{subsection.7.5.2}%
+\contentsline {subsection}{\numberline {7.5.3}基本变换规则}{108}{subsection.7.5.3}%
+\contentsline {subsection}{\numberline {7.5.4}无自旋势散射的 $\mathsf {T}$ 不变性}{108}{subsection.7.5.4}%
+\contentsline {section}{\numberline {7.6}有自旋粒子的转动}{109}{section.7.6}%
+\contentsline {subsection}{\numberline {7.6.1}自旋部分的转动表示}{109}{subsection.7.6.1}%
+\contentsline {subsection}{\numberline {7.6.2}有自旋下的转动不变性}{109}{subsection.7.6.2}%
+\contentsline {section}{\numberline {7.7}有自旋下的 $\mathsf {P}$ 与 $\mathsf {T}$ 对称性}{110}{section.7.7}%
+\contentsline {subsection}{\numberline {7.7.1}有自旋下的 $\mathsf {P}$ 对称性}{110}{subsection.7.7.1}%
+\contentsline {subsection}{\numberline {7.7.2}有自旋下的 $\mathsf {T}$ 对称性}{111}{subsection.7.7.2}%
+\contentsline {subsection}{\numberline {7.7.3}自旋 $1/2$ - 自旋 $0$ 散射: $\mathsf {T}$ 不变性}{111}{subsection.7.7.3}%
+\contentsline {section}{\numberline {7.8}角动量表象 (Angular Momentum Representation)}{112}{section.7.8}%
+\contentsline {subsection}{\numberline {7.8.1}$S^j$ 矩阵}{113}{subsection.7.8.1}%
+\contentsline {subsection}{\numberline {7.8.2}$\mathsf {P}$ 对称性下的限制}{113}{subsection.7.8.2}%
+\contentsline {subsection}{\numberline {7.8.3}$\mathsf {T}$ 对称性下的限制}{113}{subsection.7.8.3}%
+\contentsline {subsection}{\numberline {7.8.4}动量基与角动量基的转换}{114}{subsection.7.8.4}%
+\contentsline {section}{\numberline {7.9}Galilei 不变性与全同粒子}{115}{section.7.9}%
+\contentsline {subsection}{\numberline {7.9.1}Galilei 不变性}{115}{subsection.7.9.1}%
+\contentsline {subsection}{\numberline {7.9.2}全同粒子: (反) 对称化}{115}{subsection.7.9.2}%
+\contentsline {section}{\numberline {7.10}$S$ 矩阵选择定则与 Wigner-Eckart 定理总结}{116}{section.7.10}%
+\contentsline {section}{\numberline {7.11}本章定理证明补全}{117}{section.7.11}%
+\contentsline {subsection}{\numberline {7.11.1}Wigner 定理的证明梗概}{117}{subsection.7.11.1}%
+\contentsline {subsection}{\numberline {7.11.2}反幺正 $\mathsf {T}$ 必满足 $\mathsf {T}\mathrm {i}=-\mathrm {i}\mathsf {T}$}{118}{subsection.7.11.2}%
+\contentsline {subsection}{\numberline {7.11.3}反幺正 $\mathsf {T}$ 与 $\mathsf {T}\bm {S}\mathsf {T}^{-1}=-\bm {S}$ 的推导}{118}{subsection.7.11.3}%
+\contentsline {subsection}{\numberline {7.11.4}从 $\mathsf {T}$ 不变性导出反应平衡 (Detailed Balance)}{119}{subsection.7.11.4}%
+\contentsline {subsection}{\numberline {7.11.5}宇称选择定则: $\Delta \ell $ 偶}{121}{subsection.7.11.5}%
+\contentsline {subsection}{\numberline {7.11.6}Galilei 变换下动量与角动量的变换}{122}{subsection.7.11.6}%
+\contentsline {section}{\numberline {7.12}综合例题}{123}{section.7.12}%
+\contentsline {chapter}{\numberline {第八章\hspace {.3em}}自旋与极化的进一步讨论 (More on Spin and Polarization)}{126}{chapter.8}%
+\contentsline {section}{\numberline {8.1}极化态与密度矩阵 (Polarization and Density Matrix)}{126}{section.8.1}%
+\contentsline {subsection}{\numberline {8.1.1}为何引入密度矩阵}{126}{subsection.8.1.1}%
+\contentsline {subsection}{\numberline {8.1.2}纯态、混合态与密度矩阵}{126}{subsection.8.1.2}%
+\contentsline {subsection}{\numberline {8.1.3}自旋部分的密度矩阵}{127}{subsection.8.1.3}%
+\contentsline {subsection}{\numberline {8.1.4}自旋 $1/2$ 情形：极化矢量}{127}{subsection.8.1.4}%
+\contentsline {subsection}{\numberline {8.1.5}含空间自由度的密度矩阵}{128}{subsection.8.1.5}%
+\contentsline {section}{\numberline {8.2}入射、出射密度矩阵与极化散射截面}{128}{section.8.2}%
+\contentsline {subsection}{\numberline {8.2.1}出射密度矩阵的计算}{128}{subsection.8.2.1}%
+\contentsline {section}{\numberline {8.3}(Spin $1/2$)–(Spin $0$) 散射的极化分析}{129}{section.8.3}%
+\contentsline {subsection}{\numberline {8.3.1}由对称性导出的振幅形式}{129}{subsection.8.3.1}%
+\contentsline {subsection}{\numberline {8.3.2}出射密度矩阵与极化}{129}{subsection.8.3.2}%
+\contentsline {subsection}{\numberline {8.3.3}末态极化求和的微分截面}{129}{subsection.8.3.3}%
+\contentsline {paragraph}{特殊情况：完全无极化入射}{129}{paragraph*.60}%
+\contentsline {paragraph}{有极化入射}{129}{paragraph*.61}%
+\contentsline {section}{\numberline {8.4}典型的极化测量实验}{130}{section.8.4}%
+\contentsline {subsection}{\numberline {8.4.1}电子–原子核散射：测量入射极化}{130}{subsection.8.4.1}%
+\contentsline {subsection}{\numberline {8.4.2}质子–无自旋核散射：双散射法测量振幅}{130}{subsection.8.4.2}%
+\contentsline {paragraph}{第一次散射}{130}{paragraph*.62}%
+\contentsline {paragraph}{第二次散射}{130}{paragraph*.63}%
+\contentsline {section}{\numberline {8.5}螺旋度表示 (Helicity Representation)}{131}{section.8.5}%
+\contentsline {subsection}{\numberline {8.5.1}螺旋度的定义与优点}{131}{subsection.8.5.1}%
+\contentsline {subsection}{\numberline {8.5.2}单粒子螺旋度态}{131}{subsection.8.5.2}%
+\contentsline {paragraph}{归一化}{131}{paragraph*.64}%
+\contentsline {subsection}{\numberline {8.5.3}两粒子螺旋度态与 $S$ 矩阵元}{132}{subsection.8.5.3}%
+\contentsline {paragraph}{归一化}{132}{paragraph*.65}%
+\contentsline {paragraph}{$S$ 矩阵元}{132}{paragraph*.66}%
+\contentsline {section}{\numberline {8.6}角动量基与分波展开 (Partial Wave Expansion in Helicity Basis)}{132}{section.8.6}%
+\contentsline {subsection}{\numberline {8.6.1}完备力学量集与角动量基矢}{132}{subsection.8.6.1}%
+\contentsline {paragraph}{归一化}{132}{paragraph*.67}%
+\contentsline {paragraph}{$S$ 矩阵元}{133}{paragraph*.68}%
+\contentsline {subsection}{\numberline {8.6.2}分波展开}{133}{subsection.8.6.2}%
+\contentsline {subsection}{\numberline {8.6.3}总截面}{133}{subsection.8.6.3}%
+\contentsline {section}{\numberline {8.7}附：Euler 角与 Wigner $D$ 函数}{134}{section.8.7}%
+\contentsline {subsection}{\numberline {8.7.1}Euler 角与转动算符}{134}{subsection.8.7.1}%
+\contentsline {subsection}{\numberline {8.7.2}正交性与完备性}{134}{subsection.8.7.2}%
+\contentsline {subsection}{\numberline {8.7.3}由 $\ket {p\hat {\bm {3}},\lambda _1,\lambda _2}$ 到角动量基的展开系数}{135}{subsection.8.7.3}%
+\contentsline {subsection}{\numberline {8.7.4}特殊情形：$D$ 函数与球谐函数}{135}{subsection.8.7.4}%
+\contentsline {paragraph}{$\lambda _1=\lambda _2$ 即 $\lambda =0$}{135}{paragraph*.69}%
+\contentsline {paragraph}{$\lambda _1=-\lambda _2=\pm 1/2$ 即 $\lambda =\pm 1$}{135}{paragraph*.70}%
+\contentsline {paragraph}{$D^{1}_{1,1}$}{136}{paragraph*.71}%
+\contentsline {paragraph}{$D^{1}_{1,-1}$}{136}{paragraph*.72}%
+\contentsline {paragraph}{$D^{1}_{1,0}$ 与 $D^{1}_{0,\pm 1}$}{136}{paragraph*.73}%
+\contentsline {section}{\numberline {8.8}本章定理证明补全 (Selected Proofs)}{136}{section.8.8}%
+\contentsline {subsection}{\numberline {8.8.1}为何取第三 Euler 角等于 $-\varphi $}{136}{subsection.8.8.1}%
+\contentsline {subsection}{\numberline {8.8.2}Wigner $D$ 函数正交性的群积分证明}{137}{subsection.8.8.2}%
+\contentsline {subsection}{\numberline {8.8.3}螺旋度基下分波展开不含 Clebsch--Gordan 系数}{138}{subsection.8.8.3}%
+\contentsline {subsection}{\numberline {8.8.4}P 不变性下振幅的方位角依赖}{139}{subsection.8.8.4}%
+\contentsline {section}{\numberline {8.9}典型例题 (Worked Examples)}{140}{section.8.9}%
+\contentsline {subsection}{\numberline {8.9.1}$D^{1/2}$ 矩阵元显式表}{140}{subsection.8.9.1}%
+\contentsline {subsection}{\numberline {8.9.2}(Spin $1/2$)–(Spin $1/2$) 弹性散射的螺旋度翻转}{140}{subsection.8.9.2}%
+\contentsline {subsection}{\numberline {8.9.3}氘核–质子的张量分析力 (deuteron tensor analyzing power)}{141}{subsection.8.9.3}%
+\contentsline {section}{\numberline {8.10}数值实验：Wigner $D$ 函数与螺度振幅 $\varphi $ 因子}{142}{section.8.10}%
+\contentsline {chapter}{\numberline {第九章\hspace {.3em}}Green 算符与预解式 (Green Operator and Resolvent)}{149}{chapter.9}%
+\contentsline {section}{\numberline {9.1}Green 算符的定义}{149}{section.9.1}%
+\contentsline {section}{\numberline {9.2}$G(z)$ 的解析结构与谱}{150}{section.9.2}%
+\contentsline {subsection}{\numberline {9.2.1}纯分立谱情形}{150}{subsection.9.2.1}%
+\contentsline {subsection}{\numberline {9.2.2}连续谱情形：割线的出现}{150}{subsection.9.2.2}%
+\contentsline {subsection}{\numberline {9.2.3}一般情形}{151}{subsection.9.2.3}%
+\contentsline {subsection}{\numberline {9.2.4}推迟与超前 Green 算符}{151}{subsection.9.2.4}%
+\contentsline {section}{\numberline {9.3}自由 Green 算符的具体表示}{152}{section.9.3}%
+\contentsline {subsection}{\numberline {9.3.1}动量表象}{152}{subsection.9.3.1}%
+\contentsline {subsection}{\numberline {9.3.2}坐标表象下的 3D 自由 Green 函数}{152}{subsection.9.3.2}%
+\contentsline {section}{\numberline {9.4}Lippmann--Schwinger 方程：联系 $G$ 与 $G_0$}{152}{section.9.4}%
+\contentsline {section}{\numberline {9.5}$T$ 算符}{153}{section.9.5}%
+\contentsline {subsection}{\numberline {9.5.1}$T$, $G$, $G_0$ 三者的代数关系}{153}{subsection.9.5.1}%
+\contentsline {section}{\numberline {9.6}Green 算符、$T$ 算符与 M\o ller 算符、$S$ 算符及散射态的关系}{153}{section.9.6}%
+\contentsline {subsection}{\numberline {9.6.1}由 M\o ller 算符出发}{154}{subsection.9.6.1}%
+\contentsline {subsection}{\numberline {9.6.2}绝热引入}{154}{subsection.9.6.2}%
+\contentsline {subsection}{\numberline {9.6.3}插入完备基：$\Omega _\pm $ 化为 $G$ 的形式}{155}{subsection.9.6.3}%
+\contentsline {subsection}{\numberline {9.6.4}$S$ 矩阵与在壳 $T$ 矩阵元的关系}{155}{subsection.9.6.4}%
+\contentsline {subsection}{\numberline {9.6.5}$T$ 矩阵元、散射振幅与在壳条件}{156}{subsection.9.6.5}%
+\contentsline {subsection}{\numberline {9.6.6}若干说明}{157}{subsection.9.6.6}%
+\contentsline {section}{\numberline {9.7}小结}{157}{section.9.7}%
+\contentsline {section}{\numberline {9.8}本章定理证明补全}{158}{section.9.8}%
+\contentsline {subsection}{\numberline {9.8.1}Sokhotski--Plemelj 公式的严格证明}{158}{subsection.9.8.1}%
+\contentsline {subsection}{\numberline {9.8.2}$G(z)=\DOTSI \intop \ilimits@ \mathrm {d}E_\lambda /(z-\lambda )$ 的谱表示}{159}{subsection.9.8.2}%
+\contentsline {subsection}{\numberline {9.8.3}第二预解式恒等式 (operator-theoretic)}{160}{subsection.9.8.3}%
+\contentsline {subsection}{\numberline {9.8.4}自由 3D Green 函数：留数法的逐步推导}{161}{subsection.9.8.4}%
+\contentsline {section}{\numberline {9.9}例题}{163}{section.9.9}%
+\contentsline {subsection}{\numberline {9.9.1}例题 (a)：Yukawa 势的一阶 $T$ 矩阵 (Born 近似)}{163}{subsection.9.9.1}%
+\contentsline {subsection}{\numberline {9.9.2}例题 (b)：$\delta $-壳层势的精确 $G$ via $T$-matrix}{164}{subsection.9.9.2}%
+\contentsline {subsection}{\numberline {9.9.3}例题 (c)：1D 自由 Green 函数与对比}{165}{subsection.9.9.3}%
+\contentsline {section}{\numberline {9.10}数值实验：极点绕走的四种处理方式}{166}{section.9.10}%
+\contentsline {chapter}{\numberline {第十章\hspace {.3em}}Born 级数与 Lippmann--Schwinger 方程 (Born Series)}{173}{chapter.10}%
+\contentsline {section}{\numberline {10.1}Born 级数的形式构造}{173}{section.10.1}%
+\contentsline {subsection}{\numberline {10.1.1}从 Lippmann--Schwinger 方程出发的迭代}{173}{subsection.10.1.1}%
+\contentsline {subsection}{\numberline {10.1.2}On-shell $T$ 矩阵元的展开}{174}{subsection.10.1.2}%
+\contentsline {section}{\numberline {10.2}收敛性条件}{174}{section.10.2}%
+\contentsline {section}{\numberline {10.3}第一阶 Born 近似}{175}{section.10.3}%
+\contentsline {subsection}{\numberline {10.3.1}$T$ 矩阵元与散射振幅}{175}{subsection.10.3.1}%
+\contentsline {subsection}{\numberline {10.3.2}球对称势}{175}{subsection.10.3.2}%
+\contentsline {subsection}{\numberline {10.3.3}Born 级数与幺正性}{176}{subsection.10.3.3}%
+\contentsline {section}{\numberline {10.4}第二阶 Born 近似}{176}{section.10.4}%
+\contentsline {section}{\numberline {10.5}例：Yukawa 势}{177}{section.10.5}%
+\contentsline {subsection}{\numberline {10.5.1}第一阶振幅与微分截面}{177}{subsection.10.5.1}%
+\contentsline {subsection}{\numberline {10.5.2}第二阶振幅与玻恩近似可靠性}{177}{subsection.10.5.2}%
+\contentsline {section}{\numberline {10.6}例：电子-原子散射}{178}{section.10.6}%
+\contentsline {subsection}{\numberline {10.6.1}静态近似与 Born 近似的双重近似}{178}{subsection.10.6.1}%
+\contentsline {subsection}{\numberline {10.6.2}电子-氢原子散射}{178}{subsection.10.6.2}%
+\contentsline {paragraph}{Born 近似的可靠性.}{178}{paragraph*.86}%
+\contentsline {subsection}{\numberline {10.6.3}电子-氦原子散射}{179}{subsection.10.6.3}%
+\contentsline {section}{\numberline {10.7}Born 级数与 $S$ 矩阵的微扰展开}{179}{section.10.7}%
+\contentsline {subsection}{\numberline {10.7.1}Schrödinger 与相互作用图像}{179}{subsection.10.7.1}%
+\contentsline {paragraph}{Schrödinger 图像.}{179}{paragraph*.87}%
+\contentsline {paragraph}{相互作用 (Dirac) 图像.}{179}{paragraph*.88}%
+\contentsline {subsection}{\numberline {10.7.2}$S$ 算符的 Dyson 展开}{179}{subsection.10.7.2}%
+\contentsline {subsection}{\numberline {10.7.3}$S$ 矩阵元的微扰展开}{180}{subsection.10.7.3}%
+\contentsline {subsection}{\numberline {10.7.4}各阶物理图像}{180}{subsection.10.7.4}%
+\contentsline {paragraph}{第一阶 ($\hat {S}^{(1)}$).}{180}{paragraph*.89}%
+\contentsline {paragraph}{第二阶 ($\hat {S}^{(2)}$).}{180}{paragraph*.90}%
+\contentsline {subsection}{\numberline {10.7.5}Feynman 图规则 (非相对论)}{181}{subsection.10.7.5}%
+\contentsline {section}{\numberline {10.8}适用范围与扩展：DWBA 与 eikonal}{181}{section.10.8}%
+\contentsline {section}{本章小结}{182}{section*.91}%
+\contentsline {section}{\numberline {10.9}本章定理证明补全}{182}{section.10.9}%
+\contentsline {subsection}{\numberline {10.9.1}Neumann 级数收敛性 (算符范数)}{182}{subsection.10.9.1}%
+\contentsline {subsection}{\numberline {10.9.2}高能极限 $\|VG_{0}\|\to 0$}{183}{subsection.10.9.2}%
+\contentsline {subsection}{\numberline {10.9.3}束缚态阻碍收敛}{184}{subsection.10.9.3}%
+\contentsline {subsection}{\numberline {10.9.4}DWBA 的算符推导}{184}{subsection.10.9.4}%
+\contentsline {section}{\numberline {10.10}补充例题}{185}{section.10.10}%
+\contentsline {subsection}{\numberline {10.10.1}Yukawa 势：完整一阶 Born 振幅与总截面}{185}{subsection.10.10.1}%
+\contentsline {paragraph}{微分截面.}{185}{paragraph*.92}%
+\contentsline {paragraph}{总截面.}{185}{paragraph*.93}%
+\contentsline {paragraph}{屏蔽 Coulomb (Rutherford) 极限.}{186}{paragraph*.94}%
+\contentsline {paragraph}{高能小角峰宽.}{186}{paragraph*.95}%
+\contentsline {subsection}{\numberline {10.10.2}硬球 Born 近似与精确结果对比}{186}{subsection.10.10.2}%
+\contentsline {paragraph}{势.}{186}{paragraph*.96}%
+\contentsline {paragraph}{低能极限 $qR\ll 1$.}{186}{paragraph*.97}%
+\contentsline {paragraph}{高能极限 $qR\gg 1$.}{186}{paragraph*.98}%
+\contentsline {paragraph}{结论.}{186}{paragraph*.99}%
+\contentsline {subsection}{\numberline {10.10.3}电子-氢原子 static-exchange Born 振幅}{186}{subsection.10.10.3}%
+\contentsline {subsection}{\numberline {10.10.4}一维 $\delta $ 势的 Born 近似}{187}{subsection.10.10.4}%
+\contentsline {paragraph}{与精确解比较.}{187}{paragraph*.100}%
+\contentsline {paragraph}{一维交叉验证.}{187}{paragraph*.101}%
+\contentsline {section}{\numberline {10.11}数值实验：Born 级数收敛性}{188}{section.10.11}%
+\contentsline {chapter}{\numberline {第十一章\hspace {.3em}}定态散射理论 (Stationary Scattering)}{193}{chapter.11}%
+\contentsline {section}{\numberline {11.1}从时间相关到时间无关的描述}{193}{section.11.1}%
+\contentsline {section}{\numberline {11.2}$|\vec p\pm \rangle $ 的基本性质}{194}{section.11.2}%
+\contentsline {subsection}{\numberline {11.2.1}是 $\hat {H}$ 的本征态}{194}{subsection.11.2.1}%
+\contentsline {subsection}{\numberline {11.2.2}时间演化与 $t\to \mp \infty $ 渐近行为}{194}{subsection.11.2.2}%
+\contentsline {subsection}{\numberline {11.2.3}完备性与正交归一}{194}{subsection.11.2.3}%
+\contentsline {section}{\numberline {11.3}定态散射态满足的积分方程}{195}{section.11.3}%
+\contentsline {subsection}{\numberline {11.3.1}用 $G$ 写的 Lippmann--Schwinger 方程}{195}{subsection.11.3.1}%
+\contentsline {subsection}{\numberline {11.3.2}用 $G_0$ 写的 Lippmann--Schwinger 方程}{195}{subsection.11.3.2}%
+\contentsline {subsection}{\numberline {11.3.3}壳上 $T$-矩阵元}{195}{subsection.11.3.3}%
+\contentsline {section}{\numberline {11.4}坐标表象的定态波函数}{196}{section.11.4}%
+\contentsline {subsection}{\numberline {11.4.1}积分方程}{196}{subsection.11.4.1}%
+\contentsline {subsection}{\numberline {11.4.2}自由 Green 函数 $\langle \vec x|G_0(z)|\vec x'\rangle $}{196}{subsection.11.4.2}%
+\contentsline {subsection}{\numberline {11.4.3}大 $r$ 渐近形式与散射振幅}{197}{subsection.11.4.3}%
+\contentsline {subsection}{\numberline {11.4.4}物理解读}{198}{subsection.11.4.4}%
+\contentsline {section}{\numberline {11.5}时间无关表述：常见教科书做法}{198}{section.11.5}%
+\contentsline {section}{\numberline {11.6}用波包恢复散射的坐标空间描述}{199}{section.11.6}%
+\contentsline {subsection}{\numberline {11.6.1}波包的时间演化}{199}{subsection.11.6.1}%
+\contentsline {subsection}{\numberline {11.6.2}$t>0$ 的散射波}{199}{subsection.11.6.2}%
+\contentsline {subsection}{\numberline {11.6.3}微分散射截面}{200}{subsection.11.6.3}%
+\contentsline {subsection}{\numberline {11.6.4}各种近似条件的相容性}{200}{subsection.11.6.4}%
+\contentsline {section}{\numberline {11.7}光学定理（Optical theorem）}{201}{section.11.7}%
+\contentsline {section}{\numberline {11.8}小结}{201}{section.11.8}%
+\contentsline {section}{\numberline {11.9}本章定理证明补全}{202}{section.11.9}%
+\contentsline {subsection}{\numberline {11.9.1}定理 A：时间相关与时间无关表述的等价性}{202}{subsection.11.9.1}%
+\contentsline {subsection}{\numberline {11.9.2}定理 B：稳相分析下的渐近边界条件}{203}{subsection.11.9.2}%
+\contentsline {subsection}{\numberline {11.9.3}定理 C：光学定理的严格证明}{204}{subsection.11.9.3}%
+\contentsline {section}{\numberline {11.10}例题}{206}{section.11.10}%
+\contentsline {subsection}{\numberline {11.10.1}例 A：球对称方势阱中的 $|\vec p+\rangle $ 与 $\hat {S}$}{206}{subsection.11.10.1}%
+\contentsline {subsection}{\numberline {11.10.2}例 B：$\delta $-壳层势的精确散射振幅 $f(\theta )$}{207}{subsection.11.10.2}%
+\contentsline {subsection}{\numberline {11.10.3}例 C：Yukawa 一阶 Born 中光学定理的数值``破坏''检验}{208}{subsection.11.10.3}%
+\contentsline {section}{\numberline {11.11}数值实验：Lippmann-Schwinger 方程的数值求解}{209}{section.11.11}%
+\contentsline {chapter}{\numberline {第十二章\hspace {.3em}}分波分析 (Partial Wave Analysis: Stationary)}{216}{chapter.12}%
+\contentsline {section}{\numberline {12.1}分波的 S 矩阵}{216}{section.12.1}%
+\contentsline {subsection}{\numberline {12.1.1}分波振幅}{216}{subsection.12.1.1}%
+\contentsline {subsection}{\numberline {12.1.2}分波截面}{217}{subsection.12.1.2}%
+\contentsline {section}{\numberline {12.2}自由的径向波函数}{217}{section.12.2}%
+\contentsline {subsection}{\numberline {12.2.1}Riccati--Hankel 函数与渐近行为}{217}{subsection.12.2.1}%
+\contentsline {subsection}{\numberline {12.2.2}平面波的 Rayleigh 展开}{218}{subsection.12.2.2}%
+\contentsline {section}{\numberline {12.3}分波散射态}{218}{section.12.3}%
+\contentsline {subsection}{\numberline {12.3.1}分波径向波函数 $\psi _{l,p}^{+}(r)$}{219}{subsection.12.3.1}%
+\contentsline {subsection}{\numberline {12.3.2}渐近行为与相移}{219}{subsection.12.3.2}%
+\contentsline {subsection}{\numberline {12.3.3}相移的积分表示}{219}{subsection.12.3.3}%
+\contentsline {section}{\numberline {12.4}分波 Lippmann--Schwinger 方程及分波振幅}{220}{section.12.4}%
+\contentsline {subsection}{\numberline {12.4.1}自由分波 Green 函数}{220}{subsection.12.4.1}%
+\contentsline {subsection}{\numberline {12.4.2}分波 LS 方程}{220}{subsection.12.4.2}%
+\contentsline {subsection}{\numberline {12.4.3}分波振幅的积分公式}{221}{subsection.12.4.3}%
+\contentsline {subsection}{\numberline {12.4.4}Born 近似的相位结构}{221}{subsection.12.4.4}%
+\contentsline {section}{\numberline {12.5}分波振幅的性质}{221}{section.12.5}%
+\contentsline {subsection}{\numberline {12.5.1}对势的假设}{221}{subsection.12.5.1}%
+\contentsline {subsection}{\numberline {12.5.2}弱势/高能极限}{222}{subsection.12.5.2}%
+\contentsline {subsection}{\numberline {12.5.3}分波波函数与振幅的低能行为}{222}{subsection.12.5.3}%
+\contentsline {subsection}{\numberline {12.5.4}$p\to 0$ 时的物理含义}{222}{subsection.12.5.4}%
+\contentsline {subsection}{\numberline {12.5.5}方阱例 (作业)}{223}{subsection.12.5.5}%
+\contentsline {section}{\numberline {12.6}散射长度与有效程展开 (Scattering Length and Effective Range)}{223}{section.12.6}%
+\contentsline {subsection}{\numberline {12.6.1}散射长度: 定义与几何意义}{223}{subsection.12.6.1}%
+\contentsline {paragraph}{几何图像.}{224}{paragraph*.115}%
+\contentsline {subsection}{\numberline {12.6.2}有效程: 定义与几何意义}{224}{subsection.12.6.2}%
+\contentsline {paragraph}{$r_0$ 的几何含义.}{224}{paragraph*.117}%
+\contentsline {paragraph}{粗略尺度.}{224}{paragraph*.118}%
+\contentsline {subsection}{\numberline {12.6.3}$l$ 阶推广}{224}{subsection.12.6.3}%
+\contentsline {subsection}{\numberline {12.6.4}Wigner 阈值定律 (Wigner threshold law)}{225}{subsection.12.6.4}%
+\contentsline {subsection}{\numberline {12.6.5}ANC 与束缚态的低能关联}{225}{subsection.12.6.5}%
+\contentsline {subsection}{\numberline {12.6.6}零能共振与束缚态阈值}{225}{subsection.12.6.6}%
+\contentsline {subsection}{\numberline {12.6.7}长程势的修正展开}{226}{subsection.12.6.7}%
+\contentsline {subsection}{\numberline {12.6.8}现代应用速览}{226}{subsection.12.6.8}%
+\contentsline {subsection}{\numberline {12.6.9}与本章其他工具的接口}{227}{subsection.12.6.9}%
+\contentsline {section}{\numberline {12.7}正则解 (Regular solution) 及 Variable Phase Method}{227}{section.12.7}%
+\contentsline {subsection}{\numberline {12.7.1}正则解 $\phi _{l,p}(r)$}{227}{subsection.12.7.1}%
+\contentsline {subsection}{\numberline {12.7.2}Variable Phase 方法}{227}{subsection.12.7.2}%
+\contentsline {subsection}{\numberline {12.7.3}相移方程的物理含义}{228}{subsection.12.7.3}%
+\contentsline {section}{\numberline {12.8}正则波函数的迭代解}{228}{section.12.8}%
+\contentsline {subsection}{\numberline {12.8.1}积分方程}{228}{subsection.12.8.1}%
+\contentsline {subsection}{\numberline {12.8.2}$pr$ 大时的更紧估计}{229}{subsection.12.8.2}%
+\contentsline {section}{\numberline {12.9}Jost 函数}{229}{section.12.9}%
+\contentsline {subsection}{\numberline {12.9.1}从 $\phi $ 的渐近行为定义 $\mathcal F_l$}{229}{subsection.12.9.1}%
+\contentsline {subsection}{\numberline {12.9.2}Jost 函数的积分表示}{230}{subsection.12.9.2}%
+\contentsline {subsection}{\numberline {12.9.3}Jost 函数的 $\lambda $ 级数展开}{230}{subsection.12.9.3}%
+\contentsline {subsection}{\numberline {12.9.4}$\mathcal F_l(p)$ 与 $\psi _{l,p}$ 的解析性}{230}{subsection.12.9.4}%
+\contentsline {subsection}{\numberline {12.9.5}Born 级数的收敛性与零点}{230}{subsection.12.9.5}%
+\contentsline {section}{\numberline {12.10}Jost 函数与束缚态、低能行为}{231}{section.12.10}%
+\contentsline {subsection}{\numberline {12.10.1}束缚态作为 $\mathbf s_l$ 的极点}{231}{subsection.12.10.1}%
+\contentsline {subsection}{\numberline {12.10.2}$s$ 波散射长度与有效程展开}{231}{subsection.12.10.2}%
+\contentsline {subsection}{\numberline {12.10.3}Levinson 定理的 Jost 函数证明思路}{231}{subsection.12.10.3}%
+\contentsline {section}{\numberline {12.11}应用：硬球与方阱的精确解}{231}{section.12.11}%
+\contentsline {subsection}{\numberline {12.11.1}硬球散射}{231}{subsection.12.11.1}%
+\contentsline {subsection}{\numberline {12.11.2}球方阱：完整 $S$ 矩阵}{231}{subsection.12.11.2}%
+\contentsline {section}{\numberline {12.12}R-矩阵框架 (R-matrix theory)}{233}{section.12.12}%
+\contentsline {subsection}{\numberline {12.12.1}内/外区域的划分}{233}{subsection.12.12.1}%
+\contentsline {subsection}{\numberline {12.12.2}Bloch 算符与 $R$ 矩阵定义}{233}{subsection.12.12.2}%
+\contentsline {subsection}{\numberline {12.12.3}内区本征基与 $R$ 的本征值展开}{234}{subsection.12.12.3}%
+\contentsline {subsection}{\numberline {12.12.4}$R_l$ 与 $\hat {S}_l$ 的关系}{234}{subsection.12.12.4}%
+\contentsline {subsection}{\numberline {12.12.5}单极近似与共振参数化}{235}{subsection.12.12.5}%
+\contentsline {subsection}{\numberline {12.12.6}多通道 R-矩阵 (概述)}{236}{subsection.12.12.6}%
+\contentsline {subsection}{\numberline {12.12.7}R-矩阵 vs. 其他形式: $K$-矩阵, Jost 函数}{236}{subsection.12.12.7}%
+\contentsline {subsection}{\numberline {12.12.8}Calogero 变量相位方程的关联}{236}{subsection.12.12.8}%
+\contentsline {section}{\numberline {12.13}共振预告}{236}{section.12.13}%
+\contentsline {section}{\numberline {12.14}本章定理证明补全}{238}{section.12.14}%
+\contentsline {subsection}{\numberline {12.14.1}正则解关于 $p$ 的解析性 (Volterra 迭代)}{238}{subsection.12.14.1}%
+\contentsline {subsection}{\numberline {12.14.2}Jost 函数的解析性}{239}{subsection.12.14.2}%
+\contentsline {subsection}{\numberline {12.14.3}Levinson 定理}{239}{subsection.12.14.3}%
+\contentsline {subsection}{\numberline {12.14.4}有效程展开}{240}{subsection.12.14.4}%
+\contentsline {subsection}{\numberline {12.14.5}Wigner 因果性下界}{242}{subsection.12.14.5}%
+\contentsline {section}{\numberline {12.15}例题：硬球、方阱与 $\delta $ 壳}{243}{section.12.15}%
+\contentsline {subsection}{\numberline {12.15.1}硬球：完整分波分析}{243}{subsection.12.15.1}%
+\contentsline {subsection}{\numberline {12.15.2}吸引方阱：$s$ 波相移与束缚态阈值}{244}{subsection.12.15.2}%
+\contentsline {subsection}{\numberline {12.15.3}$\delta $ 壳：精确 $S$ 矩阵}{245}{subsection.12.15.3}%
+\contentsline {section}{\numberline {12.16}数值实验：Numerov 法求分波相移}{246}{section.12.16}%
+\contentsline {paragraph}{Levinson 定理。}{251}{paragraph*.134}%
+\contentsline {paragraph}{散射长度发散。}{251}{paragraph*.135}%
+\contentsline {paragraph}{低分波主导与解析比对。}{252}{paragraph*.136}%
+\contentsline {chapter}{\numberline {第十三章\hspace {.3em}}Coulomb 散射 (Coulomb Scattering)}{253}{chapter.13}%
+\contentsline {section}{\numberline {13.1}Coulomb 势的特殊性}{253}{section.13.1}%
+\contentsline {section}{\numberline {13.2}修正的 M{\o }ller 算符（Dollard 处方）}{254}{section.13.2}%
+\contentsline {subsection}{\numberline {13.2.1}对数畸变的来源}{254}{subsection.13.2.1}%
+\contentsline {subsection}{\numberline {13.2.2}Dollard 修正演化算符}{255}{subsection.13.2.2}%
+\contentsline {subsection}{\numberline {13.2.3}修正 M{\o }ller 算符 $\hat {\Omega }^C_\pm $}{255}{subsection.13.2.3}%
+\contentsline {section}{\numberline {13.3}Coulomb 波函数：坐标空间表象}{255}{section.13.3}%
+\contentsline {subsection}{\numberline {13.3.1}解的形式}{256}{subsection.13.3.1}%
+\contentsline {subsection}{\numberline {13.3.2}渐近形式}{256}{subsection.13.3.2}%
+\contentsline {section}{\numberline {13.4}Coulomb 散射振幅的推导}{256}{section.13.4}%
+\contentsline {paragraph}{第一项（``入射''部分）.}{257}{paragraph*.142}%
+\contentsline {paragraph}{第二项（``散射''部分）.}{257}{paragraph*.143}%
+\contentsline {section}{\numberline {13.5}微分截面：Rutherford 公式}{257}{section.13.5}%
+\contentsline {subsection}{\numberline {13.5.1}$\theta \to 0$ 发散与无穷大总截面}{258}{subsection.13.5.1}%
+\contentsline {subsection}{\numberline {13.5.2}屏蔽方式无关性的简单证明}{258}{subsection.13.5.2}%
+\contentsline {section}{\numberline {13.6}Coulomb 分波分析}{258}{section.13.6}%
+\contentsline {subsection}{\numberline {13.6.1}正则解 $F_\ell $ 与不规则解 $G_\ell $}{258}{subsection.13.6.1}%
+\contentsline {subsection}{\numberline {13.6.2}Coulomb 相移 $\sigma _\ell $}{259}{subsection.13.6.2}%
+\contentsline {subsection}{\numberline {13.6.3}对数相位的不可消除性}{259}{subsection.13.6.3}%
+\contentsline {subsection}{\numberline {13.6.4}Coulomb 振幅的分波展开（一致性检验）}{259}{subsection.13.6.4}%
+\contentsline {section}{\numberline {13.7}Coulomb 加短程势}{260}{section.13.7}%
+\contentsline {subsection}{\numberline {13.7.1}额外相移 $\delta _\ell ^N$}{260}{subsection.13.7.1}%
+\contentsline {subsection}{\numberline {13.7.2}修正后的振幅 $f=f_C+f_N$}{260}{subsection.13.7.2}%
+\contentsline {subsection}{\numberline {13.7.3}微分截面与干涉}{260}{subsection.13.7.3}%
+\contentsline {section}{\numberline {13.8}Coulomb 束缚态：氢原子}{261}{section.13.8}%
+\contentsline {section}{\numberline {13.9}多粒子 Coulomb：三体问题与 Faddeev 困难}{261}{section.13.9}%
+\contentsline {subsection}{\numberline {13.9.1}三体 Coulomb 渐近}{261}{subsection.13.9.1}%
+\contentsline {subsection}{\numberline {13.9.2}Faddeev 方程的失效}{262}{subsection.13.9.2}%
+\contentsline {section}{\numberline {13.10}本章小结}{262}{section.13.10}%
+\contentsline {section}{\numberline {13.11}数值实验：Coulomb 波函数与 Rutherford 截面}{262}{section.13.11}%
+\contentsline {paragraph}{对数相位畸变是真实的、不可消除的。}{268}{paragraph*.155}%
+\contentsline {paragraph}{Rutherford 公式的``奇迹''。}{268}{paragraph*.156}%
+\contentsline {paragraph}{总截面发散与长程性。}{268}{paragraph*.157}%
+\contentsline {paragraph}{$\sigma _\ell $ 不衰减与分波级数发散。}{268}{paragraph*.158}%
+\contentsline {paragraph}{从数值实验到物理实践。}{268}{paragraph*.159}%
+\contentsline {chapter}{\numberline {第十四章\hspace {.3em}}S 矩阵的解析性质 (Analytic Properties of the S-matrix)}{269}{chapter.14}%
+\contentsline {section}{\numberline {14.1}单变量解析函数的若干工具}{269}{section.14.1}%
+\contentsline {section}{\numberline {14.2}正则解的解析性质}{270}{section.14.2}%
+\contentsline {section}{\numberline {14.3}Jost 函数与分波 S 矩阵元的解析性}{271}{section.14.3}%
+\contentsline {subsection}{\numberline {14.3.1}上半平面的解析性}{271}{subsection.14.3.1}%
+\contentsline {subsection}{\numberline {14.3.2}解析势与解析延拓的扩张}{272}{subsection.14.3.2}%
+\contentsline {subsection}{\numberline {14.3.3}$p\to -p$ 与复共轭对称}{272}{subsection.14.3.3}%
+\contentsline {section}{\numberline {14.4}Riemann 面上的 S 矩阵：$E$ 平面图像}{273}{section.14.4}%
+\contentsline {section}{\numberline {14.5}束缚态与 Levinson 定理}{273}{section.14.5}%
+\contentsline {subsection}{\numberline {14.5.1}束缚态对应 Jost 函数的零点}{273}{subsection.14.5.1}%
+\contentsline {subsection}{\numberline {14.5.2}Levinson 定理}{274}{subsection.14.5.2}%
+\contentsline {section}{\numberline {14.6}阈值 $p=0$ 附近的行为}{275}{section.14.6}%
+\contentsline {subsection}{\numberline {14.6.1}$f_l(0)\neq 0$ 时的展开}{275}{subsection.14.6.1}%
+\contentsline {subsection}{\numberline {14.6.2}有效力程展开 (Effective range expansion)}{276}{subsection.14.6.2}%
+\contentsline {subsection}{\numberline {14.6.3}阈值零点 $f_l(0)=0$}{276}{subsection.14.6.3}%
+\contentsline {section}{\numberline {14.7}Wronskian 与几个有用的等式}{278}{section.14.7}%
+\contentsline {section}{\numberline {14.8}Jost 解 $\chi ^\pm _{l,p}$ 的解析性}{278}{section.14.8}%
+\contentsline {section}{\numberline {14.9}小结：解析结构图像}{278}{section.14.9}%
+\contentsline {section}{\numberline {14.10}逆散射问题：Marchenko 与 Gelfand--Levitan 方程}{279}{section.14.10}%
+\contentsline {subsection}{\numberline {14.10.1}逆问题的提法}{279}{subsection.14.10.1}%
+\contentsline {subsection}{\numberline {14.10.2}由散射数据构造的核函数 $F$}{280}{subsection.14.10.2}%
+\contentsline {subsection}{\numberline {14.10.3}Marchenko 方程}{280}{subsection.14.10.3}%
+\contentsline {paragraph}{对偶: Gelfand--Levitan 方程.}{280}{paragraph*.162}%
+\contentsline {subsection}{\numberline {14.10.4}算法流程}{281}{subsection.14.10.4}%
+\contentsline {subsection}{\numberline {14.10.5}唯一性、Levinson 与零能例外}{281}{subsection.14.10.5}%
+\contentsline {subsection}{\numberline {14.10.6}应用与现代发展}{281}{subsection.14.10.6}%
+\contentsline {subsection}{\numberline {14.10.7}与解析性的内在关联}{282}{subsection.14.10.7}%
+\contentsline {section}{\numberline {14.11}本章定理证明补全}{282}{section.14.11}%
+\contentsline {subsection}{\numberline {14.11.1}Levinson 定理：完整证明 (常规情形)}{282}{subsection.14.11.1}%
+\contentsline {subsection}{\numberline {14.11.2}Levinson 定理：例外情形 ($f_l(0)=0$) 完整证明}{283}{subsection.14.11.2}%
+\contentsline {subsection}{\numberline {14.11.3}Yukawa 型势 Jost 函数到下半平面的解析延拓}{284}{subsection.14.11.3}%
+\contentsline {subsection}{\numberline {14.11.4}Schwartz 反射原理在 $\hat {S}_l$ 上的应用}{285}{subsection.14.11.4}%
+\contentsline {subsection}{\numberline {14.11.5}分波色散关系：由解析性导出}{285}{subsection.14.11.5}%
+\contentsline {subsection}{\numberline {14.11.6}Mandelstam 表示概览}{287}{subsection.14.11.6}%
+\contentsline {section}{\numberline {14.12}例题}{288}{section.14.12}%
+\contentsline {subsection}{\numberline {14.12.1}方势阱的 Jost 函数：极点与 Levinson 验证}{288}{subsection.14.12.1}%
+\contentsline {subsection}{\numberline {14.12.2}Yukawa 势：左割线与下半平面 Jost 函数}{289}{subsection.14.12.2}%
+\contentsline {section}{\numberline {14.13}数值实验：Jost 函数零点与 Levinson 定理}{291}{section.14.13}%
+\contentsline {chapter}{\numberline {第十五章\hspace {.3em}}共振 (Resonances)}{300}{chapter.15}%
+\contentsline {section}{\numberline {15.1}共振的现象学}{300}{section.15.1}%
+\contentsline {section}{\numberline {15.2}$\mathsf {s}_\ell $ 矩阵的下半平面极点与共振相移}{300}{section.15.2}%
+\contentsline {subsection}{\numberline {15.2.1}零点处的"波函数"}{301}{subsection.15.2.1}%
+\contentsline {subsection}{\numberline {15.2.2}共振相移}{301}{subsection.15.2.2}%
+\contentsline {section}{\numberline {15.3}复能量平面与黎曼叶结构}{301}{section.15.3}%
+\contentsline {subsection}{\numberline {15.3.1}Breit--Wigner 公式}{302}{subsection.15.3.1}%
+\contentsline {section}{\numberline {15.4}束缚态、虚态与共振态：极点的迁移}{303}{section.15.4}%
+\contentsline {subsection}{\numberline {15.4.1}$\ell =0$（$s$ 波）}{303}{subsection.15.4.1}%
+\contentsline {subsection}{\numberline {15.4.2}$\ell >0$（高分波）}{303}{subsection.15.4.2}%
+\contentsline {subsection}{\numberline {15.4.3}方势阱中的相移演化（$\ell =3$ 例）}{304}{subsection.15.4.3}%
+\contentsline {section}{\numberline {15.5}有共振时的散射过程}{304}{section.15.5}%
+\contentsline {subsection}{\numberline {15.5.1}情形 (1)：$\Delta E\ll \Gamma $ —— Wigner 时间延迟}{305}{subsection.15.5.1}%
+\contentsline {subsection}{\numberline {15.5.2}情形 (2)：$\Delta E\gg \Gamma $ —— 共振态的衰变}{306}{subsection.15.5.2}%
+\contentsline {paragraph}{物理解读：}{306}{paragraph*.168}%
+\contentsline {section}{\numberline {15.6}小结}{307}{section.15.6}%
+\contentsline {section}{\numberline {15.7}本章定理证明补全}{308}{section.15.7}%
+\contentsline {subsection}{\numberline {15.7.1}Breit--Wigner 公式的严格证明}{308}{subsection.15.7.1}%
+\contentsline {subsection}{\numberline {15.7.2}Wigner 时间延迟：高斯波包的稳态相位推导}{309}{subsection.15.7.2}%
+\contentsline {subsection}{\numberline {15.7.3}Khalfin 定理：长时偏离指数衰变}{310}{subsection.15.7.3}%
+\contentsline {subsection}{\numberline {15.7.4}Friedrichs 模型：可解的"嵌入本征值 $\to $ 共振"}{311}{subsection.15.7.4}%
+\contentsline {section}{\numberline {15.8}例题}{312}{section.15.8}%
+\contentsline {subsection}{\numberline {15.8.1}例 A：吸引方势阱中的 $\ell \geq 1$ 共振}{312}{subsection.15.8.1}%
+\contentsline {subsection}{\numberline {15.8.2}例 B：Friedrichs 模型 —— 嵌入本征值 $\to $ 复极点 $\to $ 指数衰变}{313}{subsection.15.8.2}%
+\contentsline {subsection}{\numberline {15.8.3}例 C：$p$ 波低能共振与有效程参数}{313}{subsection.15.8.3}%
+\contentsline {section}{\numberline {15.9}数值实验：共振、Breit--Wigner、时间延迟与 Khalfin 尾巴}{314}{section.15.9}%
+\contentsline {chapter}{\numberline {第十六章\hspace {.3em}}全同粒子散射 (Identical Particles in Scattering)}{325}{chapter.16}%
+\contentsline {section}{\numberline {16.1}置换算符与(反)对称投影}{325}{section.16.1}%
+\contentsline {subsection}{\numberline {16.1.1}两粒子置换算符}{325}{subsection.16.1.1}%
+\contentsline {subsection}{\numberline {16.1.2}全同粒子假设}{326}{subsection.16.1.2}%
+\contentsline {section}{\numberline {16.2}(反)对称化对 $\hat {S}$ 算符的作用}{326}{section.16.2}%
+\contentsline {subsection}{\numberline {16.2.1}对称化 S 矩阵元}{326}{subsection.16.2.1}%
+\contentsline {section}{\numberline {16.3}无自旋全同粒子: 散射振幅与微分截面}{327}{section.16.3}%
+\contentsline {subsection}{\numberline {16.3.1}CM 系中的散射振幅(反)对称化}{327}{subsection.16.3.1}%
+\contentsline {subsection}{\numberline {16.3.2}微分截面: 干涉项}{327}{subsection.16.3.2}%
+\contentsline {paragraph}{与可区分粒子的对比.}{327}{paragraph*.174}%
+\contentsline {paragraph}{$\theta =\pi /2$ 处的特征值.}{327}{paragraph*.175}%
+\contentsline {section}{\numberline {16.4}Mott 散射: Coulomb 全同粒子}{328}{section.16.4}%
+\contentsline {subsection}{\numberline {16.4.1}Coulomb 振幅的(反)对称化}{328}{subsection.16.4.1}%
+\contentsline {subsection}{\numberline {16.4.2}Mott 公式 (无自旋玻色)}{328}{subsection.16.4.2}%
+\contentsline {paragraph}{$\theta =\pi /2$ 处 (Mott 玻色).}{328}{paragraph*.176}%
+\contentsline {section}{\numberline {16.5}自旋全同粒子: 自旋空间的(反)对称化}{328}{section.16.5}%
+\contentsline {subsection}{\numberline {16.5.1}置换在自旋空间上的作用}{328}{subsection.16.5.1}%
+\contentsline {subsection}{\numberline {16.5.2}费米子总(反)对称化}{329}{subsection.16.5.2}%
+\contentsline {subsection}{\numberline {16.5.3}自旋--平均微分截面}{329}{subsection.16.5.3}%
+\contentsline {paragraph}{Mott 公式 (无极化 $s=1/2$ 全同费米).}{329}{paragraph*.177}%
+\contentsline {section}{\numberline {16.6}分波展开中的奇偶限制}{330}{section.16.6}%
+\contentsline {subsection}{\numberline {16.6.1}无自旋情形}{330}{subsection.16.6.1}%
+\contentsline {subsection}{\numberline {16.6.2}含自旋 $1/2$--$1/2$}{330}{subsection.16.6.2}%
+\contentsline {section}{\numberline {16.7}典型例: $\alpha $--$\alpha $, $p$--$p$ 与 $e$--$e$ 低能散射}{330}{section.16.7}%
+\contentsline {paragraph}{$\alpha $--$\alpha $ (玻色, $s=0$).}{330}{paragraph*.178}%
+\contentsline {paragraph}{$p$--$p$ (费米, $s=1/2$, 低能).}{331}{paragraph*.179}%
+\contentsline {paragraph}{$e^-$--$e^-$ (M{\o }ller 散射).}{331}{paragraph*.180}%
+\contentsline {paragraph}{$n$--$p$.}{331}{paragraph*.181}%
+\contentsline {section}{\numberline {16.8}多通道全同 fragments}{331}{section.16.8}%
+\contentsline {section}{\numberline {16.9}小结}{331}{section.16.9}%
+\contentsline {section}{\numberline {16.10}本章定理证明补全}{332}{section.16.10}%
+\contentsline {subsection}{\numberline {16.10.1}$[\hat {S},P_{12}]=0$ 的证明}{332}{subsection.16.10.1}%
+\contentsline {subsection}{\numberline {16.10.2}(反)对称化矩阵元 \eqref {eq:id-S-pm-formula}}{332}{subsection.16.10.2}%
+\contentsline {subsection}{\numberline {16.10.3}无自旋分波展开 \eqref {eq:id-fpm-pw}}{332}{subsection.16.10.3}%
+\contentsline {subsection}{\numberline {16.10.4}总截面前因子 $8\pi $ vs $4\pi $}{332}{subsection.16.10.4}%
+\contentsline {section}{\numberline {16.11}例题}{333}{section.16.11}%
+\contentsline {subsection}{\numberline {16.11.1}例 1: $\alpha $--$\alpha $ 低能 Mott 干涉}{333}{subsection.16.11.1}%
+\contentsline {subsection}{\numberline {16.11.2}例 2: $p$--$p$ 非极化干涉项符号}{333}{subsection.16.11.2}%
+\contentsline {subsection}{\numberline {16.11.3}例 3: 三粒子全同末态的相空间因子}{333}{subsection.16.11.3}%
+\contentsline {section}{\numberline {16.12}数值实验: $\alpha $--$\alpha $ Mott 干涉条纹}{333}{section.16.12}%
+\contentsline {chapter}{\numberline {第十七章\hspace {.3em}}多通道与反应散射 (Multichannel Scattering and Reactions)}{335}{chapter.17}%
+\contentsline {section}{\numberline {17.1}通道的概念与希尔伯特空间分解}{335}{section.17.1}%
+\contentsline {subsection}{\numberline {17.1.1}安排通道与三体模型}{335}{subsection.17.1.1}%
+\contentsline {subsection}{\numberline {17.1.2}通道哈密顿量}{336}{subsection.17.1.2}%
+\contentsline {subsection}{\numberline {17.1.3}通道子空间 \(\mathcal {H}_\alpha \)}{336}{subsection.17.1.3}%
+\contentsline {subsection}{\numberline {17.1.4}束缚态空间与散射态空间}{337}{subsection.17.1.4}%
+\contentsline {section}{\numberline {17.2}通道波算符与渐近完备性}{337}{section.17.2}%
+\contentsline {subsection}{\numberline {17.2.1}渐近条件}{337}{subsection.17.2.1}%
+\contentsline {subsection}{\numberline {17.2.2}通道间正交性定理}{338}{subsection.17.2.2}%
+\contentsline {subsection}{\numberline {17.2.3}渐近完备性}{338}{subsection.17.2.3}%
+\contentsline {subsection}{\numberline {17.2.4}广义渐近态：$\mathcal {H}_{\rm as}$}{338}{subsection.17.2.4}%
+\contentsline {section}{\numberline {17.3}多通道 \boldmath $\hat {S}$ 算符与通道矩阵元}{339}{section.17.3}%
+\contentsline {subsection}{\numberline {17.3.1}多通道散射算符的定义}{339}{subsection.17.3.1}%
+\contentsline {subsection}{\numberline {17.3.2}通道分块矩阵元 $\hat {S}_{\beta \alpha }$}{339}{subsection.17.3.2}%
+\contentsline {subsection}{\numberline {17.3.3}动量基与能量守恒}{340}{subsection.17.3.3}%
+\contentsline {section}{\numberline {17.4}截面：弹性、激发与重排}{340}{section.17.4}%
+\contentsline {subsection}{\numberline {17.4.1}两体出射通道：微分截面}{340}{subsection.17.4.1}%
+\contentsline {subsection}{\numberline {17.4.2}多体出射：电离/裂解}{341}{subsection.17.4.2}%
+\contentsline {subsection}{\numberline {17.4.3}阈值行为：Wigner 阈值定律}{341}{subsection.17.4.3}%
+\contentsline {subsection}{\numberline {17.4.4}细致平衡（detailed balance）}{342}{subsection.17.4.4}%
+\contentsline {section}{\numberline {17.5}广义光学定理与弹/非弹分解}{342}{section.17.5}%
+\contentsline {subsection}{\numberline {17.5.1}分波多通道 $S$ 矩阵}{342}{subsection.17.5.1}%
+\contentsline {subsection}{\numberline {17.5.2}广义光学定理}{343}{subsection.17.5.2}%
+\contentsline {subsection}{\numberline {17.5.3}弹性、反应与吸收截面分解}{343}{subsection.17.5.3}%
+\contentsline {subsection}{\numberline {17.5.4}光学势的物理图像}{343}{subsection.17.5.4}%
+\contentsline {section}{\numberline {17.6}Feshbach 投影与光学势的严格推导}{344}{section.17.6}%
+\contentsline {subsection}{\numberline {17.6.1}$P$ 与 $Q$ 投影}{344}{subsection.17.6.1}%
+\contentsline {subsection}{\numberline {17.6.2}Feshbach 投影下的 Schrödinger 方程}{344}{subsection.17.6.2}%
+\contentsline {subsection}{\numberline {17.6.3}光学势的关键性质}{344}{subsection.17.6.3}%
+\contentsline {paragraph}{1. 能量依赖.}{344}{paragraph*.197}%
+\contentsline {paragraph}{2. 非局域 (nonlocal).}{345}{paragraph*.198}%
+\contentsline {paragraph}{3. 自洽分解为实部 + 虚部.}{345}{paragraph*.199}%
+\contentsline {paragraph}{4. 流量损失.}{345}{paragraph*.200}%
+\contentsline {subsection}{\numberline {17.6.4}光学势的 Born 级数展开}{345}{subsection.17.6.4}%
+\contentsline {subsection}{\numberline {17.6.5}Feshbach 共振}{346}{subsection.17.6.5}%
+\contentsline {paragraph}{与第~\ref {ch:resonance}~章 shape resonance 的对比.}{346}{paragraph*.201}%
+\contentsline {subsection}{\numberline {17.6.6}$\hat {S}$ 的 Feshbach 形式}{346}{subsection.17.6.6}%
+\contentsline {section}{\numberline {17.7}时间无关多通道理论：稳态 Lippmann–Schwinger 方程}{347}{section.17.7}%
+\contentsline {subsection}{\numberline {17.7.1}多通道稳态散射态}{347}{subsection.17.7.1}%
+\contentsline {subsection}{\numberline {17.7.2}多通道 Lippmann–Schwinger 方程}{347}{subsection.17.7.2}%
+\contentsline {subsection}{\numberline {17.7.3}Born 近似}{347}{subsection.17.7.3}%
+\contentsline {subsection}{\numberline {17.7.4}用靶态展开：耦合通道方程}{348}{subsection.17.7.4}%
+\contentsline {section}{\numberline {17.8}阈值现象与 Wigner cusp}{348}{section.17.8}%
+\contentsline {subsection}{\numberline {17.8.1}阈值打开与酉性约束}{348}{subsection.17.8.1}%
+\contentsline {subsection}{\numberline {17.8.2}Wigner 阈值定律重述}{348}{subsection.17.8.2}%
+\contentsline {subsection}{\numberline {17.8.3}Wigner cusp}{348}{subsection.17.8.3}%
+\contentsline {section}{\numberline {17.9}三体散射与 Faddeev 方程概述}{349}{section.17.9}%
+\contentsline {subsection}{\numberline {17.9.1}Lippmann–Schwinger 方程的非唯一性}{349}{subsection.17.9.1}%
+\contentsline {subsection}{\numberline {17.9.2}Faddeev 的“通道分解”策略}{349}{subsection.17.9.2}%
+\contentsline {section}{\numberline {17.10}小结}{350}{section.17.10}%
