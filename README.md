@@ -10,8 +10,9 @@
 
 ## 目录结构
 
-- `chapters/` —— 核心理论 8 章（v0.1-alpha 仅含第 1 章）
-- `examples/` —— 5 个具体可解势能模型
+- `chapters/` —— 核心理论 16 章（自由粒子 → S 矩阵 → LS → Born → 分波 → 自旋 → 解析结构 → 共振 → Coulomb → 多通道 → 三体 → 反散射 → Eikonal → 半经典 → 色散 → 光学势）
+- `examples/` —— 7 个具体可解势能模型（1D δ、3D 方势阱、δ-shell、Yukawa、separable rank-1、Pöschl-Teller、双 δ）
+- `appendix/` —— 5 个附录（数学基础、数值方法、不变性、运动学、现代数值）
 - `_quarto.yml`、`_macros.qmd`、`index.qmd` —— 站点配置与首页
 
 ## 本地构建

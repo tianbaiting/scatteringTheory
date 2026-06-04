@@ -21,6 +21,12 @@ book:
         - chapters/08_resonances.qmd
         - chapters/09_coulomb.qmd
         - chapters/10_multichannel.qmd
+        - chapters/11_three_body.qmd
+        - chapters/12_inverse_scattering.qmd
+        - chapters/13_eikonal.qmd
+        - chapters/14_semiclassical.qmd
+        - chapters/15_dispersion.qmd
+        - chapters/16_optical_potential.qmd
     - part: "Part II — 具体势能"
       chapters:
         - examples/1d_delta.qmd
@@ -28,10 +34,14 @@ book:
         - examples/delta_shell.qmd
         - examples/yukawa.qmd
         - examples/separable_rank1.qmd
+        - examples/poschl_teller.qmd
+        - examples/double_delta.qmd
   appendices:
     - appendix/A_math_foundations.qmd
     - appendix/B_numerical_methods.qmd
     - appendix/C_invariance.qmd
+    - appendix/D_kinematics.qmd
+    - appendix/E_modern_numerics.qmd
 
 format:
   html:

@@ -1,0 +1,413 @@
+# Eikonal 与 Glauber 高能近似
+
+{{< include /_macros.qmd >}}
+
+> **本章目标**：在高能小角度区制下推导 eikonal 近似——把粒子轨迹近似为入射方向的直线，势的全部作用塌缩为一个沿直线积分的相位 $\chi(\vec b)$；写出 eikonal 散射振幅的二维傅里叶形式；演示其在弱场极限下退化为第一阶 Born 振幅；用 Yukawa 势把 Born / eikonal / 全分波三种方法在同一组参数下并排对比；用 Glauber 多次散射框架把 eikonal 推广到复合靶。
+
+> **配套理论详证**：见 LaTeX 教材 `ch13_Eikonal_Glauber.tex`。
+
+全文取 $\hbar = 1$，$2m = 1$（$m = 1/2$），能量–波数关系 $E = k^2$。
+
+## 物理图像
+
+第 4 章的 Born 近似适用于"势弱"——把入射波 $\rme^{\rmi k z}$ 当成精确散射态的零阶近似。本章的 eikonal 近似适用的区制截然不同：**势可以不弱，但能量必须高、角度必须小**。
+
+记 $a$ 为势的特征长度（Yukawa 的 $1/\mu$，方阱的 $a$），eikonal 近似的两条标准条件是
+
+$$
+ka \gg 1, \qquad |V|/E \ll 1.
+$$
+
+第一条说波长 $\lambda \sim 1/k$ 远小于势的尺寸，几何光学/经典轨迹的语言开始有效；第二条说在势内动能远大于势能，粒子穿过势场时不被显著偏折，轨迹近似为直线。两条合在一起的物理图像：
+
+- 把入射方向取为 $\hat z$，碰撞参数 $\vec b$ 是与 $\hat z$ 垂直的二维向量；
+- 粒子沿 $\vec r(z) = \vec b + z\hat z$ 直线穿过势场；
+- 势对粒子的唯一作用是在波函数上累积一个相位 $\chi(\vec b)$，类似光学中的"光程"。
+
+注意：$|V|/E \ll 1$ 与 Born 的弱耦合条件**不**等价。Born 要求势在所有能量上都弱（谱半径 $\|VG_0\|<1$）；eikonal 只要在所考虑的高能上 $|V|\ll E$，对低能下势可以多深、能否支撑束缚态都不挑剔。这正是为什么 eikonal 在中等强势的高能散射里仍然好用，而 Born 在那里早就垮了。
+
+## Eikonal 推导
+
+写散射波函数为入射平面波乘一个慢变包络：
+
+$$
+\psi(\vec r) = \rme^{\rmi k z}\,\phi(\vec r).
+$$
+
+代入定态 Schrödinger 方程 $(-\nabla^2 + V - k^2)\psi = 0$，用 $\nabla^2(\rme^{\rmi kz}\phi) = \rme^{\rmi kz}(\nabla^2\phi + 2\rmi k\,\partial_z\phi - k^2\phi)$ 得
+
+$$
+-\nabla^2\phi - 2\rmi k\,\partial_z\phi + V\phi = 0.
+$$
+
+eikonal 假设 $\phi$ 沿 $z$ 方向是慢变的——横向梯度 $\nabla_\perp\phi$ 与二阶导 $\partial_z^2\phi$ 都比 $k\,\partial_z\phi$ 小一个 $1/(ka)$ 因子。在最低阶把 $-\nabla^2\phi$ 项整体丢掉：
+
+$$
+-2\rmi k\,\partial_z\phi + V\phi = 0
+\;\Longrightarrow\;
+\partial_z\phi = -\frac{\rmi}{2k}V\,\phi.
+$$
+
+边界条件 $\phi(\vec b, z\to-\infty) = 1$（远在势的左侧时只有入射平面波），积分得
+
+$$
+\phi(\vec b, z) = \exp\!\left[-\frac{\rmi}{2k}\int_{-\infty}^{z} V(\vec b + z'\hat z)\,\rmd z'\right].
+$$
+
+特别地，**穿过势之后**（$z \to +\infty$）的相位为
+
+$$
+\boxed{\;\chi(\vec b) = -\frac{1}{2k}\int_{-\infty}^{\infty} V(\vec b + z\hat z)\,\rmd z.\;}
+$$
+
+中心势 $V(r)$ 情形 $\chi$ 只依赖 $b = |\vec b|$：
+
+$$
+\chi(b) = -\frac{1}{2k}\int_{-\infty}^{\infty} V(\sqrt{b^2 + z^2})\,\rmd z
+       = -\frac{1}{k}\int_{b}^{\infty} \frac{r\,V(r)}{\sqrt{r^2 - b^2}}\,\rmd r.
+$$
+
+第二种写法用 $r = \sqrt{b^2+z^2}$ 换元，对数值积分更方便。
+
+## Eikonal 散射振幅
+
+把上面的 $\psi$ 代入散射振幅的标准积分公式（来自 LS 方程的渐近展开）
+
+$$
+f(\theta) = -\frac{1}{4\pi}\int \rme^{-\rmi \vec k_f\cdot\vec r}\,V(\vec r)\,\psi^+(\vec r)\,\rmd^3 r,
+$$
+
+并用 eikonal 形式 $\psi^+ = \rme^{\rmi k z}\phi$。注意一个关键技巧：$V\,\phi = 2\rmi k\,\partial_z\phi$（来自 $\phi$ 的方程），于是 $z$ 积分变成全微分：
+
+$$
+\int_{-\infty}^{\infty}\rme^{\rmi(k - k_{f,z})z}\,V\phi\,\rmd z
+= 2\rmi k\int_{-\infty}^{\infty}\rme^{\rmi(k - k_{f,z})z}\,\partial_z\phi\,\rmd z.
+$$
+
+在小角度极限 $k_{f,z} \approx k$，指数 $\rme^{\rmi(k - k_{f,z})z} \to 1$，分部积分留下端点贡献 $\phi(+\infty) - \phi(-\infty) = \rme^{\rmi\chi(\vec b)} - 1$。其余的横向积分给出二维傅里叶变换：
+
+$$
+\boxed{\;f_E(\theta) = \frac{k}{2\pi\rmi}\int \rmd^2 b\;\rme^{-\rmi\vec q\cdot\vec b}\bigl(\rme^{\rmi\chi(\vec b)} - 1\bigr),\quad |\vec q| = 2k\sin(\theta/2).\;}
+$$
+
+中心势情形对方位角积分给出 Bessel 函数 $J_0$：
+
+$$
+f_E(\theta) = -\rmi k\int_0^\infty b\,J_0(qb)\,\bigl(\rme^{\rmi\chi(b)} - 1\bigr)\,\rmd b.
+$$
+
+这是 eikonal 近似的**主公式**。它有几个让人愉快的性质：
+
+1. 即便 $\chi$ 很大，$|\rme^{\rmi\chi}-1| \le 2$ 恒成立，单位性自动守住——光学定理 $\sigma_{\rm tot} = (4\pi/k)\,\mathrm{Im}\,f(0)$ 给出
+   $$
+   \sigma_{\rm tot} = 2\int\rmd^2 b\,\bigl[1 - \cos\chi(b)\bigr] \ge 0,
+   $$
+   与 Born 一阶振幅纯实、违反幺正性形成对照。
+2. 强吸收极限 $\mathrm{Im}\,\chi \to +\infty$（黑盘）给出 $\sigma_{\rm tot} = 2\pi R^2$、$\sigma_{\rm el} = \pi R^2$，正是衍射散射的经典结果。
+
+## 弱场极限：恢复一阶 Born
+
+当 $|\chi| \ll 1$ 时把 $\rme^{\rmi\chi} - 1 \approx \rmi\chi$ 代入：
+
+$$
+f_E(\theta) \approx -\rmi k\int_0^\infty b\,J_0(qb)\,\rmi\chi(b)\,\rmd b
+= k\int_0^\infty b\,J_0(qb)\,\chi(b)\,\rmd b.
+$$
+
+把 $\chi(b) = -\tfrac{1}{2k}\int_{-\infty}^\infty V(\sqrt{b^2+z^2})\rmd z$ 代入，并用恒等式 $\int_0^\infty b\,J_0(qb)\,g(b)\,\rmd b$ 与三维傅里叶在直线轨迹近似下相联：
+
+$$
+f_E(\theta) \xrightarrow{\chi\to 0}
+-\frac{1}{2}\int_0^\infty\!\rmd b\,b\,J_0(qb)\int_{-\infty}^\infty\!\rmd z\,V(\sqrt{b^2+z^2})
+= -\frac{1}{4\pi}\int\rmd^3 r\,\rme^{-\rmi\vec q\cdot\vec r}\,V(r) = f^B(\theta).
+$$
+
+最后一步用了：在小角度近似 $\vec q\cdot\vec r \approx \vec q\cdot\vec b$（$\vec q$ 几乎垂直于 $\hat z$），三维体积元 $\rmd^3 r = b\,\rmd b\,\rmd\varphi\,\rmd z$，方位角积分给 $2\pi J_0(qb)$。**eikonal 在弱势极限退化到 Born，但同时保留了高能下的非微扰相位累积**。
+
+## Yukawa 势的 eikonal 相位
+
+取与第 4 章、`examples/yukawa.qmd` 一致的 Yukawa 形式
+
+$$
+V(r) = -V_0\,\frac{\rme^{-\mu r}}{\mu r}, \qquad V_0, \mu > 0,
+$$
+
+直接做 $z$ 积分。利用 Bessel 函数的积分表示 $K_0(\mu b) = \int_0^\infty\!\rmd z\,\rme^{-\mu\sqrt{b^2+z^2}}/\sqrt{b^2+z^2}$，有
+
+$$
+\chi(b) = -\frac{1}{2k}\int_{-\infty}^\infty\!\rmd z\,\Bigl(-\frac{V_0}{\mu}\Bigr)\frac{\rme^{-\mu\sqrt{b^2+z^2}}}{\sqrt{b^2+z^2}}
+= \frac{V_0}{k\mu}\,K_0(\mu b).
+$$
+
+再用 Hankel 变换 $\int_0^\infty b\,J_0(qb)\,K_0(\mu b)\,\rmd b = 1/(q^2+\mu^2)$ 验证弱场极限：
+
+$$
+f_E\bigl|_{\chi\to 0} = k\int_0^\infty b\,J_0(qb)\,\chi(b)\,\rmd b
+= k\cdot\frac{V_0}{k\mu}\cdot\frac{1}{q^2+\mu^2}
+= \frac{V_0/\mu}{q^2+\mu^2} = f^B(\theta),
+$$
+
+与 `examples/yukawa.qmd` 的 Born 闭式精确一致。强场下 $\rme^{\rmi\chi}-1$ 不能展开，必须做完整的 Hankel 数值积分——下一节就这样做。
+
+## Glauber 多次散射
+
+eikonal 的真正威力体现在**复合靶**上。设靶由 $A$ 个"散射子"（核子、原子）构成，位置 $\{\vec r_j\} = \{\vec b_j, z_j\}$，每个产生势 $V_j(\vec r - \vec r_j)$。直线轨迹近似下，相位线性叠加：
+
+$$
+\chi_{\rm tot}(\vec b; \{\vec r_j\}) = \sum_{j=1}^A \chi_j(\vec b - \vec b_j),
+$$
+
+$z_j$ 不出现——因为相位是沿 $z$ 全线积分的总效应，与每个散射子在 $z$ 方向的位置无关。把单体 eikonal 公式套上来，靶基态 $|\Phi_0\rangle$ 上的散射振幅是
+
+$$
+F_{\rm Glauber}(\vec q) = \frac{k}{2\pi\rmi}\int\rmd^2 b\,\rme^{-\rmi\vec q\cdot\vec b}
+\left\langle\Phi_0\Bigl|\prod_{j=1}^A\bigl[1 + \Gamma_j(\vec b - \vec b_j)\bigr] - 1\Bigr|\Phi_0\right\rangle,
+$$
+
+其中 $\Gamma_j(\vec b) = \rme^{\rmi\chi_j(\vec b)} - 1$ 称为**轮廓函数**（profile function）。展开 $\prod(1+\Gamma_j) = 1 + \sum\Gamma_j + \sum\Gamma_j\Gamma_k + \cdots$，每一项对应 $1, 2, 3, \ldots$ 个散射子被"打到"的多重散射图像。这就是 Glauber 公式的核心，是高能核物理与高能原子-分子散射的工作语言。
+
+定性结论：
+
+- 单次散射（$\sum\Gamma_j$）对应每个散射子独立贡献，与"冲量近似"等价；
+- 二重、三重散射项对截面的修正在 $|q| \sim 1/R$（$R$ 是靶尺寸）处最重要——这是 Glauber 对核衍射极小处填谷效应的物理来源；
+- $A\to\infty$ 极限取对数 $\sum_j\chi_j \to A\bar\chi$，回到光学势/平均场图像（见第 16 章）。
+
+本章数值仍以单体中心势为限；多体 Glauber 的具体例子见 LaTeX 教材的核-核衍射散射一节。
+
+## 数值实现
+
+用与 `examples/yukawa.qmd` 一致的参数约定 $V(r) = -V_0\rme^{-\mu r}/(\mu r)$，$\mu = 1$ 固定，遍历 $V_0$ 与 $k$。本节实现三套相互独立的振幅计算：(1) Born 闭式；(2) eikonal Hankel 积分；(3) Numerov 全分波展开。
+
+```{python}
+#| label: eikonal-amplitudes-setup
+
+import numpy as np
+from scipy import special, integrate
+
+# Yukawa potential: V(r) = -V0 * exp(-mu r) / (mu r)
+def V_yukawa(r, V0, mu):
+    return -V0 * np.exp(-mu * r) / (mu * r)
+
+# --- (1) Born closed form ---
+def f_born(theta, k, V0, mu):
+    q = 2.0 * k * np.sin(theta / 2.0)
+    return (V0 / mu) / (q ** 2 + mu ** 2)
+
+# --- (2) eikonal phase and amplitude ---
+def chi_yukawa(b, k, V0, mu):
+    """Closed-form eikonal phase: chi(b) = (V0 / (k mu)) * K0(mu b)."""
+    return (V0 / (k * mu)) * special.k0(mu * b)
+
+def f_eikonal(theta, k, V0, mu, b_max=40.0, n_b=4000):
+    """Eikonal amplitude via Hankel integral.
+
+    f_E(theta) = -i k int_0^infty b J_0(q b) [exp(i chi(b)) - 1] db.
+    Uses log-spaced quadrature; chi diverges as -ln(b) at b->0
+    but b * chi is integrable, so a small b_min cutoff is fine.
+    """
+    q = 2.0 * k * np.sin(theta / 2.0)
+    b_min = 1e-4 / mu
+    b = np.geomspace(b_min, b_max / mu, n_b)
+    chi = chi_yukawa(b, k, V0, mu)
+    integrand = b * special.j0(q * b) * (np.exp(1j * chi) - 1.0)
+    trap = getattr(np, "trapezoid", None) or np.trapz   # numpy >=2.0 / <2.0
+    return -1j * k * trap(integrand, b)
+
+# --- (3) Full partial-wave via Numerov ---
+def numerov_phase(k, V0, mu, l=0, r_max=80.0, N=24000):
+    """Phase shift delta_l (mod pi) from Numerov + Riccati-Bessel match.
+
+    Match at two distant points r_1 < r_2 to
+        u(r) ~ A [cos(delta) S_l(kr) + sin(delta) C_l(kr)],
+    where S_l(x) = x j_l(x) -> sin(x - l pi/2),  C_l(x) = -x y_l(x) -> cos(x - l pi/2).
+    Returning arctan(...) gives delta mod pi, which is sufficient for
+    f = (1/k) sum (2l+1) e^{i delta} sin(delta) P_l (the combination is pi-periodic).
+    """
+    r = np.linspace(r_max / N, r_max, N)
+    h = r[1] - r[0]
+    f = k ** 2 - V_yukawa(r, V0, mu) - l * (l + 1) / r ** 2
+    u = np.zeros(N)
+    u[0] = r[0] ** (l + 1)
+    u[1] = r[1] ** (l + 1) * (1.0 + h ** 2 * f[0] / 6.0)
+    c = h ** 2 / 12.0
+    for n in range(1, N - 1):
+        u[n + 1] = (2 * u[n] * (1 - 5 * c * f[n])
+                    - u[n - 1] * (1 + c * f[n - 1])) / (1 + c * f[n + 1])
+    i1, i2 = N - 200, N - 100
+    x1, x2 = k * r[i1], k * r[i2]
+    S1 = special.spherical_jn(l, x1) * x1
+    S2 = special.spherical_jn(l, x2) * x2
+    C1 = -special.spherical_yn(l, x1) * x1
+    C2 = -special.spherical_yn(l, x2) * x2
+    num = u[i2] * S1 - u[i1] * S2
+    den = u[i1] * C2 - u[i2] * C1
+    return np.arctan(num / den)
+
+def f_partial_wave(theta, k, V0, mu, lmax=None, r_max=80.0, N=24000):
+    """Partial-wave amplitude summed up to lmax (auto-chosen ~ k r_eff)."""
+    if lmax is None:
+        lmax = max(8, int(2 * k * 5.0 / mu) + 4)  # heuristic: lmax ~ 2 k a
+    deltas = np.array([numerov_phase(k, V0, mu, l=l, r_max=r_max, N=N)
+                       for l in range(lmax + 1)])
+    th = np.atleast_1d(theta)
+    f = np.zeros_like(th, dtype=complex)
+    P_prev = np.ones_like(th); P_curr = np.cos(th)
+    for l in range(lmax + 1):
+        if l == 0:   P = P_prev
+        elif l == 1: P = P_curr
+        else:
+            P = ((2 * l - 1) * np.cos(th) * P_curr - (l - 1) * P_prev) / l
+            P_prev, P_curr = P_curr, P
+        f += (2 * l + 1) * np.exp(1j * deltas[l]) * np.sin(deltas[l]) / k * P
+    return f.item() if np.isscalar(theta) else f
+
+print("Setup OK: f_born, f_eikonal, f_partial_wave defined")
+```
+
+### 三方对比：振幅 vs 角度，扫描 $k$
+
+```{python}
+#| label: fig-three-way-comparison
+#| fig-cap: "Yukawa 势 ($V_0=1$, $\\mu=1$) 在 $k=2,5,10,20$ 下的微分截面 $|f|^2$：Born（蓝虚线）、eikonal（橙点划线）、全分波 Numerov（红实线）。$k$ 越大，三条线在小角度区越接近；高能下 eikonal 与全分波在 $\\theta \\lesssim 30^\\circ$ 内几乎重合，而 Born 由于忽略了相位累积仍有可见偏差。"
+
+import numpy as np
+import matplotlib.pyplot as plt
+
+V0, mu = 1.0, 1.0
+ks = [2.0, 5.0, 10.0, 20.0]
+theta = np.linspace(0.005, np.pi - 0.005, 120)
+
+fig, axes = plt.subplots(2, 2, figsize=(11, 8), sharex=True)
+for ax, k in zip(axes.flat, ks):
+    f_b  = np.array([f_born(t, k, V0, mu) for t in theta])
+    f_e  = np.array([f_eikonal(t, k, V0, mu) for t in theta])
+    f_pw = f_partial_wave(theta, k, V0, mu)
+    ax.semilogy(np.degrees(theta), np.abs(f_b)  ** 2, "C0--", label="Born")
+    ax.semilogy(np.degrees(theta), np.abs(f_e)  ** 2, "C1-.", label="eikonal")
+    ax.semilogy(np.degrees(theta), np.abs(f_pw) ** 2, "C3-",  label="full p.w.")
+    ax.set_title(fr"$k = {k}$  ($k a \approx {k/mu:.0f}$)")
+    ax.grid(alpha=0.3); ax.legend(fontsize=8)
+    ax.set_ylabel(r"$|f|^2$")
+axes[1, 0].set_xlabel(r"$\theta$ (deg)")
+axes[1, 1].set_xlabel(r"$\theta$ (deg)")
+fig.suptitle(r"Yukawa: Born vs eikonal vs full partial wave  ($V_0=\mu=1$)")
+fig.tight_layout()
+plt.show()
+```
+
+观察：
+
+- $k=2$（$ka\approx 2$，eikonal 条件 $ka\gg 1$ 不太满足）：Born 与 eikonal 都偏离全分波，eikonal 略好。
+- $k=5,10$：小角度区 eikonal 已经追上全分波，Born 仍可见误差（来自二阶 Born 项 $\sim V_0/(k\mu)$）。
+- $k=20$（高能）：Born 与 eikonal 在前向几乎重合（弱场极限），全分波也合上来；大角度处三者全部偏离——大角度散射对应大动量转移，eikonal 的小角度假设破产。
+
+### Born ↔ eikonal 比值随 $V_0$ 的扫描
+
+固定 $k = 5$，扫 $V_0$，看 eikonal 何时偏离 Born。理论预期是 $V_0/k\mu \ll 1$ 时两者重合，$\chi \sim 1$ 后 eikonal 把多次散射相位重求和而 Born 不能。
+
+```{python}
+#| label: fig-eikonal-vs-born-vs-V0
+#| fig-cap: "前向 ($\\theta=10^\\circ$) 微分截面比 $|f_E|^2/|f^B|^2$ 随耦合 $V_0$ 的变化（$k=5$, $\\mu=1$）。$V_0\\ll 1$ 时比值趋于 1（弱场极限退化为 Born），$V_0$ 增大后 $\\chi=O(1)$ 启动 eikonal 的相位重求和，比值偏离 1。"
+
+import numpy as np
+import matplotlib.pyplot as plt
+
+k, mu = 5.0, 1.0
+theta = np.radians(10.0)
+V0_arr = np.linspace(0.05, 4.0, 24)
+ratio = []
+for V0 in V0_arr:
+    fb = f_born(theta, k, V0, mu)
+    fe = f_eikonal(theta, k, V0, mu)
+    ratio.append(abs(fe) ** 2 / abs(fb) ** 2)
+
+fig, ax = plt.subplots(figsize=(7, 4.2))
+ax.plot(V0_arr, ratio, "C2o-", ms=4)
+ax.axhline(1.0, color="k", ls=":", lw=0.8)
+ax.set(xlabel=r"$V_0$  (with $\mu=1$, $k=5$)",
+       ylabel=r"$|f_E|^2 / |f^B|^2$  at $\theta=10^\circ$",
+       title="Eikonal/Born ratio: weak-field limit at small V0")
+ax.grid(alpha=0.3)
+fig.tight_layout()
+plt.show()
+```
+
+### 数值验证：弱场极限 + 高能小角度
+
+下面是两条 assert：(a) $V_0 \to 0$ 时 eikonal 与 Born 在多个 $\theta$ 上相对误差 $< 1\%$；(b) 高能 $k = 20$ 下 eikonal 与全分波在 $\theta < 30^\circ$ 上相对误差 $< 5\%$。
+
+```{python}
+#| label: verification-eikonal
+
+import numpy as np
+
+# (a) Weak-field limit: eikonal -> Born as V0 -> 0
+mu = 1.0
+k_test = 5.0
+V0_small = 0.02
+theta_arr = np.radians([5.0, 15.0, 30.0, 60.0, 90.0])
+max_rel_err_born = 0.0
+for th in theta_arr:
+    fb = f_born(th, k_test, V0_small, mu)
+    fe = f_eikonal(th, k_test, V0_small, mu)
+    rel_err = abs(fe - fb) / abs(fb)
+    max_rel_err_born = max(max_rel_err_born, rel_err)
+print(f"(a) Weak-field V0={V0_small}: max |f_E - f_B| / |f_B| = "
+      f"{max_rel_err_born:.4f} over theta in [5,90] deg")
+assert max_rel_err_born < 0.01, (
+    f"Eikonal failed weak-field reduction to Born: rel err = {max_rel_err_born:.4f}"
+)
+
+# (b) High-energy small-angle: eikonal vs full partial wave
+k_high = 20.0
+V0_mid = 1.0
+theta_small = np.radians([5.0, 10.0, 15.0, 20.0, 25.0])
+f_pw_arr = f_partial_wave(theta_small, k_high, V0_mid, mu, lmax=120,
+                          r_max=80.0, N=24000)
+max_rel_err_pw = 0.0
+for i, th in enumerate(theta_small):
+    fe = f_eikonal(th, k_high, V0_mid, mu)
+    rel_err = abs(fe - f_pw_arr[i]) / abs(f_pw_arr[i])
+    max_rel_err_pw = max(max_rel_err_pw, rel_err)
+print(f"(b) High-energy k={k_high}, V0={V0_mid}: "
+      f"max |f_E - f_pw| / |f_pw| = {max_rel_err_pw:.4f} for theta < 30 deg")
+assert max_rel_err_pw < 0.05, (
+    f"Eikonal failed high-energy small-angle test: rel err = {max_rel_err_pw:.4f}"
+)
+print("Eikonal verification passed: weak-field -> Born, high-energy -> full p.w.")
+```
+
+## 失败模式
+
+| 区制 | 物理图像 | 哪一步崩了 |
+|:--|:--|:--|
+| 大角度 $\theta\gtrsim 30^\circ$ | 大动量转移 $q\sim k$ | $\rme^{-\rmi\vec q\cdot\vec b}\approx \rme^{-\rmi\vec q\cdot\vec r}$ 不成立，丢掉的 $\nabla^2\phi$ 项与保留项同量级 |
+| 强势 $|V|/E \sim 1$ | 经典轨迹被显著弯折 | $\phi$ 不再是慢变包络，"沿直线"的 ansatz 失效；可考虑直线的非直线修正（curved trajectory eikonal） |
+| 低能 $ka \lesssim 1$ | 波长 $\sim$ 势的尺寸 | 几何光学语言不成立，所有分波贡献相当，必须分波展开 |
+| 共振附近 | 长寿命中间态 | eikonal 把势"瞬时"积分掉，无法解析共振 polepole；用 Breit-Wigner（第 8 章） |
+| 长程力（Coulomb） | 任意远 $b$ 都有相位 | $\chi(b)$ 在 $b\to\infty$ 不收敛；需做 Coulomb 改写或只算"屏蔽 + Coulomb"的差（见第 9 章） |
+
+把这些与第 4 章的 Born 收敛条件对照：
+
+- Born 适用区：弱耦合（任何能量）；
+- eikonal 适用区：高能 + 小角度（任何深度，只要 $|V|/E\ll 1$）；
+- 两个区有重叠（高能弱耦合）——重叠区 eikonal 退化为 Born；
+- 都不适用的区（低能强耦合、共振、大角度）：必须用全分波/精确数值，第 5、8 章的内容。
+
+## 小结
+
+- eikonal 近似在 $ka\gg 1$、$|V|/E\ll 1$ 区制下把势的全部作用塌缩为沿入射直线的相位 $\chi(\vec b) = -\tfrac{1}{2k}\int V\,\rmd z$。
+- 中心势的 eikonal 振幅是相位轮廓 $\rme^{\rmi\chi(b)}-1$ 的 Hankel 变换：$f_E(\theta) = -\rmi k\int_0^\infty b\,J_0(qb)(\rme^{\rmi\chi}-1)\rmd b$。
+- 弱场极限 $\rme^{\rmi\chi}-1\to\rmi\chi$ 精确恢复一阶 Born 振幅；强场下 eikonal 把多次散射相位重求和，幺正性自动保住。
+- Yukawa 势的 eikonal 相位有闭式 $\chi(b) = (V_0/k\mu)K_0(\mu b)$；数值 Hankel 积分给出全角度振幅。
+- 数值上验证了：(a) $V_0\to 0$ eikonal 与 Born 一致到 $<1\%$；(b) $k=20$ 高能下 eikonal 与全分波在 $\theta<30^\circ$ 内一致到 $<5\%$。
+- 复合靶情形相位线性叠加 $\chi_{\rm tot} = \sum_j\chi_j(\vec b - \vec b_j)$，给出 Glauber 多次散射展开——高能核物理的工作语言。
+
+## 进一步阅读
+
+- Glauber, "Lectures in Theoretical Physics" Vol I (1959)，eikonal-Glauber 框架的原始文献。
+- Joachain《Quantum Collision Theory》第 9 章（eikonal 与 Glauber 的系统处理，含轨迹修正）。
+- Taylor《Scattering Theory》§11-d（高能近似的算符论描述）。
+- Sakurai《Modern Quantum Mechanics》§7.4（教科书级 eikonal 推导）。
+- 本仓库 LaTeX 教材 `ch13_Eikonal_Glauber.tex`（含 Glauber 公式在核-核衍射散射上的具体应用、二阶 eikonal 修正）。
+- 与本章对照阅读：第 4 章 Born 近似（弱场极限的另一端）、第 5 章分波展开（低能精确解的主线）、第 16 章光学势（多体 eikonal 的 $A\to\infty$ 极限）。

@@ -6,7 +6,7 @@
 
 ## 这本书想达成什么
 
-1. 把散射理论里**可计算的核心结果**（S 矩阵、Born 级数、分波相移、解析结构、共振、含自旋振幅）压成 8 章；
+1. 把散射理论里**可计算的核心结果**（S 矩阵、Born 级数、分波相移、解析结构、共振、含自旋振幅、多通道、三体、反散射、Eikonal/半经典、色散关系、光学势）压成 16 章；
 2. 每个结果都**亲手用 numpy/scipy 算一遍**；
 3. 在几个解析可解的具体势能上验证理论。
 
@@ -15,6 +15,7 @@
 - 假设读者已学过基础量子力学（Hilbert 空间、算符、定态散射常识）。
 - 每个 `.qmd` 都自包含——代码不依赖前一章定义的工具函数，可以直接复制粘贴运行。
 - 代价是同一段数值方法（如 Lippmann-Schwinger 求解）会在几章里重复出现；这是有意的，请不要 import 跨页代码。
+- 章节相对独立，但有自然依赖：核心链 ch1→ch2→ch3→ch4→ch5→ch7→ch8 是主干；自旋 ch6、Coulomb ch9 与多通道 ch10 平行展开；三体 ch11、反散射 ch12、Eikonal ch13、半经典 ch14、色散 ch15、光学势 ch16 各自落在主干之上但互相耦合较弱，可按需挑读。
 
 ## 本地构建
 
@@ -31,9 +32,9 @@ quarto preview
 - LaTeX 详版：`~/workspace/nutstore/physics/ScatteringTheory/new_zhiguang_slides/note/`
 - 个别专题深入笔记：`tianbaiting.github.io` 博客 `sci/minimal_theory/`
 
-## 现状（v0.1-alpha）
+## 现状
 
-第 1 章（自由粒子）+ 5 个具体势能 example 已完工，作为模板。其余 7 章逐章推进。
+16 章正文 + 7 个例题 + 5 个附录全部完成（2026-05-10）。每个 .qmd 内嵌的 numpy/scipy 代码块都有数值 assert 验证；`quarto render` 可一次跑通整本书。
 
 ## 一段最小可运行示例
 

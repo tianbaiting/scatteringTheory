@@ -1,0 +1,836 @@
+# 附录 E：现代数值方法（CSM、R-matrix、时间依赖波包）
+
+{{< include /_macros.qmd >}}
+
+> **本附录目标**：在附录 B "经典" 数值方法（位置/动量表象、LS 矩阵、Kowalski-Noyes 主值减法、Newton/Padé 极点定位）之外，介绍三种现代散射数值方法——复缩放 (Complex Scaling Method, CSM)、R 矩阵 (R-matrix) / Lagrange-mesh、以及时间依赖波包散射。每种方法都有自己最擅长的物理任务：CSM 把共振"挑"成主面上的复本征值，R-matrix 给出高精度分波相移，时间依赖波包则可视化整个散射过程并自然处理含时势。
+
+> **配套理论详证**：CSM 的数学基础见 Aguilar–Balslev–Combes (1971)、Reed–Simon vol IV 第 XIII.10 节；R-matrix 见 Lane–Thomas (1958)、Descouvemont–Baye (2010) 综述；时间依赖方法见 Tannor《Introduction to Quantum Mechanics: A Time-Dependent Perspective》。本仓库内附录 B 是姊妹篇，请同时参阅。
+
+全文默认 $\hbar = 1$，$2m = 1$（与附录 B、第 5 章一致），$E = k^2$。§3 的 1D 时间依赖部分自然取 $m = 1/2$，演化算符 $\rme^{-\rmi \Hmat_0 t}$ 在动量表象就是逐分量乘 $\rme^{-\rmi k^2 t}$（与第 1 章 FFT 范式相同）。
+
+## §1 复缩放方法（CSM, ABC 定理）
+
+### 标度变换与谱的旋转
+
+对径向坐标做复标度变换
+$$
+U(\theta):\; r \;\longmapsto\; r\,\rme^{\rmi\theta}, \qquad \theta \in (0, \pi/2),
+$$
+诱导 Hamiltonian 的相似变换 $\Hmat_\theta = U(\theta)\,\Hmat\,U^{-1}(\theta)$。在径向表象上（$\hbar = 1, 2m = 1$）
+$$
+\Hmat = -\frac{\rmd^2}{\rmd r^2} + V(r) \;\;\Longrightarrow\;\;
+\Hmat_\theta = -\rme^{-2\rmi\theta}\frac{\rmd^2}{\rmd r^2} + V(r\,\rme^{\rmi\theta}).
+$$
+动能项整体旋转因子 $\rme^{-2\rmi\theta}$，势变成沿复路径取值 $V(r\,\rme^{\rmi\theta})$。
+
+**ABC 定理（Aguilar 1971；Balslev–Combes 1971）**：若 $V$ 是 dilation-analytic（典型条件：$V(r\,\rme^{\rmi\theta})$ 在带状区域 $|\Im\theta| < \theta_0$ 上解析、$\Hmat_0$-紧），则 $\Hmat_\theta$ 的谱由三部分构成：
+
+- **束缚态**：实本征值 $E_n < 0$，与 $\theta$ 无关（变换是相似变换，不改变离散谱）；
+- **连续谱**：从原点出发、转角为 $-2\theta$ 的射线 $\rme^{-2\rmi\theta}\,\R_+$；
+- **共振极点**：原本"藏"在第二张 Riemann 叶上的 $S$ 矩阵极点 $E_R - \rmi\Gamma/2$ 一旦被旋转后的连续谱"扫过"（即 $\arg(E_R - \rmi\Gamma/2) > -2\theta$），就成为 $\Hmat_\theta$ 的真正复本征值，与连续谱分离。
+
+直观：对角化 $\Hmat_\theta$ 直接看到所有束缚态与已露出的共振，无需做相移扫描或 $S$ 矩阵 Padé 拟合。**这是 CSM 相对于附录 B Newton/Padé 方法的核心优势**——共振以"标准本征值问题"的方式给出，对深度埋藏在第二叶的窄共振也很稳。
+
+### 选择 $\theta$ 的实操考虑
+
+- $\theta$ **太小**：连续谱旋转角不够，共振仍被连续谱"覆盖"，看不到分离的复本征值；
+- $\theta$ **太大**：势 $V(r\,\rme^{\rmi\theta})$ 沿陡路径取值，数值上势矩阵元变得病态，本征值精度下降；解析延拓的有效域 $\theta_0$ 也是上界。
+- 经验值：$\theta \in [0.3, 0.6]$ rad（约 $17^\circ \sim 35^\circ$）对多数局域势已经够。
+- **$\theta$-trajectory**：扫描 $\theta$ 看本征值轨迹——共振是 $\theta$ 的**驻点**（$\partial E/\partial\theta \approx 0$），连续谱本征值以速度 $-2\rmi$ 沿射线滑动。这是辨别共振 vs 离散化伪极点的标准技术。
+
+### Worked Example：3D δ-shell s 波共振
+
+势 $V(r) = \gamma\,\delta(r - R)$（与附录 B §"极点的数值定位"中 $\delta$-shell 同体系，但归一化为 $\gamma$ 而非 $\gamma/R$，以匹配 $V(r) = \gamma\,\delta(r-R)$ 的标准形式；参见第 8 章）。s 波径向方程 $u_0(r) = r R_0(r)$ 满足
+$$
+-u_0''(r) + \gamma\,\delta(r-R)\,u_0(r) = k^2\,u_0(r), \qquad u_0(0) = 0.
+$$
+
+δ-shell 严格意义上**不是 dilation-analytic** 势：标度变换 $r \to r\rme^{\rmi\theta}$ 后 $\delta(r\rme^{\rmi\theta} - R) = \rme^{-\rmi\theta}\delta(r - R\rme^{-\rmi\theta})$，δ 的支撑被推到复位置 $R\rme^{-\rmi\theta}$，无法在实径向网格上直接表示。因此本节采用 **exterior complex scaling (ECS)**：选取旋转点 $r_c$（$R < r_c < r_{\max}$），仅在外区 $r > r_c$ 把动能算符旋转 $\rme^{-2\rmi\theta}$，δ 势仍位于未旋转的内区 $r < r_c$。这等价于沿分段实-复路径 $F(r) = r$（$r \le r_c$）/ $r_c + (r - r_c)\rme^{\rmi\theta}$（$r > r_c$）求解，使渐近出射波 $\rme^{\rmi k F(r)}$ 在 $r \to \infty$ 沿复路径衰减（前提 $\sin\theta\,\Re k + \cos\theta\,\Im k > 0$，即旋转角足够"扫过"共振极点的 $\arg E$），从而把第二叶 Siegert 极点暴露为 $\Hmat_\theta$ 的有限秩复本征值。算符形式：
+$$
+\Hmat_\theta\,u(r) = \begin{cases}
+-u''(r) + \gamma\,\delta(r - R)\,u(r), & 0 < r < r_c, \\
+-\rme^{-2\rmi\theta}\,u''(r), & r > r_c,
+\end{cases}
+$$
+内外区在 $r = r_c$ 处通过 $u$ 与（沿各自变量的）$u'$ 匹配，离散化时由非均匀格距差分自动实现。
+
+**离散化策略 (ECS)**：
+1. 取 $r \in [0, r_{\max}]$，$N$ 等距格点（含 $r = h, 2h, \ldots, r_{\max}$），$h = r_{\max}/N$，Dirichlet 边界 $u(0) = u(r_{\max}) = 0$。
+2. 选取旋转点 $r_c$（如 $r_c = 2.0$）和对应格点指标 $j_c$ 满足 $r_{j_c} \approx r_c$；要求 $j_R < j_c$（δ 严格落在内区）。
+3. 动能矩阵 $\mathbf{T}$：
+   - 内区（$j < j_c$）：标准三点差分 $T_{j, j\pm1} = -1/h^2$，$T_{jj} = 2/h^2$；
+   - 外区（$j > j_c$）：旋转后 $T_{j, j\pm1} = -\rme^{-2\rmi\theta}/h^2$，$T_{jj} = 2\,\rme^{-2\rmi\theta}/h^2$；
+   - 界面（$j = j_c$）：非均匀格距 $h_- = h$（向内）、$h_+ = h\,\rme^{\rmi\theta}$（沿复路径向外），二阶非均匀差分系数
+   $$
+   T_{j_c, j_c-1} = -\frac{2}{h^2(1 + \rme^{\rmi\theta})}, \quad
+   T_{j_c, j_c}   =  \frac{2}{h^2 \rme^{\rmi\theta}}, \quad
+   T_{j_c, j_c+1} = -\frac{2}{h^2 \rme^{\rmi\theta}(1 + \rme^{\rmi\theta})}.
+   $$
+   ($\theta \to 0$ 时各系数退化为 $-1/h^2, 2/h^2, -1/h^2$，验证一致。)
+4. δ 势：在最接近 $R$ 的格点 $j_R$（在内区）上加 $\gamma/h$ 至对角（$\delta$ 函数的"box-integral"离散化）。
+5. 对角化 $\Hmat_\theta = \mathbf{T} + \mathrm{diag}(V)$，复本征值中满足 $\Im E < 0$、$\Re E > 0$、且远离旋转连续谱射线 $\rme^{-2\rmi\theta}\,\R_+$ 的，即 s 波共振 $E_R - \rmi\Gamma/2$。
+6. 与附录 B Newton 迭代结果对账。
+
+```{python}
+#| label: fig-csm-shell
+#| fig-cap: "δ-shell 势 ($\\gamma=20, R=1$) 的复缩放谱（ECS 实现）：旋转角 $\\theta=0.5$ rad，旋转点 $r_c=2.0$，$N=600$ 径向格点，$r_{\\max}=8$。外区连续谱沿角度 $-2\\theta \\approx -1.0$ rad 的射线展开，s 波共振以红圆显示，与 Newton 迭代极点（黑十字）位置一致到约 $10^{-3}$ 量级。"
+
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Parameters: same delta-shell as Appendix B (V = gamma*delta(r-R), gamma_E = gamma_B/R)
+gamma_sh = 20.0      # shell strength (V = gamma * delta(r - R))
+R_sh     = 1.0       # shell radius
+
+# CSM (exterior complex scaling) grid
+N      = 600
+r_max  = 8.0
+h      = r_max / N
+r      = np.linspace(h, r_max, N)              # r = h, 2h, ..., r_max; Dirichlet at r=0
+theta  = 0.5                                   # rotation angle (radians)
+r_c    = 2.0                                   # rotation point: R_sh < r_c < r_max
+
+# Identify grid indices: j_R for delta location, j_c for ECS interface
+j_R = int(np.argmin(np.abs(r - R_sh)))
+j_c = int(np.argmin(np.abs(r - r_c)))
+assert j_R < j_c, "delta-shell must lie strictly in the unrotated inner region"
+
+# Build kinetic matrix with ECS: standard FD inside (j<j_c), rotated FD outside (j>j_c),
+# and an asymmetric 3-point stencil at the interface (j=j_c) using non-uniform spacings
+# h_- = h, h_+ = h*exp(i*theta).
+T_mat   = np.zeros((N, N), dtype=complex)
+ph      = np.exp(1j * theta)            # forward step phase (outer side)
+c_outer = np.exp(-2j * theta)           # uniform-rotation prefactor in outer region
+for j in range(N):
+    if j < j_c:                         # inner region: real FD
+        T_mat[j, j] = 2.0 / h**2
+        if j - 1 >= 0: T_mat[j, j - 1] = -1.0 / h**2
+        if j + 1 < N:  T_mat[j, j + 1] = -1.0 / h**2
+    elif j > j_c:                       # outer region: rotated FD
+        T_mat[j, j] = c_outer * 2.0 / h**2
+        if j - 1 >= 0: T_mat[j, j - 1] = -c_outer / h**2
+        if j + 1 < N:  T_mat[j, j + 1] = -c_outer / h**2
+    else:                               # interface: non-uniform 3-point stencil
+        T_mat[j, j - 1] = -2.0 / (h**2 * (1.0 + ph))
+        T_mat[j, j    ] =  2.0 / (h**2 * ph)
+        T_mat[j, j + 1] = -2.0 / (h**2 * ph * (1.0 + ph))
+
+# Delta-shell potential: place gamma/h at grid point closest to R (in the inner region)
+V_diag    = np.zeros(N, dtype=complex)
+V_diag[j_R] = gamma_sh / h        # box-integral approximation of gamma*delta(r-R)
+
+H_theta = T_mat + np.diag(V_diag)        # ECS-rotated Hamiltonian (complex)
+evals, _ = np.linalg.eig(H_theta)
+
+# Sort by Re(E)
+idx = np.argsort(evals.real)
+evals = evals[idx]
+
+# Identify s-wave resonance candidates: Re(E) > 0, Im(E) < 0,
+# and well-separated from rotated continuum line E = exp(-2i*theta) * R_+.
+# Continuum eigenvalues lie close to angle -2*theta from origin.
+def is_resonance(E, theta, tol_angle=0.15):
+    if E.real <= 0:
+        return False
+    if E.imag >= 0:
+        return False
+    angle = np.angle(E)
+    # Continuum is along angle = -2*theta. Resonance has |angle - (-2*theta)| > tol.
+    return abs(angle - (-2.0 * theta)) > tol_angle and abs(E) > 1.0
+
+resonances = np.array([E for E in evals if is_resonance(E, theta)])
+# Sort by Re(E)
+resonances = resonances[np.argsort(resonances.real)]
+
+print("First few CSM s-wave resonance complex energies:")
+for E in resonances[:3]:
+    k_E = np.sqrt(E)
+    if k_E.imag > 0:
+        k_E = -k_E   # second-sheet convention: Im(k) < 0
+    print(f"  E = {E.real:+.5f} {E.imag:+.5f}j   k = {k_E.real:+.5f} {k_E.imag:+.5f}j")
+
+# Newton reference: pole equation derived directly from u_in = sin(kr) (r<R),
+# u_out = exp(ikr) (outgoing for r>R), and the jump condition
+#     u'(R+) - u'(R-) = gamma * u(R)
+# Substituting yields  k cot(kR) = ik - gamma, equivalently
+#     2ik - gamma * (1 - exp(2ikR)) = 0,    i.e.   exp(2ikR) = 1 - 2ik/gamma.
+# (Cross-check: this matches Appendix B's F(k) = kR + gamma*sin(kR)*e^{ikR} = 0
+# under the convention V_AppB = (gamma/R)*delta(r-R) with R=1.)
+def F_shell_direct(k, gamma=gamma_sh, R=R_sh):
+    """Pole equation for V(r) = gamma * delta(r-R), s-wave outgoing BC."""
+    return 2j * k - gamma * (1.0 - np.exp(2j * k * R))
+
+def dF_shell_direct(k, gamma=gamma_sh, R=R_sh):
+    return 2j + 2j * R * gamma * np.exp(2j * k * R)
+
+def newton_shell_direct(k_init, tol=1e-13, max_iter=300):
+    k = complex(k_init)
+    for _ in range(max_iter):
+        F  = F_shell_direct(k)
+        dF = dF_shell_direct(k)
+        dk = F / dF
+        k -= dk
+        if abs(dk) < tol:
+            break
+    return k
+
+# First two resonances; initial guess kR ~ n*pi - small i
+newton_poles_k = []
+for n in [1, 2, 3]:
+    k0 = n * np.pi / R_sh - 0.05j
+    kp = newton_shell_direct(k0)
+    newton_poles_k.append(kp)
+    Ep = kp**2
+    print(f"Newton n={n}: k = {kp.real:+.5f} {kp.imag:+.5f}j   "
+          f"E = {Ep.real:+.5f} {Ep.imag:+.5f}j")
+
+# Plot complex E plane: continuum line + CSM eigenvalues + Newton poles
+fig, ax = plt.subplots(figsize=(8, 5))
+# Continuum: rotated ray E = r * exp(-2i*theta), r in [0, k_max^2]
+r_line = np.linspace(0, 60, 100)
+E_line = r_line * np.exp(-2j * theta)
+ax.plot(E_line.real, E_line.imag, 'b--', lw=0.8, alpha=0.6,
+        label=fr'Rotated continuum (angle $-2\theta = {-2*theta:.2f}$)')
+# CSM eigenvalues
+mask_plot = (evals.real > -2) & (evals.real < 60) & (evals.imag > -25) & (evals.imag < 5)
+ax.plot(evals[mask_plot].real, evals[mask_plot].imag, 'b.', ms=4, alpha=0.5,
+        label='CSM eigenvalues')
+# Resonances
+if len(resonances) > 0:
+    ax.plot(resonances.real, resonances.imag, 'ro', ms=10, mfc='none', mew=2,
+            label='CSM resonances')
+# Newton poles
+for kp in newton_poles_k:
+    Ep = kp**2
+    ax.plot(Ep.real, Ep.imag, 'kx', ms=12, mew=2.5)
+ax.plot([], [], 'kx', ms=12, mew=2.5, label='Newton poles (App. B)')
+ax.axhline(0, color='gray', lw=0.5)
+ax.axvline(0, color='gray', lw=0.5)
+ax.set_xlabel(r'$\Re E$')
+ax.set_ylabel(r'$\Im E$')
+ax.set_title(fr'CSM spectrum of $\delta$-shell ($\gamma={gamma_sh},\,R={R_sh},\,\theta={theta}$)')
+ax.legend(loc='lower right', fontsize=9)
+ax.grid(alpha=0.3)
+fig.tight_layout()
+plt.show()
+```
+
+**关于势的离散化**：上面的 box-integral 近似 $\delta(r-R) \to \mathbf{1}_{j=j_R}/h$ 是径向网格上 $\delta$ 函数最简单的表示，引入 $O(h)$ 系统误差到极点位置。如要更高精度，可用紧支 Gaussian 近似 $\delta(r-R) \to (1/\sqrt{\pi\sigma^2})\rme^{-(r-R)^2/\sigma^2}$，$\sigma \sim h$，并扫描 $\sigma \to 0$ 外推。本附录关心的是方法演示，故就用最简单形式。
+
+```{python}
+#| label: appendix-e-csm-verification
+
+import numpy as np
+
+# ============================================================
+# Test: CSM (ECS) resonance vs Newton-iteration pole, delta-shell.
+# Newton pole equation:  2ik - gamma*(1 - exp(2ikR)) = 0    (V = gamma*delta(r-R))
+# Tolerance: 1% relative in E, well above the FD/ECS discretization error (~1e-3).
+# ============================================================
+gamma_sh = 20.0
+R_sh     = 1.0
+
+# Newton pole (high-precision reference)
+def F_dir(k, gamma=gamma_sh, R=R_sh):
+    return 2j * k - gamma * (1.0 - np.exp(2j * k * R))
+def dF_dir(k, gamma=gamma_sh, R=R_sh):
+    return 2j + 2j * R * gamma * np.exp(2j * k * R)
+def newton_dir(k0, tol=1e-13, max_iter=300):
+    k = complex(k0)
+    for _ in range(max_iter):
+        d = F_dir(k) / dF_dir(k)
+        k -= d
+        if abs(d) < tol:
+            break
+    return k
+
+k_newton_1 = newton_dir(1 * np.pi / R_sh - 0.05j)
+E_newton_1 = k_newton_1 ** 2
+# Sanity: residual of direct first-principles condition  k cot(kR) = ik - gamma
+direct_resid = k_newton_1 * (np.cos(k_newton_1*R_sh)/np.sin(k_newton_1*R_sh)) \
+               - (1j * k_newton_1 - gamma_sh)
+assert abs(direct_resid) < 1e-10, f"Newton root fails first-principles eq: {direct_resid}"
+
+# CSM via exterior complex scaling (rotation only outside r_c > R_sh)
+N     = 600
+r_max = 8.0
+h     = r_max / N
+r     = np.linspace(h, r_max, N)
+theta = 0.5
+r_c   = 2.0
+
+j_R = int(np.argmin(np.abs(r - R_sh)))
+j_c = int(np.argmin(np.abs(r - r_c)))
+assert j_R < j_c
+
+T_mat   = np.zeros((N, N), dtype=complex)
+ph      = np.exp(1j * theta)
+c_outer = np.exp(-2j * theta)
+for j in range(N):
+    if j < j_c:
+        T_mat[j, j] = 2.0 / h**2
+        if j - 1 >= 0: T_mat[j, j - 1] = -1.0 / h**2
+        if j + 1 < N:  T_mat[j, j + 1] = -1.0 / h**2
+    elif j > j_c:
+        T_mat[j, j] = c_outer * 2.0 / h**2
+        if j - 1 >= 0: T_mat[j, j - 1] = -c_outer / h**2
+        if j + 1 < N:  T_mat[j, j + 1] = -c_outer / h**2
+    else:
+        T_mat[j, j - 1] = -2.0 / (h**2 * (1.0 + ph))
+        T_mat[j, j    ] =  2.0 / (h**2 * ph)
+        T_mat[j, j + 1] = -2.0 / (h**2 * ph * (1.0 + ph))
+
+V_d = np.zeros(N, dtype=complex)
+V_d[j_R] = gamma_sh / h
+H_th = T_mat + np.diag(V_d)
+ev, _ = np.linalg.eig(H_th)
+
+# Filter to candidate resonances (off the rotated continuum ray), then pick the
+# one closest to the analytic Newton pole. This guards against picking a discretized
+# continuum eigenvalue that happens to be numerically nearby.
+def _is_res(E, theta_, tol_angle=0.15):
+    if E.real <= 0 or E.imag >= 0: return False
+    return abs(np.angle(E) - (-2.0 * theta_)) > tol_angle and abs(E) > 1.0
+
+mask     = np.array([_is_res(E, theta) for E in ev])
+ev_cand  = ev[mask]
+assert ev_cand.size > 0, "no off-continuum eigenvalues found; check theta / r_c / N"
+idx_match = np.argmin(np.abs(ev_cand - E_newton_1))
+E_csm_1   = ev_cand[idx_match]
+
+rel_err = abs(E_csm_1 - E_newton_1) / abs(E_newton_1)
+print(f"Newton: E = {E_newton_1.real:+.6f} {E_newton_1.imag:+.6f}j")
+print(f"CSM   : E = {E_csm_1.real:+.6f} {E_csm_1.imag:+.6f}j")
+print(f"Relative error |E_csm - E_newton|/|E_newton| = {rel_err:.4e}")
+
+assert rel_err < 0.01, (
+    f"CSM/Newton mismatch on delta-shell first resonance: rel err {rel_err:.4e} >= 1%"
+)
+print("CSM (ECS) resonance agrees with Newton pole to better than 1%.")
+```
+
+## §2 R 矩阵 / Lagrange-mesh
+
+### 内外区分割与 Bloch 算符
+
+R 矩阵方法的核心思想：把径向区间 $[0, \infty)$ 在 $r = a$ 处切成内区 $[0, a]$ 和外区 $[a, \infty)$。内区**不**直接施加散射边界条件，而是用一个**有限基**（Lagrange-Legendre mesh、harmonic oscillator、splines 等）展开，外区用解析自由解 $F_\ell, G_\ell$（Riccati-Bessel/Neumann）。两区在 $r = a$ 处对数导数匹配。
+
+直接把内区 Hamiltonian $\Hmat$ 限制到 $[0, a]$ 上是不自伴的——动能算符 $-\partial_r^2$ 在 Dirichlet 之外的边界条件下产生表面项。Bloch 引入辅助算符
+$$
+\Op{L}_b = \delta(r - a)\,\frac{\rmd}{\rmd r}
+$$
+使 $\Hmat + \Op{L}_b$ 在内区**自伴**（在合适的边界条件下）。设 $\{u_n\}, \{E_n\}$ 是 Bloch-augmented 算符的本征对：
+$$
+(\Hmat + \Op{L}_b)\,u_n = E_n\,u_n, \qquad u_n(0) = 0.
+$$
+
+### R 矩阵的定义
+
+定义 R 矩阵（s 波，多通道情形是矩阵）为
+$$
+R(E) = \frac{1}{2 m a}\sum_n \frac{\gamma_n^2}{E_n - E}, \qquad
+\gamma_n^2 \equiv |u_n(a)|^2.
+$$
+
+（本附录 $2m = 1$，所以 $R = \sum_n \gamma_n^2 / [a(E_n - E)]$；不同教科书用 $R = u/(au')$ 或 $R = u'/u$ 的约定都有，这里采用 Lane–Thomas 的"对数导数倒数"约定 $R = u/(a\,u')$ 等价形式。）
+
+物理意义：$R(E)$ 是内区"波函数 / 边界对数导数倒数"的总响应函数，与外区无关。
+
+### 相移提取
+
+外区 $r > a$ 自由解的正交基为 Riccati-Bessel 函数 $\hat j_\ell(kr) = kr\,j_\ell(kr)$ 与 $\hat y_\ell(kr) = -kr\,y_\ell(kr)$；s 波 ($\ell = 0$) 即 $\hat j_0(\rho) = \sin\rho$，$\hat y_0(\rho) = \cos\rho$。外区出射解 $u_{\rm out}(r) = \cos\delta_\ell\,\hat j_\ell(kr) + \sin\delta_\ell\,\hat y_\ell(kr)$，匹配条件 $u(a^-) = u(a^+)$ 与 $u'(a^-) = u'(a^+)$（$' = \rmd/\rmd r$，外区作用在 $\hat j(kr)$ 上得 $k\hat j'(\rho)$，$\hat y$ 同理）化为
+$$
+\boxed{\;\tan\delta_\ell = \frac{L\,\hat j_\ell(ka) - k\,\hat j_\ell'(ka)}{k\,\hat y_\ell'(ka) - L\,\hat y_\ell(ka)}\;}
+$$
+其中 $L = u'(a)/u(a) = 1/[a R(E)]$ 是边界处对数导数（$R$-matrix 的"互逆"），$\hat j_\ell'(\rho)$ 与 $\hat y_\ell'(\rho)$ 表示对自变量的导数。代码中可统一替换 $L\hat j(ka) \to L_R\,\hat j(ka)/a$（$L_R = aL$）形式以匹配传统 R-matrix 文献。
+
+### 有限元离散化（Bloch 自伴形式的最简实现）
+
+为聚焦 R-matrix 的核心思想，本节用**分段线性有限元**（FE / "帽函数"）做内区离散，而把 Lagrange-Legendre 等高阶基作为推广。把内区 $[0, a]$ 等距划分为 $N$ 个单元，节点 $r_j = j h$（$h = a/N$，$j = 0, 1, \ldots, N$），帽函数 $\psi_j$ 满足 $\psi_j(r_i) = \delta_{ij}$。
+
+**关键观察**：Galerkin 弱形式的动能矩阵自动包含 Bloch 表面项。分部积分
+$$
+\int_0^a \psi_i\,(-\psi_j'')\,\rmd r
+= \int_0^a \psi_i'\,\psi_j'\,\rmd r \;-\; \big[\psi_i\,\psi_j'\big]_0^a
+$$
+端点项 $\psi_i(a)\psi_j'(a)$（$\psi_i(0) = 0$ 由 Dirichlet 自动消去）正好是 Bloch 算符 $\Op{L}_b = \delta(r-a)\partial_r$ 的矩阵元；因此**直接采用 Galerkin 形式 $T_{ij} = \int \psi_i' \psi_j' \rmd r$ 即等价于 $\hat T + \Op{L}_b$**，对应在 $r = a$ 处自由（不施加 BC）的开放算符。
+$$
+T_{ij} = \begin{cases}
+2/h, & i = j,\;0 < i < N, \\
+1/h, & i = j,\;i \in \{0, N\}, \\
+-1/h, & |i - j| = 1, \\
+0, & \text{otherwise}.
+\end{cases}
+$$
+对应的 consistent 质量矩阵 $M_{ij} = \int \psi_i \psi_j\,\rmd r$ 也是三对角（对角 $2h/3$、非对角 $h/6$、端点对角 $h/3$）。势能矩阵 $V_{ij} = \int \psi_i V \psi_j\,\rmd r$ 对分段常数 $V$ 可逐元素解析积分。
+
+广义本征问题
+$$
+(T + V)\,u_n = E_n\,M\,u_n, \qquad u_n(0) = 0
+$$
+（实操是删除第 $0$ 行/列）一次性给出所有 $\{E_n, u_n\}$；本征向量第 $j$ 分量即 $u_n(r_j)$，特别 $u_n(a) = u_n^{(N)}$。代入 R-matrix 求和 $R(E) = a^{-1}\sum_n |u_n(a)|^2/(E_n - E)$、$L = 1/[a R(E)]$、再用 $\hat j_0, \hat y_0$ 匹配相移——内区本征问题只算一次（与能量无关），扫描 $\delta_0(E)$ 时只需做加和与代数运算，比直接每能量积分快得多。
+
+> **关于更高阶基**：Lagrange-Legendre mesh（Baye–Heenen 1986；Baye 2015）把节点取为 Gauss-Legendre 根，势矩阵在求积意义下自动对角，且收敛阶很高（核物理 R-matrix 代码常用）；Hermite、B-spline 也都常见。本节用 FE 是为了把 "Bloch $\equiv$ Galerkin 表面项" 这一逻辑显式呈现，把帽函数换成高阶基只改 $T_{ij}, M_{ij}, V_{ij}$ 的具体公式，主线不变。
+
+### Worked Example：3D 方势阱 s 波相移
+
+势 $V(r) = -V_0\,\Theta(R - r)$，$V_0 = 10$，$R = 1$。取内区半径 $a = 1.5 > R$（确保 $V$ 在 $[a, \infty)$ 严格为零）。
+
+```{python}
+#| label: fig-rmatrix-phase
+#| fig-cap: "R-matrix（FE Bloch 自伴形式）计算 3D 方势阱（$V_0 = 10$，$R = 1$，$a = 1.5$）s 波相移：与解析结果比较，分段线性 FE $N = 400$ 单元达到 $\\sim 10^{-4}$ 精度。内区本征问题只算一次，扫描相移谱的成本在求和与代数运算上。"
+
+import numpy as np
+from scipy.linalg import eigh
+from scipy.special import spherical_jn, spherical_yn
+import matplotlib.pyplot as plt
+
+# Parameters
+V0_well = 10.0
+R_well  = 1.0
+a_box   = 1.5         # internal-region radius (> R_well)
+
+def analytic_delta0(V0, k, R=R_well):
+    """Analytic s-wave phase shift for 3D square well."""
+    K   = np.sqrt(V0 + k**2)
+    num = k * np.tan(K*R) - K * np.tan(k*R)
+    den = K + k * np.tan(K*R) * np.tan(k*R)
+    return np.arctan2(num, den)
+
+def build_internal_eigen(N=400, V0=V0_well, R=R_well, a=a_box):
+    """
+    Internal eigenproblem on [0, a] with FE Bloch-augmented Hamiltonian.
+    Piecewise-linear hat functions on uniform mesh r_j = j*h, j=0,...,N.
+    Galerkin form: T_ij = ∫ ψ_i' ψ_j' dr automatically includes the Bloch
+    surface term [ψ_i ψ_j']_0^a (since u(0)=0 by Dirichlet, the only surface
+    contribution is at r=a, which equals the Bloch operator's matrix element).
+    Returns (E_n, u_n_at_a) -- k-independent; reuse for all energies.
+    """
+    h = a / N
+    r = np.linspace(0.0, a, N + 1)
+    # Bloch-augmented kinetic (tridiagonal)
+    T = np.zeros((N + 1, N + 1))
+    for i in range(N + 1):
+        T[i, i] = 2.0 / h
+        if i + 1 <= N:
+            T[i, i + 1] = -1.0 / h
+            T[i + 1, i] = -1.0 / h
+    T[0, 0] = 1.0 / h          # endpoint hat: ∫(ψ_0')^2 = 1/h on (r_0, r_1)
+    T[N, N] = 1.0 / h          # endpoint hat: ∫(ψ_N')^2 = 1/h on (r_{N-1}, r_N)
+    # Consistent FE mass matrix (tridiagonal)
+    M = np.zeros((N + 1, N + 1))
+    for i in range(N + 1):
+        M[i, i] = 2.0 * h / 3.0
+        if i + 1 <= N:
+            M[i, i + 1] = h / 6.0
+            M[i + 1, i] = h / 6.0
+    M[0, 0] = h / 3.0
+    M[N, N] = h / 3.0
+    # V matrix: piecewise-constant V (square well), exact element-wise integration
+    V = np.zeros((N + 1, N + 1))
+    for k_el in range(N):
+        rL, rR = r[k_el], r[k_el + 1]
+        if rR <= R:                        # element fully inside well
+            V_el = -V0
+            iLL, iLR, iRR = h / 3.0, h / 6.0, h / 3.0
+        elif rL >= R:                      # element fully outside well
+            continue
+        else:                              # element straddles the V step at r=R
+            xi = (R - rL) / h              # fraction of element inside well
+            V_el = -V0
+            iLL = (xi - xi**2 + xi**3 / 3.0) * h
+            iLR = (xi**2 / 2.0 - xi**3 / 3.0) * h
+            iRR = (xi**3 / 3.0) * h
+        V[k_el,     k_el    ] += V_el * iLL
+        V[k_el + 1, k_el + 1] += V_el * iRR
+        V[k_el,     k_el + 1] += V_el * iLR
+        V[k_el + 1, k_el    ] += V_el * iLR
+    H = T + V
+    # Apply Dirichlet at r=0 by removing row/col 0
+    E_n, U_n = eigh(H[1:, 1:], M[1:, 1:])
+    u_n_at_a = U_n[N - 1, :]                # value at r_N = a (last DOF after dropping i=0)
+    return E_n, u_n_at_a
+
+def rmatrix_delta0(k, E_n, u_a_n, a=a_box):
+    """
+    s-wave phase shift from precomputed Bloch eigenpairs via R-matrix sum.
+    Matching: u_out(r) = cos(δ) sin(kr) + sin(δ) cos(kr) = sin(kr + δ).
+    With L_log = u'(a)/u(a):  tan(δ) = (L_log F - F') / (G' - L_log G),
+    where F(r) = sin(kr) = (kr) j_0(kr), G(r) = cos(kr) = -(kr) y_0(kr).
+    """
+    E     = k ** 2
+    R_E   = (1.0 / a) * np.sum(u_a_n ** 2 / (E_n - E))
+    L_log = 1.0 / (a * R_E)
+    ka  = k * a
+    F   = ka * spherical_jn(0, ka)
+    Fp  = k * (spherical_jn(0, ka) + ka * spherical_jn(0, ka, derivative=True))
+    G   = -ka * spherical_yn(0, ka)
+    Gp  = -k * (spherical_yn(0, ka) + ka * spherical_yn(0, ka, derivative=True))
+    return np.arctan((L_log * F - Fp) / (Gp - L_log * G))
+
+# Precompute internal eigenproblem (k-independent)
+N_FE = 400
+E_n, u_a_n = build_internal_eigen(N=N_FE)
+
+# Scan k and compare with analytic
+k_arr    = np.linspace(0.3, 4.5, 30)
+delta_rm = np.array([rmatrix_delta0(k, E_n, u_a_n) for k in k_arr])
+delta_an = np.array([analytic_delta0(V0_well, k) for k in k_arr])
+
+# arctan branch: compare via |sin(diff)|
+err_phase = np.abs(np.sin(delta_rm - delta_an))
+
+fig, axes = plt.subplots(1, 2, figsize=(11, 4))
+axes[0].plot(k_arr, np.degrees(delta_an), 'k-', lw=1.5, label='Analytic')
+axes[0].plot(k_arr, np.degrees(delta_rm), 'ro', ms=4, label=f'R-matrix FE (N={N_FE})')
+axes[0].set_xlabel('k'); axes[0].set_ylabel(r'$\delta_0$ (deg, mod $\pi$)')
+axes[0].set_title('R-matrix vs analytic s-wave phase shift')
+axes[0].legend(); axes[0].grid(alpha=0.3)
+
+axes[1].semilogy(k_arr, np.maximum(err_phase, 1e-16), 'b.-')
+axes[1].set_xlabel('k'); axes[1].set_ylabel(r'$|\sin(\delta_{\rm R} - \delta_{\rm exact})|$')
+axes[1].set_title('R-matrix phase-shift error')
+axes[1].grid(alpha=0.3, which='both')
+fig.tight_layout()
+plt.show()
+
+print(f"Max |sin(delta_R - delta_exact)| over k in [0.3, 4.5]: {err_phase.max():.2e}")
+```
+
+```{python}
+#| label: appendix-e-rmatrix-verification
+
+import numpy as np
+from scipy.linalg import eigh
+from scipy.special import spherical_jn, spherical_yn
+
+V0_well = 10.0
+R_well  = 1.0
+a_box   = 1.5
+
+def analytic_delta0_v(V0, k, R=R_well):
+    K   = np.sqrt(V0 + k**2)
+    num = k * np.tan(K*R) - K * np.tan(k*R)
+    den = K + k * np.tan(K*R) * np.tan(k*R)
+    return np.arctan2(num, den)
+
+def build_internal_eigen_v(N=400, V0=V0_well, R=R_well, a=a_box):
+    """FE Bloch-augmented internal eigenproblem; returns (E_n, u_n(a))."""
+    h = a / N
+    r = np.linspace(0.0, a, N + 1)
+    T = np.zeros((N + 1, N + 1))
+    for i in range(N + 1):
+        T[i, i] = 2.0 / h
+        if i + 1 <= N:
+            T[i, i + 1] = -1.0 / h
+            T[i + 1, i] = -1.0 / h
+    T[0, 0] = 1.0 / h
+    T[N, N] = 1.0 / h
+    M = np.zeros((N + 1, N + 1))
+    for i in range(N + 1):
+        M[i, i] = 2.0 * h / 3.0
+        if i + 1 <= N:
+            M[i, i + 1] = h / 6.0
+            M[i + 1, i] = h / 6.0
+    M[0, 0] = h / 3.0
+    M[N, N] = h / 3.0
+    V = np.zeros((N + 1, N + 1))
+    for k_el in range(N):
+        rL, rR = r[k_el], r[k_el + 1]
+        if rR <= R:
+            V_el, iLL, iLR, iRR = -V0, h / 3.0, h / 6.0, h / 3.0
+        elif rL >= R:
+            continue
+        else:
+            xi = (R - rL) / h
+            V_el = -V0
+            iLL = (xi - xi**2 + xi**3 / 3.0) * h
+            iLR = (xi**2 / 2.0 - xi**3 / 3.0) * h
+            iRR = (xi**3 / 3.0) * h
+        V[k_el,     k_el    ] += V_el * iLL
+        V[k_el + 1, k_el + 1] += V_el * iRR
+        V[k_el,     k_el + 1] += V_el * iLR
+        V[k_el + 1, k_el    ] += V_el * iLR
+    H = T + V
+    E_n, U_n = eigh(H[1:, 1:], M[1:, 1:])
+    return E_n, U_n[N - 1, :]
+
+def rmatrix_delta0_v(k, E_n, u_a_n, a=a_box):
+    E     = k ** 2
+    R_E   = (1.0 / a) * np.sum(u_a_n ** 2 / (E_n - E))
+    L_log = 1.0 / (a * R_E)
+    ka  = k * a
+    F   = ka * spherical_jn(0, ka)
+    Fp  = k * (spherical_jn(0, ka) + ka * spherical_jn(0, ka, derivative=True))
+    G   = -ka * spherical_yn(0, ka)
+    Gp  = -k * (spherical_yn(0, ka) + ka * spherical_yn(0, ka, derivative=True))
+    return np.arctan((L_log * F - Fp) / (Gp - L_log * G))
+
+# Precompute eigenproblem once
+E_n_v, u_a_n_v = build_internal_eigen_v(N=400)
+
+k_test = np.array([0.5, 1.0, 1.7, 2.5, 3.5])
+errs   = []
+for kv in k_test:
+    d_rm = rmatrix_delta0_v(kv, E_n_v, u_a_n_v)
+    d_an = analytic_delta0_v(V0_well, kv)
+    err  = abs(np.sin(d_rm - d_an))
+    errs.append(err)
+    print(f"k = {kv:>4.2f}:  delta_RM = {np.degrees(d_rm):+8.4f} deg,  "
+          f"delta_an = {np.degrees(d_an):+8.4f} deg,  |sin(diff)| = {err:.2e}")
+
+errs = np.array(errs)
+# Tolerance 1e-3: comfortable margin above linear-FE O(h^2) discretization at N=400
+# (typical err ~ 1e-4); use higher-order basis (Lagrange-Legendre, Hermite) for tighter.
+assert errs.max() < 1e-3, f"R-matrix phase shift fails 1e-3 tolerance: {errs.max():.2e}"
+print(f"\nMax |sin(delta_R - delta_exact)| = {errs.max():.2e} < 1e-3")
+print("R-matrix (FE Bloch-augmented) s-wave phase shift agrees with analytic to better than 1e-3.")
+```
+
+## §3 时间依赖波包散射
+
+### 思路：实空间 + 时间演化 + 远端吸收
+
+定态散射的"时间无关"求解（LS 方程、$\Hmat$ 对角化）之外，可以直接模拟时间依赖薛定谔方程
+$$
+\rmi\,\partial_t\,\psi(x, t) = \Hmat\,\psi(x, t), \qquad \Hmat = -\partial_x^2 + V(x).
+$$
+
+把初始波包（位于势之外、向势运动的高斯）演化足够长时间后，分析末态在远端的左/右传播分量即可读出 $r(k), t(k)$。
+
+**演化算符**：split-step Fourier（Suzuki-Trotter 二阶）
+$$
+\rme^{-\rmi \Hmat\,\Delta t} \approx \rme^{-\rmi V \Delta t / 2}\,\rme^{-\rmi \Hmat_0 \Delta t}\,\rme^{-\rmi V \Delta t / 2} + O(\Delta t^3),
+$$
+其中 $\rme^{-\rmi \Hmat_0 \Delta t}$ 在动量表象对角，FFT 实现。误差 $O(\Delta t^3)$ 是单步局部误差，全程累积为 $O(\Delta t^2)$。
+
+**远端吸收**：在 $|x|$ 大的边缘加复吸收势 (Complex Absorbing Potential, CAP)
+$$
+\Hmat \to \Hmat - \rmi W(x), \qquad W(x) = W_0 \cdot \max(0, |x| - x_{\rm cap})^2,
+$$
+让向左/右出射的部分到达边缘后被指数衰减吸收，避免 FFT 周期性导致的折叠（wrap-around）污染。$W_0$ 太小则吸收不完全（反射回来），太大则在 CAP 边界处有反射（"反射跳跃"）。
+
+**散射观测量（自由参考法）**：直接取 $|\hat\psi_{\rm out}(k, T)|^2 / |\hat\psi_0(k, 0)|^2$ 会因为截取窗口对动量积分的遮挡而失真——窗口外的"漏出"在透射波包和自由参考波包上是**不同**的。正确做法是用同样的截取算子作用在两者上：把势 $V$ 关掉重做一次 split-step 演化，得到自由演化的末态 $\psi_{\rm free}(x, T)$，对其同样截取并 FFT。透射系数为
+$$
+|t(k)|^2 = \frac{|\hat\psi_{\rm out}(k, T)|^2}{|\hat\psi_{\rm free}(k, T)|^2},
+$$
+其中 $\hat\psi_{\rm out}, \hat\psi_{\rm free}$ 都是对截取后的 $\psi(x, T)\,\mathbf{1}_{x_{\min}<x<x_{\max}}$ 取 FFT。物理上：自由参考保留了**相同的窗口截取效应、相同的 FFT 周期性、相同的 CAP 衰减**，使得这些公共误差在比值中相互抵消，仅剩下 $V$ 引起的散射调制 $|t(k)|^2$。这一"自由参考"技巧是 TDWP 方法获得 $\sim 10^{-2}$ 数量级精度的关键。
+
+**精度 trade-off**：
+- 网格大小 $L$ vs 波包散开：$L \gtrsim v_g T + 4\sigma_{\rm wp}$；
+- 时间步 $\Delta t$ vs 最高频率：$\Delta t \cdot k_{\max}^2 \ll 2\pi$（避免 trotter 误差爆炸）；
+- CAP 强度：$W_0 \cdot \delta x_{\rm cap}^2 \sim O(1)$，$\delta x_{\rm cap}$ 是 CAP 窗口宽度。
+
+### Worked Example：1D 方势阱透射系数
+
+势 $V(x) = -V_0\,\Theta(L_w/2 - |x|)$，$V_0 = 5$，$L_w = 2$。初始波包高斯，中心 $x_0 = -8$，$\sigma = 1$，中心动量 $k_0 = 2$。演化到 $T = 6$。
+
+```{python}
+#| label: fig-tdwp-transmission
+#| fig-cap: "时间依赖波包散射：1D 方势阱（$V_0=5$, $L_w=2$）的透射 $|t(k)|^2$（蓝实线）与解析 transfer-matrix 结果（黑虚线）。波包中心动量 $k_0 = 2$，$\\sigma = 2$ 提供 $k$ 分布宽度 $\\sim 1/\\sigma = 0.5$，足够覆盖 $k \\in [1.5, 2.5]$ 主体能谱。比值用同截取窗口的自由参考波包归一化，去除窗口截取与 CAP 共有的伪误差。在中心动量附近吻合到约 $10^{-2}$。"
+
+import numpy as np
+import matplotlib.pyplot as plt
+
+V0_w, Lw = 5.0, 2.0
+
+# Grid
+L_box = 128.0
+N     = 4096
+x     = np.linspace(-L_box/2, L_box/2, N, endpoint=False)
+dx    = x[1] - x[0]
+k_grid = 2 * np.pi * np.fft.fftfreq(N, d=dx)
+
+V = np.where(np.abs(x) < Lw/2, -V0_w, 0.0)
+
+x_cap = L_box/2 - 12.0
+W0    = 0.3
+W_cap = W0 * np.maximum(0.0, np.abs(x) - x_cap)**2
+
+# Wider Gaussian wavepacket for tighter k-distribution; longer initial offset
+x0_wp, k0_wp, sigma_wp = -25.0, 2.0, 3.0
+psi0 = (np.pi * sigma_wp**2)**(-0.25) * \
+       np.exp(-(x - x0_wp)**2 / (2 * sigma_wp**2)) * \
+       np.exp(1j * k0_wp * x)
+psi0 /= np.sqrt(np.sum(np.abs(psi0)**2) * dx)
+
+T_total, dt = 14.0, 0.004
+Nt = int(T_total / dt)
+kin_phase = np.exp(-1j * k_grid**2 * dt)
+
+def evolve(V_total):
+    """Split-step Fourier evolve psi0 under (V_total - i*W_cap) for total time T_total."""
+    half = np.exp(-1j * (V_total - 1j*W_cap) * dt / 2)
+    psi  = psi0.copy()
+    for _ in range(Nt):
+        psi = half * psi
+        psi = np.fft.ifft(kin_phase * np.fft.fft(psi))
+        psi = half * psi
+    return psi
+
+psi_scat = evolve(V)                    # full scattering evolution
+psi_free = evolve(np.zeros_like(V))     # CAP-only free reference
+
+# Extract transmitted region: right of well, inside CAP-free zone
+x_min_out, x_max_out = Lw/2 + 5.0, x_cap - 5.0
+mask_out = (x > x_min_out) & (x < x_max_out)
+
+psi_scat_k = np.fft.fft(np.where(mask_out, psi_scat, 0.0)) * dx
+psi_free_k = np.fft.fft(np.where(mask_out, psi_free, 0.0)) * dx
+
+k_sorted = np.argsort(k_grid)
+k_phys = k_grid[k_sorted]
+scat_amp = psi_scat_k[k_sorted]
+free_amp = psi_free_k[k_sorted]
+
+# t(k) via free reference: same window/CAP/FFT-period truncation cancels in the ratio
+free_mag = np.abs(free_amp)
+mask_k = (k_phys > 0.5) & (k_phys < 3.5) & (free_mag > 0.05 * free_mag.max())
+T_amp = np.zeros_like(k_phys)
+T_amp[mask_k] = np.abs(scat_amp[mask_k]) / np.abs(free_amp[mask_k])
+
+def t_exact_well(k, V0, Lw):
+    kap = np.sqrt(k**2 + V0 + 0j); a = Lw/2
+    D = np.cos(2*kap*a) - 0.5j*(k/kap + kap/k)*np.sin(2*kap*a)
+    return np.exp(-2j*k*a) / D
+
+T_exact = np.abs(t_exact_well(k_phys, V0_w, Lw))**2
+
+fig, ax = plt.subplots(figsize=(8, 5))
+ax.plot(k_phys[mask_k], T_amp[mask_k]**2, 'b-', lw=1.5, label=r'TDWP $|t(k)|^2$ (free-ref)')
+ax.plot(k_phys[mask_k], T_exact[mask_k], 'k--', lw=1.2, label='Analytic transfer-matrix')
+ax.set_xlabel('k'); ax.set_ylabel(r'$|t(k)|^2$')
+ax.set_title(r'TDWP transmission for 1D square well ($V_0=5,\,L_w=2$)')
+ax.legend(); ax.grid(alpha=0.3)
+ax.set_xlim(0.5, 3.5); ax.set_ylim(0, 1.15)
+fig.tight_layout()
+plt.show()
+
+print("k       |t|^2 TDWP      |t|^2 exact     abs error")
+for k_target in [1.5, 2.0, 2.5]:
+    j = np.argmin(np.abs(k_phys - k_target))
+    if mask_k[j]:
+        T_n = T_amp[j]**2
+        T_e = T_exact[j]
+        print(f"{k_phys[j]:>5.2f}   {T_n:>12.6f}   {T_e:>12.6f}   {abs(T_n - T_e):.3e}")
+```
+
+```{python}
+#| label: appendix-e-tdwp-verification
+
+import numpy as np
+
+V0_w, Lw = 5.0, 2.0
+
+L_box = 128.0
+N     = 4096
+x     = np.linspace(-L_box/2, L_box/2, N, endpoint=False)
+dx    = x[1] - x[0]
+k_grid = 2 * np.pi * np.fft.fftfreq(N, d=dx)
+
+V = np.where(np.abs(x) < Lw/2, -V0_w, 0.0)
+x_cap = L_box/2 - 12.0
+W0 = 0.3
+W_cap = W0 * np.maximum(0.0, np.abs(x) - x_cap)**2
+
+x0_wp, k0_wp, sigma_wp = -25.0, 2.0, 3.0
+psi0 = (np.pi * sigma_wp**2)**(-0.25) * \
+       np.exp(-(x - x0_wp)**2 / (2 * sigma_wp**2)) * \
+       np.exp(1j * k0_wp * x)
+psi0 /= np.sqrt(np.sum(np.abs(psi0)**2) * dx)
+
+T_total, dt = 14.0, 0.004
+Nt = int(T_total / dt)
+kin_phase = np.exp(-1j * k_grid**2 * dt)
+
+def evolve(V_total):
+    half = np.exp(-1j * (V_total - 1j*W_cap) * dt / 2)
+    psi = psi0.copy()
+    for _ in range(Nt):
+        psi = half * psi
+        psi = np.fft.ifft(kin_phase * np.fft.fft(psi))
+        psi = half * psi
+    return psi
+
+psi_scat = evolve(V)
+psi_free = evolve(np.zeros_like(V))
+
+x_min_out, x_max_out = Lw/2 + 5.0, x_cap - 5.0
+mask_out = (x > x_min_out) & (x < x_max_out)
+
+psi_scat_k = np.fft.fft(np.where(mask_out, psi_scat, 0.0)) * dx
+psi_free_k = np.fft.fft(np.where(mask_out, psi_free, 0.0)) * dx
+
+k_sorted = np.argsort(k_grid)
+k_phys   = k_grid[k_sorted]
+scat_amp = psi_scat_k[k_sorted]
+free_amp = psi_free_k[k_sorted]
+
+def t_exact_well(k, V0, Lw):
+    kap = np.sqrt(k**2 + V0 + 0j); a = Lw/2
+    D = np.cos(2*kap*a) - 0.5j*(k/kap + kap/k)*np.sin(2*kap*a)
+    return np.exp(-2j*k*a) / D
+
+# Check at central k = k0 ± small (where wavepacket has strong support)
+k_check = [1.7, 2.0, 2.3]
+print("Test 3: TDWP transmission |t(k)|^2 (free-reference) vs analytic")
+print(f"{'k':>5}  {'|t|^2 TDWP':>14}  {'|t|^2 exact':>14}  {'abs error':>14}")
+errs = []
+for kv in k_check:
+    j = np.argmin(np.abs(k_phys - kv))
+    T_num = (np.abs(scat_amp[j]) / np.abs(free_amp[j]))**2
+    T_an  = abs(t_exact_well(k_phys[j], V0_w, Lw))**2
+    err   = abs(T_num - T_an)
+    errs.append(err)
+    print(f"{k_phys[j]:>5.2f}  {T_num:>14.6f}  {T_an:>14.6f}  {err:>14.3e}")
+
+errs = np.array(errs)
+# Tolerance 0.05: TDWP is inherently accurate to ~few % from finite wp width,
+# spatial truncation at extraction window, and CAP boundary effects. The
+# free-reference normalization is the single most important correction.
+assert errs.max() < 0.05, (
+    f"TDWP transmission fails 5% tolerance at central k: {errs.max():.2e}"
+)
+print(f"\nMax |T_TDWP - T_exact| at k near k0 = {errs.max():.2e} < 5e-2")
+print("TDWP transmission agrees with analytic transfer-matrix at central k.")
+```
+
+### 优点：含时与多通道
+
+时间依赖波包方法天然处理：
+
+- **含时势** $V(x, t)$：化学反应中的强场激光、原子磁场扫描——只需在每步演化中更新 $V$；
+- **移动靶**：靶子在演化中带动量、自身散开，TDWP 模拟"对撞"全过程；
+- **多通道**：把 $\psi$ 写成多分量（如自旋、内态），$V$ 是矩阵函数，演化算符仍为 split-step；
+- **可视化**：动画 $|\psi(x, t)|^2$ 直接看到入射、撞击、反射/透射，对教学和直觉非常有帮助。
+
+代价：单一 $|t(k)|^2$ 计算比定态方法贵 $\sim 10^2$ 倍（必须演化整段时间），所以"扫描相移谱"不是 TDWP 的强项；它的主战场是**时间分辨**或**含时**问题。
+
+## 小结
+
+| 方法 | 最适合的任务 | 提取的量 | 代价 |
+|------|--------------|----------|------|
+| **CSM** | 共振极点（尤其窄共振、深隐第二叶） | $E_R - \rmi\Gamma/2$ 直接作复本征值 | 单次对角化 $O(N^3)$；要求 dilation-analytic |
+| **R-matrix / Lagrange-mesh** | 高精度分波相移（多道、连续谱） | $\delta_\ell(E)$ 通过对数导数匹配 | 一次内区对角化 + 每个 $E$ 一次 $O(N)$ 求和 |
+| **时间依赖波包** | 含时势 / 多通道 / 可视化散射过程 | $\|t(k)\|^2$, $\|r(k)\|^2$ 通过末态投影 | $O(N \log N \cdot N_t)$，$N_t$ 步 FFT |
+
+与附录 B "经典" 方法形成互补：
+
+- **B 的 LS-动量表象 + KN 减法** vs **E 的 R-matrix**：前者全空间动量积分，后者内外区分割。R-matrix 在涉及 Coulomb-like 长程相互作用时更稳（外区用解析 Coulomb 函数）。
+- **B 的 Newton/Padé 找极点** vs **E 的 CSM**：前者需要好初始猜测 + 局部收敛，后者一次对角化全得；但 CSM 要求势可解析延拓。
+- **B 的定态 $T$ 矩阵** vs **E 的 TDWP**：前者效率高（每能量独立），后者一次演化覆盖整个能谱（中心动量附近），且天然含时。
+
+实际工作中三组方法常**联合使用**：先用 R-matrix 算实轴相移谱，找出共振峰位置 → 用 CSM 精确定位极点 $E_R - \rmi\Gamma/2$ → 用 TDWP 模拟该共振的时间衰减、对账时间延迟 $\tau \approx \hbar/\Gamma$。
+
+## 进一步阅读
+
+- Aguilar & Combes，"A class of analytic perturbations for one-body Schrödinger Hamiltonians"，*Comm. Math. Phys.* 22, 269 (1971)；Balslev & Combes，*Comm. Math. Phys.* 22, 280 (1971)：CSM 的奠基论文。
+- Reed & Simon，*Methods of Modern Mathematical Physics*, vol IV, §XIII.10：dilation-analytic 势与 ABC 定理的严格表述。
+- Moiseyev，*Non-Hermitian Quantum Mechanics*（2011）：CSM 与复本征值问题的现代综述。
+- Lane & Thomas，"R-Matrix Theory of Nuclear Reactions"，*Rev. Mod. Phys.* 30, 257 (1958)：R 矩阵原始文献。
+- Descouvemont & Baye，"The R-matrix theory"，*Rep. Prog. Phys.* 73, 036301 (2010)：现代综述，含 Lagrange-mesh 实现细节。
+- Baye，"The Lagrange-mesh method"，*Phys. Rep.* 565, 1 (2015)：Lagrange-Legendre / Lagrange-Laguerre 求解散射 / 束缚态的完整教程。
+- Tannor，*Introduction to Quantum Mechanics: A Time-Dependent Perspective*（2007）：split-step、CAP、TDWP 的教学性专著。
+- Riss & Meyer，"Calculation of resonance energies and widths using the complex absorbing potential method"，*J. Phys. B* 26, 4503 (1993)：CAP 与 CSM 的等价性。
+- 本仓库 `appendix/B_numerical_methods.qmd`（姊妹篇：经典方法）。
+- 本仓库 `chapters/05_partial_wave.qmd`（VPM 解析对照）；`chapters/08_resonances.qmd`（共振 + Newton 迭代）。

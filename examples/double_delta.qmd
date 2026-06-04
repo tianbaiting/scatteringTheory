@@ -1,0 +1,620 @@
+# 双 delta 势：共振的最小一维模型
+
+{{< include /_macros.qmd >}}
+
+上一篇 1d delta 势把 $S$ 矩阵的全部结构压成一行代数，但整张复 $k$ 平面只有一个极点——没有共振。再上一篇 delta-shell 给出了共振的三维最小例子，那里壳层把内部空腔围成准盒子，盒子的束缚能级泄漏成 Breit-Wigner 峰。这一篇做"两者最小公约数"的一维版本：把 delta 势复制成两份，相距 $2a$，中间夹出来的一段自由区就是一维准盒子。同样的物理（共振 = 准束缚态从盒子里漏出去），但代数全部封闭——$t(k)$ 的解析形式和复极点都能写出来。
+
+全文取 $\hbar = 1, 2m = 1$，$E = k^2$。
+
+## 目标
+
+- 把 transfer matrix 方法搭起来，给出 $t(k), r(k)$ 的闭式；
+- 用 $1/t(k) = 0$ 找复 $k$ 平面上的共振极点；
+- 验证共振峰 $|t(k)|^2$ 在峰附近是 Breit-Wigner 形状，从拟合提取 $E_R, \Gamma$ 与极点对账；
+- 计算时间延迟 $\tau(E)$，验证共振处 $\tau \approx \hbar/\Gamma$（精确为 $4/\Gamma$）；
+- 吸引情形 ($\lambda < 0$)：偶/奇宇称双束缚态及其能级劈裂，与 1d delta 单束缚态形成对照；
+- 与 delta-shell 共振的物理对账。
+
+## 势的定义
+
+$$
+V(x) = \lambda\,[\,\delta(x-a) + \delta(x+a)\,], \qquad a > 0,\;\lambda \in \R.
+$$
+
+$\lambda > 0$（双势垒）：两侧硬壁、中间宽 $2a$ 自由区，准盒子能级 $\sim (n\pi/(2a))^2$ 漏成共振。$\lambda < 0$（双势阱）：每口井单独有一个束缚态，两阱耦合后偶/奇宇称组合劈裂。
+
+定态薛定谔方程
+$$
+-\psi''(x) + \lambda\,[\delta(x-a) + \delta(x+a)]\,\psi(x) = k^2\,\psi(x).
+$$
+
+势只支撑在 $x = \pm a$ 两点，三个开区间内波函数都是自由波叠加。匹配条件来自把方程在每个 delta 点附近 $[\pm a - \epsilon, \pm a + \epsilon]$ 上积分：
+
+- 连续性：$\psi$ 在 $\pm a$ 处连续；
+- 导数跳变：$\psi'(\pm a^+) - \psi'(\pm a^-) = \lambda\,\psi(\pm a)$。
+
+## Transfer matrix
+
+平面波基写法：在每个自由区
+$$
+\psi(x) = A\,\rme^{\rmi k x} + B\,\rme^{-\rmi k x}.
+$$
+
+把 $(A, B)$ 视为列向量。在一个 delta 点 $x_0$ 两侧，连续性 + 导数跳变给出
+$$
+\begin{pmatrix} A_+ \\ B_+ \end{pmatrix}
+= \Op{M}(x_0)\,\begin{pmatrix} A_- \\ B_- \end{pmatrix},\qquad
+\Op{M}(x_0) = \mathbf{1} + \frac{\lambda}{2\rmi k}
+\begin{pmatrix} 1 & \rme^{-2\rmi k x_0} \\ -\rme^{2\rmi k x_0} & -1 \end{pmatrix}.
+$$
+
+代数推导：把 $\psi$ 在 $x_0$ 两侧的表达式代入连续性，得 $A_+ + B_+\rme^{-2\rmi k x_0} = A_- + B_-\rme^{-2\rmi k x_0}$（用 $\psi(x_0)$ 作为公共值）；导数跳变给第二条独立关系。整理即得上面 $\Op{M}$ 的形式。这是 1d delta 势 transfer matrix 的标准结果，详见教材（如 Merzbacher 6 节）。
+
+两个 delta 串起来：先过 $x = -a$，再过 $x = +a$，
+$$
+\Op{M}_{\rm tot} = \Op{M}(+a)\,\Op{M}(-a).
+$$
+
+行列式 $\det\Op{M}(x_0) = 1$（Wronskian 守恒），所以 $\det\Op{M}_{\rm tot} = 1$。
+
+入射散射边条件：
+$$
+\psi(x) =
+\begin{cases}
+\rme^{\rmi k x} + r(k)\,\rme^{-\rmi k x}, & x < -a,\\
+t(k)\,\rme^{\rmi k x}, & x > +a.
+\end{cases}
+$$
+
+即 $(A, B) = (1, r)$ 在左、$(A, B) = (t, 0)$ 在右。代入 $(t, 0)^\top = \Op{M}_{\rm tot}\,(1, r)^\top$，从第二行解出 $r = -M_{21}/M_{22}$，第一行得 $t = M_{11} - M_{12} M_{21}/M_{22}$。利用 $\det\Op{M}_{\rm tot} = 1$ 简化为
+$$
+t(k) = \frac{1}{M_{22}}.
+$$
+
+代数化简（计算机代数验证过）：
+
+$$
+\boxed{\;
+t(k) = \frac{4 k^2}{(2k + \rmi\lambda)^2 + \lambda^2\,\rme^{4 \rmi k a}},\qquad
+\frac{1}{t(k)} = \frac{(2k + \rmi\lambda)^2 + \lambda^2\,\rme^{4 \rmi k a}}{4 k^2}.
+\;}
+$$
+
+反射振幅
+$$
+r(k) = -\,\frac{\rmi\lambda\,\bigl[(2k + \rmi\lambda) + (2k - \rmi\lambda)\,\rme^{4\rmi k a}\bigr]\,\rme^{-2\rmi k a}}{(2k + \rmi\lambda)^2 + \lambda^2\,\rme^{4 \rmi k a}}.
+$$
+
+两个 sanity check：
+
+1. $a \to 0$ 极限。两 delta 合并成强度 $2\lambda$ 的单 delta：$\rme^{4\rmi k a} \to 1$，分母化为 $(2k + \rmi\lambda)^2 + \lambda^2 = 4k^2 + 4\rmi k\lambda - \lambda^2 + \lambda^2 = 4k^2 + 4\rmi k\lambda$，于是 $t \to 4k^2/(4k^2 + 4\rmi k\lambda) = 2\rmi k/(2\rmi k - 2\lambda)$，正是 1d delta 势 $\lambda \mapsto 2\lambda$ 的结果。
+
+2. $\lambda \to 0$：$t \to 1$，无散射。
+
+幺正性 $|t|^2 + |r|^2 = 1$ 在实 $k$ 上自动成立（transfer matrix 满足 $|M_{22}|^2 - |M_{12}|^2 = 1$ 的辛结构），数值验证见下文。
+
+## 共振条件（$\lambda > 0$）
+
+$|t(k)|^2 = 4k^2 / |(2k+\rmi\lambda)^2 + \lambda^2 \rme^{4\rmi k a}|^2 \cdot 4k^2$，分子为 $16 k^4$。$|t|^2$ 极大对应分母极小。把分母写成
+$$
+D(k) = (2k+\rmi\lambda)^2 + \lambda^2\,\rme^{4\rmi k a},
+$$
+$|D|^2 = D \bar D$，强 $\lambda$ 极限内 $\lambda^2$ 项主导，要 $D \approx 0$ 就要求 $(2k+\rmi\lambda)^2 + \lambda^2 \rme^{4\rmi k a} \approx 0$，即
+$$
+2k + \rmi\lambda \approx \pm\,\rmi\lambda\,\rme^{2\rmi k a}.
+$$
+
+实 $k$ 主导项给出条件
+$$
+\rme^{2\rmi k a} \approx -1,
+\quad\Longrightarrow\quad
+2 k a \approx (2n-1)\pi,\quad n = 1, 2, \dots
+$$
+
+——准盒子（宽度 $2a$，两端被强 delta 屏蔽）半奇数波长共振。$\lambda$ 大时这是良好近似（参考下图：$\lambda = 10$ 时数值极点的实部 $k_R \approx 1.43, 2.88, 4.35$，对应 $2 k_R a / \pi \approx 0.91, 1.83, 2.77$；偏离整数是有限 $\lambda$ 修正——$\delta$ 屏不是完全反射，能级被外界自由空间稍稍下推）。
+
+## 复 $k$ 平面上的极点
+
+把分母方程当成 $k$ 的超越方程：
+$$
+(2k + \rmi\lambda)^2 + \lambda^2\,\rme^{4\rmi k a} = 0.
+$$
+
+物理面（$\Im k > 0$）上正虚轴极点对应束缚态（仅 $\lambda < 0$）；其余极点位于解析延拓后的第二张面，复 $k$ 平面下半（$\Im k < 0$）——对应共振。把极点写成
+$$
+k_n = k_n^R + \rmi k_n^I,\qquad k_n^I < 0,
+$$
+能量
+$$
+E_n = k_n^2 = (k_n^R)^2 - (k_n^I)^2 + 2\rmi k_n^R k_n^I \equiv E_R - \rmi\,\Gamma/2,
+$$
+所以
+$$
+E_R = (k_n^R)^2 - (k_n^I)^2,\qquad \Gamma = -4\,k_n^R\,k_n^I > 0.
+$$
+
+数值上对 $\lambda = 10, a = 1$ 用 Newton 法求解 $F(k) := (2k+\rmi\lambda)^2 + \lambda^2 \rme^{4\rmi k a} = 0$，初值取 $k_0 = n\pi/(2a) - 0.05 - 0.05\rmi n$。
+
+## Breit-Wigner 拟合
+
+每个共振峰附近 $|t(k)|^2$ 应为 Lorentz 形：
+$$
+|t(E)|^2 \approx \frac{(\Gamma/2)^2}{(E - E_R)^2 + (\Gamma/2)^2},\qquad E = k^2.
+$$
+
+下面用极点位置作为 $E_R, \Gamma$ 的"真值"，再独立从 $|t(E)|^2$ 数据做 curve_fit，比对相对误差。
+
+## 时间延迟
+
+透射相位 $\delta_t(k) = \arg t(k)$，时间延迟
+$$
+\tau(E) = 2\,\frac{\rmd \delta_t}{\rmd E}.
+$$
+
+纯 BW 相位 $\delta_t(E) = -\arctan\!\bigl((\Gamma/2)/(E - E_R)\bigr) + \text{背底}$，所以
+$$
+\frac{\rmd\delta_t}{\rmd E} = \frac{\Gamma/2}{(E-E_R)^2 + (\Gamma/2)^2},
+$$
+峰值 $2/\Gamma$（$E = E_R$ 处），$\tau$ 峰值 $= 4/\Gamma$。习惯上记为 $\tau \approx \hbar/\Gamma$ 量级——本节单位 $\hbar = 1$ 下精确系数为 4（不是 1），因为 $\tau = 2\,\rmd\delta_t/\rmd E$ 的"2"来自双向反射对入射粒子的等效路径长度。
+
+## 数值与图
+
+第一张图：$|t(k)|^2$、$|r(k)|^2$ vs $k$，$\lambda = 10, a = 1$（窄共振）和 $\lambda = 5$（宽共振）对比。
+
+```{python}
+#| label: fig-tr-vs-k
+#| fig-cap: "双 $\\delta$ 势透射/反射概率（$a=1$）。$\\lambda=10$ 三个尖峰对应 $2ka\\approx \\pi, 2\\pi, 3\\pi$ 附近的窄共振；$\\lambda=5$ 同位置但峰展宽。虚线 $|t|^2+|r|^2$ 恒等于 1，幺正性满足。"
+
+import numpy as np
+import matplotlib.pyplot as plt
+
+def t_amp(k, lam, a):
+    return 4*k**2 / ((2*k + 1j*lam)**2 + lam**2 * np.exp(4j*k*a))
+
+def r_amp(k, lam, a):
+    num = -1j*lam*((2*k+1j*lam) + (2*k-1j*lam)*np.exp(4j*k*a))*np.exp(-2j*k*a)
+    den = (2*k + 1j*lam)**2 + lam**2 * np.exp(4j*k*a)
+    return num/den
+
+a = 1.0
+k = np.linspace(0.05, 6.0, 4000)
+fig, axes = plt.subplots(1, 2, figsize=(11, 4))
+for ax, lam in zip(axes, [10.0, 5.0]):
+    T = np.abs(t_amp(k, lam, a))**2
+    R = np.abs(r_amp(k, lam, a))**2
+    ax.plot(k, T, label=r"$|t|^2$")
+    ax.plot(k, R, label=r"$|r|^2$", alpha=0.7)
+    ax.plot(k, T+R, "--", color="gray", lw=0.8, label=r"$|t|^2+|r|^2$")
+    for n in (1, 2, 3):
+        ax.axvline(n*np.pi/(2*a), color="k", lw=0.3, ls=":")
+    ax.set_xlabel("k")
+    ax.set_title(f"λ={lam},  a={a}")
+    ax.legend(loc="center right")
+    ax.grid(alpha=0.3)
+fig.tight_layout()
+plt.show()
+```
+
+虚线（$|t|^2 + |r|^2$）恒等于 1，幺正性逐 $k$ 满足。$\lambda$ 越大峰越窄越尖，$\lambda \to \infty$ 极限恢复硬墙盒子的真束缚态（峰收成 $\delta$，宽度 $\Gamma \to 0$）。
+
+第二张图：复 $k$ 平面上 $\log_{10}|t(k)|$，标出 Newton 找到的极点。
+
+```{python}
+#| label: fig-pole-scan
+#| fig-cap: "复 $k$ 平面上 $\\log_{10}|t(k)|$（$\\lambda=10, a=1$）。亮点为 $|t|$ 极大处，红星标出 Newton 法找到的前三个共振极点，全部位于下半平面（第二张面）。"
+
+import numpy as np
+import matplotlib.pyplot as plt
+
+def F(k, lam, a):
+    return (2*k + 1j*lam)**2 + lam**2 * np.exp(4j*k*a)
+
+def dF(k, lam, a):
+    return 4*(2*k + 1j*lam) + lam**2 * 4j*a * np.exp(4j*k*a)
+
+def newton_pole(k0, lam, a, tol=1e-13, itmax=200):
+    k = complex(k0)
+    for _ in range(itmax):
+        f, df = F(k, lam, a), dF(k, lam, a)
+        dk = f/df
+        k -= dk
+        if abs(dk) < tol:
+            break
+    return k
+
+def t_amp(k, lam, a):
+    return 4*k**2 / F(k, lam, a)
+
+lam, a = 10.0, 1.0
+poles = [newton_pole(n*np.pi/(2*a) - 0.05 - 0.05j*n, lam, a) for n in (1, 2, 3)]
+
+kr = np.linspace(0.2, 5.5, 700)
+ki = np.linspace(-0.6, 0.2, 280)
+KR, KI = np.meshgrid(kr, ki)
+T = t_amp(KR + 1j*KI, lam, a)
+Z = np.log10(np.abs(T) + 1e-3)
+
+fig, ax = plt.subplots(figsize=(8, 4.2))
+pcm = ax.pcolormesh(KR, KI, np.clip(Z, -1, 4), shading="auto", cmap="magma")
+fig.colorbar(pcm, ax=ax, label=r"$\log_{10}|t(k)|$")
+for n, kp in enumerate(poles, 1):
+    ax.plot(kp.real, kp.imag, "r*", ms=14)
+    ax.annotate(f"n={n}", (kp.real, kp.imag), xytext=(6, 6),
+                textcoords="offset points", color="white")
+ax.axhline(0, color="w", lw=0.4)
+ax.set(xlabel="Re k", ylabel="Im k",
+       title=rf"$|t(k)|$ on complex k plane,  λ={lam:g}, a={a:g}")
+fig.tight_layout()
+plt.show()
+
+print("Resonance poles (λ=10, a=1):")
+print(f"{'n':>2} {'Re k':>10} {'Im k':>10} {'E_R':>10} {'Γ':>10}")
+for n, kp in enumerate(poles, 1):
+    ER = kp.real**2 - kp.imag**2
+    G  = -4*kp.real*kp.imag
+    print(f"{n:>2} {kp.real:>10.4f} {kp.imag:>10.4f} {ER:>10.4f} {G:>10.4f}")
+```
+
+红星正落在亮点处。$n$ 越大极点越深入下半面，对应共振寿命缩短 ($\Gamma_n$ 增大)，与"高阶准束缚态壁垒透射率高"的直觉一致。
+
+第三张图：BW 拟合与极点对账。
+
+```{python}
+#| label: fig-bw-fit
+#| fig-cap: "$|t(E)|^2$ 在三个共振峰附近的 Breit-Wigner 拟合（$\\lambda=10, a=1$）。蓝点为解析公式数据，橙线为 Lorentz 拟合，竖虚线为极点位置 $E_R$。"
+
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy.optimize import curve_fit
+
+def F(k, lam, a):
+    return (2*k + 1j*lam)**2 + lam**2 * np.exp(4j*k*a)
+
+def dF(k, lam, a):
+    return 4*(2*k + 1j*lam) + lam**2 * 4j*a * np.exp(4j*k*a)
+
+def newton_pole(k0, lam, a, tol=1e-13, itmax=200):
+    k = complex(k0)
+    for _ in range(itmax):
+        dk = F(k, lam, a)/dF(k, lam, a)
+        k -= dk
+        if abs(dk) < tol:
+            break
+    return k
+
+def t_amp(k, lam, a):
+    return 4*k**2 / F(k, lam, a)
+
+def lorentz(E, ER, Gamma, c0):
+    return c0 * (Gamma/2)**2 / ((E - ER)**2 + (Gamma/2)**2)
+
+lam, a = 10.0, 1.0
+poles = [newton_pole(n*np.pi/(2*a) - 0.05 - 0.05j*n, lam, a) for n in (1, 2, 3)]
+
+fig, axes = plt.subplots(1, 3, figsize=(13, 3.6))
+print(f"{'n':>2} {'E_R(pole)':>12} {'E_R(fit)':>12} {'Γ(pole)':>12} {'Γ(fit)':>12} "
+      f"{'rel_E':>10} {'rel_Γ':>10}")
+for ax, n, kp in zip(axes, (1, 2, 3), poles):
+    ER_p = kp.real**2 - kp.imag**2
+    G_p  = -4*kp.real*kp.imag
+    Emin, Emax = ER_p - 0.5*G_p, ER_p + 0.5*G_p
+    kmin, kmax = np.sqrt(max(Emin, 1e-4)), np.sqrt(Emax)
+    kgrid = np.linspace(kmin, kmax, 400)
+    Egrid = kgrid**2
+    Tgrid = np.abs(t_amp(kgrid, lam, a))**2
+    popt, _ = curve_fit(lorentz, Egrid, Tgrid, p0=[ER_p, G_p, 1.0], maxfev=10000)
+    ER_f, G_f, c0_f = popt
+    rE = abs(ER_f - ER_p)/ER_p
+    rG = abs(G_f  - G_p)/G_p
+    print(f"{n:>2} {ER_p:>12.6f} {ER_f:>12.6f} {G_p:>12.6f} {G_f:>12.6f} "
+          f"{rE:>10.2e} {rG:>10.2e}")
+
+    ax.plot(Egrid, Tgrid, "o", ms=3, label="data")
+    ax.plot(Egrid, lorentz(Egrid, *popt), "-", label="BW fit")
+    ax.axvline(ER_p, color="k", lw=0.5, ls="--")
+    ax.set(xlabel="E", ylabel=r"$|t(E)|^2$",
+           title=f"n={n}: $E_R$={ER_p:.3f}, Γ={G_p:.3f}")
+    ax.legend()
+    ax.grid(alpha=0.3)
+fig.tight_layout()
+plt.show()
+```
+
+打印的相对误差 $\lesssim 10^{-2}$：极点位置和 BW 拟合值在 1% 量级吻合。残留偏差来自 BW 是 $|t|^2$ 在 $E_R$ 附近的 Padé(2,2) 近似，更高阶非 Lorentz 修正会被 fit 吸进 $E_R, \Gamma$。
+
+第四张图：时间延迟 $\tau(E)$。
+
+```{python}
+#| label: fig-time-delay
+#| fig-cap: "时间延迟 $\\tau(E) = 2\\,\\rmd\\delta_t/\\rmd E$（$\\lambda=10, a=1$）。每个共振处出现尖峰，峰高与解析预言 $4/\\Gamma$（红虚线）吻合。"
+
+import numpy as np
+import matplotlib.pyplot as plt
+
+def F(k, lam, a):
+    return (2*k + 1j*lam)**2 + lam**2 * np.exp(4j*k*a)
+
+def dF(k, lam, a):
+    return 4*(2*k + 1j*lam) + lam**2 * 4j*a * np.exp(4j*k*a)
+
+def newton_pole(k0, lam, a, tol=1e-13, itmax=200):
+    k = complex(k0)
+    for _ in range(itmax):
+        dk = F(k, lam, a)/dF(k, lam, a)
+        k -= dk
+        if abs(dk) < tol:
+            break
+    return k
+
+def t_amp(k, lam, a):
+    return 4*k**2 / F(k, lam, a)
+
+lam, a = 10.0, 1.0
+poles = [newton_pole(n*np.pi/(2*a) - 0.05 - 0.05j*n, lam, a) for n in (1, 2, 3)]
+widths = [-4*kp.real*kp.imag for kp in poles]
+ER_list = [kp.real**2 - kp.imag**2 for kp in poles]
+
+k = np.linspace(0.3, 5.0, 6000)
+E = k**2
+phase = np.unwrap(np.angle(t_amp(k, lam, a)))
+tau = 2 * np.gradient(phase, E)
+
+fig, ax = plt.subplots(figsize=(8, 4))
+ax.plot(E, tau, label=r"$\tau(E)$")
+for ER, G in zip(ER_list, widths):
+    ax.axhline(4/G, color="r", lw=0.4, ls="--")
+    ax.axvline(ER, color="k", lw=0.4, ls=":")
+ax.set(xlabel="E", ylabel=r"$\tau(E) = 2\,d\delta_t/dE$",
+       title=f"Time delay,  λ={lam:g}, a={a:g}")
+ax.legend()
+ax.grid(alpha=0.3)
+fig.tight_layout()
+plt.show()
+
+# Verify peak height vs BW prediction 4/Γ
+for n, (kp, G) in enumerate(zip(poles, widths), 1):
+    kR = kp.real
+    eps = max(0.5*abs(kp.imag), 0.01)
+    kk = np.linspace(kR - eps, kR + eps, 4001)
+    EE = kk**2
+    ph = np.unwrap(np.angle(t_amp(kk, lam, a)))
+    tau_local = 2 * np.gradient(ph, EE)
+    tau_max = tau_local.max()
+    print(f"n={n}: τ_peak={tau_max:.4f}, 4/Γ={4/G:.4f}, ratio={tau_max/(4/G):.4f}")
+```
+
+每个共振处时间延迟出现尖峰，峰高接近纯 BW 预言 $4/\Gamma$（红虚线）。低阶共振（$n = 1$，$\Gamma$ 窄）峰高与 $4/\Gamma$ 在百分量级吻合；越高阶 $\Gamma/E_R$ 越大、BW 偏离越显著（$n = 3$ 的 $\tau_{\rm peak}$ 比 $4/\Gamma$ 低约 20%），因为 BW 是窄共振展开。物理图像不变：粒子在准盒子里"困住"的平均寿命就是 $\Gamma^{-1}$ 量级，因子 4 来自 $\tau = 2\,\rmd\delta_t/\rmd E$ 的 BW 形式 $2/\Gamma$ 再乘以前置 2。
+
+## 吸引情形 ($\lambda < 0$)：偶/奇束缚态
+
+$\lambda < 0$ 时每口井单独有一个束缚态（能量 $-\lambda^2/4$），两阱相隔 $2a$ 时这两个态以偶/奇宇称组合劈裂。
+
+写束缚态 ansatz $\psi(x) = \rme^{-\kappa|x|}$ 为远区衰减。利用 $V$ 的偶称：$\psi$ 是定字称态。
+
+**偶宇称**：$\psi(x) = \cosh(\kappa x)$ 在 $|x| < a$，$\psi(x) = A\,\rme^{-\kappa|x|}$ 在 $|x| > a$。$x = a$ 处连续性 $\cosh(\kappa a) = A\rme^{-\kappa a}$，跳变 $-A\kappa\rme^{-\kappa a} - \kappa\sinh(\kappa a) = \lambda \cosh(\kappa a)$。代入 $A = \cosh(\kappa a)\rme^{\kappa a}$ 化简：
+$$
+\boxed{\;\kappa\,[\,1 + \tanh(\kappa a)\,] = -\lambda \quad (\lambda < 0).\;}
+$$
+
+**奇宇称**：$\psi(x) = \sinh(\kappa x)$ 在 $|x| < a$，外侧 $\psi(x) = \sgn(x)\,A\,\rme^{-\kappa|x|}$。同步推导：
+$$
+\boxed{\;\kappa\,[\,1 + \coth(\kappa a)\,] = -\lambda.\;}
+$$
+
+由 $\tanh < \coth$，给定 $\lambda$ 偶宇称解的 $\kappa$ 大、能量低（$E = -\kappa^2$），奇宇称解能量高——双井束缚态 always 偶低奇高。这是分子物理 LCAO 中"成键/反键轨道"的最简版本。
+
+奇宇称解仅当 $|\lambda|\,a > 1$ 时存在（$\kappa \to 0$ 极限要求 $\kappa\,(1 + 1/(\kappa a)) = -\lambda$ 即 $\kappa + 1/a \to 1/a = -\lambda$ 临界）。$|\lambda|\,a < 1$ 时只有偶解，单束缚态退化到 $a \to 0$ 单 delta 极限的 $-\lambda^2$（注意此时强度变为 $2\lambda$）。
+
+```{python}
+#| label: fig-bound-states
+#| fig-cap: "吸引双 $\\delta$ 势的偶/奇束缚态能量随分离 $a$ 的变化（$\\lambda=-3$）。$a\\to 0$ 时偶态趋于单 $\\delta(2\\lambda)$ 极限 $E = -\\lambda^2$，奇态在 $|\\lambda|a > 1$ 才出现；$a\\to\\infty$ 两态简并到单井极限 $E = -\\lambda^2/4$。"
+
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy.optimize import brentq
+
+def even_eq(kappa, lam, a):
+    return kappa*(1 + np.tanh(kappa*a)) + lam   # = 0, lam<0
+
+def odd_eq(kappa, lam, a):
+    return kappa*(1 + 1/np.tanh(kappa*a)) + lam
+
+lam = -3.0
+a_grid = np.linspace(0.05, 3.0, 200)
+E_even, E_odd = [], []
+for a in a_grid:
+    ke = brentq(even_eq, 1e-8, 100, args=(lam, a))
+    E_even.append(-ke**2)
+    if -lam*a > 1.0 + 1e-3:
+        ko = brentq(odd_eq, 1e-8, 100, args=(lam, a))
+        E_odd.append(-ko**2)
+    else:
+        E_odd.append(np.nan)
+
+fig, ax = plt.subplots(figsize=(7, 4.2))
+ax.plot(a_grid, E_even, label="even", lw=1.5)
+ax.plot(a_grid, E_odd, label="odd", lw=1.5)
+ax.axhline(-lam**2/4, color="k", lw=0.6, ls="--",
+           label=r"single-well limit $-\lambda^2/4$")
+ax.axhline(-lam**2,   color="gray", lw=0.6, ls=":",
+           label=r"merged-well limit $-(2\lambda)^2/4 = -\lambda^2$")
+ax.axvline(1/abs(lam), color="r", lw=0.5, ls=":",
+           label=r"odd threshold $a=1/|\lambda|$")
+ax.set(xlabel="a", ylabel="E",
+       title=rf"Bound-state energies vs separation,  λ={lam}")
+ax.legend(); ax.grid(alpha=0.3)
+fig.tight_layout()
+plt.show()
+
+# Verify pole of t at k = i*kappa for both bound states (a=1)
+def F(k, lam, a):
+    return (2*k + 1j*lam)**2 + lam**2 * np.exp(4j*k*a)
+
+a = 1.0
+ke = brentq(even_eq, 1e-8, 100, args=(lam, a))
+ko = brentq(odd_eq, 1e-8, 100, args=(lam, a))
+print(f"a={a}, λ={lam}: κ_even={ke:.4f}, E_even={-ke**2:.4f},"
+      f"  κ_odd={ko:.4f}, E_odd={-ko**2:.4f}")
+print(f"  |F(i κ_even)| = {abs(F(1j*ke, lam, a)):.2e}")
+print(f"  |F(i κ_odd)|  = {abs(F(1j*ko, lam, a)):.2e}")
+assert abs(F(1j*ke, lam, a)) < 1e-9
+assert abs(F(1j*ko, lam, a)) < 1e-9
+```
+
+两条曲线的物理：
+
+- $a \to 0$（井合并）：偶态 $E \to -\lambda^2$（强度 $2\lambda$ 单 delta），奇态被推到正能（消失，因为单井不支持反对称态）；
+- $a \to \infty$（井分开）：两态都收敛到单井束缚能 $-\lambda^2/4$，劈裂指数小 $\Delta E \sim \rme^{-2\kappa a}$（同分子物理隧穿劈裂）；
+- 阈值 $|\lambda|\,a = 1$：奇态从连续谱浮现（$E = 0^-$）。
+
+最后两行 assert 直接验证束缚态 $\kappa$ 是 $1/t(k)$ 在 $k = \rmi\kappa$ 上的零点——与 1d delta 势"束缚态 = $S$ 矩阵正虚轴极点"的图像完全衔接。
+
+## 与 delta-shell 共振的对账
+
+把这一节的现象学翻译到 delta-shell 笔记的语言：
+
+| 双 delta 一维 | delta-shell 三维 s 波 |
+|:--|:--|
+| 排斥情形 $\lambda > 0$，准盒子宽度 $2a$ | 排斥壳 $\gamma > 0$，准盒子半径 $R$ |
+| 准盒子能级 $\sim (n\pi/(2a))^2$（半奇数波长） | 硬球内能级 $(n\pi/R)^2$（整数波长） |
+| 共振条件 $2 k a \approx (2n-1)\pi$ | 共振条件 $k R \approx n\pi$ |
+| 复 $k$ 极点 $k_n = k_n^R + \rmi k_n^I,\ k_n^I < 0$ | 同 |
+| 宽度 $\Gamma$ 随 $\lambda$ 增大单调减小 | $\Gamma \sim 4\pi^3/\gamma^2$（log-log 斜率 $-2$）|
+| $\lambda \to \infty$ 极点收到实轴（真束缚态） | $\gamma \to \infty$ 同 |
+| 吸引 $\lambda < 0$：偶/奇双束缚态 | 吸引 $\gamma < 0$：单 s 波束缚态（$|\gamma| > 1$） |
+
+差别的根源：一维双 delta 是"两点屏 + 中间空腔"，三维 delta-shell 是"球面屏 + 内部球腔"。三维额外的 $u(0) = 0$ 边条件（来自 $\psi$ 在原点正则）相当于在 $r = 0$ 加了一面硬墙，所以 delta-shell 的整数波长共振 $kR = n\pi$ 等价于一维区间 $[0, R]$ 两端 Dirichlet 条件下的盒子能级——而本节双 delta 在中间区间 $[-a, +a]$ 上是软 Dirichlet（强 $\lambda$ 极限），同时区间外是自由空间（不是被另一面硬墙挡住），共振条件因此变成半奇数波长。两者本质都是"准束缚态从盒子里 leak 出去"，只是边条件不同导致量子化数论略有差异。
+
+## sanity checks
+
+```{python}
+#| label: sanity-checks
+
+import numpy as np
+from scipy.optimize import curve_fit, brentq
+
+def F(k, lam, a):
+    return (2*k + 1j*lam)**2 + lam**2 * np.exp(4j*k*a)
+
+def dF(k, lam, a):
+    return 4*(2*k + 1j*lam) + lam**2 * 4j*a * np.exp(4j*k*a)
+
+def newton_pole(k0, lam, a, tol=1e-13, itmax=200):
+    k = complex(k0)
+    for _ in range(itmax):
+        dk = F(k, lam, a)/dF(k, lam, a)
+        k -= dk
+        if abs(dk) < tol:
+            break
+    return k
+
+def t_amp(k, lam, a):
+    return 4*k**2 / F(k, lam, a)
+
+def r_amp(k, lam, a):
+    num = -1j*lam*((2*k+1j*lam) + (2*k-1j*lam)*np.exp(4j*k*a))*np.exp(-2j*k*a)
+    return num / F(k, lam, a)
+
+# 1. Unitarity for a batch of (lam, a, k)
+rng = np.random.default_rng(2)
+for _ in range(20):
+    lam = rng.uniform(-8, 12)
+    a   = rng.uniform(0.3, 2.5)
+    k   = rng.uniform(0.1, 6.0)
+    T = abs(t_amp(k, lam, a))**2
+    R = abs(r_amp(k, lam, a))**2
+    assert abs(T + R - 1) < 1e-12, (lam, a, k, T+R)
+print("unitarity OK on 20 random samples")
+
+# 2. a -> 0 limit reproduces single delta of strength 2*lam
+for _ in range(5):
+    lam = rng.uniform(-5, 5)
+    k   = rng.uniform(0.5, 4.0)
+    a_small = 1e-8
+    t_dd = t_amp(k, lam, a_small)
+    t_single = 2j*k / (2j*k - 2*lam)
+    assert abs(t_dd - t_single) < 1e-6, (lam, k, t_dd, t_single)
+print("a->0 limit reproduces single-delta (strength 2λ)")
+
+# 3. Pole vs BW fit, lam=10, a=1
+lam, a = 10.0, 1.0
+poles = [newton_pole(n*np.pi/(2*a) - 0.05 - 0.05j*n, lam, a) for n in (1, 2, 3)]
+
+def lorentz(E, ER, Gamma, c0):
+    return c0 * (Gamma/2)**2 / ((E - ER)**2 + (Gamma/2)**2)
+
+for n, kp in enumerate(poles, 1):
+    ER_p = kp.real**2 - kp.imag**2
+    G_p  = -4*kp.real*kp.imag
+    Emin, Emax = ER_p - 0.5*G_p, ER_p + 0.5*G_p
+    kgrid = np.linspace(np.sqrt(max(Emin, 1e-4)), np.sqrt(Emax), 400)
+    Tgrid = abs(t_amp(kgrid, lam, a))**2
+    popt, _ = curve_fit(lorentz, kgrid**2, Tgrid,
+                        p0=[ER_p, G_p, 1.0], maxfev=10000)
+    rE = abs(popt[0] - ER_p)/ER_p
+    rG = abs(popt[1] - G_p)/G_p
+    assert rE < 1e-2, f"n={n}: rel E_R err = {rE}"
+    assert rG < 5e-2, f"n={n}: rel Γ err = {rG}"
+print("BW fit vs pole: rel_E < 1%, rel_Γ < 5% for all 3 poles")
+
+# 4. Time delay peak vs BW prediction 4/Γ.
+# Only the narrowest resonance (n=1) is close to pure BW; wider ones
+# pick up O(Γ/E_R) corrections. We assert leading-order agreement.
+for n, kp in enumerate(poles, 1):
+    G = -4*kp.real*kp.imag
+    eps = max(0.5*abs(kp.imag), 0.01)
+    kk = np.linspace(kp.real - eps, kp.real + eps, 4001)
+    EE = kk**2
+    ph = np.unwrap(np.angle(t_amp(kk, lam, a)))
+    tau = 2*np.gradient(ph, EE)
+    ratio = tau.max() / (4/G)
+    if n == 1:
+        assert abs(ratio - 1) < 0.05, f"n=1: τ_peak/(4/Γ) = {ratio}"
+    else:
+        # For wider resonances, BW is a leading-order approximation only.
+        assert 0.6 < ratio < 1.1, f"n={n}: τ_peak/(4/Γ) = {ratio}"
+print("time-delay peak: n=1 within 5% of 4/Γ; "
+      "higher n within 40% (BW leading-order)")
+
+# 5. Bound-state poles on positive imaginary axis (lam=-3, a=1)
+def even_eq(kappa, lam, a):
+    return kappa*(1 + np.tanh(kappa*a)) + lam
+def odd_eq(kappa, lam, a):
+    return kappa*(1 + 1/np.tanh(kappa*a)) + lam
+
+lam_b, a_b = -3.0, 1.0
+ke = brentq(even_eq, 1e-8, 100, args=(lam_b, a_b))
+ko = brentq(odd_eq,  1e-8, 100, args=(lam_b, a_b))
+assert abs(F(1j*ke, lam_b, a_b)) < 1e-9
+assert abs(F(1j*ko, lam_b, a_b)) < 1e-9
+assert -ke**2 < -ko**2  # even more bound than odd
+print(f"bound states: κ_even={ke:.4f}, κ_odd={ko:.4f}, "
+      f"E_even={-ke**2:.4f} < E_odd={-ko**2:.4f}")
+```
+
+## 与主线笔记的对账
+
+| 主线 | 双 delta 中的对应 |
+|:--|:--|
+| 第 2 章 $S$ 矩阵 | $S = \begin{pmatrix} r & t \\ t & r \end{pmatrix}$，宇称基对角化为 $S_\pm = r \pm t$ |
+| 第 7 章 $S(E)$ 解析结构：束缚态 = 物理面正虚轴极点 | $1/t(\rmi\kappa) = 0$ 给偶/奇束缚态条件，吸引 $\lambda < 0$ |
+| 第 7 章：共振 = 第二张面下半 $k$ 极点 | $1/t(k) = 0$ 在 $\Im k < 0$ 上的解 |
+| 第 8 章共振：BW 形式 $\sigma \sim (\Gamma/2)^2/[(E-E_R)^2 + (\Gamma/2)^2]$ | 直接 fit $\|t(E)\|^2$，与极点提取的 $E_R, \Gamma$ 一致 |
+| 第 8 章时间延迟 Wigner 公式 $\tau = 2\,\rmd\delta/\rmd E$ | 数值微分透射相位，峰高 $4/\Gamma$ |
+
+奇通道与偶通道在双 delta 上都被激活（不同于单 delta 的奇通道恒零）——因为势的支撑不再只在原点，奇函数在 $x = \pm a$ 不为零，可以被看到。
+
+## 进一步阅读
+
+- Galindo & Pascual, *Quantum Mechanics II*, §4.6 给一维任意势 $V(x) = \sum_i \lambda_i \delta(x - x_i)$ 的 transfer matrix 一般形式。
+- Merzbacher, *Quantum Mechanics* 3rd ed., Ch. 6：单 delta + 双 delta 的标准教学处理。
+- 共振时间延迟的 Wigner-Smith 矩阵 $Q = -\rmi S^{-1}\,\rmd S/\rmd E$：本节做的是对角元 $Q_{tt} = \tau$ 的直接实现。
+- Friedrichs 模型（第 8 章）：把 $\Gamma_n$ 看作离散态-连续谱耦合 $|g(E)|^2$ 的体现，本节双 delta 是其最小一维可解版本。
+- Pöschl-Teller 例题（同批次）：另一个一维可解势，但其反射零的结构（无反射势）与本节共振结构互补。
+
+## next-step
+
+- 三 delta、$N$ delta：transfer matrix 直接堆乘，给出 1D Kronig-Penney 模型从有限到无限的过渡，能带从离散共振谱演化而来。
+- 复杂势：替换 $\lambda \to \lambda + \rmi\Gamma_{\rm abs}$ 引入吸收，$|t|^2 + |r|^2 < 1$，对应 16 章光学势的最简一维版本。
+- 时间域 wave packet 模拟：高斯包入射，观察共振附近 packet 在准盒子里的延时与衰减——直接看 $\tau \sim \hbar/\Gamma$ 的物理意义。
+- $r(k)$ 在复 $k$ 平面的解析延拓与 Krein-Friedel 计数：每一对共振极点贡献相位 $\pi$，与 Levinson 定理的连续延伸合拍。

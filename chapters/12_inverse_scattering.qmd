@@ -1,0 +1,434 @@
+# 反散射问题：从散射数据恢复势
+
+{{< include /_macros.qmd >}}
+
+> **本章目标**：把"已知 $V$ 求 $S$"反过来——给定一组散射谱数据（反射系数、相移、束缚态能级与 normalization 常数），重建势 $V(r)$。本章建立 Gel'fand–Levitan / Marchenko 积分方程，写出无反射势 (reflectionless potentials) 的闭式解，并给出 1D Marchenko 求解器；在 sech² 与 Bargmann 双 soliton 上验证 $V_\text{数值} \to V_\text{解析}$。
+
+> **配套理论详证**：见 LaTeX 教材 `ch12_InverseScattering.tex`；亦可参阅 Chadan–Sabatier《Inverse Problems in Quantum Scattering Theory》、Newton《Scattering Theory of Waves and Particles》第 20 章。
+
+全文取 $\hbar = 1$，$2m = 1$，故定态方程为 $-\psi'' + V\psi = k^2 \psi$，$E = k^2$。一维情形 $x \in \R$，三维 s 波情形 $r \in [0, \infty)$ 写作 $u(r) = r\,R(r)$ 后形式相同（定义域不同）。
+
+## 反散射问题陈述
+
+**正向问题（forward）**：给定势 $V$ → 求 S 矩阵 $S(k)$、束缚态 $\{E_n^{(b)}\}$。
+
+**反向问题（inverse）**：给定**谱数据**
+
+$$
+\mathcal{D} \;=\; \bigl\{\; r(k)\;\text{或}\;\delta_\ell(k),\;\; k_n^{(b)} = \rmi\kappa_n,\;\; c_n \;\bigr\}_{k \in \R,\; n=1,\dots,N_b}
+$$
+
+→ 恢复 $V$。这里：
+
+- $r(k)$（一维）/ $\delta_\ell(k)$（三维分波）：实轴上的散射相位/振幅信息；
+- $\kappa_n > 0$：第 $n$ 个束缚态对应的虚轴极点位置，$E_n = -\kappa_n^2$；
+- $c_n > 0$：束缚态波函数的 **normalization 常数**——具体定义在下一节给出。
+
+**唯一性陈述**（Marchenko 1955；Gel'fand–Levitan 1951）：在适当衰减类（如 $\int_0^\infty (1+r) |V(r)| \rmd r < \infty$）内，谱数据 $\mathcal{D}$ 唯一决定 $V$。**仅有相移 $\delta_\ell(k)$ 是不够的**——必须同时给出每个束缚态的 normalization 常数 $c_n$，否则可以构造无穷多个 isospectral（同谱）势。这是反散射问题最容易忽视的一点。
+
+## Jost 函数 / 谱数据的字典
+
+在第 7 章我们已经知道：S 矩阵元 $S_\ell(k) = f_\ell(-k)/f_\ell(k)$，束缚态 $\Leftrightarrow$ Jost 函数 $f_\ell(k)$ 在正虚轴 $k = \rmi\kappa_n$ 上的零点。反散射问题的核心数据可以全部用 Jost 函数表达。
+
+### 1D 全空间设置
+
+势 $V(x)$ 衰减足够快（$\int (1+|x|) |V| \rmd x < \infty$）。两个 Jost 解
+$f_\pm(x, k) \to \rme^{\pm \rmi k x}$，$x \to \pm\infty$。S 矩阵在 $\{$从左入射, 从右入射$\}$ 通道基下为
+
+$$
+S(k) = \begin{pmatrix} r_-(k) & t(k) \\ t(k) & r_+(k) \end{pmatrix},
+\qquad |t|^2 + |r_\pm|^2 = 1.
+$$
+
+束缚态 $\Leftrightarrow$ $t(k)$ 在 $k = \rmi\kappa_n$ 处的极点，$\kappa_n > 0$。**右端 normalization 常数** $c_n$ 由束缚态波函数 $\psi_n(x) \to c_n \rme^{-\kappa_n x}$（$x \to +\infty$）的渐近振幅给出（已用 $\int |\psi_n|^2 \rmd x = 1$ 归一化）。
+
+反散射的**右端谱数据**：
+
+$$
+\mathcal{D}_+ \;=\; \bigl\{\, r_+(k)\;(k \in \R),\;\;\kappa_n,\;\; c_n \,\bigr\}_{n=1}^{N_b}.
+$$
+
+### 3D s 波设置
+
+势 $V(r)$ 衰减足够快，$u(r) = rR(r)$ 满足 $u(0) = 0$。s 波 Jost 解 $f(r,k) \to \rme^{\rmi k r}$，s 波 S 矩阵 $S_0(k) = f(0, -k)/f(0, k) = \rme^{2\rmi\delta_0(k)}$。束缚态 $\Leftrightarrow$ $f(0, \rmi\kappa_n) = 0$，束缚态波函数 $u_n(r) \to c_n \rme^{-\kappa_n r}$。反散射数据：$\{\delta_0(k);\;\kappa_n, c_n\}$。
+
+### 一句话字典
+
+| 物理对象 | 1D | 3D s 波 |
+|---|---|---|
+| 实轴散射 | $r_+(k), t(k)$ | $\rme^{2\rmi\delta_0(k)}$ |
+| 束缚态极点 | $\rmi\kappa_n$ 是 $t$ 的极点 | $\rmi\kappa_n$ 是 $f(0,k)$ 的零点 |
+| Norm 常数 | $u_n \sim c_n \rme^{-\kappa_n x}$，$x\to+\infty$ | $u_n \sim c_n \rme^{-\kappa_n r}$，$r\to\infty$ |
+
+## Gel'fand–Levitan 方程
+
+构造的核心是：把"未知势"换成"未知积分核 $K(r, r')$"，让 $K$ 由谱数据线性决定，然后 $V$ 从 $K$ 沿对角的导数读出。
+
+考虑 3D s 波情形，记**正则解** $\varphi(r, k)$（满足 $\varphi(0,k) = 0,\;\varphi'(0,k) = 1$）与自由正则解 $\varphi_0(r,k) = \sin(kr)/k$。基本结构定理（Povzner–Levitan）：
+
+$$
+\varphi(r, k) \;=\; \varphi_0(r, k) + \int_0^r K(r, r')\, \varphi_0(r', k)\, \rmd r'.
+$$
+
+把这个表达代入薛定谔方程 $-\varphi'' + V\varphi = k^2 \varphi$，比较两边对 $k$ 的依赖，可以推出 $K$ 满足双曲型 PDE 加上对角条件
+
+$$
+V(r) \;=\; 2\,\frac{\rmd}{\rmd r} K(r, r).
+$$
+
+引入**谱密度差** $\rmd\rho - \rmd\rho_0$，$\rho_0$ 为自由 Hamiltonian 的谱测度，$\rho$ 为 $H = -\partial_r^2 + V$ 的谱测度。定义对称核
+
+$$
+G(r, r') \;=\; \int_{-\infty}^\infty \varphi_0(r, k)\,\varphi_0(r', k)\, \bigl[\rmd\rho(k^2) - \rmd\rho_0(k^2)\bigr].
+$$
+
+**Gel'fand–Levitan 积分方程**：
+
+$$
+\boxed{\;K(r, r') + G(r, r') + \int_0^r K(r, r'')\, G(r'', r')\, \rmd r'' \;=\; 0,\qquad 0 < r' < r.\;}
+$$
+
+求解流程：
+
+1. 由谱数据 $\{\delta_\ell(k);\;\kappa_n, c_n\}$ 算谱测度差 → 得 $G(r, r')$。
+2. 对每个固定 $r$，把 $r'$ 离散化，解一个对 $K(r, \cdot)$ 的 Fredholm 第二类积分方程。
+3. 沿对角读 $V(r) = 2\, \rmd K(r, r)/\rmd r$。
+
+谱数据出现在 $G$ 里：$\rmd\rho - \rmd\rho_0$ 在束缚态上贡献离散质量 $c_n^2$，在连续谱上贡献 $|f(0,k)|^{-2} - 1$ 的修正，正好把全部谱信息打包成单一函数。
+
+## Marchenko 方程
+
+Marchenko 方程是 Gel'fand–Levitan 的"出射端形式"：用从 $r = +\infty$ 出发的 Jost 解 $f(r, k) = \rme^{\rmi k r}\bigl[1 + \int_r^\infty A(r, r') \rme^{\rmi k(r'-r)} \rmd r'\bigr]$ 替代正则解，类似的代数推导给出
+
+$$
+\boxed{\;A(r, r') + F(r + r') + \int_r^\infty A(r, r'')\, F(r'' + r')\, \rmd r'' \;=\; 0,\qquad r' > r,\;}
+$$
+
+其中 **Marchenko 核**
+
+$$
+F(s) \;=\; \sum_{n=1}^{N_b} c_n^2\, \rme^{-\kappa_n s} \;+\; \frac{1}{2\pi}\int_{-\infty}^\infty r(k)\, \rme^{\rmi k s}\, \rmd k.
+$$
+
+势恢复：$\;V(r) = -2\,\dfrac{\rmd}{\rmd r} A(r, r).\;$（一维全空间情形把"$r$"换成"$x$"，$F$ 用 $r_+(k)$，$A \to K_+$。）
+
+**Gel'fand–Levitan vs Marchenko**：两者都是 Fredholm 第二类方程，理论上等价。差异：
+
+| | Gel'fand–Levitan | Marchenko |
+|---|---|---|
+| 出发端 | 原点 $r = 0$ | 无穷远 $r \to \infty$ |
+| 输入 | 谱测度（含 $\delta_\ell$ 与 $c_n$） | 反射系数 $r(k)$ + $\{\kappa_n, c_n\}$ |
+| 适用 | 短程势、3D s 波 | 1D 全空间、含奇异行为的势 |
+| 数值 | 在 $r$ 大时核 $G$ 复杂 | 反射系数 $r(k)$ 直接傅里叶变换给出 $F$ |
+
+在 1D 全空间情形 Marchenko 形式更自然，本章数值部分采用它。
+
+## 无反射势：Bargmann 闭式
+
+当 $r(k) \equiv 0$ 时 Marchenko 核退化为有限指数和
+
+$$
+F(s) \;=\; \sum_{n=1}^{N_b} c_n^2\, \rme^{-\kappa_n s}.
+$$
+
+代入 Marchenko 方程，假设 $A(x, y) = \sum_n L_n(x)\, \rme^{-\kappa_n y}$，则得到 $L_n(x)$ 的**有限维代数方程组**
+
+$$
+L_n(x) + c_n^2 \rme^{-\kappa_n x} + \sum_{m=1}^{N_b} L_m(x)\, \frac{c_n^2\, \rme^{-(\kappa_n + \kappa_m) x}}{\kappa_n + \kappa_m} = 0.
+$$
+
+记 $C_{nm}(x) = c_n c_m\, \rme^{-(\kappa_n + \kappa_m) x}/(\kappa_n + \kappa_m)$，势可以写成 **tau 函数**形式
+
+$$
+\boxed{\;V(x) \;=\; -2\,\frac{\rmd^2}{\rmd x^2} \ln \det\bigl[\,\mathbf{1} + C(x)\,\bigr].\;}
+$$
+
+这就是 **Bargmann 形式**的 N-soliton 势。
+
+**$N=1$ 情形**：取 $\kappa_1 = 1, c_1 = \sqrt{2}$。$F(s) = 2 \rme^{-s}$，假设 $A(x, y) = L(x) \rme^{-y}$ 代入：
+
+$$
+L(x) + 2 \rme^{-x} + L(x) \cdot 2 \cdot \tfrac{\rme^{-2x}}{2} = 0
+\;\Longrightarrow\;
+L(x) = -\frac{2\rme^{-x}}{1 + \rme^{-2x}} = -\frac{1}{\cosh x}.
+$$
+
+故 $A(x,x) = -\rme^{-x}/\cosh x$，
+
+$$
+V(x) = -2\,\frac{\rmd}{\rmd x}\!\left[-\frac{\rme^{-x}}{\cosh x}\right]
+     = \frac{-2}{\cosh^2 x}.
+$$
+
+这正是 **Pöschl–Teller** 势 $V = -\lambda(\lambda+1)/\cosh^2 x$ 在 $\lambda = 1$ 时的特例（$N = \lambda$ 个束缚态）。一般整数 $\lambda$ 的 Pöschl–Teller 势对应 $N = \lambda$ 个束缚态，反射系数恒为零，正是 Bargmann 构造的典型 anchor。
+
+## 与 KdV 孤子的联系
+
+Korteweg–de Vries (KdV) 方程
+
+$$
+\partial_t u - 6 u\,\partial_x u + \partial_x^3 u = 0
+$$
+
+的最神奇之处：把 $u(x, t)$ 当作"势" $V(x)$ 用于 1D Schrödinger 算符 $L_t = -\partial_x^2 + u(x, t)$，那么 $L_t$ 的**谱**（束缚态 $\{-\kappa_n^2\}$ 与反射系数 $r(k)$）在 KdV 演化下按以下简单规律平移：
+
+$$
+\kappa_n(t) = \kappa_n(0),\qquad c_n(t) = c_n(0)\,\rme^{4\kappa_n^3 t},\qquad r(k, t) = r(k, 0)\,\rme^{8\rmi k^3 t}.
+$$
+
+束缚态能量是**守恒量**！于是 KdV 初值问题的解法变成"三步走"：
+
+1. **正向散射** $t = 0$：从 $u(x, 0)$ 算出谱数据 $\{r(k,0); \kappa_n, c_n(0)\}$。
+2. **平凡演化**：把谱数据按上式推到时间 $t$。
+3. **反散射** $t > 0$：用 Marchenko 方程从 $\{r(k,t); \kappa_n, c_n(t)\}$ 重建 $u(x, t)$。
+
+无反射初值（$r \equiv 0$）→ 演化下仍无反射 → 解就是 N-soliton 解，闭式由 Bargmann tau 公式给出。这就是 **Inverse Scattering Transform (IST)**——把非线性 PDE 变成线性散射问题，可解 Painlevé、KdV、NLS、sine–Gordon 等一大类可积系统。
+
+## 数值实现：1D Marchenko 求解器
+
+下面在均匀网格 $\{x_0 < x_1 < \dots < x_{N-1}\}$（步长 $h$）上离散 Marchenko 方程。
+
+**核函数** $F(s)$：
+
+```{python}
+import os
+for v in ("OPENBLAS_NUM_THREADS", "OMP_NUM_THREADS", "MKL_NUM_THREADS"):
+    os.environ[v] = "1"
+
+import numpy as np
+
+
+def marchenko_kernel(s, kappas, cs, k_grid=None, r_vals=None):
+    """Marchenko 核 F(s) = sum_n c_n^2 e^{-kappa_n s}
+                       + (1 / 2 pi) int dk r(k) e^{i k s}.
+    kappas, cs: 束缚态参数列表
+    k_grid, r_vals: 实轴反射系数离散化（可为 None 表示无反射）
+    """
+    s_arr = np.asarray(s, dtype=float)
+    val = np.zeros_like(s_arr)
+    for kappa, c in zip(kappas, cs):
+        val = val + (c ** 2) * np.exp(-kappa * s_arr)
+    if k_grid is not None and r_vals is not None:
+        dk = k_grid[1] - k_grid[0]
+        phase = np.exp(1j * np.multiply.outer(s_arr, k_grid))
+        integrand = phase * r_vals
+        # 梯形积分（端点系数 1/2）
+        integral = np.sum(integrand, axis=-1) * dk
+        integral -= 0.5 * dk * (
+            phase[..., 0] * r_vals[0] + phase[..., -1] * r_vals[-1]
+        )
+        val = val + integral.real / (2 * np.pi)
+    return val
+```
+
+**Simpson 权重 + 4 阶导数**——用于把 $K(x,x)$ 转成 $V(x) = -2\, \rmd K(x,x)/\rmd x$：
+
+```{python}
+def simpson_weights(m, h):
+    """复合 Simpson 权重，m 点等距网格步长 h；m=2 时退化到梯形。"""
+    w = np.zeros(m)
+    if m == 1:
+        return w
+    if m == 2:
+        w[:] = 0.5 * h
+        return w
+    if m % 2 == 1:
+        w[0] = h / 3; w[-1] = h / 3
+        w[1:-1:2] = 4 * h / 3
+        w[2:-1:2] = 2 * h / 3
+    else:
+        # 偶数点：前 m-1 点用 Simpson，最后一段补梯形
+        w[0] = h / 3; w[m - 2] = h / 3
+        w[1:m - 2:2] = 4 * h / 3
+        w[2:m - 2:2] = 2 * h / 3
+        w[m - 2] += 0.5 * h
+        w[m - 1] = 0.5 * h
+    return w
+
+
+def deriv4(y, h):
+    """4 阶中心有限差分，边界二阶单边。"""
+    n = len(y)
+    dy = np.zeros(n)
+    dy[2:-2] = (-y[4:] + 8 * y[3:-1] - 8 * y[1:-3] + y[:-4]) / (12 * h)
+    dy[0]  = (-3 * y[0]  + 4 * y[1]  - y[2])  / (2 * h)
+    dy[1]  = (y[2]  - y[0])  / (2 * h)
+    dy[-2] = (y[-1] - y[-3]) / (2 * h)
+    dy[-1] = (3 * y[-1] - 4 * y[-2] + y[-3]) / (2 * h)
+    return dy
+```
+
+**主求解器**：对每个 $x_i$，把 $y$ 离散到尾部网格 $\{x_i, x_{i+1}, \dots, x_{N-1}\}$，方程
+
+$$
+A(x_i, y_j) + F(x_i + y_j) + \sum_l w_l\, A(x_i, z_l)\, F(z_l + y_j) = 0
+$$
+
+写成 $(\mathbf{1} + \tilde F\,\operatorname{diag} w)\,\mathbf{A} = -\mathbf{F}_{\text{rhs}}$，用 `np.linalg.solve` 一步解；取 $A(x_i, x_i)$ 即对角值。
+
+```{python}
+def marchenko_solve(x_grid, F_func):
+    """求解 Marchenko 方程，返回对角 K_diag[i] = A(x_i, x_i)。"""
+    N = len(x_grid)
+    h = x_grid[1] - x_grid[0]
+    Kdiag = np.zeros(N)
+    Xa, Xb = np.meshgrid(x_grid, x_grid, indexing='ij')
+    Fpair = F_func(Xa + Xb)
+    for i in range(N):
+        m = N - i
+        if m == 1:
+            Kdiag[i] = -F_func(np.array([2 * x_grid[i]]))[0]
+            continue
+        sub = Fpair[i:, i:]      # F(x_{i+j} + x_{i+l}), shape (m, m)
+        w = simpson_weights(m, h)
+        M = np.eye(m) + sub * w   # 列 l 上乘 w_l
+        b = -sub[:, 0]            # rhs: -F(x_i + x_{i+j})
+        Kdiag[i] = np.linalg.solve(M, b)[0]
+    return Kdiag
+
+
+def reconstruct_potential(x_grid, kappas, cs, k_grid=None, r_vals=None):
+    """全流程：谱数据 -> Marchenko -> V(x)。返回 (V, K_diag)。"""
+    F_func = lambda s: marchenko_kernel(s, kappas, cs, k_grid, r_vals)
+    Kdiag = marchenko_solve(x_grid, F_func)
+    h = x_grid[1] - x_grid[0]
+    V = -2.0 * deriv4(Kdiag, h)
+    return V, Kdiag
+```
+
+## 测试 1：单 soliton 应给出 $V = -2/\cosh^2 x$
+
+```{python}
+#| label: fig-marchenko-single
+#| fig-cap: "单束缚态 $\\kappa_1 = 1, c_1 = \\sqrt{2}$ 的 Marchenko 反演结果。曲线：解析 sech² 势；点：数值重建。两者在画图精度内重合。"
+
+import numpy as np
+import matplotlib.pyplot as plt
+
+x = np.linspace(-4.0, 6.0, 201)
+V_num, _ = reconstruct_potential(x, kappas=[1.0], cs=[np.sqrt(2.0)])
+V_true = -2.0 / np.cosh(x) ** 2
+
+fig, ax = plt.subplots(figsize=(7, 4))
+ax.plot(x, V_true, 'k-', lw=1.5, label=r'exact  $-2\,\mathrm{sech}^2 x$')
+ax.plot(x[::8], V_num[::8], 'ro', ms=4, label='Marchenko reconstruction')
+ax.set_xlabel('x'); ax.set_ylabel('V(x)')
+ax.legend(); ax.grid(alpha=0.3)
+ax.set_title('Reflectionless single-bound-state inversion')
+fig.tight_layout(); plt.show()
+
+mask = (x > -3.0) & (x < 5.0)
+err = float(np.max(np.abs(V_num[mask] - V_true[mask])))
+print(f"max |V_num - V_true|  (interior)  =  {err:.3e}")
+assert err < 1e-3, f"sech^2 reconstruction failed: err = {err:.3e}"
+print(f"PASS:  err < 1e-3   (typical 1e-5 with Simpson + 4th-order derivative)")
+```
+
+## 测试 2：双 soliton 与 Bargmann 公式
+
+```{python}
+#| label: fig-marchenko-two
+#| fig-cap: "双束缚态 $\\kappa = (1, 2)$，$c = (\\sqrt{2}, \\sqrt{12})$ 的 Marchenko 反演 vs Bargmann tau-函数公式。"
+
+import numpy as np
+import matplotlib.pyplot as plt
+
+
+def bargmann_potential(x, kappas, cs):
+    """V(x) = -2 d^2/dx^2 ln det(I + C),
+       C_{nm} = c_n c_m e^{-(kappa_n + kappa_m) x} / (kappa_n + kappa_m)."""
+    K = len(kappas)
+    kappa = np.asarray(kappas); cvec = np.asarray(cs)
+    log_tau = np.empty_like(x)
+    for i, xi in enumerate(x):
+        kk = kappa[:, None] + kappa[None, :]
+        cc = cvec[:, None] * cvec[None, :]
+        Cmat = cc * np.exp(-kk * xi) / kk
+        log_tau[i] = np.log(np.linalg.det(np.eye(K) + Cmat))
+    h = x[1] - x[0]
+    return -2.0 * deriv4(deriv4(log_tau, h), h)
+
+
+kappas = [1.0, 2.0]
+cs = [np.sqrt(2.0), np.sqrt(12.0)]
+
+x2 = np.linspace(-3.0, 5.0, 201)
+V_num2, _ = reconstruct_potential(x2, kappas=kappas, cs=cs)
+V_true2 = bargmann_potential(x2, kappas, cs)
+
+fig, ax = plt.subplots(figsize=(7, 4))
+ax.plot(x2, V_true2, 'k-', lw=1.5, label='exact 2-soliton (tau formula)')
+ax.plot(x2[::6], V_num2[::6], 'ro', ms=4, label='Marchenko')
+ax.set_xlabel('x'); ax.set_ylabel('V(x)')
+ax.legend(); ax.grid(alpha=0.3)
+ax.set_title(r'Bargmann two-soliton, $\kappa=(1,2)$')
+fig.tight_layout(); plt.show()
+
+mask2 = (x2 > -2.0) & (x2 < 4.0)
+err2 = float(np.max(np.abs(V_num2[mask2] - V_true2[mask2])))
+print(f"max |V_num - V_true|  (interior)  =  {err2:.3e}")
+assert err2 < 5e-3, f"Two-soliton failed: err = {err2:.3e}"
+print(f"PASS")
+```
+
+## 测试 3：含小反射的玩具谱数据
+
+无解析参考，只检查定性合理：弱反射对应弱势（与 Born 近似一致），$V$ 不应发散。
+
+```{python}
+#| label: fig-marchenko-with-reflection
+#| fig-cap: "无束缚态、反射系数 $r(k) = a/(1+k^2)$（$a = 0.1$）的 Marchenko 反演。弱反射 $\\Rightarrow$ 弱势，定性符合预期。"
+
+import numpy as np
+import matplotlib.pyplot as plt
+
+a = 0.1
+k_grid = np.linspace(-30.0, 30.0, 1201)
+r_vals = a / (1.0 + k_grid ** 2)
+
+x3 = np.linspace(-4.0, 6.0, 201)
+V_num3, _ = reconstruct_potential(x3, kappas=[], cs=[],
+                                  k_grid=k_grid, r_vals=r_vals)
+
+fig, ax = plt.subplots(figsize=(7, 4))
+ax.plot(x3, V_num3, 'b-', lw=1.5, label=fr'Marchenko, $r(k)=\frac{{{a}}}{{1+k^2}}$')
+ax.set_xlabel('x'); ax.set_ylabel('V(x)')
+ax.legend(); ax.grid(alpha=0.3)
+ax.set_title('Inversion from weak reflection (no bound state)')
+fig.tight_layout(); plt.show()
+
+print(f"V(0)        = {V_num3[(np.abs(x3)).argmin()]:.5f}")
+print(f"max |V|     = {np.max(np.abs(V_num3)):.5f}")
+print(f"反射小 (a={a}) 对应势小，与 Born 近似 V ~ O(a) 一致")
+assert np.max(np.abs(V_num3)) < 3 * a, "弱反射下 V 不应过大"
+print("PASS")
+```
+
+## 实践注意
+
+- **唯一性 caveat**：仅有相移 $\delta_\ell(k)$（或 $|t(k)|$）不足以确定势——必须给出每个束缚态的 normalization 常数 $c_n$。Bargmann 多势族就是把 $c_n$ 拉成参数族而生成的同 phase shift / 不同 $V$ 的反例。如果实验只给出截面 $|f|^2$，则丢掉了 $f$ 的相位信息，反演问题进一步退化为 **phaseless inverse problem**——一般无唯一解，需要额外约束（如先验稀疏性或几何对称性）。
+
+- **噪声敏感性**：Marchenko 方程是 Fredholm 第二类，结构上良态；但在 $r(k)$ 含噪声时，傅里叶变换 $\int r(k) \rme^{\rmi k s} \rmd k$ 把高频噪声直接搬到 $F$ 里。实践中需要先正则化反射系数（带通滤波 / Tikhonov），再代入 Marchenko，否则恢复的 $V$ 在小尺度上发散。
+
+- **离散化网格**：上面例子取 $N = 201$；在 sech² 上达到 $\sim 10^{-5}$ 量级。若需要更高精度，瓶颈通常在 $K(x,x)$ 取数值导数那一步，可以改用 spline 或在解 Marchenko 时同时记录 $\partial_y A(x, y)|_{y=x}$，避免最后一次差分。
+
+- **三维 vs 一维**：本章数值实现是 1D 全空间的 Marchenko 形式。三维 s 波只需把 $x \in \R$ 替换为 $r \in [0, \infty)$，把"右端 normalization"替换为 $r \to \infty$ 的指数衰减振幅，方程结构一致。Gel'fand–Levitan 形式（"原点端"）则需要用谱测度差替代 Marchenko 核。
+
+- **不可约 input**：Marchenko 需要的 $r(k)$ 在 $k \in (-\infty, \infty)$ 上的全部值。若 $r$ 仅在有限带宽内给出（如 $|k| < k_{\max}$），需要在带外做合理外推；最常见的是假设势短程，让 $r(k) \to 0$ 在 $|k| \to \infty$ 上以幂或指数方式衰减。
+
+## 小结
+
+- 反散射的输入是 **谱数据三件套**：实轴 $r(k)$（或 $\delta_\ell$）、束缚态能量 $\{-\kappa_n^2\}$、normalization 常数 $\{c_n\}$。仅有相位/相移**不够**，必须配合 $c_n$ 才能唯一定 $V$。
+- **Gel'fand–Levitan**（原点端）与 **Marchenko**（无穷远端）是两条等价的求解路径，都是 Fredholm 第二类积分方程，势由核沿对角的导数给出：$V = -2\,\rmd A(r,r)/\rmd r$。
+- **无反射势** $r(k) \equiv 0$ 时 Marchenko 退化为有限维代数方程组，势可写成 tau 函数 $V = -2\,\partial_x^2 \ln \det(\mathbf{1} + C)$ 形式 (Bargmann)。Pöschl–Teller $V = -\lambda(\lambda+1)/\cosh^2 x$（整数 $\lambda$）是 $N=\lambda$ 个束缚态的典型实例。
+- **KdV / IST**：把 $V = u(\cdot, t)$ 用作 1D Schrödinger 势，KdV 演化下谱数据简单平移，故 KdV 解可由"正向散射 → 谱平移 → 反散射"三步重建；这是把非线性 PDE 线性化的范式。
+- 数值上 Marchenko 方程是结构良态的；噪声敏感性体现在 $r(k)$ 的傅里叶变换上，需要正则化。本章求解器在 $N=201$、Simpson 权重 + 4 阶导数下，sech² 重建误差 $\sim 10^{-5}$。
+
+## 进一步阅读
+
+- Chadan & Sabatier《Inverse Problems in Quantum Scattering Theory》第 III–V 章——Marchenko/Gel'fand–Levitan 完整推导与唯一性定理。
+- Newton《Scattering Theory of Waves and Particles》§20——3D s 波 Gel'fand–Levitan 与各种 $\ell$ 的推广。
+- Drazin & Johnson《Solitons: An Introduction》——KdV 的 IST 求解、N-soliton 解、Bargmann 势的物理推导。
+- Deift & Trubowitz, *Comm. Pure Appl. Math.* **32** (1979) 121-251——一维全直线反散射的现代严格处理。
+- 本仓库 LaTeX 教材 `ch12_InverseScattering.tex`；本书第 7 章关于 Jost 函数与 Levinson 定理的解析结构 anchor。
+- 本仓库 `examples/poschl_teller.qmd`（Pöschl–Teller 势的解析谱数据，可作为本章求解器的 anchor case）。

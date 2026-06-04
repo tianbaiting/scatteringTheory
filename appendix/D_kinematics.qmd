@@ -1,0 +1,480 @@
+# 附录 D：散射运动学（lab/CM、相空间、与实验对接）
+
+{{< include /_macros.qmd >}}
+
+> **本附录目标**：把第 2 章里只在质心系（CM）里建立起来的"理论散射振幅 $f(\theta)$"接到实验台上的"每秒计数率 $\rmd N/\rmd t$"。具体覆盖：实验室系（lab）与质心系之间的运动学变换、散射角与立体角的 Jacobian、不同质量比下的双值映射、二体相空间因子在 unitarity 中的角色、亮度（luminosity）与计数率的关系，以及相对论 Mandelstam 变量的简介。
+
+> **配套理论详证**：见 LaTeX 教材 `ch_kinematics.tex`、Goldstein《Classical Mechanics》§3、Pilkuhn《Relativistic Particle Physics》§2；本仓库正文第 2 章给出 CM 系中的 $f(\theta)$ 与光学定理、第 11 章讨论三体相空间、第 15 章使用相对论 $s,t,u$ 变量。
+
+## 单位与符号约定
+
+全文取 $\hbar = 1$；本附录涉及不同质量的两个粒子，记入射粒子（弹道粒子，"projectile"）质量为 $m_1$、靶粒子（"target"）质量为 $m_2$，约化质量
+$$
+\mu = \frac{m_1 m_2}{m_1 + m_2}.
+$$
+非相对论部分写出 $m_1, m_2, \mu$ 显式依赖；相对论一节单独取 $c = 1$。本附录中除特别说明外只讨论**弹性散射** $1+2 \to 1+2$。
+
+## 两体碰撞的两个参考系
+
+### Lab 系与 CM 系的关系（Galileo）
+
+实验上常见的设置是**固定靶**：粒子 2 在 lab 系中静止（$\vec v_2^{\rm lab}=0$），粒子 1 以速度 $\vec v_1^{\rm lab}$ 入射。质心速度
+$$
+\vec V_{\rm CM} = \frac{m_1\vec v_1^{\rm lab} + m_2\vec v_2^{\rm lab}}{m_1+m_2} = \frac{m_1}{m_1+m_2}\,\vec v_1^{\rm lab}.
+$$
+在 CM 系中两粒子等大反向：
+$$
+\vec v_1^{\rm CM} = \vec v_1^{\rm lab} - \vec V_{\rm CM} = \frac{m_2}{m_1+m_2}\,\vec v_1^{\rm lab},
+\qquad \vec v_2^{\rm CM} = -\frac{m_1}{m_1+m_2}\,\vec v_1^{\rm lab}.
+$$
+两边 CM 动量大小相同：$|\vec p_1^{\rm CM}|=|\vec p_2^{\rm CM}| = \mu\,|\vec v_1^{\rm lab}| =: p$。CM 系中相对运动的"等效单粒子"动量恰好就是 $p$。
+
+CM 系中弹性散射前后动量大小不变（能量守恒 + 动量守恒），只把动量方向旋转一个角 $\theta_{\rm CM}$；这就是第 2 章中 $f(\theta_{\rm CM})$ 的论域。
+
+### 为什么理论住在 CM 系而实验住在 lab 系
+
+理论中的 LS 方程、相移、$f(\theta)$ 都是相对运动的解，相对运动等价于一个质量为 $\mu$ 的等效单粒子在 $V(r)$ 中散射，这一过程**只在 CM 系里写得最干净**（CM 系下两体问题分解为质心匀速 + 相对运动，质心部分平凡）。但实验设备里靶静止、探测器分布在实验室空间方位角上，测到的微分截面是 $\rmd\sigma/\rmd\Omega_{\rm lab}$。把 $f(\theta_{\rm CM})$ 接到实验，必须做角度变换。
+
+## 散射角变换
+
+### 弹道粒子（粒子 1）的角度变换
+
+设 CM 系中粒子 1 散射后动量方向与入射方向夹角为 $\theta_{\rm CM}$。把 CM 系中的速度 $\vec v_1^{\prime\rm CM}$ Galileo 加回 $\vec V_{\rm CM}$ 得到 lab 系中的散射速度。对纵向 / 横向分量分解：
+$$
+v_{1,\parallel}^{\rm lab\,\prime} = v_1^{\prime\rm CM}\cos\theta_{\rm CM} + V_{\rm CM},
+\qquad v_{1,\perp}^{\rm lab\,\prime} = v_1^{\prime\rm CM}\sin\theta_{\rm CM}.
+$$
+定义比值
+$$
+\gamma_{12} := \frac{V_{\rm CM}}{v_1^{\prime\rm CM}} = \frac{m_1/(m_1+m_2)}{m_2/(m_1+m_2)} = \frac{m_1}{m_2},
+$$
+（最后一步用了弹性散射 $|\vec v_1^{\prime\rm CM}| = |\vec v_1^{\rm CM}| = (m_2/(m_1+m_2))v_1^{\rm lab}$），即得
+$$
+\boxed{\;\tan\theta_{\rm lab} = \frac{\sin\theta_{\rm CM}}{\cos\theta_{\rm CM} + m_1/m_2}.\;}
+$$ {#eq-theta-lab-cm}
+
+记 $\eta := m_1/m_2$。下面是三种典型情况。
+
+### 三种质量比的定性图景
+
+**$\eta = 1$（等质量）**：(@eq-theta-lab-cm) 化为
+$$
+\tan\theta_{\rm lab} = \frac{\sin\theta_{\rm CM}}{1 + \cos\theta_{\rm CM}} = \tan(\theta_{\rm CM}/2),
+$$
+故 $\theta_{\rm lab} = \theta_{\rm CM}/2$，且 $\theta_{\rm lab}\in[0, \pi/2]$。原因物理上简单：等质量碰撞后两粒子在 lab 系中的速度互相垂直（经典刚体台球结果），所以散射角永远小于直角。
+
+**$\eta \ll 1$（轻击重，如电子击核）**：分母 $\cos\theta_{\rm CM}+\eta\approx \cos\theta_{\rm CM}$，故 $\theta_{\rm lab}\approx \theta_{\rm CM}$。lab 系与 CM 系几乎重合——重靶基本不动，$V_{\rm CM}$ 可忽略。
+
+**$\eta > 1$（重击轻）**：lab 系散射角存在**最大值** $\theta_{\rm lab}^{\max}<\pi/2$。求 (@eq-theta-lab-cm) 关于 $\theta_{\rm CM}$ 的极值，得
+$$
+\sin\theta_{\rm lab}^{\max} = 1/\eta, \qquad \cos\theta_{\rm CM}^\star = -1/\eta.
+$$
+更糟糕的是：在 $\theta_{\rm lab}\in[0, \theta_{\rm lab}^{\max})$ 范围内，每个 $\theta_{\rm lab}$ 对应**两个不同的 $\theta_{\rm CM}$**——一个在前半球（$\cos\theta_{\rm CM}>-1/\eta$），一个在后半球。这是经典斜抛的"打到同一点的两条轨道"。物理后果：观测到的 $\rmd\sigma/\rmd\Omega_{\rm lab}$ 必须是两个 CM 分支贡献的叠加（见下节）。
+
+## 立体角的 Jacobian 与截面变换
+
+### Jacobian 闭式
+
+由角度变换得到 $\rmd\theta_{\rm lab}/\rmd\theta_{\rm CM}$，再乘以 $\sin\theta_{\rm lab}/\sin\theta_{\rm CM}$ 给出立体角比。从 (@eq-theta-lab-cm) 出发，更对称的写法是先求出
+$$
+\cos\theta_{\rm lab} = \frac{\cos\theta_{\rm CM} + \eta}{\sqrt{1 + 2\eta\cos\theta_{\rm CM} + \eta^2}},
+\qquad \sin\theta_{\rm lab} = \frac{\sin\theta_{\rm CM}}{\sqrt{1 + 2\eta\cos\theta_{\rm CM} + \eta^2}}.
+$$
+对 $\theta_{\rm CM}$ 求导并整理：
+$$
+\boxed{\;J(\theta_{\rm CM}) := \frac{\rmd\Omega_{\rm lab}}{\rmd\Omega_{\rm CM}} = \frac{\bigl|1 + \eta\cos\theta_{\rm CM}\bigr|}{\bigl(1 + 2\eta\cos\theta_{\rm CM} + \eta^2\bigr)^{3/2}}.\;}
+$$ {#eq-jacobian}
+
+绝对值是为了让 $\eta>1$ 时 $J\geq 0$（在 $\cos\theta_{\rm CM}=-1/\eta$ 处 Jacobian 过零，对应 lab 角到达极值的"反折"）。
+
+### 截面变换公式
+
+$\rmd\sigma$ 是不变量（同一物理事件率），故
+$$
+\frac{\rmd\sigma}{\rmd\Omega_{\rm lab}}(\theta_{\rm lab}) = \sum_{\theta_{\rm CM}\,\to\,\theta_{\rm lab}}\frac{1}{J(\theta_{\rm CM})}\,\frac{\rmd\sigma}{\rmd\Omega_{\rm CM}}(\theta_{\rm CM}).
+$$
+求和号在 $\eta>1$ 时跑过两个 CM 分支；$\eta\leq 1$ 时是单值映射，求和号退化为单项。
+
+### 总截面参考系无关
+
+立体角元的变换是测度变换，故
+$$
+\sigma_{\rm tot} = \int\frac{\rmd\sigma}{\rmd\Omega_{\rm CM}}\rmd\Omega_{\rm CM} = \int\frac{\rmd\sigma}{\rmd\Omega_{\rm lab}}\rmd\Omega_{\rm lab}.
+$$
+这是数值任务 A 的 assert。
+
+### 反冲粒子（粒子 2）
+
+CM 系中粒子 2 与粒子 1 散射方向相反 $\theta_{\rm CM}^{(2)}=\pi-\theta_{\rm CM}$。粒子 2 在 CM 系的速度 $v_2^{\prime\rm CM}=(m_1/(m_1+m_2))v_1^{\rm lab}$，恰等于 $V_{\rm CM}$，故 $\gamma_{21}=V_{\rm CM}/v_2^{\prime\rm CM}=1$ **永远**——不论 $m_1, m_2$ 关系如何。代入 (@eq-theta-lab-cm) 类比公式：
+$$
+\tan\theta_{\rm lab}^{(2)} = \frac{\sin(\pi-\theta_{\rm CM})}{\cos(\pi-\theta_{\rm CM})+1} = \cot(\theta_{\rm CM}/2),
+$$
+所以 $\theta_{\rm lab}^{(2)} = (\pi - \theta_{\rm CM})/2 \in [0, \pi/2]$。反冲粒子总在前半球，且 $\theta_{\rm lab}^{(1)}+\theta_{\rm lab}^{(2)}=\pi/2$ **当且仅当** $\eta=1$（等质量）；一般情形二者无简单和式。
+
+## 总截面、亮度与计数率
+
+### Luminosity 的定义
+
+实验上"每秒事件率"由两条独立信息决定：粒子级的相互作用强度 $\sigma$（截面，单位面积，参考系无关）+ 装置级的"单位面积单位时间的有效双粒子流通量" $L$（**亮度** / luminosity，单位 [面积$^{-1}$ 时间$^{-1}$]）。两者乘积给出计数率：
+$$
+\boxed{\;\frac{\rmd N}{\rmd t} = L\,\sigma.\;}
+$$
+
+**固定靶**：入射束流强度（单位面积单位时间粒子数）为 $j_b$，靶粒子数面密度（单位面积内的靶粒子数，假设束流横截面完全打在靶上）为 $n_T$，则
+$$
+L_{\rm fixed} = j_b\, n_T.
+$$
+对厚度 $d$、体积数密度 $n_T^{\rm vol}$ 的薄靶，$n_T = n_T^{\rm vol}\, d$。
+
+**对撞机**：两束流相向运动，每束横截面积 $A$、束内粒子数 $N_{1,2}$、相对碰撞频率 $f$（bunch crossing 频率）：
+$$
+L_{\rm collider} = \frac{N_1 N_2 f}{A}\;\bigl(\text{乘上重叠/瞄准修正}\bigr).
+$$
+LHC 在 $\sqrt s=13\,\text{TeV}$ 标称 luminosity $\mathcal{O}(10^{34})\,\text{cm}^{-2}\text{s}^{-1}$，结合典型微分截面给出每秒数百 MHz 的 inelastic event 率。
+
+### 微分计数率
+
+实验上"角分布探测器"测到的是
+$$
+\frac{\rmd^2 N}{\rmd t\,\rmd\Omega_{\rm lab}} = L\,\frac{\rmd\sigma}{\rmd\Omega_{\rm lab}},
+$$
+其中 $\rmd\sigma/\rmd\Omega_{\rm lab}$ 由 (@eq-jacobian) 从理论 $\rmd\sigma/\rmd\Omega_{\rm CM}=|f(\theta_{\rm CM})|^2$ 得到。这是"理论 $\to$ 实验"的核心闭环。
+
+## 二体相空间因子
+
+### 非相对论 CM 系
+
+第 2 章光学定理推导用到了
+$$
+\int\rmd^3 p''\,\delta(E_{p''}-E_p)\,F(\vec p'') = \mu\,p\int\rmd\Omega_{p''}\,F(p\hat p''),
+$$
+其中 $E_{p''}=p''^2/(2\mu)$。重写为"Lorentz-不变态密度"：
+$$
+\rho_2(E) := \int\frac{\rmd^3 p}{(2\pi)^3}\delta(E-E_p) = \frac{\mu p}{(2\pi)^2}\quad(\text{CM, 非相对论, } \hbar=1).
+$$
+这个 $\rho_2$ 把 ${\rm Im}\,T(\theta=0) = (\text{相空间测度})\times \int|f|^2$ 中的"测度"变成具体数；在第 2 章光学定理的推导里它被吸收进 $f=-(2\pi)^2 m\,t/(\,\dots\,)$ 的归一化里了。
+
+更一般地，对二体末态相空间元
+$$
+\rmd\Phi_2 = \frac{\rmd^3 p_1}{(2\pi)^3 2E_1}\frac{\rmd^3 p_2}{(2\pi)^3 2E_2}\,(2\pi)^4\delta^{(4)}(P-p_1-p_2)
+$$
+（相对论形式，$c=1$），CM 系积出后给
+$$
+\rmd\Phi_2 = \frac{1}{4(2\pi)^2}\frac{p^\star}{\sqrt s}\,\rmd\Omega^\star,
+$$
+其中 $p^\star$ 是 CM 系动量，$\sqrt s$ 是 CM 总能。这是粒子物理散射截面公式 $\rmd\sigma = (1/F)|\mathcal M|^2 \rmd\Phi_2$ 中的标准因子。
+
+## 相对论 Mandelstam 变量（前向引用第 15 章）
+
+取 $c=1$。两体过程 $1+2\to 3+4$，定义 Lorentz 标量
+$$
+s = (p_1+p_2)^2,\qquad t = (p_1-p_3)^2,\qquad u = (p_1-p_4)^2.
+$$
+$\sqrt s$ 是 CM 总能；$t, u$ 是动量转移。直接展开 $s+t+u = 3 m_1^2 + \dots$ 或用四动量守恒，得到守恒关系
+$$
+s + t + u = m_1^2 + m_2^2 + m_3^2 + m_4^2.
+$$
+
+**物理 region**（弹性 $m_3=m_1, m_4=m_2$）：$s\geq (m_1+m_2)^2$、$t\leq 0$、$u\leq 0$。CM 系中 $t = -2 p^{\star 2}(1-\cos\theta_{\rm CM})$，故 $t\in[-4p^{\star 2}, 0]$，$\theta_{\rm CM}=0$ 对应 $t=0$（前向）、$\theta_{\rm CM}=\pi$ 对应 $t=-4p^{\star 2}$（后向）。
+
+非相对论极限 $p^\star\ll m_i$ 时 $\sqrt s \approx m_1+m_2 + p^{\star 2}/(2\mu)$，$\sqrt s - m_1 - m_2 \approx p^{\star 2}/(2\mu) = E_{\rm CM}$（CM 系动能），$-t\approx 2 p^{\star 2}(1-\cos\theta_{\rm CM}) = q^2$（动量转移平方）——这就是第 2 章和 Yukawa 例题里出现的 $q$。色散关系（第 15 章）把 $f(s)$ 在 $s$-平面解析延拓后得到的积分公式建立在这套不变量上。
+
+## 实例：等质量与不等质量的角度映射
+
+### 等质量 $\eta=1$
+
+如前述：粒子 1 散射角 $\theta_{\rm lab}^{(1)}=\theta_{\rm CM}/2$，反冲 $\theta_{\rm lab}^{(2)}=(\pi-\theta_{\rm CM})/2$，二者之和恒为 $\pi/2$。
+
+### 数值绘图任务 B：不同 $\eta$ 下的 $\theta_{\rm lab}(\theta_{\rm CM})$
+
+```{python}
+#| label: fig-theta-mapping
+#| fig-cap: "弹道粒子 lab 系散射角 $\\theta_{\\rm lab}$ 关于 CM 系散射角 $\\theta_{\\rm CM}$ 的函数，质量比 $\\eta=m_1/m_2 \\in \\{0.5, 1, 2, 5\\}$。$\\eta>1$ 时 $\\theta_{\\rm lab}$ 存在极大值 $\\arcsin(1/\\eta)$（虚线水平线），同一 $\\theta_{\\rm lab}$ 对应两个 CM 分支。"
+
+import numpy as np
+import matplotlib.pyplot as plt
+
+def theta_lab(theta_cm, eta):
+    """Eq. (D.1): tan(theta_lab) = sin(theta_cm) / (cos(theta_cm) + eta)."""
+    return np.arctan2(np.sin(theta_cm), np.cos(theta_cm) + eta)
+
+theta_cm = np.linspace(0.0, np.pi, 1000)
+etas = [0.5, 1.0, 2.0, 5.0]
+colors = ["C0", "C1", "C2", "C3"]
+
+fig, ax = plt.subplots(figsize=(8, 5))
+for eta, c in zip(etas, colors):
+    th_lab = theta_lab(theta_cm, eta)
+    ax.plot(np.degrees(theta_cm), np.degrees(th_lab),
+            color=c, lw=1.6, label=fr"$\eta={eta}$")
+    if eta > 1.0:
+        # Maximum lab angle at cos(theta_cm) = -1/eta
+        th_lab_max = np.degrees(np.arcsin(1.0 / eta))
+        ax.axhline(th_lab_max, color=c, ls=":", lw=1.0, alpha=0.7)
+        ax.text(5, th_lab_max + 1.5,
+                fr"$\theta_{{\rm lab}}^{{\max}}={th_lab_max:.1f}^\circ$",
+                color=c, fontsize=9)
+
+ax.set_xlabel(r"$\theta_{\rm CM}$  (degrees)")
+ax.set_ylabel(r"$\theta_{\rm lab}$  (degrees)")
+ax.set_title(r"Lab vs. CM scattering angle for various mass ratios $\eta=m_1/m_2$")
+ax.set_xlim(0, 180); ax.set_ylim(0, 180)
+ax.legend(loc="upper left"); ax.grid(alpha=0.3)
+fig.tight_layout()
+plt.show()
+```
+
+注意 $\eta=5$ 时 $\theta_{\rm lab}$ 在 $\theta_{\rm CM}\approx 101.5^\circ$ 处达到极大约 $11.5^\circ$，之后 lab 角随 CM 角继续增大反而**回落**——这是双值映射的来源。
+
+## 数值任务 A：Yukawa Born 微分截面在两参考系下的总截面
+
+取 Yukawa 1st Born $\rmd\sigma/\rmd\Omega_{\rm CM} = |f^B(q)|^2$，$f^B(q) = (V_0/\mu_y)/(q^2+\mu_y^2)$，$q=2p\sin(\theta_{\rm CM}/2)$（用 $\mu_y$ 表示 Yukawa 屏蔽参数以避免与约化质量 $\mu$ 混淆；CM 系动量记 $p$）。在 CM 系直接积分给出 $\sigma_{\rm tot}^{\rm CM}$。把同一份 $|f^B|^2$ 用 (@eq-jacobian) 变换到 lab 系再积分给出 $\sigma_{\rm tot}^{\rm lab}$。两者必须严格相等。
+
+```{python}
+#| label: tbl-sigma-frame-invariance
+#| tbl-cap: "Yukawa 1st Born 总截面在 CM 系与 lab 系下的数值积分，验证参考系无关性。"
+
+import numpy as np
+
+# Yukawa Born differential cross section (in CM)
+# f^B(q) = (V0/mu_y) / (q^2 + mu_y^2),  q = 2 p sin(theta_cm/2)
+# All units hbar=2m_reduced=1; CM momentum p is the "k" of the relative motion.
+
+V0     = 2.0
+mu_y   = 1.0
+p      = 1.5    # CM momentum
+
+def dsigma_dOmega_CM(theta_cm):
+    q2 = (2.0 * p * np.sin(theta_cm / 2.0))**2
+    fB = (V0 / mu_y) / (q2 + mu_y**2)
+    return fB**2
+
+def theta_lab_of(theta_cm, eta):
+    return np.arctan2(np.sin(theta_cm), np.cos(theta_cm) + eta)
+
+def jacobian(theta_cm, eta):
+    """J = dOmega_lab/dOmega_CM, eq. (D.2). Positive everywhere."""
+    num = np.abs(1.0 + eta * np.cos(theta_cm))
+    den = (1.0 + 2.0 * eta * np.cos(theta_cm) + eta**2)**1.5
+    return num / den
+
+def dth_lab_dth_cm(theta_cm, eta):
+    """
+    Analytic derivative d theta_lab / d theta_cm
+        = (1 + eta cos theta_cm) / (1 + 2 eta cos theta_cm + eta^2).
+    Negative when cos theta_cm < -1/eta (the 'reflected' branch for eta>1).
+    """
+    num = 1.0 + eta * np.cos(theta_cm)
+    den = 1.0 + 2.0 * eta * np.cos(theta_cm) + eta**2
+    return num / den
+
+def sigma_tot_CM():
+    """sigma_CM = 2 pi int_0^pi |f|^2 sin(theta_cm) d theta_cm."""
+    th = np.linspace(0.0, np.pi, 200001)
+    integrand = dsigma_dOmega_CM(th) * np.sin(th)
+    return 2.0 * np.pi * np.trapezoid(integrand, th)
+
+def sigma_tot_lab(eta):
+    """
+    Total cross section integrated as a lab-frame solid-angle integral, but
+    parametrized by theta_cm via the change of variable
+        sigma = 2 pi int (dsig/dOmega_lab) sin(theta_lab) d theta_lab
+              = 2 pi int_0^pi (dsig/dOmega_CM / J) sin(theta_lab)
+                              |d theta_lab / d theta_cm| d theta_cm.
+    For eta>1 the map theta_cm -> theta_lab is non-monotone, but integrating
+    over theta_cm in [0, pi] automatically sums over both branches with the
+    correct |d theta_lab/d theta_cm| factor (which carries a sign change at
+    cos theta_cm = -1/eta, and the |.| restores it).
+    Endpoint eps avoids the eta=1 backscatter divergence J -> infty.
+    """
+    eps = 1e-7
+    th_cm = np.linspace(eps, np.pi - eps, 200001)
+    th_lab = theta_lab_of(th_cm, eta)
+    J = jacobian(th_cm, eta)
+    dth = np.abs(dth_lab_dth_cm(th_cm, eta))
+    integrand = (dsigma_dOmega_CM(th_cm) / J) * np.sin(th_lab) * dth
+    return 2.0 * np.pi * np.trapezoid(integrand, th_cm)
+
+sig_CM = sigma_tot_CM()
+print(f"sigma_tot (CM)  = {sig_CM:.10e}")
+print(f"{'eta':>6}  {'sigma_tot (lab)':>20}  {'rel_err':>12}")
+for eta in [0.2, 0.5, 1.0, 2.0, 5.0]:
+    sig_lab = sigma_tot_lab(eta)
+    rel = abs(sig_lab - sig_CM) / sig_CM
+    print(f"{eta:6.2f}  {sig_lab:20.10e}  {rel:12.2e}")
+```
+
+```{python}
+#| label: assertion-frame-invariance
+
+import numpy as np
+
+V0     = 2.0
+mu_y   = 1.0
+p      = 1.5
+
+def dsig_dOm_CM(theta_cm):
+    q2 = (2.0 * p * np.sin(theta_cm / 2.0))**2
+    return ((V0 / mu_y) / (q2 + mu_y**2))**2
+
+def theta_lab_of(theta_cm, eta):
+    return np.arctan2(np.sin(theta_cm), np.cos(theta_cm) + eta)
+
+def jacobian(theta_cm, eta):
+    num = np.abs(1.0 + eta * np.cos(theta_cm))
+    den = (1.0 + 2.0 * eta * np.cos(theta_cm) + eta**2)**1.5
+    return num / den
+
+def dth_lab_dth_cm(theta_cm, eta):
+    num = 1.0 + eta * np.cos(theta_cm)
+    den = 1.0 + 2.0 * eta * np.cos(theta_cm) + eta**2
+    return num / den
+
+def sigma_CM():
+    th = np.linspace(0.0, np.pi, 200001)
+    return 2.0 * np.pi * np.trapezoid(dsig_dOm_CM(th) * np.sin(th), th)
+
+def sigma_lab(eta):
+    eps = 1e-7
+    th_cm = np.linspace(eps, np.pi - eps, 200001)
+    th_lab = theta_lab_of(th_cm, eta)
+    J = jacobian(th_cm, eta)
+    dth = np.abs(dth_lab_dth_cm(th_cm, eta))
+    ig = (dsig_dOm_CM(th_cm) / J) * np.sin(th_lab) * dth
+    return 2.0 * np.pi * np.trapezoid(ig, th_cm)
+
+sig_CM_val = sigma_CM()
+for eta in [0.2, 0.5, 1.0, 2.0, 5.0]:
+    sig_lab_val = sigma_lab(eta)
+    rel = abs(sig_lab_val - sig_CM_val) / sig_CM_val
+    assert rel < 1e-8, f"frame invariance violated at eta={eta}: rel_err={rel:.2e}"
+print(f"sigma_tot frame-invariance OK across eta in {{0.2, 0.5, 1, 2, 5}}, max rel_err < 1e-8")
+```
+
+注：解析上"参考系无关"是测度变换的恒等式：被积式 $\sin\theta_{\rm lab}|\rmd\theta_{\rm lab}/\rmd\theta_{\rm CM}|/J = \sin\theta_{\rm CM}$ 逐点成立。把 $\rmd\theta_{\rm lab}/\rmd\theta_{\rm CM} = (1+\eta\cos\theta_{\rm CM})/(1+2\eta\cos\theta_{\rm CM}+\eta^2)$ 用闭式而非数值差分代入后，残余误差只剩浮点 round-off（$\sim 10^{-14}$ 量级），双值分支自动通过 $|\rmd\theta_{\rm lab}/\rmd\theta_{\rm CM}|$ 的符号翻转吸收，无需手动拆 branch。
+
+## 数值任务 C：lab 系 vs CM 系微分截面并排展示
+
+```{python}
+#| label: fig-dsigma-lab-vs-cm
+#| fig-cap: "同一物理过程（Yukawa 1st Born，$V_0=2$，$\\mu_y=1$，CM 动量 $p=1.5$）在 CM 系（左）与 lab 系（右）的微分截面。$\\eta=m_1/m_2 \\in \\{0.5, 1, 2\\}$。$\\eta=2$ 时 lab 角被压缩到 $[0, \\arcsin(1/2)=30^\\circ]$，并出现双分支贡献叠加（实线为总和）。"
+
+import numpy as np
+import matplotlib.pyplot as plt
+
+V0, mu_y, p = 2.0, 1.0, 1.5
+
+def dsig_CM(theta_cm):
+    q2 = (2.0 * p * np.sin(theta_cm / 2.0))**2
+    return ((V0/mu_y) / (q2 + mu_y**2))**2
+
+def theta_lab_of(theta_cm, eta):
+    return np.arctan2(np.sin(theta_cm), np.cos(theta_cm) + eta)
+
+def jacobian(theta_cm, eta):
+    num = np.abs(1.0 + eta * np.cos(theta_cm))
+    den = (1.0 + 2.0*eta*np.cos(theta_cm) + eta**2)**1.5
+    return num / den
+
+theta_cm = np.linspace(1e-6, np.pi - 1e-6, 4000)
+dsig_cm_vals = dsig_CM(theta_cm)
+
+fig, axes = plt.subplots(1, 2, figsize=(11, 4.5))
+
+# Left: CM frame (single curve, depends only on q, not on eta)
+axes[0].plot(np.degrees(theta_cm), dsig_cm_vals, "k", lw=1.6,
+             label="Yukawa Born")
+axes[0].set_xlabel(r"$\theta_{\rm CM}$  (deg)")
+axes[0].set_ylabel(r"$d\sigma/d\Omega_{\rm CM}$")
+axes[0].set_yscale("log")
+axes[0].set_title("CM-frame differential cross section")
+axes[0].grid(alpha=0.3); axes[0].legend()
+
+# Right: lab frame for several eta. For eta>1 sum the two CM branches.
+def dsig_lab_curve(eta, n_lab=400):
+    th_lab_grid = np.linspace(1e-4, np.pi - 1e-4, n_lab)
+    out = np.zeros_like(th_lab_grid)
+    if eta <= 1.0:
+        # Monotone: invert numerically
+        th_lab_seq = theta_lab_of(theta_cm, eta)
+        # interpolate dsig_CM and J at theta_cm corresponding to each theta_lab
+        from numpy import interp
+        # use sorted (theta_lab_seq, theta_cm) by sequence
+        idx = np.argsort(th_lab_seq)
+        tlab_s = th_lab_seq[idx]
+        tcm_s  = theta_cm[idx]
+        valid = (th_lab_grid >= tlab_s.min()) & (th_lab_grid <= tlab_s.max())
+        tcm_at = np.interp(th_lab_grid[valid], tlab_s, tcm_s)
+        out[valid] = dsig_CM(tcm_at) / jacobian(tcm_at, eta)
+        # Outside range: zero (no contribution)
+        return th_lab_grid, out
+    # eta > 1: two branches
+    cos_star = -1.0 / eta
+    th_star = np.arccos(cos_star)
+    th_lab_max = np.arcsin(1.0 / eta)
+    # branch 1: theta_cm in [0, th_star] -> theta_lab in [0, th_lab_max], increasing
+    # branch 2: theta_cm in [th_star, pi] -> theta_lab in [th_lab_max, 0], decreasing
+    mask1 = theta_cm <= th_star
+    mask2 = theta_cm >= th_star
+    for mask in (mask1, mask2):
+        tcm_b = theta_cm[mask]
+        tlb_b = theta_lab_of(tcm_b, eta)
+        order = np.argsort(tlb_b)
+        tlb_s = tlb_b[order]; tcm_s = tcm_b[order]
+        valid = (th_lab_grid >= tlb_s.min()) & (th_lab_grid <= tlb_s.max())
+        tcm_at = np.interp(th_lab_grid[valid], tlb_s, tcm_s)
+        out[valid] += dsig_CM(tcm_at) / jacobian(tcm_at, eta)
+    return th_lab_grid, out
+
+for eta, c in zip([0.5, 1.0, 2.0], ["C0", "C1", "C2"]):
+    tlab, dsig_lab = dsig_lab_curve(eta)
+    nz = dsig_lab > 0
+    axes[1].plot(np.degrees(tlab[nz]), dsig_lab[nz], color=c, lw=1.6,
+                 label=fr"$\eta={eta}$")
+    if eta > 1.0:
+        axes[1].axvline(np.degrees(np.arcsin(1.0/eta)), color=c, ls=":", lw=1.0, alpha=0.7)
+
+axes[1].set_xlabel(r"$\theta_{\rm lab}$  (deg)")
+axes[1].set_ylabel(r"$d\sigma/d\Omega_{\rm lab}$")
+axes[1].set_yscale("log")
+axes[1].set_title("Lab-frame differential cross section")
+axes[1].set_xlim(0, 180)
+axes[1].grid(alpha=0.3); axes[1].legend()
+
+fig.tight_layout()
+plt.show()
+```
+
+注意 $\eta=2$ 曲线在 $\theta_{\rm lab}\to 30^\circ$ 处发散，对应 $J\to 0$（lab 角到达极值点处雅可比奇异）；这是 lab 系的典型"运动学奇点"（kinematic singularity），积分仍然收敛（CM 系下被积测度光滑）。
+
+## Cookbook：从理论 $f(\theta)$ 到实验计数率
+
+把第 2 章 / Yukawa example 中得到的 CM 系散射振幅 $f(\theta_{\rm CM})$ 接到一台真实实验，五步：
+
+1. **确定运动学**。给定束流动能 $T_{\rm lab}$（如打在液氢靶上的质子束），由 $T_{\rm lab} = (1/2)m_1 v_1^{{\rm lab}\,2}$ 算 $\vec V_{\rm CM}$，再得 CM 系相对动量 $p = \mu v_1^{\rm lab}$ 与质量比 $\eta = m_1/m_2$。
+2. **CM 系差分截面**。用第 2、3 或 4 章的 LS / 分波解算 $f(\theta_{\rm CM})$，得 $\rmd\sigma/\rmd\Omega_{\rm CM}=|f|^2$。
+3. **角度 + 截面变换到 lab**。对每个 $\theta_{\rm CM}$ 求 $\theta_{\rm lab}$（(@eq-theta-lab-cm)）与 $J$（(@eq-jacobian)），得 $\rmd\sigma/\rmd\Omega_{\rm lab}=\sum_{\rm branches} |f|^2/J$（$\eta>1$ 时双值叠加）。
+4. **乘 luminosity**。固定靶 $L = j_b n_T^{\rm vol} d$；$\rmd^2 N/(\rmd t\,\rmd\Omega_{\rm lab}) = L\,\rmd\sigma/\rmd\Omega_{\rm lab}$。
+5. **乘探测器立体角与效率**。探测器覆盖 $\Delta\Omega_{\rm lab}$、效率 $\varepsilon$，则计数率 $\rmd N/\rmd t = L\,\varepsilon\int_{\Delta\Omega_{\rm lab}}\rmd\sigma/\rmd\Omega_{\rm lab}\,\rmd\Omega_{\rm lab}$。这就直接对接到实验数据 acquisition 的"trigger rate"上。
+
+总截面 $\sigma_{\rm tot}$ 是参考系不变量（数值任务 A 验证），所以"积出来的总事件率"无所谓 lab 还是 CM；但"角分布"必须做变换。光学定理 ${\rm Im}\,f(0) = (k/4\pi)\sigma_{\rm tot}$（第 2 章）天然成立于 CM 系（向前散射在 CM 系定义清晰），实验中通过测量 $\sigma_{\rm tot}$ 与小角弹性散射可独立交叉验证。
+
+## 小结
+
+- Lab 系（靶静止）与 CM 系（质心静止）由 Galileo 变换 $\vec V_{\rm CM} = m_1\vec v_1^{\rm lab}/(m_1+m_2)$ 联系；理论住在 CM 系，实验住在 lab 系。
+- 弹道粒子角度变换 $\tan\theta_{\rm lab} = \sin\theta_{\rm CM}/(\cos\theta_{\rm CM}+\eta)$，$\eta=m_1/m_2$。$\eta\ll 1$ 退化、$\eta=1$ 给 $\theta_{\rm lab}=\theta_{\rm CM}/2$、$\eta>1$ 出现 lab 角极值 $\arcsin(1/\eta)$ 与双值映射。
+- 立体角 Jacobian $J = (1+\eta\cos\theta_{\rm CM})/(1+2\eta\cos\theta_{\rm CM}+\eta^2)^{3/2}$（取绝对值）；微分截面变换 $\rmd\sigma/\rmd\Omega_{\rm lab} = \sum_{\rm branches} J^{-1}\,\rmd\sigma/\rmd\Omega_{\rm CM}$。
+- 总截面 $\sigma_{\rm tot}$ 参考系无关，数值任务 A 在 Yukawa Born 上验证到浮点 round-off 量级（$\lesssim 10^{-13}$）。
+- 二体 CM 系态密度 $\rho_2(E) = \mu p/(2\pi)^2$ 是光学定理推导中的相空间测度；相对论形式 $\rmd\Phi_2 \propto p^\star/\sqrt s\,\rmd\Omega^\star$。
+- 计数率 $\rmd N/\rmd t = L\sigma$；固定靶 $L=j_b n_T$，对撞机 $L=N_1 N_2 f / A$。
+- Mandelstam $s,t,u$（$c=1$）满足 $s+t+u=\sum m_i^2$；非相对论极限 $-t\approx q^2$，$\sqrt s - \sum m_i \approx p^{\star 2}/(2\mu)$，与正文符号自洽。
+- Cookbook：CM 系算 $f(\theta_{\rm CM})\to$ 角度变换到 lab $\to$ 乘 luminosity 与探测器接收度 = 实验计数率。
+
+## 进一步阅读
+
+- Goldstein《Classical Mechanics》§3.10–3.11（两体散射运动学的经典推导）
+- Pilkuhn《Relativistic Particle Physics》§2 与 Byckling–Kajantie《Particle Kinematics》（Mandelstam 变量、相对论相空间）
+- Taylor《Scattering Theory》§3.4（lab/CM 角度与截面变换的算符层面陈述）
+- Particle Data Group "Kinematics" review（最新数据公式集，包含 luminosity 标准定义）
+- 本仓库正文第 2 章（CM 系 $f(\theta)$ 与光学定理）、第 11 章（三体相空间）、第 15 章（色散关系与 $s,t,u$ 解析延拓）
+- 本仓库 LaTeX 教材 `ch_kinematics.tex`——本附录的理论详证版本

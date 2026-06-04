@@ -1,0 +1,538 @@
+# 三体散射与 Faddeev–AGS 方程
+
+{{< include /_macros.qmd >}}
+
+> **本章目标**：解释为什么把 Lippmann–Schwinger 方程直接套到三体问题会失败（连通性问题），引入 Faddeev 1961 的分解 $\Tmat = \Tmat^{(1)} + \Tmat^{(2)} + \Tmat^{(3)}$ 与 AGS 形式 $U_{\beta\alpha}$，给出 separable 两体输入下方程的降维结果（Skornyakov–Ter-Martirosyan 结构），并用 1D 三玻色子玩具模型亲手解出三体束缚态——验证它确实位于 $2{+}1$ 阈值之下。
+
+> **配套理论详证**：Glöckle《The Quantum Mechanical Few-Body Problem》全书；Newton《Scattering Theory of Waves and Particles》第 17 章；Faddeev & Merkuriev《Quantum Scattering Theory for Several Particle Systems》。AGS 形式的原始文献：Alt–Grassberger–Sandhas, Nucl. Phys. B **2**, 167 (1967)。
+
+本章统一约定 $\hbar = 1$、$m = 1$（所有粒子等质量）。这与全书 $m = 1/2$ 的默认有别——三体问题里多次出现约化质量 $m/2$ 与 $2m/3$，取 $m = 1$ 让 Jacobi 动能写成 $H_0 = \tfrac{3}{4}p^2 + q^2$（spectator 动量 $p$、对内相对动量 $q$），数值代码也最干净。
+
+## 为什么三体不能直接写 LS
+
+对三体系统 $\Hmat = \Hmat_0 + \Vmat_1 + \Vmat_2 + \Vmat_3$，其中 $\Vmat_i$ 表示作用于"不含粒子 $i$"那一对（即 $jk$ 对）的两体势。直觉地写下 LS 方程
+
+$$
+\Tmat = \Vmat + \Vmat\,\Op{G}_0\,\Tmat, \qquad \Vmat = \Vmat_1 + \Vmat_2 + \Vmat_3
+$$
+
+形式上没问题，但**这条积分方程在动量空间不是 Fredholm 型**：核 $\Vmat\Op{G}_0$ 不是紧算符。
+
+核心原因是 **disconnected piece**（"未连通"图）。把势写成
+
+$$
+\Vmat\,\Op{G}_0 = \sum_i \Vmat_i\,\Op{G}_0,
+$$
+
+每一项 $\Vmat_i \Op{G}_0$ 在动量空间含有形如 $\delta(p_i' - p_i)$ 的因子——粒子 $i$ 是该 $\Vmat_j$（$j \neq i$）的旁观者，其动量被 $\delta$ 函数固定。此 $\delta$ 函数让算符的"动量空间核"在对角线上有一条不可积的奇异线，**故 $\Vmat\Op{G}_0$ 的迭代核 $(\Vmat\Op{G}_0)^n$ 也带 $\delta$ 函数**，Neumann 级数发散，Fredholm 行列式不存在。
+
+具体讲，写 $\Vmat_i$ 在三粒子动量基下的矩阵元 $\langle p_1' p_2' p_3'|\Vmat_i|p_1 p_2 p_3\rangle = \delta(p_i' - p_i) \cdot v(\dots)$。乘 $\Op{G}_0$ 仍然带这个 $\delta$。于是 $\Vmat_i \Op{G}_0 \Vmat_i \Op{G}_0$ 含 $\delta(p_i' - p_i)^2$——典型的 disconnected diagram 病。
+
+**Faddeev 1961 的洞见**：与其求解整个 $\Tmat$，不如把它分成三块 $\Tmat = \Tmat^{(1)} + \Tmat^{(2)} + \Tmat^{(3)}$，每块满足一个**只用两体 t-matrix 作为驱动**的耦合方程，迭代核（多次乘 $G_0 t_i$ 后）确实是紧的。这是把"两体子动力学"显式地化掉，再让"剩余的相互作用"——本质上是粒子置换——上场。
+
+## 三体 Hilbert 空间与渐近通道
+
+三粒子的渐近态按碎片划分（参第 10 章通道概念）共有四类：
+
+1. **完全裂解通道** $\alpha = 0$：三粒子皆自由，渐近态张成 $\Hilb_0$，阈值 $W_0 = 0$。
+2. **重排通道** $\alpha = i$（$i = 1, 2, 3$）：粒子 $i$ 自由飞出，对 $(jk)$ 处于某个束缚态 $\phi_n^{(i)}$，阈值 $W_i = E_n^{(jk)} < 0$（这是粒子 $i$ 单独时不存在的子系统能量）。每条 $\alpha = i$ 内部还按 $(jk)$ 的束缚态量子数细分。
+3. **三体束缚态**（如有）：能量 $E_3 < \min_i W_i$，离散，对应 $\Hmat$ 的纯点谱。
+
+通道 Hamiltonian
+$$
+\Hmat_i = \Hmat_0 + \Vmat_i, \qquad \Vmat^i = \Vmat - \Vmat_i = \Vmat_j + \Vmat_k.
+$$
+
+注意 $\Hmat_i$ 只**保留**粒子 $(jk)$ 之间的相互作用（让它们能形成束缚态），把粒子 $i$ 与 $(jk)$ 的耦合统统放进 $\Vmat^i$。这与第 10 章双通道的 $\Vmat^\alpha$ 分解完全同构。三体 Faddeev 框架的本质就是把三种互不等价的"$2{+}1$ 重排"显式地标识出来，避免它们在算符方程里互相干扰。
+
+## Faddeev 分解
+
+引入三个**通道 $T$ 算符**
+
+$$
+\boxed{\;
+\Tmat^{(i)}(z) \equiv \Vmat_i + \Vmat_i\,\Op{G}(z)\,\Vmat,\qquad i=1,2,3.
+\;}
+$$
+
+它们的和给出全 $T$ 算符 $\Tmat = \sum_i \Tmat^{(i)}$（因为 $\sum_i \Vmat_i = \Vmat$，且 $\Tmat = \Vmat + \Vmat \Op{G} \Vmat$）。
+
+利用 Dyson 方程对 $\Hmat = \Hmat_i + \Vmat^i$（注意现在分裂方式取 $\Hmat_i$ 含 $\Vmat_i$）以及 $\Op{G}_i\Vmat_i = \Op{G}_0 t_i$（其中 $t_i$ 是两体 t-matrix 嵌入三体空间的"通道 t 算符"），经过几步代数操纵可得 **Faddeev 方程组**
+
+$$
+\boxed{\;
+\Tmat^{(i)}(z) = t_i(z) + t_i(z)\,\Op{G}_0(z)\,\bigl[\Tmat^{(j)}(z) + \Tmat^{(k)}(z)\bigr],
+\qquad (i,j,k) = \mathrm{cyc}(1,2,3).
+\;}
+$$
+
+形式上这是三个耦合的算符积分方程，驱动项是两体 t-matrix $t_i$，**不再含 $\Vmat_i$ 自己作为迭代核**。关键点：
+
+- 每一步迭代必然交替使用不同 $i$，因此核 $t_i G_0 t_j$（$i \neq j$）**不再有 disconnected $\delta$**——粒子 $j$ 在 $t_i$ 中是旁观者带 $\delta$，但被 $t_j$ 紧接着作用，$\delta$ 被吸收到 $t_j$ 的非平凡矩阵元里。三次迭代之后核就是紧的（Faddeev 原始定理）。
+- $t_i$ 是已知的两体输入：解一次两体 LS 即可得到，三体计算只需把它当数据。
+- 方程依赖能量参数 $z$；束缚态 $E_3 < W_{\min}$ 对应 $\sum_i \Tmat^{(i)}(z)$ 在 $z = E_3$ 处的极点。
+
+**AGS 形式**（Alt–Grassberger–Sandhas, 1967）作为 Faddeev 方程的"通道-通道矩阵"重写，更适合写散射跃迁振幅：定义跃迁算符 $U_{\beta\alpha}$（$\alpha,\beta \in \{0, 1, 2, 3\}$）满足
+
+$$
+U_{\beta\alpha}(z) = \bar{\delta}_{\beta\alpha}\,\Op{G}_0^{-1}(z)
++ \sum_{\gamma \neq \beta} \bar{\delta}_{\beta\gamma}\, t_\gamma(z)\,\Op{G}_0(z)\, U_{\gamma\alpha}(z),
+$$
+
+其中 $\bar{\delta}_{\beta\alpha} = 1 - \delta_{\beta\alpha}$（$\beta\alpha$ 不同则 $1$，相同则 $0$）。$U_{\beta\alpha}$ 的在壳矩阵元直接给出从 $2{+}1$ 通道 $\alpha$ 到 $\beta$ 的散射振幅；对角元 $\beta = \alpha$ 描述弹性 $2{+}1$ 散射（粒子 $\alpha$ 与束缚对 $(\alpha)$ 弹性碰撞），离对角元描述重排或裂解。AGS 与 Faddeev 互为算符代换，本章数值实验解 Faddeev 形式，但读者应记住：发表的核物理三体计算几乎都用 AGS 字母 $U$。
+
+## Separable 两体输入与降维
+
+直接的 Faddeev 方程在动量空间是 5 维积分方程（每个 $\Tmat^{(i)}$ 依赖两个三动量 $\vec{p}, \vec{p}\,'$ 和能量 $z$，共 6 维变量；s 波投影后省一维）。计算量大。
+
+**关键简化**：若两体 t-matrix 是 separable rank-$N$（参 examples/separable_rank1.qmd 关于 Yamaguchi 的讨论），即
+
+$$
+t_i(q, q'; \epsilon) = \sum_{n=1}^{N} g_n^{(i)}(q)\,\tau_{nm}^{(i)}(\epsilon)\,g_m^{(i)}(q'),
+$$
+
+代入 Faddeev 方程，所有"对内相对动量 $q$"被 form factor $g_n$ 吸收。三体波函数 $\Tmat^{(i)}$ 的对内动量依赖固定为 $g_n^{(i)}(q)$，剩下的未知量只是**spectator 动量 $p_i$ 的标量函数** $F_n^{(i)}(p_i; z)$。维度从 5 降到 1。最终方程长这样
+
+$$
+F_n^{(i)}(p; z) = \sum_{j \neq i} \sum_{m,n'}\int \rmd p'\, K^{(ij)}_{nm,n'm'}(p, p'; z)\, F_{m'}^{(j)}(p'; z),
+$$
+
+核 $K$ 含 $\tau$ 与"重新表达 spectator 动量"的形式因子积：当从 $i$ 视角换到 $j$ 视角，spectator $j$ 的动量 $p'$ 与 $(ik)$ 内部相对动量被 spectator $i$ 的动量 $p$ 与 $(jk)$ 内部相对动量线性混合。
+
+对秩 1（$N = 1$）和恒等粒子，方程进一步退化为单变量的耦合积分方程——这就是 **Skornyakov–Ter-Martirosyan（STM, 1956）方程**的现代形式：
+
+$$
+F(p) = \tau(z - \tfrac{3}{4m}p^2)\int \rmd p'\, Z(p, p'; z)\, F(p'),
+$$
+
+其中 $Z$ 是"交换核"（exchange kernel），含两端 form factor 之积除以三体自由传播子的能量分母。STM 1956 对零程极限（$g \to 1$）写下了同型方程，研究 $n{-}d$ 散射；20 世纪 70 年代 Efimov 在该方程的渐近自相似谱中发现普适三体束缚态级。本章 1D 数值实验就构造这个 $F(p)$。
+
+## Efimov 效应：定性梗概
+
+在 3D 中，当两体散射长度 $a \to \pm\infty$（unitary limit）时，STM 方程的核呈现尺度不变性：以 $p = e^{s} p_0$ 重新参数化后，$Z(p, p')$ 变成只依赖 $\log(p/p')$ 的 Mellin 核。这导致
+
+$$
+F(p) \sim p^{-1 \pm \rmi s_0}, \qquad s_0 \approx 1.00624 \text{（玻色子）},
+$$
+
+所以三体波函数在动量空间出现一族**对数周期**振荡。回到坐标空间，三体束缚态能量呈几何级数
+
+$$
+E_n^{(3)} = -\,\rme^{-2\pi n / s_0}\,E_*^{(3)}, \qquad \rme^{2\pi/s_0} \approx 515.04,
+$$
+
+形成无穷多个**Efimov 态**（universal 三体束缚态级）；每相邻级能量相差因子 $\sim 515$。Efimov 1970 的原始论文与 Braaten–Hammer Phys. Rep. 428 (2006) 综述给出完整推导。实验上 Kraemer 等 (Nature **440**, 315, 2006) 在超冷 Cs 原子上首次观测到 Efimov 三聚物。
+
+**重要边界条件**：Efimov 效应只发生在**3D**（或更高维），且需要至少两对粒子的两体散射长度同时大。**1D 情形不存在 Efimov 塔**——1D 短程相互作用普遍束缚（任何吸引势都至少有一束缚态），不存在 unitary scaling fixed point。这就是为什么本章数值实验取 1D（构造干净，能量易找），而把 Efimov 留给定性叙述。
+
+## 数值演示：1D 三玻色子的 Faddeev 束缚态
+
+**模型**：三个等质量（$m = 1$）玻色子在一维线上。两体相互作用为秩 1 separable
+
+$$
+v(q, q') = \lambda\, g(q)\, g(q'), \qquad g(q) = \frac{1}{q^2 + \beta^2},
+$$
+
+吸引取 $\lambda < 0$。这是 examples/separable_rank1.qmd 的 Yamaguchi 直接搬到 1D（用 $\rmd q/(2\pi)$ 测度）。
+
+**两体 t-matrix**：ansatz $t(q, q'; \epsilon) = g(q)\,\tau(\epsilon)\,g(q')$，标量传播子
+
+$$
+\tau(\epsilon) = \frac{\lambda}{1 - \lambda\, I(\epsilon)}, \qquad
+I(\epsilon) = \int_{-\infty}^{\infty}\frac{\rmd q}{2\pi}\,\frac{[g(q)]^2}{\epsilon - q^2 + \rmi 0}.
+$$
+
+**Faddeev 1D 三玻色子积分方程**：用 spectator-pair Jacobi 坐标，spectator 动量 $p$（单粒子动量），对内相对动量 $q = (p_j - p_k)/2$。三体动能 $H_0 = \tfrac{3}{4} p^2 + q^2$。两体子系统能量 $\epsilon(p) = z - \tfrac{3}{4} p^2$。对恒等玻色子，$\Tmat^{(j)} + \Tmat^{(k)} = 2 \Tmat^{(j)}$（粒子置换对称），最终单变量方程
+
+$$
+\boxed{\;
+F(p) = -2\,\tau\!\bigl(z - \tfrac{3}{4} p^2\bigr)
+\int_{-\infty}^{\infty}\!\frac{\rmd p'}{2\pi}\,
+\frac{g\!\bigl(p' + p/2\bigr)\, g\!\bigl(p + p'/2\bigr)}{p^2 + p p' + p'^2 - z}\,F(p').
+\;}
+$$
+
+推导：写下 $\langle p,q|G_0|p',q'\rangle_{ij}$ 的不同 spectator 矩阵元——以 spectator $j$ 表示时，$q' = p + p'/2$、$q = p' + p/2$，能量分母 $z - p^2 - p p' - p'^2$（合并 spectator $i$ 在 $p$、spectator $j$ 在 $p'$ 时三粒子的总动能）；再把两侧 form factor $g(q')$、$g(q)$ 乘进来即得上式。
+
+束缚态条件：齐次 Fredholm 方程 $F = K(z) F$ 在 $z = E_3$ 处有特征值 1，即 $\det[\mathbb{1} - K(E_3)] = 0$。**数值算法**：对 $z$ 扫描，每个 $z$ 把 $K$ 离散化为矩阵，求最大特征值，找其等于 1 的 $z$。
+
+### 第一段代码：两体子系统
+
+```{python}
+#| label: two-body-1d
+#| fig-cap: "1D 秩 1 separable（Yamaguchi）势的两体束缚态：左图 $1/\\tau(\\epsilon)$ 在束缚能 $\\epsilon_2$ 处穿过零；右图 $|\\tau(\\epsilon)|$ 在 $\\epsilon = \\epsilon_2$ 处发散（极点）。"
+
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy.integrate import quad
+from scipy.optimize import brentq
+
+# Parameters: hbar = 1, m = 1 (override of book default m=1/2 for cleanliness)
+beta = 1.0
+lam  = -3.0   # attractive, gives a single two-body bound state
+
+def g(p, b=beta):
+    return 1.0 / (p*p + b*b)
+
+def I_eps(eps, b=beta):
+    """Two-body propagator integral.
+    I(eps) = integral_{-inf}^{inf} dq/(2pi)  g(q)^2 / (eps - q^2 + i0)
+    For eps < 0 this is a regular real integral (no pole on real axis).
+    """
+    integrand = lambda q: g(q, b)**2 / (eps - q*q) / (2.0*np.pi)
+    val, _ = quad(integrand, -np.inf, np.inf, limit=300,
+                  epsabs=1e-13, epsrel=1e-13)
+    return val
+
+def tau(eps, l=lam, b=beta):
+    return l / (1.0 - l * I_eps(eps, b))
+
+# Locate two-body bound state: 1/lam - I(eps2) = 0
+eps2 = brentq(lambda e: 1.0/lam - I_eps(e), -50.0, -1e-7, xtol=1e-12)
+kappa2 = np.sqrt(-eps2)
+print(f"Two-body bound state: eps2 = {eps2:.8f}, kappa2 = {kappa2:.6f}")
+
+# Plot 1/tau(eps) and |tau(eps)|
+eps_arr = np.linspace(-2.0, -1e-3, 400)
+inv_tau = np.array([1.0/lam - I_eps(e) for e in eps_arr])
+mod_tau = np.array([abs(tau(e)) for e in eps_arr])
+
+fig, axes = plt.subplots(1, 2, figsize=(10, 3.5))
+ax = axes[0]
+ax.plot(eps_arr, inv_tau, 'C0-', lw=1.5)
+ax.axhline(0, color='k', lw=0.5)
+ax.axvline(eps2, color='r', ls='--', lw=1, label=fr"$\epsilon_2={eps2:.4f}$")
+ax.set_xlabel(r'$\epsilon$'); ax.set_ylabel(r'$1/\lambda - I(\epsilon)$')
+ax.set_title('Two-body bound-state condition'); ax.legend(); ax.grid(alpha=0.3)
+
+ax = axes[1]
+ax.plot(eps_arr, mod_tau, 'C2-', lw=1.5)
+ax.axvline(eps2, color='r', ls='--', lw=1)
+ax.set_yscale('log')
+ax.set_xlabel(r'$\epsilon$'); ax.set_ylabel(r'$|\tau(\epsilon)|$')
+ax.set_title(r'Two-body propagator $\tau(\epsilon)$'); ax.grid(alpha=0.3)
+
+fig.suptitle(fr'1D Yamaguchi rank-1: $\lambda={lam}$, $\beta={beta}$')
+fig.tight_layout()
+plt.show()
+```
+
+### 第二段代码：Faddeev 核与三体束缚态扫描
+
+```{python}
+#| label: fig-faddeev-eigvalue-scan
+#| fig-cap: "Faddeev 齐次方程最大本征值 $\\Lambda(z)$ 随能量 $z$ 的变化。三体束缚态 $E_3$ 处 $\\Lambda = 1$；$\\Lambda$ 在 $z \\to \\epsilon_2^-$ 处发散（$\\tau$ 极点）。竖线分别标记 $\\epsilon_2$（$2{+}1$ 阈值）与求得的 $E_3$。"
+
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy.integrate import quad
+from scipy.optimize import brentq
+
+# Self-contained: redefine all two-body machinery
+beta = 1.0
+lam  = -3.0
+
+def g(p, b=beta):
+    return 1.0 / (p*p + b*b)
+
+def I_eps(eps, b=beta):
+    integrand = lambda q: g(q, b)**2 / (eps - q*q) / (2.0*np.pi)
+    val, _ = quad(integrand, -np.inf, np.inf, limit=300,
+                  epsabs=1e-13, epsrel=1e-13)
+    return val
+
+def tau(eps, l=lam, b=beta):
+    return l / (1.0 - l * I_eps(eps, b))
+
+eps2 = brentq(lambda e: 1.0/lam - I_eps(e), -50.0, -1e-7, xtol=1e-12)
+
+def faddeev_kernel(z, N=80, Pmax=12.0):
+    """Discretise the 1D 3-boson Faddeev kernel on Gauss-Legendre grid.
+    Returns (K, p, w_p): K[i,j] is such that the integral equation
+    F(p_i) = sum_j K[i,j] F(p_j)   (homogeneous, eigenvalue = 1 at z=E_3).
+    """
+    x, w = np.polynomial.legendre.leggauss(N)
+    p  = Pmax * x         # grid in [-Pmax, Pmax]
+    wp = Pmax * w
+    # Pre-compute spectator-energy tau values
+    tau_vals = np.array([tau(z - 0.75 * pp*pp) for pp in p])
+    K = np.zeros((N, N))
+    for i in range(N):
+        denom = p[i]**2 + p[i]*p[None,:] + p[None,:]**2 - z   # broadcasts over j
+        ff    = g(p[None,:] + 0.5*p[i]) * g(p[i] + 0.5*p[None,:])
+        K[i, :] = -2.0 * tau_vals[i] * ff[0] / denom[0] * wp / (2.0*np.pi)
+    return K, p, wp
+
+def max_eig(z, N=80, Pmax=12.0):
+    K, _, _ = faddeev_kernel(z, N, Pmax)
+    vals = np.linalg.eigvals(K)
+    real_part = vals.real
+    # Pick the largest real eigenvalue
+    idx = np.argmax(real_part)
+    return real_part[idx]
+
+# Sweep z below threshold eps2
+z_scan = np.linspace(-3.0, 1.05*eps2, 60)
+Lambdas = np.array([max_eig(z, N=80, Pmax=12.0) for z in z_scan])
+
+# Locate E_3 by root-finding: Lambda(E_3) = 1
+def f(z):
+    return max_eig(z, N=80, Pmax=12.0) - 1.0
+
+# Bracket: find where sign flips
+sgn = np.sign(Lambdas - 1.0)
+ks = np.where(np.diff(sgn) != 0)[0]
+assert len(ks) >= 1, "未找到 Lambda=1 的零点"
+z_lo, z_hi = z_scan[ks[0]], z_scan[ks[0]+1]
+E3 = brentq(f, z_lo, z_hi, xtol=1e-7)
+print(f"Three-body bound state: E_3 = {E3:.8f}")
+print(f"2+1 threshold (one bound pair + free spectator) = eps2 = {eps2:.8f}")
+print(f"Binding below threshold: B_3 = E_3 - eps2 = {E3 - eps2:.6f}")
+print(f"Ratio E_3/eps2 = {E3/eps2:.4f}")
+
+fig, ax = plt.subplots(figsize=(7.5, 4))
+ax.plot(z_scan, Lambdas, 'o-', ms=4, lw=1, label=r'$\Lambda(z)$ (max eigenvalue)')
+ax.axhline(1.0, color='k', lw=0.7, ls=':')
+ax.axvline(eps2, color='C3', ls='--', lw=1, label=fr'$\epsilon_2={eps2:.4f}$ (2+1 threshold)')
+ax.axvline(E3,   color='C2', ls='--', lw=1, label=fr'$E_3={E3:.4f}$ (three-body)')
+ax.set_xlabel('z'); ax.set_ylabel(r'max real eigenvalue of $K(z)$')
+ax.set_title('Faddeev homogeneous equation: locating the three-body bound state')
+ax.set_ylim(0, 5); ax.grid(alpha=0.3); ax.legend(fontsize=9)
+fig.tight_layout()
+plt.show()
+```
+
+### 第三段代码：束缚态波函数与对称性
+
+```{python}
+#| label: fig-faddeev-wavefunction
+#| fig-cap: "三体束缚态的 Faddeev 分量 $F(p)$（在 spectator-pair Jacobi 表象下）。曲线偶对称——这是恒等玻色子三体基态（无角动量）的必然要求。"
+
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy.integrate import quad
+from scipy.optimize import brentq
+
+# Self-contained
+beta = 1.0
+lam  = -3.0
+
+def g(p, b=beta):  return 1.0 / (p*p + b*b)
+def I_eps(eps):
+    integrand = lambda q: g(q)**2 / (eps - q*q) / (2.0*np.pi)
+    v, _ = quad(integrand, -np.inf, np.inf, limit=300, epsabs=1e-13, epsrel=1e-13)
+    return v
+def tau(eps): return lam / (1.0 - lam * I_eps(eps))
+
+eps2 = brentq(lambda e: 1.0/lam - I_eps(e), -50.0, -1e-7, xtol=1e-12)
+
+def faddeev_kernel(z, N=80, Pmax=12.0):
+    x, w = np.polynomial.legendre.leggauss(N)
+    p  = Pmax * x
+    wp = Pmax * w
+    tau_vals = np.array([tau(z - 0.75 * pp*pp) for pp in p])
+    K = np.zeros((N, N))
+    for i in range(N):
+        denom = p[i]**2 + p[i]*p + p**2 - z
+        ff    = g(p + 0.5*p[i]) * g(p[i] + 0.5*p)
+        K[i, :] = -2.0 * tau_vals[i] * ff / denom * wp / (2.0*np.pi)
+    return K, p, wp
+
+def max_eig(z, N=80, Pmax=12.0):
+    K, _, _ = faddeev_kernel(z, N, Pmax)
+    return float(np.max(np.linalg.eigvals(K).real))
+
+E3 = brentq(lambda z: max_eig(z) - 1.0, -3.0, 1.05*eps2, xtol=1e-8)
+
+# Extract eigenvector at z = E_3
+K, p, wp = faddeev_kernel(E3, N=80, Pmax=12.0)
+vals, vecs = np.linalg.eig(K)
+idx = np.argmax(vals.real)
+F = vecs[:, idx].real
+F = F / np.max(np.abs(F))   # normalise to unit max
+
+# Check parity (F(p) should equal F(-p) for the ground state)
+# Grid is symmetric: p[i] = -p[N-1-i] (Gauss-Legendre on symmetric interval)
+sym_resid = np.max(np.abs(F - F[::-1]))
+print(f"Eigenvalue at E_3: {vals[idx].real:.8f} (should be 1)")
+print(f"Parity test |F(p) - F(-p)|_max = {sym_resid:.3e}  (ground state expected even)")
+
+# Verify normalisation of K: max |eigenvalue| should be 1 at z=E3
+fig, ax = plt.subplots(figsize=(7.5, 4))
+order = np.argsort(p)
+ax.plot(p[order], F[order], 'o-', ms=3, lw=1)
+ax.set_xlabel('spectator momentum  p')
+ax.set_ylabel('F(p)  (normalised)')
+ax.set_title(fr'Three-body Faddeev component at $E_3 = {E3:.4f}$')
+ax.grid(alpha=0.3)
+fig.tight_layout()
+plt.show()
+```
+
+### 第四段代码：网格收敛与零程极限
+
+```{python}
+#| label: fig-convergence
+#| fig-cap: "$E_3$ 对网格大小 $N$（点数）和动量截断 $P_{\\max}$ 的收敛。$N \\geq 100$ 后误差 $< 10^{-3}$。"
+
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy.integrate import quad
+from scipy.optimize import brentq
+
+beta = 1.0
+lam  = -3.0
+
+def g(p, b=beta):  return 1.0 / (p*p + b*b)
+def I_eps(eps, b=beta):
+    integrand = lambda q: g(q, b)**2 / (eps - q*q) / (2.0*np.pi)
+    v, _ = quad(integrand, -np.inf, np.inf, limit=300, epsabs=1e-13, epsrel=1e-13)
+    return v
+def tau(eps, l=lam, b=beta): return l / (1.0 - l * I_eps(eps, b))
+
+def E3_solve(b, l, N=80, Pmax=12.0):
+    eps2 = brentq(lambda e: 1.0/l - I_eps(e, b), -200.0, -1e-7, xtol=1e-12)
+    def faddeev_kernel(z):
+        x, w = np.polynomial.legendre.leggauss(N)
+        p  = Pmax * x; wp = Pmax * w
+        tau_vals = np.array([tau(z - 0.75*pp*pp, l, b) for pp in p])
+        K = np.zeros((N, N))
+        for i in range(N):
+            denom = p[i]**2 + p[i]*p + p**2 - z
+            ff    = g(p + 0.5*p[i], b) * g(p[i] + 0.5*p, b)
+            K[i, :] = -2.0 * tau_vals[i] * ff / denom * wp / (2.0*np.pi)
+        return K
+    def fmax(z):
+        K = faddeev_kernel(z)
+        return float(np.max(np.linalg.eigvals(K).real))
+    return brentq(lambda z: fmax(z) - 1.0, 50*eps2, 1.05*eps2, xtol=1e-8), eps2
+
+# Grid convergence at fixed (beta, lam) = (1, -3)
+print("Grid convergence (beta=1, lam=-3):")
+print(f"{'N':>4} {'Pmax':>6} {'E_3':>14}")
+for N in [40, 60, 80, 100, 120, 160]:
+    E3, _ = E3_solve(1.0, -3.0, N=N, Pmax=12.0)
+    print(f"{N:>4} {12.0:>6.1f} {E3:>14.8f}")
+
+# Zero-range limit: beta -> infinity with lam tuned to keep eps2 ~ -0.5
+# In Yamaguchi 1D, eps2 scales as |lam|/beta^3 for soft form factor; we hand-tune.
+print("\nZero-range limit (E_3/eps2 should approach McGuire's 4):")
+print(f"{'beta':>6} {'lam':>10} {'eps2':>12} {'E_3':>12} {'E_3/eps2':>10}")
+for b, l in [(0.5, -0.375), (1.0, -3.0), (2.0, -24.0), (4.0, -192.0)]:
+    E3, eps2 = E3_solve(b, l, N=120, Pmax=10.0)
+    print(f"{b:>6.2f} {l:>10.3f} {eps2:>12.6f} {E3:>12.6f} {E3/eps2:>10.4f}")
+```
+
+### 数值验证
+
+```{python}
+#| label: verification
+
+import numpy as np
+from scipy.integrate import quad
+from scipy.optimize import brentq
+
+beta = 1.0
+lam  = -3.0
+
+def g(p, b=beta): return 1.0/(p*p + b*b)
+def I_eps(eps):
+    integrand = lambda q: g(q)**2 / (eps - q*q) / (2.0*np.pi)
+    v, _ = quad(integrand, -np.inf, np.inf, limit=300, epsabs=1e-13, epsrel=1e-13)
+    return v
+def tau(eps): return lam / (1.0 - lam*I_eps(eps))
+
+# (1) Two-body bound state existence and value
+eps2 = brentq(lambda e: 1.0/lam - I_eps(e), -50.0, -1e-7, xtol=1e-12)
+assert eps2 < 0, "two-body must be bound for attractive lambda"
+assert abs(1.0/lam - I_eps(eps2)) < 1e-10, "bound-state condition residual too large"
+print(f"[OK] two-body: eps2 = {eps2:.8f}")
+
+# (2) Solve Faddeev for E_3 with high accuracy
+def faddeev_kernel(z, N=120, Pmax=12.0):
+    x, w = np.polynomial.legendre.leggauss(N)
+    p  = Pmax*x; wp = Pmax*w
+    tau_vals = np.array([tau(z - 0.75*pp*pp) for pp in p])
+    K = np.zeros((N, N))
+    for i in range(N):
+        denom = p[i]**2 + p[i]*p + p**2 - z
+        ff    = g(p + 0.5*p[i]) * g(p[i] + 0.5*p)
+        K[i, :] = -2.0 * tau_vals[i] * ff / denom * wp / (2.0*np.pi)
+    return K
+def fmax(z, N=120, Pmax=12.0):
+    return float(np.max(np.linalg.eigvals(faddeev_kernel(z, N, Pmax)).real))
+E3 = brentq(lambda z: fmax(z) - 1.0, -3.0, 1.05*eps2, xtol=1e-8)
+
+# (3) Three-body bound state must lie below the 2+1 threshold
+assert E3 < eps2, f"E_3={E3} not below 2+1 threshold eps2={eps2}!"
+print(f"[OK] three-body below 2+1 threshold: E_3={E3:.6f}  <  eps2={eps2:.6f}  "
+      f"(B_3 = {eps2 - E3:.6f})")
+
+# (4) Eigenvalue exactly 1 at z=E3 (consistency)
+lam_max = fmax(E3, N=120, Pmax=12.0)
+assert abs(lam_max - 1.0) < 1e-5, f"Lambda(E_3) = {lam_max}, expected 1"
+print(f"[OK] Lambda(E_3) = {lam_max:.8f}  (target 1, residual {abs(lam_max-1):.2e})")
+
+# (5) Grid convergence: result stable to <1e-3 between N=100 and N=160
+def E3_at(N, Pmax=12.0):
+    return brentq(lambda z: fmax(z, N, Pmax) - 1.0, -3.0, 1.05*eps2, xtol=1e-8)
+E3_100 = E3_at(100)
+E3_160 = E3_at(160)
+print(f"[OK] grid convergence: E_3(N=100)={E3_100:.6f}, E_3(N=160)={E3_160:.6f}, "
+      f"diff = {abs(E3_100-E3_160):.2e}")
+assert abs(E3_100 - E3_160) < 1e-3
+
+# (6) Zero-range limit: as beta increases (with lam tuned), E_3/eps2 -> 4 (McGuire 1964
+#     for 1D delta bosons: E_N = -m c^2 N(N^2-1)/24, hence E_3/E_2 = 4).
+def E3_eps2_at(b, l):
+    def Ie(eps):
+        v, _ = quad(lambda q: 1.0/((q*q+b*b)**2*(eps-q*q))/(2*np.pi),
+                    -np.inf, np.inf, limit=300, epsabs=1e-13, epsrel=1e-13)
+        return v
+    def tt(eps): return l/(1.0 - l*Ie(eps))
+    e2 = brentq(lambda e: 1.0/l - Ie(e), -200, -1e-7, xtol=1e-12)
+    def K(z, N=120, P=10.0):
+        x, w = np.polynomial.legendre.leggauss(N)
+        p = P*x; wp = P*w
+        tv = np.array([tt(z - 0.75*pp*pp) for pp in p])
+        Km = np.zeros((N,N))
+        for i in range(N):
+            d = p[i]**2 + p[i]*p + p**2 - z
+            f = (1.0/((p+0.5*p[i])**2 + b*b)) * (1.0/((p[i]+0.5*p)**2 + b*b))
+            Km[i,:] = -2.0*tv[i]*f/d*wp/(2*np.pi)
+        return Km
+    fm = lambda z: float(np.max(np.linalg.eigvals(K(z)).real))
+    e3 = brentq(lambda z: fm(z) - 1.0, 50*e2, 1.05*e2, xtol=1e-7)
+    return e3, e2
+
+ratios = []
+for b, l in [(1.0, -3.0), (2.0, -24.0), (4.0, -192.0)]:
+    e3, e2 = E3_eps2_at(b, l)
+    ratios.append(e3/e2)
+    print(f"  beta={b}: eps2={e2:.5f}, E_3={e3:.5f}, E_3/eps2={e3/e2:.4f}")
+# Ratios must form an increasing sequence approaching ~4
+assert ratios[0] < ratios[1] < ratios[2] < 4.0
+assert ratios[2] > 3.7, f"Zero-range limit not approached: ratios={ratios}"
+print(f"[OK] McGuire zero-range limit approached: ratio sequence {ratios} -> 4")
+
+print("\nAll assertions passed.")
+```
+
+## 小结
+
+- 三体直接 LS 方程因 disconnected $\delta$ 函数不是 Fredholm 型——Neumann 级数发散；这是 Faddeev 1961 工作的出发点。
+- Faddeev 把 $\Tmat$ 拆成三个通道分量 $\Tmat^{(i)}$，每个满足以两体 t-matrix $t_i$ 为驱动的耦合方程；三次迭代后核紧。
+- AGS 形式 $U_{\beta\alpha}$ 是 Faddeev 的"通道-通道矩阵"重写，更便于读出 $2{+}1$ 跃迁振幅。
+- 秩 1 separable 两体输入下，三体方程降到 spectator 动量的单变量积分方程（STM 1956）；本章 1D 实现给出干净的 toy 数值实验。
+- 1D 三玻色子（$\beta=1$, $\lambda=-3$）数值结果：$\epsilon_2 \approx -0.4906$，$E_3 \approx -1.6174$，三体束缚 $B_3 = \epsilon_2 - E_3 \approx 1.13 > 0$ 严格在 $2{+}1$ 阈值之下；$E_3/\epsilon_2 \approx 3.30$。
+- 零程极限 $\beta \to \infty$（$\lambda$ 同步调整保持 $\epsilon_2$ 量级）下数值给出 $E_3/\epsilon_2 \to 4$，与 McGuire 1964 的解析结果 $E_N = -m c^2 N(N^2-1)/24$ 完全吻合。
+- Efimov 效应：3D 中 $a \to \infty$ 引发对数周期三体束缚态塔 $E_n \propto \rme^{-2\pi n/s_0}$（玻色子 $s_0 \approx 1.006$，几何因子 $\sim 515$）。1D 不存在 Efimov 塔，但 Faddeev 框架本身在所有维度通用。
+
+## 进一步阅读
+
+- Glöckle, *The Quantum Mechanical Few-Body Problem* (Springer, 1983)：标准教材，第 2–4 章覆盖 Faddeev/AGS 全部经典内容。
+- Faddeev & Merkuriev, *Quantum Scattering Theory for Several Particle Systems* (Kluwer, 1993)：原始作者数学严格版本。
+- Newton, *Scattering Theory of Waves and Particles* (1982)，第 17 章：与本仓库其它章节风格一致的紧凑推导。
+- Braaten & Hammer, *Universality in Few-Body Systems with Large Scattering Length*, Phys. Rep. **428**, 259 (2006)：Efimov 效应与冷原子实验的现代综述。
+- Phillips, Rotureau, van Kolck, *Modern Theory of Nuclear Forces*, 综述里关于 EFT + Faddeev 在核物理三体系统中的应用。
+- 本仓库 examples/separable_rank1.qmd：本章数值实验所用 Yamaguchi 两体 t-matrix 的 3D 解析处理；下一阶段计划补的 16 章（光学势 / Feshbach）会进一步把"三体子系统积出去"做成有效两体问题。
