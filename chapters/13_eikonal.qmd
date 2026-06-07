@@ -384,7 +384,7 @@ print("Eikonal verification passed: weak-field -> Born, high-energy -> full p.w.
 | 大角度 $\theta\gtrsim 30^\circ$ | 大动量转移 $q\sim k$ | $\rme^{-\rmi\vec q\cdot\vec b}\approx \rme^{-\rmi\vec q\cdot\vec r}$ 不成立，丢掉的 $\nabla^2\phi$ 项与保留项同量级 |
 | 强势 $|V|/E \sim 1$ | 经典轨迹被显著弯折 | $\phi$ 不再是慢变包络，"沿直线"的 ansatz 失效；可考虑直线的非直线修正（curved trajectory eikonal） |
 | 低能 $ka \lesssim 1$ | 波长 $\sim$ 势的尺寸 | 几何光学语言不成立，所有分波贡献相当，必须分波展开 |
-| 共振附近 | 长寿命中间态 | eikonal 把势"瞬时"积分掉，无法解析共振 polepole；用 Breit-Wigner（第 8 章） |
+| 共振附近 | 长寿命中间态 | eikonal 把势"瞬时"积分掉，无法解析共振 pole；用 Breit-Wigner（第 8 章） |
 | 长程力（Coulomb） | 任意远 $b$ 都有相位 | $\chi(b)$ 在 $b\to\infty$ 不收敛；需做 Coulomb 改写或只算"屏蔽 + Coulomb"的差（见第 9 章） |
 
 把这些与第 4 章的 Born 收敛条件对照：
