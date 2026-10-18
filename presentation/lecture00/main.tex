@@ -82,21 +82,25 @@ $S$ 算符联系同一次散射的入射态和出射态：
 它回答：准备给定的入射态后，各种出射结果的概率幅是多少？
 \end{frame}
 
-\begin{frame}{不含时描述：按能量分解}
-指数函数是时间微分算子的广义本征函数：
+\begin{frame}{不含时描述：时空张量积与能量分解}
+$H$ 不显含时间时，在时空函数的乘积空间 $\mathcal F_t\otimes\mathcal H_{\bm r}$ 中展开：
 \[
-\partial_t e^{\pm\ii\omega t}=\pm\ii\omega e^{\pm\ii\omega t}.
+\Psi=\sum_a c_a\,T_a\otimes\psi_a,\qquad
+(T_a\otimes\psi_a)(t,\bm r)=T_a(t)\psi_a(\bm r).
 \]
-取 $e^{-\ii\omega t}$ 约定，$\ii\hbar\partial_t$ 在该模式上作用等价于乘 $E=\hbar\omega$：
+取 $T_E(t)=e^{-\ii Et/\hbar}$，则 $\ii\hbar\partial_tT_E=ET_E$。含时方程中的算子为
 \[
-\Psi_E(t,\bm r)=e^{-\ii Et/\hbar}\psi_E(\bm r),
-\qquad H\psi_E=E\psi_E.
+\mathcal D=\ii\hbar\partial_t\otimes\id-\id\otimes H.
+\]
+对单个定能乘积解 $\Psi_E=T_E\otimes\psi_E$，
+\[
+\mathcal D(T_E\otimes\psi_E)=T_E\otimes(E-H)\psi_E=0.
 \]
 \begin{itemize}
-\item $H$ 不显含时间时，不同能量模式可以分别求解。
-\item 一般波包是这些模式的叠加，叠加系数由初态决定。
+\item 时间因子分离后，空间波函数满足 $H\psi_E=E\psi_E$。
+\item 一般波包由定能乘积解叠加而成，连续能量标签用积分。
 \end{itemize}
-\note{定态分离与波包叠加：\url{https://www.damtp.cam.ac.uk/user/tong/qm/qmhtml/S2.html}}
+\note{$\mathcal F_t$ 表示时间函数空间，时间仍是演化参数。这里的张量积组织时空函数，谐波与散射定态按广义模态理解；标签 $a$ 可包含能量及简并指标，叠加系数由初态决定。定态分离与波包叠加：\url{https://www.damtp.cam.ac.uk/user/tong/qm/qmhtml/S2.html}}
 \end{frame}
 
 \begin{frame}{定能描述：计算振幅与截面}
