@@ -215,91 +215,190 @@ X(s)=\frac{F(s)+sx_0+v_0}{s^2+\omega_0^2}.
 变换把微分化为代数运算；初始数据和响应条件仍是求解的一部分。
 \end{frame}
 
-\begin{frame}{Green 函数：单位脉冲的响应}
-先给振子一个单位脉冲，观察此后的运动：
+\begin{frame}{Green 函数：线性算符的求逆问题}
+受迫振动可以写成一个带源的线性方程：
 \[
-(\partial_t^2+\omega_0^2)G_R(t)=\delta(t),
-\qquad G_R(t<0)=0.
-\]
-单位冲量令速度跃变 $1$，随后系统自由振动：
-\[
-G_R(0^+)=0,\qquad \dot G_R(0^+)=1,
-\]
-\[
-G_R(t)=\theta(t)\frac{\sin\omega_0t}{\omega_0}.
-\]
-下标 $R$ 表示推迟响应。后面的自由 Green 算符也先解决给定源的响应问题。
-\end{frame}
-
-\begin{frame}{Green 函数：已知外源与未知源}
-把连续外力看作许多脉冲的叠加，总响应也由各次脉冲的响应叠加：
-\[
-x(t)=x_h(t)+\int_0^tG_R(t-\tau)f(\tau)\dd\tau,
-\]
-\[
-x_h(t)=x_0\cos\omega_0t+\frac{v_0}{\omega_0}\sin\omega_0t.
+Lx=f,\qquad L=\frac{\dd^2}{\dd t^2}+\omega_0^2.
 \]
 \begin{itemize}
-\item $x_h$ 携带初值，卷积项叠加各时刻外力产生的响应。
-\item 这里 $f$ 已知；散射中的 $V\psi$ 还依赖待求的 $\psi$。
+\item $L$ 描述系统的动力学，$f$ 是给定的源，$x$ 是待求的响应。
+\item 线性性保证：若 $Lx_1=f_1$、$Lx_2=f_2$，则
 \end{itemize}
-因此，后面的响应关系本身成为积分方程，需要继续迭代或离散为线性方程组。
-\note{Green 函数与初值项：\url{https://tonic.physics.sunysb.edu/~dteaney/F16_Phy505/lectures/green.pdf}}
+\[
+L(ax_1+bx_2)=af_1+bf_2.
+\]
+我们希望像解矩阵方程一样，把源映射为解。但若 $Lx_h=0$，
+\[
+L(x+x_h)=f.
+\]
+因此，求逆还需要指定初始条件或边界条件，选出所需的解。
 \end{frame}
 
-\begin{frame}{Picard：未知解怎样进入积分方程？}
-也可以把回复力放到右侧，将振子方程积分两次：
+\begin{frame}{Green 函数：求解算符的积分核}
+对于可逆矩阵，逆矩阵将源的各个分量组合成解：
 \[
-x(t)=x_0+v_0t+\int_0^t(t-\tau)
-\bigl[f(\tau)-\omega_0^2x(\tau)\bigr]\dd\tau.
+A\bm x=\bm f,\qquad x_i=\sum_j(A^{-1})_{ij}f_j,
+\qquad \sum_k A_{ik}(A^{-1})_{kj}=\delta_{ij}.
 \]
-用上一轮的轨迹生成下一轮：
+连续变量下，矩阵元对应积分核。在时间区间 $I$ 上，求和变为积分：
 \[
-x^{(n+1)}(t)=x_0+v_0t+\int_0^t(t-\tau)
-\bigl[f(\tau)-\omega_0^2x^{(n)}(\tau)\bigr]\dd\tau.
+x_p(t)=\int_I G(t,t')f(t')\dd t',\qquad
+L_tG(t,t')=\delta(t-t').
 \]
 \begin{itemize}
-\item 每轮用上一次的 $x$ 计算回复力，再更新整条轨迹。
-\item 后面的 LS 方程与 Born 迭代也用近似解生成新的源，再修正近似解。
+\item $t'$ 标记源施加的时刻，$t$ 标记观察响应的时刻。
+\item $L_t$ 只作用于第一个变量；$G(t,t')$ 是单位点源对应的解。
 \end{itemize}
-逐次修正的思想可以沿用；散射迭代的收敛性需要结合势与能量判断。
+为 $G$ 指定相应的条件后，它就给出从源到特解 $x_p$ 的映射。
 \end{frame}
 
-\begin{frame}{因果响应的频域 Green 函数}
-单位脉冲之后才有响应。对这个因果响应作 Fourier 变换，用 $\epsilon>0$ 保证收敛：
+\begin{frame}{Green 函数：分解源，再叠加响应}
+任意源都可以写成单位点源的加权叠加：
 \[
+f(t)=\int_I\delta(t-t')f(t')\dd t'.
+\]
+由线性性，每个点源的响应也按同样的权重叠加：
+\[
+x_p(t)=\int_I G(t,t')f(t')\dd t'.
+\]
+把算符作用回去，就能验证它确实求解了原方程：
+\[
+L_tx_p(t)=\int_I L_tG(t,t')f(t')\dd t'
+=\int_I\delta(t-t')f(t')\dd t'=f(t).
+\]
+完整解为 $x=x_h+x_p$，其中 $Lx_h=0$。
+\par
+所选的 $G$ 与自由项共同满足初始或边界条件。
+\end{frame}
+
+\begin{frame}{Retarded：源施加之后的响应}
+推迟 Green 函数要求在源施加之前没有响应：
+\[
+L_tG_R(t,t')=\delta(t-t'),\qquad G_R(t,t')=0\quad(t<t').
+\]
+对振子，单位冲量使速度跃变 $1$，随后自由振动：
+\[
+G_R(t,t')=\theta(t-t')\frac{\sin[\omega_0(t-t')]}{\omega_0}.
+\]
+从 $t_0$ 的初值出发，时刻 $t\ge t_0$ 的解为
+\[
+x(t)=x_h(t)+\int_{t_0}^{t}G_R(t,t')f(t')\dd t',
+\]
+\[
+x_h(t)=x_0\cos[\omega_0(t-t_0)]
++\frac{v_0}{\omega_0}\sin[\omega_0(t-t_0)].
+\]
+自由项携带初值，积分项只累积过去的外力，且在 $t_0$ 的位移、速度均为零。
+\note{在 $t=t'$ 处，G 连续，且对 L_tG=delta(t-t') 跨越源点积分得到导数跳跃为 1。推迟条件令源点左侧的 G 和导数为零，因此右侧满足 G(t'+)=0、partial_t G(t'+)=1。}
+\end{frame}
+
+\begin{frame}{Advanced：从终端条件向过去求解}
+超前 Green 函数满足同一个带源方程，但要求源施加之后响应为零：
+\[
+L_tG_A(t,t')=\delta(t-t'),\qquad G_A(t,t')=0\quad(t>t').
+\]
+振子的超前解为
+\[
+G_A(t,t')=-\theta(t'-t)\frac{\sin[\omega_0(t-t')]}{\omega_0}.
+\]
+给定终端时刻 $T$ 的位移和速度，对 $t\le T$ 可写成
+\[
+x(t)=x_{h,T}(t)+\int_t^T G_A(t,t')f(t')\dd t'.
+\]
+\begin{itemize}
+\item $x_{h,T}$ 是携带终端数据的自由解；积分项在 $T$ 的位移、速度均为零。
+\item 此时 $t$ 的解使用其后的源，是从终端条件向过去重建运动。
+\end{itemize}
+施加外力并观察随后运动的初值实验，选择的是推迟响应。
+\note{超前核的负号保证导数跳跃仍为 1：源点右导数为 0、左导数为 -1。终端自由解为 x(T)cos[omega_0(t-T)]+v(T)sin[omega_0(t-T)]/omega_0。有限终端 T 的写法不要求未来无穷远处的谐波源可积。}
+\end{frame}
+
+\begin{frame}{同一个点源方程，不同的时间条件}
+令 $\tau=\omega_0(t-t')$。两种核在源点两侧的支撑不同：
+\begin{center}
+% [EN] Plot the exact dimensionless kernels to compare their temporal support / [CN] 绘制精确的无量纲核，对比两者在时间轴上的支撑。
+\begin{tikzpicture}
+\begin{axis}[
+width=0.88\textwidth,height=3.8cm,
+xmin=-7,xmax=7,ymin=-1.25,ymax=1.25,
+xlabel={$\tau=\omega_0(t-t')$},ylabel={$\omega_0 G$},
+xtick={-6,-3,0,3,6},ytick={-1,0,1},
+grid=major,grid style={gray!20},
+tick label style={font=\small},label style={font=\small},
+legend style={font=\small,at={(0.5,1.02)},anchor=south,legend columns=2,draw=none},
+]
+\addplot[blue!70!black,thick,domain=-7:7,samples=301]
+{x>=0 ? sin(deg(x)) : 0};
+\addlegendentry{$G_R$: retarded}
+\addplot[orange!85!black,thick,dashed,domain=-7:7,samples=301]
+{x<=0 ? -sin(deg(x)) : 0};
+\addlegendentry{$G_A$: advanced}
+\end{axis}
+\end{tikzpicture}
+\end{center}
+两者都在 $t=t'$ 连续，且满足同一个单位源要求的导数跳跃：
+\[
+\partial_tG(t'^+,t')-\partial_tG(t'^-,t')=1.
+\]
+\end{frame}
+
+\begin{frame}{时间条件在频域中成为极点规定}
+令 $u=t-t'$，取 $\widetilde G(\omega)=\int_{-\infty}^{\infty}e^{\ii\omega u}G(u)\dd u$。
+对两种时间支撑分别加收敛因子 $e^{-\epsilon|u|}$，得到
+\[
+\begin{aligned}
 \widetilde G_R(\omega)
-=\lim_{\epsilon\downarrow0}\int_0^\infty
- e^{\ii\omega\tau-\epsilon\tau}
- \frac{\sin\omega_0\tau}{\omega_0}\dd\tau
-=\frac{1}{\omega_0^2-(\omega+\ii0^+)^2}.
-\]
-若系统在 $t<0$ 静止，则
-\[
-\widetilde x(\omega)=\widetilde G_R(\omega)\widetilde f(\omega).
+&=\lim_{\epsilon\downarrow0}\int_0^\infty
+ e^{\ii\omega u-\epsilon u}\frac{\sin\omega_0u}{\omega_0}\dd u
+=\frac{1}{\omega_0^2-(\omega+\ii0^+)^2},\\[0.7em]
+\widetilde G_A(\omega)
+&=\lim_{\epsilon\downarrow0}\int_{-\infty}^0
+ e^{\ii\omega u+\epsilon u}\frac{-\sin\omega_0u}{\omega_0}\dd u
+=\frac{1}{\omega_0^2-(\omega-\ii0^+)^2}.
+\end{aligned}
 \]
 \begin{itemize}
-\item 时间域的响应条件，在频域中指定了极点的位置。
-\item 后面的 $(E-H_0+\ii0^+)^{-1}$ 也需要附带物理条件来定义。
+\item 推迟核的极点在实轴下方，超前核的极点在实轴上方。
+\item 时间域选定的响应条件，在频域中由 $\pm\ii0^+$ 保留下来。
 \end{itemize}
-分母为零时，物理条件参与逆算符的定义。
+选定核后，源产生的特解由 $\widetilde x_p=\widetilde G\widetilde f$ 给出。
 \end{frame}
 
 \begin{frame}{极点绕行与因果条件}
 频域中的极点规定，怎样保证外力施加之前没有响应？
 \[
-G_R(\tau)=\int_{-\infty}^{\infty}\frac{\dd\omega}{2\pi}
-\frac{e^{-\ii\omega\tau}}{\omega_0^2-(\omega+\ii0^+)^2}.
+G_R(u)=\int_{-\infty}^{\infty}\frac{\dd\omega}{2\pi}
+\frac{e^{-\ii\omega u}}{\omega_0^2-(\omega+\ii0^+)^2}.
 \]
 极点位于 $\omega=\pm\omega_0-\ii0^+$，都在实轴下方。
 \begin{itemize}
-\item $\tau>0$：指数在下半平面衰减，向下闭合并拾取留数。
-\item $\tau<0$：向上闭合，内部没有极点，因此响应为零。
+\item $u>0$：指数在下半平面衰减，向下闭合并拾取留数。
+\item $u<0$：向上闭合，内部没有极点，因此响应为零。
 \end{itemize}
 \[
-G_R(\tau)=\theta(\tau)\frac{\sin\omega_0\tau}{\omega_0}.
+G_R(u)=\theta(u)\frac{\sin\omega_0u}{\omega_0}.
 \]
 振子选择时间上的因果响应；散射选择空间上的出射行为，各自通过极点规定表达。
+\end{frame}
+
+\begin{frame}{Green 算符与散射边界条件}
+散射方程也可以写成“线性算符作用于解等于源”：
+\[
+(E-H_0)\ket{\psi}=\ket{s},\qquad \ket{s}=V\ket{\psi}.
+\]
+给定同能量的自由入射态 $\ket{\phi}$，选择出射 Green 算符后得到
+\[
+G_0^{(+)}(E)=(E-H_0+\ii0^+)^{-1},\qquad
+\ket{\psi^{(+)}}=\ket{\phi}+G_0^{(+)}V\ket{\psi^{(+)}}.
+\]
+\begin{itemize}
+\item $\ket{\phi}$ 是自由入射解；$G_0^{(+)}V\ket{\psi^{(+)}}$ 是源产生的响应。
+\item 散射中的 $+\ii0^+$ 规定源产生空间上的出射波：
+\end{itemize}
+\[
+\psi^{(+)}(\bm r)\sim e^{\ii kz}+f(\hat{\bm r})\frac{e^{\ii kr}}{r}.
+\]
+这里的源依赖未知的 $\psi$，因此得到的是积分方程，仍需自洽求解。
 \end{frame}
 
 \begin{frame}{耦合振子与散射中的通道耦合}
@@ -394,32 +493,12 @@ u_l(r)\sim A_l\sin\bigl(kr-l\pi/2+\delta_l\bigr).
 振子的初值规定怎样开始运动；散射的空间条件规定正则性与入射、出射行为。
 \end{frame}
 
-\begin{frame}{Green 算符与散射边界条件}
-把相互作用看成依赖未知波函数的源：
-\[
-(E-H_0)\ket{\psi}=V\ket{\psi}.
-\]
-给定同能量的自由入射态 $\ket{\phi}$，选择出射 Green 算符后得到
-\[
-G_0^{(+)}(E)=(E-H_0+\ii0^+)^{-1},\qquad
-\ket{\psi^{(+)}}=\ket{\phi}+G_0^{(+)}V\ket{\psi^{(+)}}.
-\]
-\begin{itemize}
-\item 振子的推迟 Green 函数规定时间上的因果响应。
-\item 散射中的 $+\ii0^+$ 规定源产生空间上的出射波：
-\end{itemize}
-\[
-\psi^{(+)}(\bm r)\sim e^{\ii kz}+f(\hat{\bm r})\frac{e^{\ii kr}}{r}.
-\]
-物理条件随问题改变，带条件求逆的思想继续沿用。
-\end{frame}
-
 \begin{frame}{进入散射计算时会遇到的问题}
 \renewcommand{\arraystretch}{1.45}
 \begin{tabular}{@{}p{0.43\textwidth}p{0.53\textwidth}@{}}
 \textbf{后面会遇到的问题}&\textbf{振子中已经见过的处理思路}\\\hline
 定能、分波以后，是否还会耦合？&先选乘积基，再检查算子与剩余矩阵\\
-未知解也出现在源项中，怎样求解？&积分方程的逐次修正，并检查收敛\\
+未知解也出现在源项中，怎样求解？&自洽积分方程；Picard 迭代见附录\\
 没有解析解，怎样计算径向波函数？&Runge--Kutta、Numerov 推进，再作远场匹配\\
 分母为零时，怎样定义带条件的逆？&Green 函数配合极点规定与物理条件\\
 剩余的通道或动量耦合怎样处理？&矩阵求解，或积分方程的离散与迭代
@@ -431,6 +510,24 @@ G_0^{(+)}(E)=(E-H_0+\ii0^+)^{-1},\qquad
 
 \renewcommand{\appendixname}{备用页}
 \appendix
+
+\begin{frame}{备用：Picard 积分方程与逐次修正}
+也可以把回复力放到右侧，将振子方程积分两次：
+\[
+x(t)=x_0+v_0t+\int_0^t(t-\tau)
+\bigl[f(\tau)-\omega_0^2x(\tau)\bigr]\dd\tau.
+\]
+用上一轮的轨迹生成下一轮：
+\[
+x^{(n+1)}(t)=x_0+v_0t+\int_0^t(t-\tau)
+\bigl[f(\tau)-\omega_0^2x^{(n)}(\tau)\bigr]\dd\tau.
+\]
+\begin{itemize}
+\item 每轮用上一次的 $x$ 计算回复力，再更新整条轨迹。
+\item 后面的 LS 方程与 Born 迭代也用近似解生成新的源，再修正近似解。
+\end{itemize}
+逐次修正的思想可以沿用；散射迭代的收敛性需要结合势与能量判断。
+\end{frame}
 
 \begin{frame}{备用：Runge--Kutta 递推公式}
 后面的径向方程通常没有解析解，需要从原点附近沿 $r$ 向外积分。
