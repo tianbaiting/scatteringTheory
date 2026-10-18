@@ -19,6 +19,7 @@ venv/
 **/*.quarto_ipynb
 
 # LaTeX
+/presentation/lecture*/build/
 *.aux
 *.log
 *.out

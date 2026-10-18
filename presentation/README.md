@@ -2,29 +2,30 @@
 
 本目录与 Quarto 教材并行维护，用于录制讲课视频。每讲独立编译。
 
-## 第一讲：散射理论概述
+## 第 0 讲：散射理论序言
 
-`lecture01/main.tex`（21 页）介绍散射问题的脉络、含时演化与定态描述的关系，再借受迫振子介绍直接积分、傅里叶与 Laplace 变换、Green 函数、极点规定。最后连接到径向 Schrödinger 方程、渐近匹配、动量空间 LS 方程与矩阵求逆。
+`lecture00/main.tex`（21 页）介绍散射问题的脉络、含时演化与定态描述的关系，再借受迫振子介绍直接积分、傅里叶与 Laplace 变换、Green 函数、极点规定。最后连接到径向 Schrödinger 方程、渐近匹配、动量空间 LS 方程与矩阵求逆。
 
 它是导论，不是将受迫振动当作散射理论的主题，也不试图在第一讲完整推导所有技术。
 
 ## 编译
 
-需要 XeLaTeX、xeCJK 和 Noto Sans CJK SC 字体。
+需要 latexmk、XeLaTeX、xeCJK 和 Noto Sans CJK SC 字体。
 
 ```bash
 cd presentation
 make
-# presentation/lecture01/main.pdf
+# presentation/lecture00/build/main.pdf
 ```
 
 也可以直接运行：
 
 ```bash
-cd presentation/lecture01
-xelatex -interaction=nonstopmode -halt-on-error main.tex
-xelatex -interaction=nonstopmode -halt-on-error main.tex
+cd presentation/lecture00
+latexmk main.tex
 ```
+
+`.latexmkrc` 将 PDF 和辅助文件统一输出到 TeX 同级的 `build/`。在 `presentation/` 运行 `make clean` 清理辅助文件并保留 PDF。
 
 ## 与教材的联系
 
