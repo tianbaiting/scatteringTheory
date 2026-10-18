@@ -215,105 +215,129 @@ X(s)=\frac{F(s)+sx_0+v_0}{s^2+\omega_0^2}.
 变换把微分化为代数运算；初始数据和响应条件仍是求解的一部分。
 \end{frame}
 
-\begin{frame}{Green 函数：线性算符的求逆问题}
-受迫振动可以写成一个带源的线性方程：
+\begin{frame}{受迫振子：升维降次后的演化方程}
+把位置和速度一起作为状态，二阶方程成为一阶线性系统：
 \[
-Lx=f,\qquad L=\frac{\dd^2}{\dd t^2}+\omega_0^2.
+\ddot x+\omega_0^2x=f(t)
+\quad\Longleftrightarrow\quad
+\dot{\bm y}=A\bm y+\bm b(t),
+\]
+\[
+\bm y=\begin{pmatrix}x\\v\end{pmatrix},\qquad
+A=\begin{pmatrix}0&1\\-\omega_0^2&0\end{pmatrix},\qquad
+\bm b(t)=\begin{pmatrix}0\\f(t)\end{pmatrix}.
 \]
 \begin{itemize}
-\item $L$ 描述系统的动力学，$f$ 是给定的源，$x$ 是待求的响应。
-\item 线性性保证：若 $Lx_1=f_1$、$Lx_2=f_2$，则
+\item $A$ 描述自由运动，外力直接改变速度，再通过演化影响位置。
+\item 定义 $\mathcal D=\partial_t-A$，带源方程就是 $\mathcal D\bm y=\bm b$。
 \end{itemize}
-\[
-L(ax_1+bx_2)=af_1+bf_2.
-\]
-我们希望像解矩阵方程一样，把源映射为解。但若 $Lx_h=0$，
-\[
-L(x+x_h)=f.
-\]
-因此，求逆还需要指定初始条件或边界条件，选出所需的解。
+线性性允许叠加不同源的响应。要从源确定唯一的运动，还需给定初始或终端数据。
 \end{frame}
 
-\begin{frame}{Green 函数：求解算符的积分核}
-对于可逆矩阵，逆矩阵将源的各个分量组合成解：
+\begin{frame}{演化算符：传播已有的状态}
+先关掉外力。自由运动满足
 \[
-A\bm x=\bm f,\qquad x_i=\sum_j(A^{-1})_{ij}f_j,
-\qquad \sum_k A_{ik}(A^{-1})_{kj}=\delta_{ij}.
+\bm y(t)=U(t,t')\bm y(t'),\qquad
+\partial_tU(t,t')=AU(t,t'),\qquad U(t',t')=I.
 \]
-连续变量下，矩阵元对应积分核。在时间区间 $I$ 上，求和变为积分：
+本例中 $A$ 为常矩阵，且 $A^2=-\omega_0^2I$。令 $u=t-t'$，则
 \[
-x_p(t)=\int_I G(t,t')f(t')\dd t',\qquad
-L_tG(t,t')=\delta(t-t').
+U(t,t')=e^{Au}
+=\begin{pmatrix}
+\cos\omega_0u & \dfrac{\sin\omega_0u}{\omega_0}\\[0.5em]
+-\omega_0\sin\omega_0u & \cos\omega_0u
+\end{pmatrix}.
 \]
 \begin{itemize}
-\item $t'$ 标记源施加的时刻，$t$ 标记观察响应的时刻。
-\item $L_t$ 只作用于第一个变量；$G(t,t')$ 是单位点源对应的解。
+\item 两列分别给出单位初始位移、单位初始速度产生的运动。
+\item $U(t,t')$ 可以向前或向后传播，尚未选择源的响应方向。
 \end{itemize}
-为 $G$ 指定相应的条件后，它就给出从源到特解 $x_p$ 的映射。
 \end{frame}
 
-\begin{frame}{Green 函数：分解源，再叠加响应}
-任意源都可以写成单位点源的加权叠加：
+\begin{frame}{带源演化：传播并叠加每次注入}
+将源分解为各时刻的点源：
 \[
-f(t)=\int_I\delta(t-t')f(t')\dd t'.
+\bm b(t)=\int_{-\infty}^{\infty}\delta(t-t')\bm b(t')\dd t'.
 \]
-由线性性，每个点源的响应也按同样的权重叠加：
+在 $t'$ 附近注入的状态增量为 $\bm b(t')\dd t'$，
+传播到 $t$ 后成为 $U(t,t')\bm b(t')\dd t'$。由线性性，
 \[
-x_p(t)=\int_I G(t,t')f(t')\dd t'.
+\boxed{\bm y(t)=U(t,t_0)\bm y_0
++\int_{t_0}^{t}U(t,t')\bm b(t')\dd t'}.
 \]
-把算符作用回去，就能验证它确实求解了原方程：
+第一项传播初态，第二项累积此后各时刻的源。对第二项求导：
 \[
-L_tx_p(t)=\int_I L_tG(t,t')f(t')\dd t'
-=\int_I\delta(t-t')f(t')\dd t'=f(t).
+\frac{\dd}{\dd t}\int_{t_0}^{t}U(t,t')\bm b(t')\dd t'
+=\bm b(t)+A\int_{t_0}^{t}U(t,t')\bm b(t')\dd t'.
 \]
-完整解为 $x=x_h+x_p$，其中 $Lx_h=0$。
+上限贡献当前的源，已有的响应继续自由演化。
+\end{frame}
+
+\begin{frame}{Retarded：带时间条件的求逆核}
+推迟 Green 矩阵只保留源施加之后的传播：
+\[
+\mathcal G_R(t,t')=\theta(t-t')U(t,t').
+\]
+对 $\mathcal D=\partial_t-A$，直接求导得到
+\[
+\begin{aligned}
+\mathcal D_t\mathcal G_R(t,t')
+&=\delta(t-t')U(t,t')
++\theta(t-t')(\partial_t-A)U(t,t')\\
+&=\delta(t-t')I.
+\end{aligned}
+\]
+$\mathcal G_R$ 因而是带推迟条件的求逆核。对 $t\ge t_0$，源产生的特解为
+\[
+\bm y_p(t)=\int_{t_0}^{t}\mathcal G_R(t,t')\bm b(t')\dd t',
+\qquad \mathcal D\bm y_p=\bm b,\quad \bm y_p(t_0)=0.
+\]
+演化算符传播状态；阶跃函数选择响应方向，并在源点产生单位矩阵源。
+\end{frame}
+
+\begin{frame}{Advanced：从终端条件向过去传播}
+超前 Green 矩阵选择源时刻之前的传播：
+\[
+\mathcal G_A(t,t')=-\theta(t'-t)U(t,t'),\qquad
+\mathcal G_A(t,t')=0\quad(t>t').
+\]
+由于 $\partial_t[-\theta(t'-t)]=\delta(t-t')$，它满足同一个带源方程：
+\[
+\mathcal D_t\mathcal G_A(t,t')=\delta(t-t')I.
+\]
+给定终端状态 $\bm y(T)$，对 $t\le T$ 有
+\[
+\bm y(t)=U(t,T)\bm y(T)
++\int_t^T\mathcal G_A(t,t')\bm b(t')\dd t'.
+\]
+\begin{itemize}
+\item 自由项传播终端数据，积分项使用 $t$ 之后的源，并在 $T$ 为零。
+\item 初值实验用推迟核，终端条件问题可用超前核向过去重建运动。
+\end{itemize}
+\end{frame}
+
+\begin{frame}{标量 Green 函数与矩阵核的对应}
+外力注入速度分量，我们观察位置分量，因此取矩阵核第 $1$ 行、第 $2$ 列：
+\[
+\begin{aligned}
+G_R(t,t')&=(\mathcal G_R)_{12}
+=\theta(t-t')\frac{\sin[\omega_0(t-t')]}{\omega_0},\\[0.5em]
+G_A(t,t')&=(\mathcal G_A)_{12}
+=-\theta(t'-t)\frac{\sin[\omega_0(t-t')]}{\omega_0}.
+\end{aligned}
+\]
+带源演化公式的位置分量就是熟悉的受迫振动解：
+\[
+x(t)=x_h(t)+\int_{t_0}^{t}
+\frac{\sin[\omega_0(t-t')]}{\omega_0}f(t')\dd t'.
+\]
+$x_h$ 是 $U(t,t_0)\bm y_0$ 的位置分量，携带初始位移和速度。
 \par
-所选的 $G$ 与自由项共同满足初始或边界条件。
+直接从二阶方程构造同一个标量核的推导，放在附录中对照。
+\note{自由位移为 $x_h(t)=x_0\cos[\omega_0(t-t_0)]+v_0\sin[\omega_0(t-t_0)]/\omega_0$。由于源向量的第一分量为零，位置响应只使用 Green 矩阵的第 1 行、第 2 列。}
 \end{frame}
 
-\begin{frame}{Retarded：源施加之后的响应}
-推迟 Green 函数要求在源施加之前没有响应：
-\[
-L_tG_R(t,t')=\delta(t-t'),\qquad G_R(t,t')=0\quad(t<t').
-\]
-对振子，单位冲量使速度跃变 $1$，随后自由振动：
-\[
-G_R(t,t')=\theta(t-t')\frac{\sin[\omega_0(t-t')]}{\omega_0}.
-\]
-从 $t_0$ 的初值出发，时刻 $t\ge t_0$ 的解为
-\[
-x(t)=x_h(t)+\int_{t_0}^{t}G_R(t,t')f(t')\dd t',
-\]
-\[
-x_h(t)=x_0\cos[\omega_0(t-t_0)]
-+\frac{v_0}{\omega_0}\sin[\omega_0(t-t_0)].
-\]
-自由项携带初值，积分项只累积过去的外力，且在 $t_0$ 的位移、速度均为零。
-\note{在 $t=t'$ 处，G 连续，且对 L_tG=delta(t-t') 跨越源点积分得到导数跳跃为 1。推迟条件令源点左侧的 G 和导数为零，因此右侧满足 G(t'+)=0、partial_t G(t'+)=1。}
-\end{frame}
-
-\begin{frame}{Advanced：从终端条件向过去求解}
-超前 Green 函数满足同一个带源方程，但要求源施加之后响应为零：
-\[
-L_tG_A(t,t')=\delta(t-t'),\qquad G_A(t,t')=0\quad(t>t').
-\]
-振子的超前解为
-\[
-G_A(t,t')=-\theta(t'-t)\frac{\sin[\omega_0(t-t')]}{\omega_0}.
-\]
-给定终端时刻 $T$ 的位移和速度，对 $t\le T$ 可写成
-\[
-x(t)=x_{h,T}(t)+\int_t^T G_A(t,t')f(t')\dd t'.
-\]
-\begin{itemize}
-\item $x_{h,T}$ 是携带终端数据的自由解；积分项在 $T$ 的位移、速度均为零。
-\item 此时 $t$ 的解使用其后的源，是从终端条件向过去重建运动。
-\end{itemize}
-施加外力并观察随后运动的初值实验，选择的是推迟响应。
-\note{超前核的负号保证导数跳跃仍为 1：源点右导数为 0、左导数为 -1。终端自由解为 x(T)cos[omega_0(t-T)]+v(T)sin[omega_0(t-T)]/omega_0。有限终端 T 的写法不要求未来无穷远处的谐波源可积。}
-\end{frame}
-
-\begin{frame}{同一个点源方程，不同的时间条件}
+\begin{frame}{标量 Green 函数的时间支撑}
 令 $\tau=\omega_0(t-t')$。两种核在源点两侧的支撑不同：
 \begin{center}
 % [EN] Plot the exact dimensionless kernels to compare their temporal support / [CN] 绘制精确的无量纲核，对比两者在时间轴上的支撑。
@@ -510,6 +534,45 @@ u_l(r)\sim A_l\sin\bigl(kr-l\pi/2+\delta_l\bigr).
 
 \renewcommand{\appendixname}{备用页}
 \appendix
+
+\begin{frame}{备用：直接从二阶方程构造 Green 函数}
+取 $L=\partial_t^2+\omega_0^2$，直接求满足 $L_tG(t,t')=\delta(t-t')$ 的标量核。
+在源点两侧，方程都是自由振动方程。令 $u=t-t'$，
+\[
+G(t,t')=\begin{cases}
+a_-\cos\omega_0u+b_-\sin\omega_0u,&t<t',\\
+a_+\cos\omega_0u+b_+\sin\omega_0u,&t>t'.
+\end{cases}
+\]
+若 $G$ 跳跃，二阶导数会产生 $\delta'$，因此 $G$ 必须连续。
+跨越源点积分 $L_tG=\delta$，得到
+\[
+G(t'^+,t')=G(t'^-,t'),\qquad
+\partial_tG(t'^+,t')-\partial_tG(t'^-,t')=1.
+\]
+于是 $a_+=a_-$、$\omega_0(b_+-b_-)=1$。
+再指定推迟或超前条件，才能确定所需的核。
+\end{frame}
+
+\begin{frame}{备用：二阶构造与矩阵核的对照}
+推迟条件令 $t<t'$ 一侧为零。连续性和导数跳跃给出
+\[
+a_-=b_-=a_+=0,\qquad b_+=\frac{1}{\omega_0},
+\]
+\[
+G_R(t,t')=\theta(t-t')\frac{\sin[\omega_0(t-t')]}{\omega_0}
+=(\mathcal G_R)_{12}.
+\]
+超前条件令 $t>t'$ 一侧为零。同理得到
+\[
+a_+=b_+=a_-=0,\qquad b_-=-\frac{1}{\omega_0},
+\]
+\[
+G_A(t,t')=-\theta(t'-t)\frac{\sin[\omega_0(t-t')]}{\omega_0}
+=(\mathcal G_A)_{12}.
+\]
+一阶矩阵核在源点跳跃 $I$；它的 $(1,2)$ 元连续，而该元素的导数跳跃 $1$。
+\end{frame}
 
 \begin{frame}{备用：Picard 积分方程与逐次修正}
 也可以把回复力放到右侧，将振子方程积分两次：
