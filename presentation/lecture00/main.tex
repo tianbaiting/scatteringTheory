@@ -226,11 +226,11 @@ A=\begin{pmatrix}0&1\\-\omega_0^2&0\end{pmatrix},\qquad
 线性性允许叠加不同源的响应。要从源确定唯一的运动，还需给定初始或终端数据。
 \end{frame}
 
-\begin{frame}{演化算符：传播已有的状态}
-先关掉外力。自由运动满足
+\begin{frame}{演化算符与 Green 核}
+演化算符 $U$ 将已有状态按自由方程传播：
 \[
 \bm y(t)=U(t,t')\bm y(t'),\qquad
-\partial_tU(t,t')=AU(t,t'),\qquad U(t',t')=I.
+U(t',t')=I.
 \]
 本例中 $A$ 为常矩阵，且 $A^2=-\omega_0^2I$。令 $u=t-t'$，则
 \[
@@ -240,10 +240,14 @@ U(t,t')=e^{Au}
 -\omega_0\sin\omega_0u & \cos\omega_0u
 \end{pmatrix}.
 \]
-\begin{itemize}
-\item 两列分别给出单位初始位移、单位初始速度产生的运动。
-\item $U(t,t')$ 可以向前或向后传播，尚未选择源的响应方向。
-\end{itemize}
+对 $\mathcal D=\partial_t-A$，$U$ 满足齐次方程，Green 核响应单位点源：
+\[
+\mathcal D_tU(t,t')=0,\qquad
+\mathcal D_t\mathcal G(t,t')=\delta(t-t')I.
+\]
+要求源施加之前无响应，就得到 $\mathcal G_R(t,t')=\theta(t-t')U(t,t')$。
+阶跃函数的导数产生 $\delta$ 源，$U(t',t')=I$ 保证其系数为单位矩阵。
+\note{$U$ 的两列分别给出单位初始位移和单位初始速度产生的自由运动。$U$ 可以向前或向后传播；Green 核还包含响应的时间条件。}
 \end{frame}
 
 \begin{frame}{带源演化：传播并叠加每次注入}
