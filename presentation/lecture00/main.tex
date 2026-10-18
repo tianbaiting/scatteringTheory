@@ -262,21 +262,19 @@ x(t'^+)-x(t'^-)=0,\qquad v(t'^+)-v(t'^-)=1.
 \cos[\omega_0(t-t')]
 \end{pmatrix}.
 \]
-外力注入速度分量，位移响应取 Green 矩阵的第 $1$ 行、第 $2$ 列：
-\[
-x_{\mathrm{pulse}}(t)=(\mathcal G_R(t,t'))_{12}.
-\]
 \end{frame}
 
-\begin{frame}{Green 算符：带初始条件的线性算符之逆}
-取 $\mathcal D=\partial_t-A$。对推迟核求导，阶跃函数产生单位点源：
+\begin{frame}{Green 算符：矩阵微分算符的逆}
+要求逆的是作用于整个状态向量的矩阵微分算符：
 \[
-\begin{aligned}
-\mathcal D_t\mathcal G_R(t,t')
-&=\delta(t-t')U(t,t')
-+\theta(t-t')(\partial_t-A)U(t,t')\\
-&=\delta(t-t')I.
-\end{aligned}
+\mathcal D=\partial_t I-A
+=\begin{pmatrix}\partial_t&-1\\\omega_0^2&\partial_t\end{pmatrix},
+\qquad \mathcal D\bm y=\bm b.
+\]
+其推迟 Green 矩阵满足
+\[
+\mathcal D_t\mathcal G_R(t,t')=\delta(t-t')I,
+\qquad \mathcal G_R(t,t')=0\quad(t<t').
 \]
 $\delta(t-t')I$ 是恒等算符的积分核，对应于矩阵求逆中的 $MM^{-1}=I$。
 \medskip
@@ -285,11 +283,29 @@ $\delta(t-t')I$ 是恒等算符的积分核，对应于矩阵求逆中的 $MM^{-
 以 $\mathcal G_R(t,t')$ 为核的积分算符就是它的逆：
 \[
 \boxed{\widehat{\mathcal G}_R=\mathcal D_R^{-1}},\qquad
-\mathcal D_R\bm y_p=\bm b
-\quad\Longrightarrow\quad
 \bm y_p=\widehat{\mathcal G}_R\bm b.
 \]
-若不固定初始数据，任意自由解都能加到特解上，因而无法唯一求逆。
+\end{frame}
+
+\begin{frame}{直接构造完整的 Green 矩阵}
+在 $t>t'$ 时，源为零，各列都满足自由演化方程：
+\[
+\partial_t\mathcal G_R=A\mathcal G_R.
+\]
+跨越源时刻积分 $\mathcal D_t\mathcal G_R=\delta(t-t')I$，得到
+\[
+\mathcal G_R(t'^+,t')-\mathcal G_R(t'^-,t')=I.
+\]
+推迟条件令左侧的核为零，右侧初值就是 $I$。因此
+\[
+\begin{aligned}
+\mathcal G_R(t,t')&=\theta(t-t')e^{A(t-t')}\\[0.4em]
+&=\theta(t-t')\begin{pmatrix}
+\cos[\omega_0(t-t')] & \dfrac{\sin[\omega_0(t-t')]}{\omega_0}\\[0.5em]
+-\omega_0\sin[\omega_0(t-t')] & \cos[\omega_0(t-t')]
+\end{pmatrix}.
+\end{aligned}
+\]
 \end{frame}
 
 \begin{frame}{任意外力：用同一个 Green 核叠加响应}
@@ -309,51 +325,37 @@ $\mathcal G_R(t,t')\bm b(t')\dd t'$。由线性性，
 \]
 非零初态由自由演化携带，完整解为
 \[
-\boxed{\bm y(t)=U(t,t_0)\bm y_0
-+\int_{t_0}^{t}U(t,t')\bm b(t')\dd t'}.
+\boxed{\begin{pmatrix}x(t)\\v(t)\end{pmatrix}
+=U(t,t_0)\begin{pmatrix}x_0\\v_0\end{pmatrix}
++\int_{t_0}^{t}\mathcal G_R(t,t')
+\begin{pmatrix}0\\f(t')\end{pmatrix}\dd t'}.
 \]
 \end{frame}
 
-\begin{frame}{位移的 Green 函数与二阶算符求逆}
-外力只进入速度分量，位移响应由矩阵核的 $(1,2)$ 元给出：
+\begin{frame}{用 Green 矩阵求出位置与速度}
+取 $t_0=0$、$\bm y_0=0$，在 $t\ge0$ 施加 $f(t)=F_0\cos\Omega t$，
+其中 $0<\Omega\ne\omega_0$。将整个源向量代入：
 \[
-G_R(t,t')=(\mathcal G_R(t,t'))_{12}
-=\theta(t-t')\frac{\sin[\omega_0(t-t')]}{\omega_0}.
+\begin{aligned}
+\begin{pmatrix}x(t)\\v(t)\end{pmatrix}
+&=\int_0^t\mathcal G_R(t,t')
+\begin{pmatrix}0\\F_0\cos\Omega t'\end{pmatrix}\dd t'\\[0.4em]
+&=F_0\int_0^t\begin{pmatrix}
+\dfrac{\sin[\omega_0(t-t')]}{\omega_0}\cos\Omega t'\\[0.5em]
+\cos[\omega_0(t-t')]\cos\Omega t'
+\end{pmatrix}\dd t'.
+\end{aligned}
 \]
-它也是原来二阶算符 $L=\partial_t^2+\omega_0^2$ 的 Green 核：
+计算积分，得到完整的状态：
 \[
-L_tG_R(t,t')=\delta(t-t').
+\boxed{\begin{pmatrix}x(t)\\v(t)\end{pmatrix}
+=\frac{F_0}{\omega_0^2-\Omega^2}
+\begin{pmatrix}
+\cos\Omega t-\cos\omega_0t\\
+-\Omega\sin\Omega t+\omega_0\sin\omega_0t
+\end{pmatrix}}.
 \]
-在零初始位移、零初始速度的条件下，积分给出 $L$ 的逆作用：
-\[
-x_p(t)=(L_R^{-1}f)(t)
-=\int_{t_0}^{t}G_R(t,t')f(t')\dd t'.
-\]
-对于一般初值，$x=x_h+x_p$，其中
-\[
-x_h(t)=x_0\cos[\omega_0(t-t_0)]
-+\frac{v_0}{\omega_0}\sin[\omega_0(t-t_0)].
-\]
-\end{frame}
-
-\begin{frame}{用 Green 函数求解本讲的受迫振子}
-取 $t_0=0$、$x_0=v_0=0$，并在 $t\ge0$ 施加
-$f(t)=F_0\cos\Omega t$，其中 $0<\Omega\ne\omega_0$。
-\[
-x(t)=\int_0^t G_R(t,t')F_0\cos\Omega t'\dd t'
-=\frac{F_0}{\omega_0}\int_0^t
-\sin[\omega_0(t-t')]\cos\Omega t'\dd t'.
-\]
-计算积分，得到
-\[
-\boxed{x(t)=\frac{F_0}{\omega_0^2-\Omega^2}
-\bigl[\cos\Omega t-\cos\omega_0t\bigr]}.
-\]
-\begin{itemize}
-\item $\cos\Omega t$ 项给出驱动频率的响应。
-\item $\cos\omega_0t$ 项与它组合，满足零初始位移和零初始速度。
-\end{itemize}
-这就是前面展示的响应曲线，由各时刻的单位冲量响应叠加得到。
+第一分量就是前面展示的位移曲线，第二分量给出速度。
 \end{frame}
 
 \begin{frame}{Advanced：终端条件对应另一种逆}
@@ -362,10 +364,9 @@ x(t)=\int_0^t G_R(t,t')F_0\cos\Omega t'\dd t'
 \mathcal G_A(t,t')=-\theta(t'-t)U(t,t'),\qquad
 \mathcal D_t\mathcal G_A(t,t')=\delta(t-t')I.
 \]
-它的位移分量为
+它在 $t>t'$ 为零，并在源点满足同样的矩阵跳跃条件：
 \[
-G_A(t,t')=(\mathcal G_A(t,t'))_{12}
-=-\theta(t'-t)\frac{\sin[\omega_0(t-t')]}{\omega_0}.
+\mathcal G_A(t'^+,t')-\mathcal G_A(t'^-,t')=0-(-I)=I.
 \]
 给定终端状态 $\bm y(T)$，对 $t\le T$ 有
 \[
@@ -379,70 +380,49 @@ G_A(t,t')=(\mathcal G_A(t,t'))_{12}
 \note{因为 $\partial_t[-\theta(t'-t)]=\delta(t-t')$，超前核的负号保证单位源的符号与推迟核一致。}
 \end{frame}
 
-\begin{frame}{标量 Green 函数的时间支撑}
-横轴为无量纲时间差 $\omega_0(t-t')$，两种核的时间支撑不同：
-\begin{center}
-% [EN] Plot the exact dimensionless kernels to compare their temporal support / [CN] 绘制精确的无量纲核，对比两者在时间轴上的支撑。
-\begin{tikzpicture}
-\begin{axis}[
-width=0.88\textwidth,height=3.8cm,
-xmin=-7,xmax=7,ymin=-1.25,ymax=1.25,
-xlabel={$\omega_0(t-t')$},ylabel={$\omega_0 G$},
-xtick={-6,-3,0,3,6},ytick={-1,0,1},
-grid=major,grid style={gray!20},
-tick label style={font=\small},label style={font=\small},
-legend style={font=\small,at={(0.5,1.02)},anchor=south,legend columns=2,draw=none},
-]
-\addplot[blue!70!black,thick,domain=-7:7,samples=301]
-{x>=0 ? sin(deg(x)) : 0};
-\addlegendentry{$G_R$: retarded}
-\addplot[orange!85!black,thick,dashed,domain=-7:7,samples=301]
-{x<=0 ? -sin(deg(x)) : 0};
-\addlegendentry{$G_A$: advanced}
-\end{axis}
-\end{tikzpicture}
-\end{center}
-两者都在 $t=t'$ 连续，且满足同一个单位源要求的导数跳跃：
+\begin{frame}{频域中直接求矩阵的逆}
+令 $\tau=t-t'$，取 Fourier 约定 $e^{-\ii\omega t}$。
+时间微分变为 $-\ii\omega$，于是
 \[
-\partial_tG(t'^+,t')-\partial_tG(t'^-,t')=1.
+\widetilde{\mathcal D}(\omega)=-\ii\omega I-A
+=\begin{pmatrix}-\ii\omega&-1\\\omega_0^2&-\ii\omega\end{pmatrix}.
 \]
-\end{frame}
-
-\begin{frame}{时间条件在频域中成为极点规定}
-令 $\tau=t-t'$，取 $\widetilde G(\omega)=\int_{-\infty}^{\infty}e^{\ii\omega\tau}G(\tau)\dd\tau$。
-对两种时间支撑分别加收敛因子 $e^{-\epsilon|\tau|}$，得到
+推迟核的变换用 $e^{-\epsilon\tau}$ 保证收敛，得到
 \[
 \begin{aligned}
-\widetilde G_R(\omega)
-&=\lim_{\epsilon\downarrow0}\int_0^\infty
- e^{\ii\omega\tau-\epsilon\tau}\frac{\sin\omega_0\tau}{\omega_0}\dd\tau
-=\frac{1}{\omega_0^2-(\omega+\ii0^+)^2},\\[0.7em]
-\widetilde G_A(\omega)
-&=\lim_{\epsilon\downarrow0}\int_{-\infty}^0
- e^{\ii\omega\tau+\epsilon\tau}\frac{-\sin\omega_0\tau}{\omega_0}\dd\tau
-=\frac{1}{\omega_0^2-(\omega-\ii0^+)^2}.
+\widetilde{\mathcal G}_R(\omega)
+&=\bigl[-\ii(\omega+\ii0^+)I-A\bigr]^{-1}\\[0.5em]
+&=\frac{1}{\omega_0^2-(\omega+\ii0^+)^2}
+\begin{pmatrix}
+-\ii(\omega+\ii0^+)&1\\
+-\omega_0^2&-\ii(\omega+\ii0^+)
+\end{pmatrix}.
 \end{aligned}
 \]
-\begin{itemize}
-\item 推迟核的极点在实轴下方，超前核的极点在实轴上方。
-\item 时间域选定的响应条件，在频域中由 $\pm\ii0^+$ 保留下来。
-\end{itemize}
-选定核后，源产生的特解由 $\widetilde x_p=\widetilde G\widetilde f$ 给出。
+超前核则为 $\widetilde{\mathcal G}_A=[-\ii(\omega-\ii0^+)I-A]^{-1}$。
+\par
+推迟极点在下半平面，超前极点在上半平面。
+\note{对推迟核，$\widetilde{\mathcal G}_R(\omega)=\lim_{\epsilon\downarrow0}\int_0^\infty e^{(\ii\omega-\epsilon)\tau}e^{A\tau}\dd\tau=[-\ii(\omega+\ii0^+)I-A]^{-1}$。超前核在负时间差上积分，收敛因子为 $e^{\epsilon\tau}$，对应另一侧的极点规定。}
 \end{frame}
 
-\begin{frame}{极点绕行与因果条件}
-频域中的极点规定，怎样保证外力施加之前没有响应？
+\begin{frame}{极点规定恢复矩阵核的时间支撑}
+对完整的矩阵逐元作 Fourier 逆变换：
 \[
-G_R(t,t')=\int_{-\infty}^{\infty}\frac{\dd\omega}{2\pi}
-\frac{e^{-\ii\omega(t-t')}}{\omega_0^2-(\omega+\ii0^+)^2}.
+\mathcal G_R(t,t')=\int_{-\infty}^{\infty}
+\frac{\dd\omega}{2\pi}\,
+ e^{-\ii\omega(t-t')}\widetilde{\mathcal G}_R(\omega).
 \]
-极点位于 $\omega=\pm\omega_0-\ii0^+$，都在实轴下方。
+矩阵元的极点均在 $\omega=\pm\omega_0-\ii0^+$，位于实轴下方。
 \begin{itemize}
-\item $t>t'$：指数在下半平面衰减，向下闭合并拾取留数。
-\item $t<t'$：向上闭合，内部没有极点，因此响应为零。
+\item $t>t'$：向下闭合，留数给出 $e^{A(t-t')}$。
+\item $t<t'$：向上闭合，内部没有极点，整个矩阵核为零。
 \end{itemize}
 \[
-G_R(t,t')=\theta(t-t')\frac{\sin[\omega_0(t-t')]}{\omega_0}.
+\mathcal G_R(t,t')=\theta(t-t')e^{A(t-t')}.
+\]
+超前核的极点位于上半平面，对应
+\[
+\mathcal G_A(t,t')=-\theta(t'-t)e^{A(t-t')}.
 \]
 \end{frame}
 
@@ -566,6 +546,28 @@ u_l(r)\sim A_l\sin\bigl(kr-l\pi/2+\delta_l\bigr).
 \renewcommand{\appendixname}{备用页}
 \appendix
 
+\begin{frame}{备用：标量核与二阶算符的逆}
+外力只进入速度分量，位移响应由矩阵核的 $(1,2)$ 元给出：
+\[
+G_R(t,t')=(\mathcal G_R(t,t'))_{12}
+=\theta(t-t')\frac{\sin[\omega_0(t-t')]}{\omega_0}.
+\]
+它也是原来二阶算符 $L=\partial_t^2+\omega_0^2$ 的 Green 核：
+\[
+L_tG_R(t,t')=\delta(t-t').
+\]
+在零初始位移、零初始速度的条件下，积分给出 $L$ 的逆作用：
+\[
+x_p(t)=(L_R^{-1}f)(t)
+=\int_{t_0}^{t}G_R(t,t')f(t')\dd t'.
+\]
+对于一般初值，$x=x_h+x_p$，其中
+\[
+x_h(t)=x_0\cos[\omega_0(t-t_0)]
++\frac{v_0}{\omega_0}\sin[\omega_0(t-t_0)].
+\]
+\end{frame}
+
 \begin{frame}{备用：直接从二阶方程构造 Green 函数}
 取 $L=\partial_t^2+\omega_0^2$，直接求满足 $L_tG(t,t')=\delta(t-t')$ 的标量核。
 在源点两侧，方程都是自由振动方程：
@@ -603,6 +605,35 @@ G_A(t,t')=-\theta(t'-t)\frac{\sin[\omega_0(t-t')]}{\omega_0}
 =(\mathcal G_A)_{12}.
 \]
 一阶矩阵核在源点跳跃 $I$；它的 $(1,2)$ 元连续，而该元素的导数跳跃 $1$。
+\end{frame}
+
+\begin{frame}{备用：标量 Green 函数的时间支撑}
+横轴为无量纲时间差 $\omega_0(t-t')$，两种核的时间支撑不同：
+\begin{center}
+% [EN] Plot the exact dimensionless kernels to compare their temporal support / [CN] 绘制精确的无量纲核，对比两者在时间轴上的支撑。
+\begin{tikzpicture}
+\begin{axis}[
+width=0.88\textwidth,height=3.8cm,
+xmin=-7,xmax=7,ymin=-1.25,ymax=1.25,
+xlabel={$\omega_0(t-t')$},ylabel={$\omega_0 G$},
+xtick={-6,-3,0,3,6},ytick={-1,0,1},
+grid=major,grid style={gray!20},
+tick label style={font=\small},label style={font=\small},
+legend style={font=\small,at={(0.5,1.02)},anchor=south,legend columns=2,draw=none},
+]
+\addplot[blue!70!black,thick,domain=-7:7,samples=301]
+{x>=0 ? sin(deg(x)) : 0};
+\addlegendentry{$G_R$: retarded}
+\addplot[orange!85!black,thick,dashed,domain=-7:7,samples=301]
+{x<=0 ? -sin(deg(x)) : 0};
+\addlegendentry{$G_A$: advanced}
+\end{axis}
+\end{tikzpicture}
+\end{center}
+两者都在 $t=t'$ 连续，且满足同一个单位源要求的导数跳跃：
+\[
+\partial_tG(t'^+,t')-\partial_tG(t'^-,t')=1.
+\]
 \end{frame}
 
 \begin{frame}{备用：Picard 积分方程与逐次修正}
