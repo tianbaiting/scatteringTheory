@@ -232,12 +232,12 @@ A=\begin{pmatrix}0&1\\-\omega_0^2&0\end{pmatrix},\qquad
 \bm y(t)=U(t,t')\bm y(t'),\qquad
 U(t',t')=I.
 \]
-本例中 $A$ 为常矩阵，且 $A^2=-\omega_0^2I$。令 $u=t-t'$，则
+本例中 $A$ 为常矩阵，且 $A^2=-\omega_0^2I$，因此
 \[
-U(t,t')=e^{Au}
+U(t,t')=e^{A(t-t')}
 =\begin{pmatrix}
-\cos\omega_0u & \dfrac{\sin\omega_0u}{\omega_0}\\[0.5em]
--\omega_0\sin\omega_0u & \cos\omega_0u
+\cos[\omega_0(t-t')] & \dfrac{\sin[\omega_0(t-t')]}{\omega_0}\\[0.5em]
+-\omega_0\sin[\omega_0(t-t')] & \cos[\omega_0(t-t')]
 \end{pmatrix}.
 \]
 对 $\mathcal D=\partial_t-A$，$U$ 满足齐次方程，Green 核响应单位点源：
@@ -331,14 +331,14 @@ $x_h$ 是 $U(t,t_0)\bm y_0$ 的位置分量，携带初始位移和速度。
 \end{frame}
 
 \begin{frame}{标量 Green 函数的时间支撑}
-令 $\tau=\omega_0(t-t')$。两种核在源点两侧的支撑不同：
+横轴为无量纲时间差 $\omega_0(t-t')$，两种核的时间支撑不同：
 \begin{center}
 % [EN] Plot the exact dimensionless kernels to compare their temporal support / [CN] 绘制精确的无量纲核，对比两者在时间轴上的支撑。
 \begin{tikzpicture}
 \begin{axis}[
 width=0.88\textwidth,height=3.8cm,
 xmin=-7,xmax=7,ymin=-1.25,ymax=1.25,
-xlabel={$\tau=\omega_0(t-t')$},ylabel={$\omega_0 G$},
+xlabel={$\omega_0(t-t')$},ylabel={$\omega_0 G$},
 xtick={-6,-3,0,3,6},ytick={-1,0,1},
 grid=major,grid style={gray!20},
 tick label style={font=\small},label style={font=\small},
@@ -360,17 +360,17 @@ legend style={font=\small,at={(0.5,1.02)},anchor=south,legend columns=2,draw=non
 \end{frame}
 
 \begin{frame}{时间条件在频域中成为极点规定}
-令 $u=t-t'$，取 $\widetilde G(\omega)=\int_{-\infty}^{\infty}e^{\ii\omega u}G(u)\dd u$。
-对两种时间支撑分别加收敛因子 $e^{-\epsilon|u|}$，得到
+令 $\tau=t-t'$，取 $\widetilde G(\omega)=\int_{-\infty}^{\infty}e^{\ii\omega\tau}G(\tau)\dd\tau$。
+对两种时间支撑分别加收敛因子 $e^{-\epsilon|\tau|}$，得到
 \[
 \begin{aligned}
 \widetilde G_R(\omega)
 &=\lim_{\epsilon\downarrow0}\int_0^\infty
- e^{\ii\omega u-\epsilon u}\frac{\sin\omega_0u}{\omega_0}\dd u
+ e^{\ii\omega\tau-\epsilon\tau}\frac{\sin\omega_0\tau}{\omega_0}\dd\tau
 =\frac{1}{\omega_0^2-(\omega+\ii0^+)^2},\\[0.7em]
 \widetilde G_A(\omega)
 &=\lim_{\epsilon\downarrow0}\int_{-\infty}^0
- e^{\ii\omega u+\epsilon u}\frac{-\sin\omega_0u}{\omega_0}\dd u
+ e^{\ii\omega\tau+\epsilon\tau}\frac{-\sin\omega_0\tau}{\omega_0}\dd\tau
 =\frac{1}{\omega_0^2-(\omega-\ii0^+)^2}.
 \end{aligned}
 \]
@@ -384,16 +384,16 @@ legend style={font=\small,at={(0.5,1.02)},anchor=south,legend columns=2,draw=non
 \begin{frame}{极点绕行与因果条件}
 频域中的极点规定，怎样保证外力施加之前没有响应？
 \[
-G_R(u)=\int_{-\infty}^{\infty}\frac{\dd\omega}{2\pi}
-\frac{e^{-\ii\omega u}}{\omega_0^2-(\omega+\ii0^+)^2}.
+G_R(t,t')=\int_{-\infty}^{\infty}\frac{\dd\omega}{2\pi}
+\frac{e^{-\ii\omega(t-t')}}{\omega_0^2-(\omega+\ii0^+)^2}.
 \]
 极点位于 $\omega=\pm\omega_0-\ii0^+$，都在实轴下方。
 \begin{itemize}
-\item $u>0$：指数在下半平面衰减，向下闭合并拾取留数。
-\item $u<0$：向上闭合，内部没有极点，因此响应为零。
+\item $t>t'$：指数在下半平面衰减，向下闭合并拾取留数。
+\item $t<t'$：向上闭合，内部没有极点，因此响应为零。
 \end{itemize}
 \[
-G_R(u)=\theta(u)\frac{\sin\omega_0u}{\omega_0}.
+G_R(t,t')=\theta(t-t')\frac{\sin[\omega_0(t-t')]}{\omega_0}.
 \]
 \end{frame}
 
@@ -519,11 +519,11 @@ u_l(r)\sim A_l\sin\bigl(kr-l\pi/2+\delta_l\bigr).
 
 \begin{frame}{备用：直接从二阶方程构造 Green 函数}
 取 $L=\partial_t^2+\omega_0^2$，直接求满足 $L_tG(t,t')=\delta(t-t')$ 的标量核。
-在源点两侧，方程都是自由振动方程。令 $u=t-t'$，
+在源点两侧，方程都是自由振动方程：
 \[
 G(t,t')=\begin{cases}
-a_-\cos\omega_0u+b_-\sin\omega_0u,&t<t',\\
-a_+\cos\omega_0u+b_+\sin\omega_0u,&t>t'.
+a_-\cos[\omega_0(t-t')]+b_-\sin[\omega_0(t-t')],&t<t',\\
+a_+\cos[\omega_0(t-t')]+b_+\sin[\omega_0(t-t')],&t>t'.
 \end{cases}
 \]
 若 $G$ 跳跃，二阶导数会产生 $\delta'$，因此 $G$ 必须连续。
