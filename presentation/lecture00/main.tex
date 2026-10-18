@@ -31,7 +31,7 @@
 
 \section{参考教材}
 
-\begin{frame}{参考教材：Taylor 的散射理论}
+\begin{frame}{参考教材}
 \textbf{John R. Taylor}
 \medskip
 
@@ -51,7 +51,7 @@
 
 \section{散射理论的脉络}
 
-\begin{frame}{含时演化：散射过程的物理图像}
+\begin{frame}{散射的含时图像}
 \[
 H=H_0+V,\qquad
 \ket{\Psi(t)}=e^{-\ii H(t-t_0)/\hbar}\ket{\Psi(t_0)}.
@@ -64,7 +64,7 @@ H=H_0+V,\qquad
 我们关心：给定入射态，相互作用如何改变最终测得的出射分布？
 \end{frame}
 
-\begin{frame}{含时描述：入射态与出射态}
+\begin{frame}{入射态与出射态}
 相互作用发生前后，波包在远离散射中心的区域近似自由传播。
 对于短程相互作用，用自由演化比较它的早期与晚期行为：
 \[
@@ -82,7 +82,7 @@ $S$ 算符联系同一次散射的入射态和出射态：
 它回答：准备给定的入射态后，各种出射结果的概率幅是多少？
 \end{frame}
 
-\begin{frame}{不含时描述：时空张量积与能量分解}
+\begin{frame}{时空张量积与定能分解}
 $H$ 不显含时间时，在时空函数的乘积空间 $\mathcal F_t\otimes\mathcal H_{\bm r}$ 中展开：
 \[
 \Psi=\sum_a c_a\,T_a\otimes\psi_a,\qquad
@@ -103,7 +103,7 @@ $H$ 不显含时间时，在时空函数的乘积空间 $\mathcal F_t\otimes\mat
 \note{$\mathcal F_t$ 表示时间函数空间，时间仍是演化参数。这里的张量积组织时空函数，谐波与散射定态按广义模态理解；标签 $a$ 可包含能量及简并指标，叠加系数由初态决定。定态分离与波包叠加：\url{https://www.damtp.cam.ac.uk/user/tong/qm/qmhtml/S2.html}}
 \end{frame}
 
-\begin{frame}{定能描述：计算振幅与截面}
+\begin{frame}{散射振幅与截面}
 固定能量后，仍要指定怎样的粒子入射，以及散射波怎样离开。
 以短程势的三维弹性散射为例，
 \[
@@ -120,9 +120,9 @@ H\psi_E=E\psi_E,\qquad E=\frac{\hbar^2k^2}{2\mu},
 \end{itemize}
 \end{frame}
 
-\section{求解中会遇到的技术}
+\section{求解技术}
 
-\begin{frame}{受迫振动与后续散射计算}
+\begin{frame}{受迫振动}
 取单位质量的受迫振子：
 \[
 \ddot x+\omega_0^2x=f(t),\qquad x(0)=x_0,\quad\dot x(0)=v_0.
@@ -138,7 +138,7 @@ x_0=v_0=0,\qquad 0<\Omega\ne\omega_0.
 \end{itemize}
 \end{frame}
 
-\begin{frame}{同一个振子的响应}
+\begin{frame}{受迫振动的响应}
 本例的精确解同时含有驱动频率和固有频率，满足给定的零初值：
 \[
 x(t)=\frac{F_0}{\omega_0^2-\Omega^2}
@@ -163,7 +163,7 @@ title={$\Omega/\omega_0=0.7$},title style={font=\small},
 \end{center}
 \end{frame}
 
-\begin{frame}{沿时间推进：数值积分}
+\begin{frame}{数值积分}
 给定当前位置与速度，就能由运动方程计算加速度：
 \[
 \dot x=v,\qquad \dot v=f(t)-\omega_0^2x.
@@ -175,7 +175,7 @@ title={$\Omega/\omega_0=0.7$},title style={font=\small},
 \end{itemize}
 \end{frame}
 
-\begin{frame}{Fourier：哪些算子会被简化？}
+\begin{frame}{Fourier 变换}
 把运动分解为不同频率的谐波，时间微分就变成乘法。
 \[
 x(t)=\int\frac{\dd\omega}{2\pi}e^{-\ii\omega t}\widetilde x(\omega),
@@ -194,7 +194,7 @@ x(t)=\int\frac{\dd\omega}{2\pi}e^{-\ii\omega t}\widetilde x(\omega),
 \end{itemize}
 \end{frame}
 
-\begin{frame}{Laplace：变换以后初态在哪里？}
+\begin{frame}{Laplace 变换与初值}
 只对 $t\ge0$ 的运动作变换，可以直接追踪初值怎样进入解。
 \[
 X(s)=\int_0^\infty e^{-st}x(t)\dd t,\qquad
@@ -207,7 +207,7 @@ X(s)=\frac{F(s)+sx_0+v_0}{s^2+\omega_0^2}.
 初值 $x_0,v_0$ 通过分子进入解。
 \end{frame}
 
-\begin{frame}{受迫振子：升维降次后的演化方程}
+\begin{frame}{振子的一阶形式}
 把位置和速度一起作为状态，二阶方程成为一阶线性系统：
 \[
 \ddot x+\omega_0^2x=f(t)
@@ -247,7 +247,7 @@ U(t,t')=e^{A(t-t')}
 $\mathcal G_R(t,t')=\theta(t-t')U(t,t')$。
 \end{frame}
 
-\begin{frame}{一次单位冲量产生什么运动？}
+\begin{frame}{单位冲量响应}
 振子原先静止。在 $t'$ 时刻施加单位冲量 $f(t)=\delta(t-t')$，
 位置连续，速度增加 $1$：
 \[
@@ -264,7 +264,28 @@ x(t'^+)-x(t'^-)=0,\qquad v(t'^+)-v(t'^-)=1.
 \]
 \end{frame}
 
-\begin{frame}{Green 算符：矩阵微分算符的逆}
+\begin{frame}{推迟条件}
+固定源施加时刻 $t'$，$t$ 表示观察响应的时刻。
+在 $t'$ 注入一个状态增量 $\bm q$，对应的源与响应为
+\[
+\bm b(t)=\delta(t-t')\bm q,\qquad
+\bm y_{\mathrm{pulse}}(t)=\mathcal G_R(t,t')\bm q.
+\]
+\textbf{推迟（retarded）条件：这次脉冲引起的响应不早于脉冲本身。}
+因此，对任意 $\bm q$，
+\[
+t<t'\quad\Longrightarrow\quad
+\bm y_{\mathrm{pulse}}(t)=0
+\quad\Longrightarrow\quad \mathcal G_R(t,t')=0.
+\]
+这里为零的是这次脉冲的响应；初态产生的自由运动另计。
+阶跃函数将源施加前后区分开：
+\[
+\theta(t-t')=\begin{cases}0,&t<t',\\1,&t>t'.\end{cases}
+\]
+\end{frame}
+
+\begin{frame}{Green 算符与求逆}
 要求逆的是作用于整个状态向量的矩阵微分算符：
 \[
 \mathcal D=\partial_t I-A
@@ -287,28 +308,47 @@ $\delta(t-t')I$ 是恒等算符的积分核，对应于矩阵求逆中的 $MM^{-
 \]
 \end{frame}
 
-\begin{frame}{直接构造完整的 Green 矩阵}
-在 $t>t'$ 时，源为零，各列都满足自由演化方程：
+\begin{frame}{源时刻的跳跃条件}
+固定 $t'$，对 $\mathcal D_t\mathcal G_R=\delta(t-t')I$
+在观察时刻 $t\in[t'-\epsilon,t'+\epsilon]$ 上积分：
 \[
-\partial_t\mathcal G_R=A\mathcal G_R.
+\int_{t'-\epsilon}^{t'+\epsilon}
+\bigl[\partial_t\mathcal G_R(t,t')-A\mathcal G_R(t,t')\bigr]\dd t=I.
 \]
-跨越源时刻积分 $\mathcal D_t\mathcal G_R=\delta(t-t')I$，得到
+$t'^-$ 表示从源施加之前趋近 $t'$，$t'^+$ 表示从源施加之后趋近：
 \[
-\mathcal G_R(t'^+,t')-\mathcal G_R(t'^-,t')=I.
+\mathcal G_R(t'^\pm,t')
+=\lim_{\epsilon\downarrow0}\mathcal G_R(t'\pm\epsilon,t').
 \]
-推迟条件令左侧的核为零，右侧初值就是 $I$。因此
+当 $\epsilon\to0$ 时，有限的 $A\mathcal G_R$ 在缩小区间上的积分趋于零。
+导数项留下前后两个极限的差：
 \[
-\begin{aligned}
-\mathcal G_R(t,t')&=\theta(t-t')e^{A(t-t')}\\[0.4em]
-&=\theta(t-t')\begin{pmatrix}
+\boxed{\mathcal G_R(t'^+,t')-\mathcal G_R(t'^-,t')=I}.
+\]
+单位矩阵源使 Green 矩阵在源施加时刻跳跃 $I$。
+\end{frame}
+
+\begin{frame}{推迟 Green 矩阵}
+推迟条件给出源施加之前的极限，跳跃条件确定施加之后的初值：
+\[
+\mathcal G_R(t'^-,t')=0,\qquad
+\mathcal G_R(t'^+,t')=I.
+\]
+单位脉冲只在 $t'$ 作用。$t>t'$ 时，矩阵按齐次方程演化：
+\[
+\partial_t\mathcal G_R=A\mathcal G_R,\qquad
+\mathcal G_R(t,t')=U(t,t')\mathcal G_R(t'^+,t')=e^{A(t-t')}.
+\]
+结合 $t<t'$ 时为零的条件，得到
+\[
+\mathcal G_R(t,t')=\theta(t-t')\begin{pmatrix}
 \cos[\omega_0(t-t')] & \dfrac{\sin[\omega_0(t-t')]}{\omega_0}\\[0.5em]
 -\omega_0\sin[\omega_0(t-t')] & \cos[\omega_0(t-t')]
 \end{pmatrix}.
-\end{aligned}
 \]
 \end{frame}
 
-\begin{frame}{任意外力：用同一个 Green 核叠加响应}
+\begin{frame}{源项叠加}
 将源分解为各时刻的点源：
 \[
 \bm b(t)=\int_{-\infty}^{\infty}\delta(t-t')\bm b(t')\dd t'.
@@ -332,7 +372,7 @@ $\mathcal G_R(t,t')\bm b(t')\dd t'$。由线性性，
 \]
 \end{frame}
 
-\begin{frame}{用 Green 矩阵求出位置与速度}
+\begin{frame}{受迫振动解}
 取 $t_0=0$、$\bm y_0=0$，在 $t\ge0$ 施加 $f(t)=F_0\cos\Omega t$，
 其中 $0<\Omega\ne\omega_0$。将整个源向量代入：
 \[
@@ -358,8 +398,8 @@ $\mathcal G_R(t,t')\bm b(t')\dd t'$。由线性性，
 第一分量就是前面展示的位移曲线，第二分量给出速度。
 \end{frame}
 
-\begin{frame}{Advanced：终端条件对应另一种逆}
-若从终端状态向过去重建运动，选择超前核：
+\begin{frame}{超前 Green 矩阵}
+若从终端状态向过去重建运动，选择超前（advanced）核：
 \[
 \mathcal G_A(t,t')=-\theta(t'-t)U(t,t'),\qquad
 \mathcal D_t\mathcal G_A(t,t')=\delta(t-t')I.
@@ -380,7 +420,7 @@ $\mathcal G_R(t,t')\bm b(t')\dd t'$。由线性性，
 \note{因为 $\partial_t[-\theta(t'-t)]=\delta(t-t')$，超前核的负号保证单位源的符号与推迟核一致。}
 \end{frame}
 
-\begin{frame}{频域中直接求矩阵的逆}
+\begin{frame}{频域矩阵求逆}
 令 $\tau=t-t'$，取 Fourier 约定 $e^{-\ii\omega t}$。
 时间微分变为 $-\ii\omega$，于是
 \[
@@ -405,7 +445,7 @@ $\mathcal G_R(t,t')\bm b(t')\dd t'$。由线性性，
 \note{对推迟核，$\widetilde{\mathcal G}_R(\omega)=\lim_{\epsilon\downarrow0}\int_0^\infty e^{(\ii\omega-\epsilon)\tau}e^{A\tau}\dd\tau=[-\ii(\omega+\ii0^+)I-A]^{-1}$。超前核在负时间差上积分，收敛因子为 $e^{\epsilon\tau}$，对应另一侧的极点规定。}
 \end{frame}
 
-\begin{frame}{极点规定恢复矩阵核的时间支撑}
+\begin{frame}{极点与时间支撑}
 对完整的矩阵逐元作 Fourier 逆变换：
 \[
 \mathcal G_R(t,t')=\int_{-\infty}^{\infty}
@@ -426,7 +466,7 @@ $\mathcal G_R(t,t')\bm b(t')\dd t'$。由线性性，
 \]
 \end{frame}
 
-\begin{frame}{Green 算符与散射边界条件}
+\begin{frame}{散射 Green 算符}
 散射方程也可以写成“线性算符作用于解等于源”：
 \[
 (E-H_0)\ket{\psi}=\ket{s},\qquad \ket{s}=V\ket{\psi}.
@@ -446,7 +486,7 @@ G_0^{(+)}(E)=(E-H_0+\ii0^+)^{-1},\qquad
 这里的源依赖未知的 $\psi$，因此得到的是积分方程，仍需自洽求解。
 \end{frame}
 
-\begin{frame}{耦合振子与散射中的通道耦合}
+\begin{frame}{耦合振子与散射通道}
 两个振子相互耦合时，位移和外力成为向量。取正定的 $K$：
 \[
 \ddot{\bm x}+K\bm x=\bm f(t),\qquad
@@ -463,7 +503,7 @@ K=\begin{pmatrix}\omega_1^2&\lambda\\\lambda&\omega_2^2\end{pmatrix}.
 \end{itemize}
 \end{frame}
 
-\begin{frame}{时间与空间的乘积结构}
+\begin{frame}{时空乘积结构}
 用时间函数和空间函数的乘积及其叠加组织时空依赖：
 \[
 \Psi(t,\bm r)=\sum_a T_a(t)\psi_a(\bm r),
@@ -478,7 +518,7 @@ $\mathcal F_t$ 表示时间函数空间。时间仍是演化参数，连续标�
 \note{乘积函数空间的数学背景：\url{https://www.ime.usp.br/~tausk/texts/TensorL2.pdf}}
 \end{frame}
 
-\begin{frame}{定能与分波：散射问题的变量组织}
+\begin{frame}{定能与分波展开}
 在散射中，先分离时间模态，再用径向和角向函数组织空间：
 \[
 \Psi_E(t,\bm r)=e^{-\ii Et/\hbar}\psi_E(\bm r),
@@ -496,7 +536,7 @@ L^2(\mathbb R^3,\dd^3r)
 \end{itemize}
 \end{frame}
 
-\begin{frame}{中心势中的算子分离与通道耦合}
+\begin{frame}{中心势与分波解耦}
 对无自旋中心势，改用约化径向函数 $u=rR$ 后，
 \[
 H=h_r\otimes\id+\frac{1}{2\mu r^2}\otimes\bm L^2,
@@ -531,7 +571,7 @@ u_l(r)\sim A_l\sin\bigl(kr-l\pi/2+\delta_l\bigr).
 \]
 \end{frame}
 
-\begin{frame}{进入散射计算时会遇到的问题}
+\begin{frame}{振子与散射的对应}
 \renewcommand{\arraystretch}{1.45}
 \begin{tabular}{@{}p{0.43\textwidth}p{0.53\textwidth}@{}}
 \textbf{后面会遇到的问题}&\textbf{振子中已经见过的处理思路}\\\hline
@@ -543,71 +583,74 @@ u_l(r)\sim A_l\sin\bigl(kr-l\pi/2+\delta_l\bigr).
 \end{tabular}
 \end{frame}
 
-\renewcommand{\appendixname}{备用页}
+\renewcommand{\appendixname}{附录}
 \appendix
 
-\begin{frame}{备用：标量核与二阶算符的逆}
-外力只进入速度分量，位移响应由矩阵核的 $(1,2)$ 元给出：
+\begin{frame}{附录：二阶算符求逆}
+从原始受迫振动方程出发：
 \[
-G_R(t,t')=(\mathcal G_R(t,t'))_{12}
-=\theta(t-t')\frac{\sin[\omega_0(t-t')]}{\omega_0}.
+Lx=f,\qquad L=\partial_t^2+\omega_0^2.
 \]
-它也是原来二阶算符 $L=\partial_t^2+\omega_0^2$ 的 Green 核：
+标量 Green 函数由单位点源方程定义：
 \[
-L_tG_R(t,t')=\delta(t-t').
+(\partial_t^2+\omega_0^2)G(t,t')=\delta(t-t').
 \]
-在零初始位移、零初始速度的条件下，积分给出 $L$ 的逆作用：
+对于源施加前没有响应的推迟解，另加条件
+\[
+G_R(t,t')=0\qquad(t<t').
+\]
+将 $L$ 限制在零初值 $x_p(t_0)=\dot x_p(t_0)=0$ 上，记为 $L_R$。
+\par
+Green 核给出其逆的积分表示：
 \[
 x_p(t)=(L_R^{-1}f)(t)
 =\int_{t_0}^{t}G_R(t,t')f(t')\dd t'.
 \]
-对于一般初值，$x=x_h+x_p$，其中
-\[
-x_h(t)=x_0\cos[\omega_0(t-t_0)]
-+\frac{v_0}{\omega_0}\sin[\omega_0(t-t_0)].
-\]
+\note{一般初值时，再加自由解 $x_h(t)=x_0\cos[\omega_0(t-t_0)]+v_0\sin[\omega_0(t-t_0)]/\omega_0$。本附录直接求解二阶算符的 Green 函数。}
 \end{frame}
 
-\begin{frame}{备用：直接从二阶方程构造 Green 函数}
-取 $L=\partial_t^2+\omega_0^2$，直接求满足 $L_tG(t,t')=\delta(t-t')$ 的标量核。
-在源点两侧，方程都是自由振动方程：
+\begin{frame}{附录：标量核的跳跃条件}
+在 $t\ne t'$ 时，$L_tG=0$，所以源时刻前后的解分别为
 \[
 G(t,t')=\begin{cases}
 a_-\cos[\omega_0(t-t')]+b_-\sin[\omega_0(t-t')],&t<t',\\
 a_+\cos[\omega_0(t-t')]+b_+\sin[\omega_0(t-t')],&t>t'.
 \end{cases}
 \]
-若 $G$ 跳跃，二阶导数会产生 $\delta'$，因此 $G$ 必须连续。
-跨越源点积分 $L_tG=\delta$，得到
+若 $G$ 跳跃，二阶导数会产生 $\delta'$。源中只有 $\delta$，因此 $G$ 必须连续。
+跨越 $t'$ 积分原方程：
+\[
+\int_{t'-\epsilon}^{t'+\epsilon}
+\bigl[\partial_t^2G(t,t')+\omega_0^2G(t,t')\bigr]\dd t=1.
+\]
+取 $\epsilon\downarrow0$，得到
 \[
 G(t'^+,t')=G(t'^-,t'),\qquad
 \partial_tG(t'^+,t')-\partial_tG(t'^-,t')=1.
 \]
-于是 $a_+=a_-$、$\omega_0(b_+-b_-)=1$。
-再指定推迟或超前条件，才能确定所需的核。
+所以 $a_+=a_-$，且 $\omega_0(b_+-b_-)=1$。
 \end{frame}
 
-\begin{frame}{备用：二阶构造与矩阵核的对照}
-推迟条件令 $t<t'$ 一侧为零。连续性和导数跳跃给出
+\begin{frame}{附录：推迟与超前标量核}
+推迟条件要求 $t<t'$ 时 $G_R(t,t')=0$，即 $a_-=b_-=0$。
+连续性和导数跳跃进一步给出
 \[
-a_-=b_-=a_+=0,\qquad b_+=\frac{1}{\omega_0},
+a_+=0,\qquad b_+=\frac{1}{\omega_0},
 \]
 \[
-G_R(t,t')=\theta(t-t')\frac{\sin[\omega_0(t-t')]}{\omega_0}
-=(\mathcal G_R)_{12}.
+\boxed{G_R(t,t')=\theta(t-t')\frac{\sin[\omega_0(t-t')]}{\omega_0}}.
 \]
-超前条件令 $t>t'$ 一侧为零。同理得到
+超前条件要求 $t>t'$ 时 $G_A(t,t')=0$，即 $a_+=b_+=0$。
+同样由连续性和导数跳跃得到
 \[
-a_+=b_+=a_-=0,\qquad b_-=-\frac{1}{\omega_0},
+a_-=0,\qquad b_-=-\frac{1}{\omega_0},
 \]
 \[
-G_A(t,t')=-\theta(t'-t)\frac{\sin[\omega_0(t-t')]}{\omega_0}
-=(\mathcal G_A)_{12}.
+\boxed{G_A(t,t')=-\theta(t'-t)\frac{\sin[\omega_0(t-t')]}{\omega_0}}.
 \]
-一阶矩阵核在源点跳跃 $I$；它的 $(1,2)$ 元连续，而该元素的导数跳跃 $1$。
 \end{frame}
 
-\begin{frame}{备用：标量 Green 函数的时间支撑}
+\begin{frame}{附录：标量核的时间支撑}
 横轴为无量纲时间差 $\omega_0(t-t')$，两种核的时间支撑不同：
 \begin{center}
 % [EN] Plot the exact dimensionless kernels to compare their temporal support / [CN] 绘制精确的无量纲核，对比两者在时间轴上的支撑。
@@ -636,7 +679,7 @@ legend style={font=\small,at={(0.5,1.02)},anchor=south,legend columns=2,draw=non
 \]
 \end{frame}
 
-\begin{frame}{备用：Picard 积分方程与逐次修正}
+\begin{frame}{附录：Picard 迭代}
 也可以把回复力放到右侧，将振子方程积分两次：
 \[
 x(t)=x_0+v_0t+\int_0^t(t-\tau)
@@ -650,7 +693,7 @@ x^{(n+1)}(t)=x_0+v_0t+\int_0^t(t-\tau)
 每轮用上一次的 $x$ 计算回复力，再更新整条轨迹。
 \end{frame}
 
-\begin{frame}{备用：Runge--Kutta 递推公式}
+\begin{frame}{附录：Runge--Kutta 格式}
 \[
 \bm y=\begin{pmatrix}x\\v\end{pmatrix},\qquad
 \dot{\bm y}=\bm F(t,\bm y)
@@ -663,7 +706,7 @@ RK4 组合当前步内四次评估的斜率 $\bm k_1,\ldots,\bm k_4$：
 \]
 \end{frame}
 
-\begin{frame}{备用：Numerov 递推公式}
+\begin{frame}{附录：Numerov 格式}
 对不含一阶导数的振子方程，令
 \[
 t_n=nh,\qquad a=\frac{h^2\omega_0^2}{12},\qquad f_n=f(t_n).
