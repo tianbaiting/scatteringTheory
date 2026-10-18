@@ -230,9 +230,9 @@ A=\begin{pmatrix}0&1\\-\omega_0^2&0\end{pmatrix},\qquad
 演化算符 $U$ 将已有状态按自由方程传播：
 \[
 \bm y(t)=U(t,t')\bm y(t'),\qquad
-U(t',t')=I.
+(\partial_t-A)U(t,t')=0,\qquad U(t',t')=I.
 \]
-本例中 $A$ 为常矩阵，且 $A^2=-\omega_0^2I$，因此
+本例中 $A^2=-\omega_0^2I$，因此
 \[
 U(t,t')=e^{A(t-t')}
 =\begin{pmatrix}
@@ -240,41 +240,36 @@ U(t,t')=e^{A(t-t')}
 -\omega_0\sin[\omega_0(t-t')] & \cos[\omega_0(t-t')]
 \end{pmatrix}.
 \]
-对 $\mathcal D=\partial_t-A$，$U$ 满足齐次方程，Green 核响应单位点源：
-\[
-\mathcal D_tU(t,t')=0,\qquad
-\mathcal D_t\mathcal G(t,t')=\delta(t-t')I.
-\]
-要求源施加之前无响应，就得到 $\mathcal G_R(t,t')=\theta(t-t')U(t,t')$。
-阶跃函数的导数产生 $\delta$ 源，$U(t',t')=I$ 保证其系数为单位矩阵。
-\note{$U$ 的两列分别给出单位初始位移和单位初始速度产生的自由运动。$U$ 可以向前或向后传播；Green 核还包含响应的时间条件。}
+两列分别给出单位初始位移、单位初始速度产生的自由运动。
+\medskip
+
+只保留源施加之后的传播，就得到推迟 Green 核
+$\mathcal G_R(t,t')=\theta(t-t')U(t,t')$。
 \end{frame}
 
-\begin{frame}{带源演化：传播并叠加每次注入}
-将源分解为各时刻的点源：
+\begin{frame}{一次单位冲量产生什么运动？}
+振子原先静止。在 $t'$ 时刻施加单位冲量 $f(t)=\delta(t-t')$，
+位置连续，速度增加 $1$：
 \[
-\bm b(t)=\int_{-\infty}^{\infty}\delta(t-t')\bm b(t')\dd t'.
+x(t'^+)-x(t'^-)=0,\qquad v(t'^+)-v(t'^-)=1.
 \]
-在 $t'$ 附近注入的状态增量为 $\bm b(t')\dd t'$，
-传播到 $t$ 后成为 $U(t,t')\bm b(t')\dd t'$。由线性性，
+此后没有外力，注入的状态增量按 $U(t,t')$ 自由演化：
 \[
-\boxed{\bm y(t)=U(t,t_0)\bm y_0
-+\int_{t_0}^{t}U(t,t')\bm b(t')\dd t'}.
+\bm y_{\mathrm{pulse}}(t)
+=\theta(t-t')U(t,t')\begin{pmatrix}0\\1\end{pmatrix}
+=\theta(t-t')\begin{pmatrix}
+\dfrac{\sin[\omega_0(t-t')]}{\omega_0}\\[0.5em]
+\cos[\omega_0(t-t')]
+\end{pmatrix}.
 \]
-第一项传播初态，第二项累积此后各时刻的源。对第二项求导：
+外力注入速度分量，位移响应取 Green 矩阵的第 $1$ 行、第 $2$ 列：
 \[
-\frac{\dd}{\dd t}\int_{t_0}^{t}U(t,t')\bm b(t')\dd t'
-=\bm b(t)+A\int_{t_0}^{t}U(t,t')\bm b(t')\dd t'.
+x_{\mathrm{pulse}}(t)=(\mathcal G_R(t,t'))_{12}.
 \]
-上限贡献当前的源，已有的响应继续自由演化。
 \end{frame}
 
-\begin{frame}{Retarded：带时间条件的求逆核}
-推迟 Green 矩阵只保留源施加之后的传播：
-\[
-\mathcal G_R(t,t')=\theta(t-t')U(t,t').
-\]
-对 $\mathcal D=\partial_t-A$，直接求导得到
+\begin{frame}{Green 算符：带初始条件的线性算符之逆}
+取 $\mathcal D=\partial_t-A$。对推迟核求导，阶跃函数产生单位点源：
 \[
 \begin{aligned}
 \mathcal D_t\mathcal G_R(t,t')
@@ -283,22 +278,94 @@ U(t,t')=e^{A(t-t')}
 &=\delta(t-t')I.
 \end{aligned}
 \]
-$\mathcal G_R$ 因而是带推迟条件的求逆核。对 $t\ge t_0$，源产生的特解为
+$\delta(t-t')I$ 是恒等算符的积分核，对应于矩阵求逆中的 $MM^{-1}=I$。
+\medskip
+
+将 $\mathcal D$ 限制在满足 $\bm y_p(t_0)=0$ 的函数上，记为 $\mathcal D_R$。
+以 $\mathcal G_R(t,t')$ 为核的积分算符就是它的逆：
 \[
-\bm y_p(t)=\int_{t_0}^{t}\mathcal G_R(t,t')\bm b(t')\dd t',
-\qquad \mathcal D\bm y_p=\bm b,\quad \bm y_p(t_0)=0.
+\boxed{\widehat{\mathcal G}_R=\mathcal D_R^{-1}},\qquad
+\mathcal D_R\bm y_p=\bm b
+\quad\Longrightarrow\quad
+\bm y_p=\widehat{\mathcal G}_R\bm b.
+\]
+若不固定初始数据，任意自由解都能加到特解上，因而无法唯一求逆。
+\end{frame}
+
+\begin{frame}{任意外力：用同一个 Green 核叠加响应}
+将源分解为各时刻的点源：
+\[
+\bm b(t)=\int_{-\infty}^{\infty}\delta(t-t')\bm b(t')\dd t'.
+\]
+每次注入 $\bm b(t')\dd t'$，产生响应
+$\mathcal G_R(t,t')\bm b(t')\dd t'$。由线性性，
+\[
+\bm y_p(t)=(\widehat{\mathcal G}_R\bm b)(t)
+=\int_{t_0}^{t}\mathcal G_R(t,t')\bm b(t')\dd t'.
+\]
+对它作用 $\mathcal D$，就还原出源：
+\[
+\mathcal D\bm y_p=\bm b,\qquad \bm y_p(t_0)=0.
+\]
+非零初态由自由演化携带，完整解为
+\[
+\boxed{\bm y(t)=U(t,t_0)\bm y_0
++\int_{t_0}^{t}U(t,t')\bm b(t')\dd t'}.
 \]
 \end{frame}
 
-\begin{frame}{Advanced：从终端条件向过去传播}
-超前 Green 矩阵选择源时刻之前的传播：
+\begin{frame}{位移的 Green 函数与二阶算符求逆}
+外力只进入速度分量，位移响应由矩阵核的 $(1,2)$ 元给出：
+\[
+G_R(t,t')=(\mathcal G_R(t,t'))_{12}
+=\theta(t-t')\frac{\sin[\omega_0(t-t')]}{\omega_0}.
+\]
+它也是原来二阶算符 $L=\partial_t^2+\omega_0^2$ 的 Green 核：
+\[
+L_tG_R(t,t')=\delta(t-t').
+\]
+在零初始位移、零初始速度的条件下，积分给出 $L$ 的逆作用：
+\[
+x_p(t)=(L_R^{-1}f)(t)
+=\int_{t_0}^{t}G_R(t,t')f(t')\dd t'.
+\]
+对于一般初值，$x=x_h+x_p$，其中
+\[
+x_h(t)=x_0\cos[\omega_0(t-t_0)]
++\frac{v_0}{\omega_0}\sin[\omega_0(t-t_0)].
+\]
+\end{frame}
+
+\begin{frame}{用 Green 函数求解本讲的受迫振子}
+取 $t_0=0$、$x_0=v_0=0$，并在 $t\ge0$ 施加
+$f(t)=F_0\cos\Omega t$，其中 $0<\Omega\ne\omega_0$。
+\[
+x(t)=\int_0^t G_R(t,t')F_0\cos\Omega t'\dd t'
+=\frac{F_0}{\omega_0}\int_0^t
+\sin[\omega_0(t-t')]\cos\Omega t'\dd t'.
+\]
+计算积分，得到
+\[
+\boxed{x(t)=\frac{F_0}{\omega_0^2-\Omega^2}
+\bigl[\cos\Omega t-\cos\omega_0t\bigr]}.
+\]
+\begin{itemize}
+\item $\cos\Omega t$ 项给出驱动频率的响应。
+\item $\cos\omega_0t$ 项与它组合，满足零初始位移和零初始速度。
+\end{itemize}
+这就是前面展示的响应曲线，由各时刻的单位冲量响应叠加得到。
+\end{frame}
+
+\begin{frame}{Advanced：终端条件对应另一种逆}
+若从终端状态向过去重建运动，选择超前核：
 \[
 \mathcal G_A(t,t')=-\theta(t'-t)U(t,t'),\qquad
-\mathcal G_A(t,t')=0\quad(t>t').
-\]
-由于 $\partial_t[-\theta(t'-t)]=\delta(t-t')$，它满足同一个带源方程：
-\[
 \mathcal D_t\mathcal G_A(t,t')=\delta(t-t')I.
+\]
+它的位移分量为
+\[
+G_A(t,t')=(\mathcal G_A(t,t'))_{12}
+=-\theta(t'-t)\frac{\sin[\omega_0(t-t')]}{\omega_0}.
 \]
 给定终端状态 $\bm y(T)$，对 $t\le T$ 有
 \[
@@ -306,28 +373,10 @@ $\mathcal G_R$ 因而是带推迟条件的求逆核。对 $t\ge t_0$，源产生
 +\int_t^T\mathcal G_A(t,t')\bm b(t')\dd t'.
 \]
 \begin{itemize}
-\item 自由项传播终端数据，积分项使用 $t$ 之后的源，并在 $T$ 为零。
-\item 初值实验用推迟核，终端条件问题可用超前核向过去重建运动。
+\item 积分项在 $T$ 为零，给出 $\mathcal D$ 在零终端数据下的逆作用。
+\item 推迟与超前核求逆的是同一个微分表达式，指定的时间条件不同。
 \end{itemize}
-\end{frame}
-
-\begin{frame}{标量 Green 函数与矩阵核的对应}
-外力注入速度分量，我们观察位置分量，因此取矩阵核第 $1$ 行、第 $2$ 列：
-\[
-\begin{aligned}
-G_R(t,t')&=(\mathcal G_R)_{12}
-=\theta(t-t')\frac{\sin[\omega_0(t-t')]}{\omega_0},\\[0.5em]
-G_A(t,t')&=(\mathcal G_A)_{12}
-=-\theta(t'-t)\frac{\sin[\omega_0(t-t')]}{\omega_0}.
-\end{aligned}
-\]
-带源演化公式的位置分量就是熟悉的受迫振动解：
-\[
-x(t)=x_h(t)+\int_{t_0}^{t}
-\frac{\sin[\omega_0(t-t')]}{\omega_0}f(t')\dd t'.
-\]
-$x_h$ 是 $U(t,t_0)\bm y_0$ 的位置分量，携带初始位移和速度。
-\note{自由位移为 $x_h(t)=x_0\cos[\omega_0(t-t_0)]+v_0\sin[\omega_0(t-t_0)]/\omega_0$。由于源向量的第一分量为零，位置响应只使用 Green 矩阵的第 1 行、第 2 列。}
+\note{因为 $\partial_t[-\theta(t'-t)]=\delta(t-t')$，超前核的负号保证单位源的符号与推迟核一致。}
 \end{frame}
 
 \begin{frame}{标量 Green 函数的时间支撑}
