@@ -4,13 +4,13 @@
 
 ## 第 0 讲：散射理论序言
 
-`lecture00/main.tex`（21 页）介绍散射问题的脉络、含时演化与定态描述的关系，再借受迫振子介绍直接积分、傅里叶与 Laplace 变换、Green 函数、极点规定。最后连接到径向 Schrödinger 方程、渐近匹配、动量空间 LS 方程与矩阵求逆。
+`lecture00/main.tex`（21 页）是课程序言：先用含时演化建立散射图像，解释时间与空间的乘积结构以及定能分解；再用同一个受迫振动初值问题演示 Picard、Runge–Kutta、Numerov、Fourier、Laplace、Green 函数和极点规定。最后借耦合振子连接分波、径向积分与散射边界条件。
 
-它是导论，不是将受迫振动当作散射理论的主题，也不试图在第一讲完整推导所有技术。
+受迫振动用于预演后续方法；正式的散射理论从下一讲开始。
 
 ## 编译
 
-需要 latexmk、XeLaTeX、xeCJK 和 Noto Sans CJK SC 字体。
+需要 latexmk、XeLaTeX、xeCJK、PGFPlots 和 Noto Sans CJK SC 字体。
 
 ```bash
 cd presentation
