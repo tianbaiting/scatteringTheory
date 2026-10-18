@@ -9,19 +9,47 @@
 \usecolortheme{dolphin}
 \setbeamertemplate{navigation symbols}{}
 \setbeamertemplate{footline}[frame number]
+\setbeamertemplate{section in toc shaded}[default][55]
 \newcommand{\dd}{\mathrm d}
 \newcommand{\ii}{\mathrm i}
 \newcommand{\id}{\mathbb I}
 \newcommand{\ket}[1]{\lvert #1\rangle}
 \title{第 0 讲：散射理论序言}
-\subtitle{散射计算中的分解、求逆与物理条件}
+\subtitle{含时与定能描述，以及受迫振动中的求解方法}
 \author{Baiting Tian}
 \date{}
+\AtBeginSection[]{
+\begin{frame}{本讲内容}
+\tableofcontents[currentsection,hideallsubsections]
+\end{frame}
+}
 \begin{document}
 
 \begin{frame}
 \titlepage
 \end{frame}
+
+\section{参考教材}
+
+\begin{frame}{参考教材：Taylor 的散射理论}
+\textbf{John R. Taylor}
+\medskip
+
+\textit{Scattering Theory: The Quantum Theory of Nonrelativistic Collisions}
+\medskip
+
+本课程借鉴这本书的讲述思路：
+\begin{itemize}
+\item 用含时描述建立散射过程，理解入射态、出射态与 $S$ 算符。
+\item 再引入不含时方法，在固定能量下计算散射振幅和截面。
+\end{itemize}
+\medskip
+
+这一讲先交代理论脉络，再用熟悉的受迫振动认识求解中会遇到的结构。
+\note{教材：John R. Taylor, Scattering Theory: The Quantum Theory of Nonrelativistic Collisions, Dover Publications. 课程借鉴其先含时、后不含时的组织方式。\url{https://books.google.com/books?id=OIaXvuwZMLQC}}
+\end{frame}
+
+\section{散射理论的脉络}
 
 \begin{frame}{含时演化：散射过程的物理图像}
 \[
@@ -33,28 +61,28 @@ H=H_0+V,\qquad
 \item 波包与靶发生相互作用，随后向不同方向或通道传播。
 \item 远处的探测器记录出射粒子的分布。
 \end{itemize}
-后面要把这个过程转成可计算的方程，并保留正确的入射、出射条件。
+我们关心：给定入射态，相互作用如何改变最终测得的出射分布？
 \end{frame}
 
-\begin{frame}{时间与空间的乘积结构}
-用时间函数和空间函数的乘积及其叠加组织时空依赖：
+\begin{frame}{含时描述：入射态与出射态}
+相互作用发生前后，波包在远离散射中心的区域近似自由传播。
+对于短程相互作用，用自由演化比较它的早期与晚期行为：
 \[
-\Psi(t,\bm r)=\sum_a T_a(t)\psi_a(\bm r),
-\qquad \mathcal F_t\otimes\mathcal H_{\bm r}.
+\ket{\Psi(t)}\sim e^{-\ii H_0t/\hbar}\ket{\phi_{\mathrm{in}}}
+\quad(t\to-\infty),
 \]
-当 $H$ 不显含时间时，方程中的算子分别作用于两个因子：
 \[
-\mathcal D=\ii\hbar\partial_t\otimes\id-\id\otimes H.
+\ket{\Psi(t)}\sim e^{-\ii H_0t/\hbar}\ket{\phi_{\mathrm{out}}}
+\quad(t\to+\infty).
 \]
-后面选择能量、角度和通道基底时，都要先组织展开，再检查算子是否让各模式解耦。
-\medskip
-
-$\mathcal F_t$ 表示时间函数空间。时间仍是演化参数，连续标签的求和用积分代替。
-% [EN] Time modes organize spacetime functions, not an extra quantum subsystem / [CN] 时间模态组织时空函数，并不引入额外的量子子系统。
-\note{乘积函数空间的数学背景：\url{https://www.ime.usp.br/~tausk/texts/TensorL2.pdf}}
+$S$ 算符联系同一次散射的入射态和出射态：
+\[
+\ket{\phi_{\mathrm{out}}}=S\ket{\phi_{\mathrm{in}}}.
+\]
+它回答：准备给定的入射态后，各种出射结果的概率幅是多少？
 \end{frame}
 
-\begin{frame}{谐波模态与定能问题}
+\begin{frame}{不含时描述：按能量分解}
 指数函数是时间微分算子的广义本征函数：
 \[
 \partial_t e^{\pm\ii\omega t}=\pm\ii\omega e^{\pm\ii\omega t}.
@@ -68,12 +96,32 @@ $\mathcal F_t$ 表示时间函数空间。时间仍是演化参数，连续标�
 \item $H$ 不显含时间时，不同能量模式可以分别求解。
 \item 一般波包是这些模式的叠加，叠加系数由初态决定。
 \end{itemize}
-后面固定入射能量计算振幅和截面，就以这种定能分解为起点。
+因此可以先分别求解各能量下的散射态，再叠加成波包。
 \note{定态分离与波包叠加：\url{https://www.damtp.cam.ac.uk/user/tong/qm/qmhtml/S2.html}}
 \end{frame}
 
+\begin{frame}{定能描述：计算振幅与截面}
+固定能量后，仍要指定怎样的粒子入射，以及散射波怎样离开。
+以短程势的三维弹性散射为例，
+\[
+H\psi_E=E\psi_E,\qquad E=\frac{\hbar^2k^2}{2\mu},
+\]
+\[
+\psi_E^{(+)}(\bm r)\sim e^{\ii kz}
++f(\hat{\bm r})\frac{e^{\ii kr}}{r},
+\qquad \frac{\dd\sigma}{\dd\Omega}=|f(\hat{\bm r})|^2.
+\]
+\begin{itemize}
+\item 含时描述说明入射与出射的意义，建立散射量的定义。
+\item 定能描述把计算组织成带散射边界条件的方程。
+\end{itemize}
+两种描述处理同一个散射过程。能量分解以后，物理条件仍需保留。
+\end{frame}
+
+\section{求解中会遇到的技术}
+
 \begin{frame}{受迫振动与后续散射计算}
-用一个熟悉的初值问题，预演后面会遇到的计算困难。取单位质量：
+先求一个熟悉的运动问题，再逐步认识不同求解方法。取单位质量：
 \[
 \ddot x+\omega_0^2x=f(t),\qquad x(0)=x_0,\quad\dot x(0)=v_0.
 \]
@@ -83,176 +131,14 @@ f(t)=F_0\cos\Omega t\quad(t\ge0),\qquad
 x_0=v_0=0,\qquad 0<\Omega\ne\omega_0.
 \]
 \begin{itemize}
-\item 未知解也出现在源项中时，怎样构造积分方程并逐次修正？
-\item 换表象以后，哪些算子简化了，哪些耦合与物理条件仍要处理？
+\item 沿时间推进，怎样得到振子的运动轨迹？
+\item 换到频率域，或把外力分解为脉冲，求解会怎样简化？
 \end{itemize}
-这些问题会在后续的 LS 方程、分波与通道耦合、散射边界条件中反复出现。
+初值怎样进入解、响应怎样叠加，都可以在这个例子中具体看见。
 \end{frame}
 
-\begin{frame}{Picard：未知解怎样进入积分方程？}
-后面会遇到未知解出现在方程两侧的积分方程。先把振子方程积分两次：
-\[
-x(t)=x_0+v_0t+\int_0^t(t-\tau)
-\bigl[f(\tau)-\omega_0^2x(\tau)\bigr]\dd\tau.
-\]
-用上一轮的轨迹生成下一轮：
-\[
-x^{(n+1)}(t)=x_0+v_0t+\int_0^t(t-\tau)
-\bigl[f(\tau)-\omega_0^2x^{(n)}(\tau)\bigr]\dd\tau.
-\]
-\begin{itemize}
-\item 每轮用上一次的 $x$ 计算回复力，再更新整条轨迹。
-\item 后面的 LS 方程与 Born 迭代也用近似解生成新的源，再修正近似解。
-\end{itemize}
-逐次修正的思想可以沿用；散射迭代的收敛性需要结合势与能量判断。
-\end{frame}
-
-\begin{frame}{Runge--Kutta：一阶系统的数值推进}
-后面的径向方程通常没有解析解，需要从原点附近沿 $r$ 向外积分。
-\[
-\bm y=\begin{pmatrix}x\\v\end{pmatrix},\qquad
-\dot{\bm y}=\bm F(t,\bm y)
-=\begin{pmatrix}v\\f(t)-\omega_0^2x\end{pmatrix}.
-\]
-用已知的位置与速度，在一个小区间内估计运动。
-RK4 组合当前步内四次评估的斜率 $\bm k_1,\ldots,\bm k_4$：
-\[
-\bm y_{n+1}=\bm y_n+\frac h6
-(\bm k_1+2\bm k_2+2\bm k_3+\bm k_4).
-\]
-\begin{itemize}
-\item 这里沿时间推进；后面沿半径推进，获得正则径向解。
-\item 还要在远场匹配入射、出射波才能读取相移，并检查步长收敛。
-\end{itemize}
-\end{frame}
-
-\begin{frame}{Numerov：二阶方程的三点递推}
-后面的径向方程同样不含一阶导数，可以直接利用二阶结构。振子中令
-\[
-t_n=nh,\qquad a=\frac{h^2\omega_0^2}{12},\qquad f_n=f(t_n).
-\]
-Numerov 格式直接联系三个相邻时刻：
-\[
-\begin{aligned}
-(1+a)x_{n+1}={}&2(1-5a)x_n-(1+a)x_{n-1}\\
-&+\frac{h^2}{12}\bigl(f_{n+1}+10f_n+f_{n-1}\bigr).
-\end{aligned}
-\]
-\begin{itemize}
-\item 振子由初值及 Taylor 展开启动两个点，再逐步递推。
-\item 径向问题的有效系数随 $r$ 变化，需要使用相应的变系数格式。
-\end{itemize}
-后面选择数值格式时要利用方程结构，并分别处理原点启动与远场匹配。
-\end{frame}
-
-\begin{frame}{Fourier：哪些算子会被简化？}
-后面在动量表象中，自由动能变成乘法，相互作用仍可耦合不同动量。
-\[
-x(t)=\int\frac{\dd\omega}{2\pi}e^{-\ii\omega t}\widetilde x(\omega),
-\qquad \partial_t^2 e^{-\ii\omega t}=-\omega^2e^{-\ii\omega t}.
-\]
-在每个频率上，微分方程化为代数关系：
-\[
-(\omega_0^2-\omega^2)\widetilde x=\widetilde f,
-\qquad
-\widetilde x(\omega)=\frac{\widetilde f(\omega)}{\omega_0^2-\omega^2}
-\quad(\omega\ne\pm\omega_0).
-\]
-\begin{itemize}
-\item 振子的时间系数恒定，不同频率独立；极点处仍需选定响应。
-\item 本例按 $f(t)=\theta(t)F_0\cos\Omega t$ 接通外力，取 $t<0$ 静止。
-\end{itemize}
-全时轴谐波按广义变换理解。后面换表象时，也要检查剩余耦合与物理条件。
-\end{frame}
-
-\begin{frame}{Laplace：变换以后初态在哪里？}
-后面联系含时演化与能量域方程时，需要追踪初态怎样进入变换。
-\[
-X(s)=\int_0^\infty e^{-st}x(t)\dd t,\qquad
-\mathcal L[\ddot x]=s^2X-sx_0-v_0.
-\]
-记 $F(s)=\mathcal L[f](s)$，则
-\[
-X(s)=\frac{F(s)+sx_0+v_0}{s^2+\omega_0^2}.
-\]
-\begin{itemize}
-\item 振子的初值明确进入分子，变换后的方程仍携带这些已知数据。
-\item 后面把时间传播写成能量域的 Green 算符时，也要保留初态并规定收敛方式。
-\end{itemize}
-变换把微分化为代数运算；初始数据和响应条件仍是求解的一部分。
-\end{frame}
-
-\begin{frame}{Green 函数：单位脉冲的响应}
-后面需要知道一处源怎样影响别处的波函数。先看单位脉冲怎样驱动振子：
-\[
-(\partial_t^2+\omega_0^2)G_R(t)=\delta(t),
-\qquad G_R(t<0)=0.
-\]
-单位冲量令速度跃变 $1$，随后系统自由振动：
-\[
-G_R(0^+)=0,\qquad \dot G_R(0^+)=1,
-\]
-\[
-G_R(t)=\theta(t)\frac{\sin\omega_0t}{\omega_0}.
-\]
-下标 $R$ 表示推迟响应。后面的自由 Green 算符也先解决给定源的响应问题。
-\end{frame}
-
-\begin{frame}{Green 函数：已知外源与未知源}
-后面的散射源 $V\psi$ 含有未知波函数。先理解已知外力怎样产生响应：
-\[
-x(t)=x_h(t)+\int_0^tG_R(t-\tau)f(\tau)\dd\tau,
-\]
-\[
-x_h(t)=x_0\cos\omega_0t+\frac{v_0}{\omega_0}\sin\omega_0t.
-\]
-\begin{itemize}
-\item $x_h$ 携带初值，卷积项叠加各时刻外力产生的响应。
-\item 这里 $f$ 已知；散射中的 $V\psi$ 还依赖待求的 $\psi$。
-\end{itemize}
-因此，后面的响应关系本身成为积分方程，需要继续迭代或离散为线性方程组。
-\note{Green 函数与初值项：\url{https://tonic.physics.sunysb.edu/~dteaney/F16_Phy505/lectures/green.pdf}}
-\end{frame}
-
-\begin{frame}{因果响应的频域 Green 函数}
-后面 Green 算符的分母可能为零，需要规定怎样求逆。振子先用 $\epsilon>0$ 保证收敛：
-\[
-\widetilde G_R(\omega)
-=\lim_{\epsilon\downarrow0}\int_0^\infty
- e^{\ii\omega\tau-\epsilon\tau}
- \frac{\sin\omega_0\tau}{\omega_0}\dd\tau
-=\frac{1}{\omega_0^2-(\omega+\ii0^+)^2}.
-\]
-若系统在 $t<0$ 静止，则
-\[
-\widetilde x(\omega)=\widetilde G_R(\omega)\widetilde f(\omega).
-\]
-\begin{itemize}
-\item 时间域的响应条件，在频域中指定了极点的位置。
-\item 后面的 $(E-H_0+\ii0^+)^{-1}$ 也需要附带物理条件来定义。
-\end{itemize}
-分母为零时，物理条件参与逆算符的定义。
-\end{frame}
-
-\begin{frame}{极点绕行与因果条件}
-后面 $+\ii0^+$ 为什么对应出射波？先看绕行规定怎样选出振子的响应。
-\[
-G_R(\tau)=\int_{-\infty}^{\infty}\frac{\dd\omega}{2\pi}
-\frac{e^{-\ii\omega\tau}}{\omega_0^2-(\omega+\ii0^+)^2}.
-\]
-极点位于 $\omega=\pm\omega_0-\ii0^+$，都在实轴下方。
-\begin{itemize}
-\item $\tau>0$：指数在下半平面衰减，向下闭合并拾取留数。
-\item $\tau<0$：向上闭合，内部没有极点，因此响应为零。
-\end{itemize}
-\[
-G_R(\tau)=\theta(\tau)\frac{\sin\omega_0\tau}{\omega_0}.
-\]
-振子选择时间上的因果响应；散射选择空间上的出射行为，各自通过极点规定表达。
-\end{frame}
-
-\begin{frame}{可解模型与数值结果的检查}
-用本例的精确解，检查不同算法是否满足同一个方程与零初值：
+\begin{frame}{同一个振子的响应}
+本例的精确解同时含有驱动频率和固有频率，满足给定的零初值：
 \[
 x(t)=\frac{F_0}{\omega_0^2-\Omega^2}
 \bigl(\cos\Omega t-\cos\omega_0t\bigr),\qquad t\ge0.
@@ -274,11 +160,150 @@ title={$\Omega/\omega_0=0.7$},title style={font=\small},
 \end{axis}
 \end{tikzpicture}
 \end{center}
-后面同样用可解势与步长、网格收敛，检查散射数值解的精度。
+下面用不同方法求这同一条曲线，并用精确解检查数值误差。
+\end{frame}
+
+\begin{frame}{沿时间推进：数值积分}
+给定当前位置与速度，就能由运动方程计算加速度：
+\[
+\dot x=v,\qquad \dot v=f(t)-\omega_0^2x.
+\]
+\begin{itemize}
+\item Runge--Kutta 将它作为一阶系统，在每一步估计位置和速度的变化。
+\item Numerov 利用不含一阶导数的二阶方程结构，递推相邻网格点上的位移。
+\item 减小步长，并与精确解比较，检查计算结果是否收敛。
+\end{itemize}
+\medskip
+
+散射的径向方程也能沿半径数值积分，再由远场匹配提取相移。
+\end{frame}
+
+\begin{frame}{Fourier：哪些算子会被简化？}
+把运动分解为不同频率的谐波，时间微分就变成乘法。
+\[
+x(t)=\int\frac{\dd\omega}{2\pi}e^{-\ii\omega t}\widetilde x(\omega),
+\qquad \partial_t^2 e^{-\ii\omega t}=-\omega^2e^{-\ii\omega t}.
+\]
+在每个频率上，微分方程化为代数关系：
+\[
+(\omega_0^2-\omega^2)\widetilde x=\widetilde f,
+\qquad
+\widetilde x(\omega)=\frac{\widetilde f(\omega)}{\omega_0^2-\omega^2}
+\quad(\omega\ne\pm\omega_0).
+\]
+\begin{itemize}
+\item 振子的时间系数恒定，不同频率独立；极点处仍需选定响应。
+\item 本例按 $f(t)=\theta(t)F_0\cos\Omega t$ 接通外力，取 $t<0$ 静止。
+\end{itemize}
+全时轴谐波按广义变换理解。后面换表象时，也要检查剩余耦合与物理条件。
+\end{frame}
+
+\begin{frame}{Laplace：变换以后初态在哪里？}
+只对 $t\ge0$ 的运动作变换，可以直接追踪初值怎样进入解。
+\[
+X(s)=\int_0^\infty e^{-st}x(t)\dd t,\qquad
+\mathcal L[\ddot x]=s^2X-sx_0-v_0.
+\]
+记 $F(s)=\mathcal L[f](s)$，则
+\[
+X(s)=\frac{F(s)+sx_0+v_0}{s^2+\omega_0^2}.
+\]
+\begin{itemize}
+\item 振子的初值明确进入分子，变换后的方程仍携带这些已知数据。
+\item 后面把时间传播写成能量域的 Green 算符时，也要保留初态并规定收敛方式。
+\end{itemize}
+变换把微分化为代数运算；初始数据和响应条件仍是求解的一部分。
+\end{frame}
+
+\begin{frame}{Green 函数：单位脉冲的响应}
+先给振子一个单位脉冲，观察此后的运动：
+\[
+(\partial_t^2+\omega_0^2)G_R(t)=\delta(t),
+\qquad G_R(t<0)=0.
+\]
+单位冲量令速度跃变 $1$，随后系统自由振动：
+\[
+G_R(0^+)=0,\qquad \dot G_R(0^+)=1,
+\]
+\[
+G_R(t)=\theta(t)\frac{\sin\omega_0t}{\omega_0}.
+\]
+下标 $R$ 表示推迟响应。后面的自由 Green 算符也先解决给定源的响应问题。
+\end{frame}
+
+\begin{frame}{Green 函数：已知外源与未知源}
+把连续外力看作许多脉冲的叠加，总响应也由各次脉冲的响应叠加：
+\[
+x(t)=x_h(t)+\int_0^tG_R(t-\tau)f(\tau)\dd\tau,
+\]
+\[
+x_h(t)=x_0\cos\omega_0t+\frac{v_0}{\omega_0}\sin\omega_0t.
+\]
+\begin{itemize}
+\item $x_h$ 携带初值，卷积项叠加各时刻外力产生的响应。
+\item 这里 $f$ 已知；散射中的 $V\psi$ 还依赖待求的 $\psi$。
+\end{itemize}
+因此，后面的响应关系本身成为积分方程，需要继续迭代或离散为线性方程组。
+\note{Green 函数与初值项：\url{https://tonic.physics.sunysb.edu/~dteaney/F16_Phy505/lectures/green.pdf}}
+\end{frame}
+
+\begin{frame}{Picard：未知解怎样进入积分方程？}
+也可以把回复力放到右侧，将振子方程积分两次：
+\[
+x(t)=x_0+v_0t+\int_0^t(t-\tau)
+\bigl[f(\tau)-\omega_0^2x(\tau)\bigr]\dd\tau.
+\]
+用上一轮的轨迹生成下一轮：
+\[
+x^{(n+1)}(t)=x_0+v_0t+\int_0^t(t-\tau)
+\bigl[f(\tau)-\omega_0^2x^{(n)}(\tau)\bigr]\dd\tau.
+\]
+\begin{itemize}
+\item 每轮用上一次的 $x$ 计算回复力，再更新整条轨迹。
+\item 后面的 LS 方程与 Born 迭代也用近似解生成新的源，再修正近似解。
+\end{itemize}
+逐次修正的思想可以沿用；散射迭代的收敛性需要结合势与能量判断。
+\end{frame}
+
+\begin{frame}{因果响应的频域 Green 函数}
+单位脉冲之后才有响应。对这个因果响应作 Fourier 变换，用 $\epsilon>0$ 保证收敛：
+\[
+\widetilde G_R(\omega)
+=\lim_{\epsilon\downarrow0}\int_0^\infty
+ e^{\ii\omega\tau-\epsilon\tau}
+ \frac{\sin\omega_0\tau}{\omega_0}\dd\tau
+=\frac{1}{\omega_0^2-(\omega+\ii0^+)^2}.
+\]
+若系统在 $t<0$ 静止，则
+\[
+\widetilde x(\omega)=\widetilde G_R(\omega)\widetilde f(\omega).
+\]
+\begin{itemize}
+\item 时间域的响应条件，在频域中指定了极点的位置。
+\item 后面的 $(E-H_0+\ii0^+)^{-1}$ 也需要附带物理条件来定义。
+\end{itemize}
+分母为零时，物理条件参与逆算符的定义。
+\end{frame}
+
+\begin{frame}{极点绕行与因果条件}
+频域中的极点规定，怎样保证外力施加之前没有响应？
+\[
+G_R(\tau)=\int_{-\infty}^{\infty}\frac{\dd\omega}{2\pi}
+\frac{e^{-\ii\omega\tau}}{\omega_0^2-(\omega+\ii0^+)^2}.
+\]
+极点位于 $\omega=\pm\omega_0-\ii0^+$，都在实轴下方。
+\begin{itemize}
+\item $\tau>0$：指数在下半平面衰减，向下闭合并拾取留数。
+\item $\tau<0$：向上闭合，内部没有极点，因此响应为零。
+\end{itemize}
+\[
+G_R(\tau)=\theta(\tau)\frac{\sin\omega_0\tau}{\omega_0}.
+\]
+振子选择时间上的因果响应；散射选择空间上的出射行为，各自通过极点规定表达。
 \end{frame}
 
 \begin{frame}{耦合振子与散射中的通道耦合}
-散射中分离能量或角度后，还可能剩下一组耦合方程。振子中取正定的 $K$：
+两个振子相互耦合时，位移和外力成为向量。取正定的 $K$：
 \[
 \ddot{\bm x}+K\bm x=\bm f(t),\qquad
 K=\begin{pmatrix}\omega_1^2&\lambda\\\lambda&\omega_2^2\end{pmatrix}.
@@ -293,6 +318,24 @@ K=\begin{pmatrix}\omega_1^2&\lambda\\\lambda&\omega_2^2\end{pmatrix}.
 \item 散射通道有类似的矩阵结构，连续的动量标签则对应积分核。
 \end{itemize}
 后面选定表象之后，还要用矩阵求解或积分方程方法处理剩余耦合。
+\end{frame}
+
+\begin{frame}{时间与空间的乘积结构}
+用时间函数和空间函数的乘积及其叠加组织时空依赖：
+\[
+\Psi(t,\bm r)=\sum_a T_a(t)\psi_a(\bm r),
+\qquad \mathcal F_t\otimes\mathcal H_{\bm r}.
+\]
+当 $H$ 不显含时间时，方程中的算子分别作用于两个因子：
+\[
+\mathcal D=\ii\hbar\partial_t\otimes\id-\id\otimes H.
+\]
+后面选择能量、角度和通道基底时，都要先组织展开，再检查算子是否让各模式解耦。
+\medskip
+
+$\mathcal F_t$ 表示时间函数空间。时间仍是演化参数，连续标签的求和用积分代替。
+% [EN] Time modes organize spacetime functions, not an extra quantum subsystem / [CN] 时间模态组织时空函数，并不引入额外的量子子系统。
+\note{乘积函数空间的数学背景：\url{https://www.ime.usp.br/~tausk/texts/TensorL2.pdf}}
 \end{frame}
 
 \begin{frame}{定能与分波：散射问题的变量组织}
@@ -384,6 +427,47 @@ G_0^{(+)}(E)=(E-H_0+\ii0^+)^{-1},\qquad
 \medskip
 
 后续从自由态、渐近态和 $S$ 矩阵开始，把这些方法用于具体的散射问题。
+\end{frame}
+
+\renewcommand{\appendixname}{备用页}
+\appendix
+
+\begin{frame}{备用：Runge--Kutta 递推公式}
+后面的径向方程通常没有解析解，需要从原点附近沿 $r$ 向外积分。
+\[
+\bm y=\begin{pmatrix}x\\v\end{pmatrix},\qquad
+\dot{\bm y}=\bm F(t,\bm y)
+=\begin{pmatrix}v\\f(t)-\omega_0^2x\end{pmatrix}.
+\]
+用已知的位置与速度，在一个小区间内估计运动。
+RK4 组合当前步内四次评估的斜率 $\bm k_1,\ldots,\bm k_4$：
+\[
+\bm y_{n+1}=\bm y_n+\frac h6
+(\bm k_1+2\bm k_2+2\bm k_3+\bm k_4).
+\]
+\begin{itemize}
+\item 这里沿时间推进；后面沿半径推进，获得正则径向解。
+\item 还要在远场匹配入射、出射波才能读取相移，并检查步长收敛。
+\end{itemize}
+\end{frame}
+
+\begin{frame}{备用：Numerov 递推公式}
+后面的径向方程同样不含一阶导数，可以直接利用二阶结构。振子中令
+\[
+t_n=nh,\qquad a=\frac{h^2\omega_0^2}{12},\qquad f_n=f(t_n).
+\]
+Numerov 格式直接联系三个相邻时刻：
+\[
+\begin{aligned}
+(1+a)x_{n+1}={}&2(1-5a)x_n-(1+a)x_{n-1}\\
+&+\frac{h^2}{12}\bigl(f_{n+1}+10f_n+f_{n-1}\bigr).
+\end{aligned}
+\]
+\begin{itemize}
+\item 振子由初值及 Taylor 展开启动两个点，再逐步递推。
+\item 径向问题的有效系数随 $r$ 变化，需要使用相应的变系数格式。
+\end{itemize}
+后面选择数值格式时要利用方程结构，并分别处理原点启动与远场匹配。
 \end{frame}
 
 \end{document}
